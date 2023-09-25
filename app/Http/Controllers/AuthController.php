@@ -1,0 +1,96 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+class AuthController extends Controller
+{
+    /**
+     * Show the login form.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function showLoginForm()
+    {
+        return view('auth.login');
+    }
+
+    /**
+     * Handle an authentication attempt.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function login(Request $request)
+    {
+        // Validate user input
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|min:8',
+        ]);
+
+        // Attempt to log in the user
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            // Authentication was successful, redirect to the intended page
+
+            $user = Auth::user();
+
+            // Store user attributes in the session
+            Session::put('user_id', $user->id);
+            Session::put('country_code', $user->country_code);
+            Session::put('business_code', $user->business_code);
+            Session::put('current_location_code', $user->current_location_code);
+            Session::put('type', $user->type);
+            Session::put('code', $user->code);
+            Session::put('name', $user->name);
+            Session::put('phone_otp', $user->phone_otp);
+            Session::put('email_otp', $user->email_otp);
+            Session::put('phone', $user->phone);
+            Session::put('email', $user->email);
+            Session::put('isVerified', $user->isVerified);
+            Session::put('AuthToken', $user->AuthToken);
+            Session::put('phone_verified_at', $user->phone_verified_at);
+            Session::put('email_verified_at', $user->email_verified_at);
+            Session::put('is_super_agent', $user->is_super_agent);
+            Session::put('last_login', $user->last_login);
+            Session::put('status', $user->status);
+            Session::put('should_change_password', $user->should_change_password);
+            Session::put('iddoc_type', $user->iddoc_type);
+            Session::put('iddoc_id', $user->iddoc_id);
+            Session::put('iddoc_path', $user->iddoc_path);
+            Session::put('password', $user->password);
+            Session::put('two_factor_secret', $user->two_factor_secret);
+            Session::put('two_factor_recovery_codes', $user->two_factor_recovery_codes);
+            Session::put('two_factor_confirmed_at', $user->two_factor_confirmed_at);
+            Session::put('remember_token', $user->remember_token);
+            Session::put('created_at', $user->created_at);
+            Session::put('updated_at', $user->updated_at);
+    
+            // Redirect to the intended page
+            echo "valid";
+        }
+
+        // Authentication failed, redirect back with an error message
+        // return back()->withErrors(['email' => 'Invalid credentials']);
+        echo "invalid";
+    }
+
+    /**
+     * Log the user out of the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect('/');
+    }
+}
