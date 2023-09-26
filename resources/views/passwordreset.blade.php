@@ -33,6 +33,7 @@
 		<!--end::Theme mode setup on page load-->
 		<!--begin::Main-->
 		<!--begin::Root-->
+        
 		<div class="d-flex flex-column flex-root">
 			<!--begin::Authentication - Password reset -->
 			<div class="d-flex flex-column flex-lg-row flex-column-fluid">

@@ -64,9 +64,9 @@ var KTSigninGeneral = function () {
                     // Check axios library docs: https://axios-http.com/docs/intro
                     axios.post(submitButton.closest('form').getAttribute('action'), new FormData(form)).then(function (response) {
                         
-                        console.log(response);
                         
-                        if (response === "valid") {
+                        if (parseInt(response.data) == 1) {
+                            console.log(response);
                             form.reset();
 
                             // Show message popup. For more info check the plugin's official documentation: https://sweetalert2.github.io/
@@ -86,6 +86,7 @@ var KTSigninGeneral = function () {
                                 location.href = redirectUrl;
                             }
                         } else {
+                            console.log('failed');
                             // Show error popup. For more info check the plugin's official documentation: https://sweetalert2.github.io/
                             Swal.fire({
                                 text: "Sorry, the email or password is incorrect, please try again.",

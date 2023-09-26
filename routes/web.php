@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\AuthController;
 /*
@@ -31,3 +31,17 @@ Route::post('/change-language', [LanguageController::class, 'changeLanguage']);
 Route::post('/auth-action', [AuthController::class, 'login']);
 
 Route::get('/auth', [LanguageController::class, 'page']);
+
+Route::get('/logout', [AuthController::class, 'logout']);
+
+Route::group(['prefix'=>'dashboard','as'=>'dashboard.'], function(){
+
+     
+
+    Route::get('/', function () {
+        return view('pages/home');
+    });
+    Route::get('connect', ['as' => 'connect', 'uses' => 'AccountController@connect']);
+
+
+});

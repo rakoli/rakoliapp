@@ -38,7 +38,7 @@ class AuthController extends Controller
             $user = Auth::user();
 
             // Store user attributes in the session
-            Session::put('user_id', $user->id);
+            Session::put('id', $user->id);
             Session::put('country_code', $user->country_code);
             Session::put('business_code', $user->business_code);
             Session::put('current_location_code', $user->current_location_code);
@@ -69,12 +69,12 @@ class AuthController extends Controller
             Session::put('updated_at', $user->updated_at);
     
             // Redirect to the intended page
-            echo "valid";
+            echo 1;
+        }else{
+            // Authentication failed, redirect back with an error message
+            // return back()->withErrors(['email' => 'Invalid credentials']);
+            echo 0;
         }
-
-        // Authentication failed, redirect back with an error message
-        // return back()->withErrors(['email' => 'Invalid credentials']);
-        echo "invalid";
     }
 
     /**
