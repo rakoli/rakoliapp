@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -38,7 +39,7 @@ class AuthController extends Controller
             $user = Auth::user();
 
             // Store user attributes in the session
-            Session::put('user_id', $user->id);
+            Session::put('id', $user->id);
             Session::put('country_code', $user->country_code);
             Session::put('business_code', $user->business_code);
             Session::put('current_location_code', $user->current_location_code);
@@ -69,12 +70,12 @@ class AuthController extends Controller
             Session::put('updated_at', $user->updated_at);
     
             // Redirect to the intended page
-            echo "valid";
+            echo 1;
+        }else{
+            // Authentication failed, redirect back with an error message
+            // return back()->withErrors(['email' => 'Invalid credentials']);
+            echo 0;
         }
-
-        // Authentication failed, redirect back with an error message
-        // return back()->withErrors(['email' => 'Invalid credentials']);
-        echo "invalid";
     }
 
     /**
@@ -86,11 +87,12 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         Auth::logout();
-
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
-
+        Session::flush();
         return redirect('/');
+    }
+
+    public function checkuser(){ 
+        // User is not authenticated, redirect to the sign-in route
+        return Session::get('id') < 1 ? View('welcome'):redirect('/dashboard');      
     }
 }

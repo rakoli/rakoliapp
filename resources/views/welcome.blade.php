@@ -66,7 +66,7 @@
                         <!--begin::Wrapper-->
                         <div class="w-lg-500px p-10">
                             <!--begin::Form-->
-                            <form  class="form w-100" novalidate="novalidate" id="kt_sign_in_form" data-kt-redirect-url="/home" action="/auth-action" method="POST">
+                            <form  class="form w-100" novalidate="novalidate" id="kt_sign_in_form" data-kt-redirect-url="/dashboard" action="/auth-action" method="POST">
                                 <!--begin::Heading-->
                                 <div class="text-center mb-10">
                                     <!--begin::Title-->
