@@ -27,7 +27,7 @@ Please check the official laravel installation guide for server requirements bef
 
 Clone the repository
 
-    git clone git@github.com:emabusi2/rakoliwebapp.git
+    git clone git@github.com:emabusi2/rakoliapp.git
 
 Switch to the repo folder
 
