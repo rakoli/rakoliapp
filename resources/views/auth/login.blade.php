@@ -66,8 +66,9 @@
                         <!--begin::Wrapper-->
                         <div class="w-lg-500px p-10">
                             <!--begin::Form-->
-                            <form  class="form w-100" novalidate="novalidate" id="kt_sign_in_form" data-kt-redirect-url="/dashboard" action="/auth-action" method="POST">
+                            <form  class="form w-100" novalidate="novalidate" id="kt_sign_in_form" data-kt-redirect-url="/home" action="authenticate" method="POST">
                                 <!--begin::Heading-->
+                                @csrf
                                 <div class="text-center mb-10">
                                     <!--begin::Title-->
                                     <h1 class="text-dark mb-3">{{ $translator("Sign In","Ingia")}}</h1>
@@ -75,7 +76,7 @@
                                     <!--begin::Link-->
                                     <div class="text-gray-400 fw-semobold fs-4"> 
                                         {{ $translator("New Here?","Huna akaunti?")}} 
-                                        <a href="sign-up" class="link-primary fw-bold"> {{ $translator("Create an Account","Fungua akaunti")}}  </a>
+                                        <a href="register" class="link-primary fw-bold"> {{ $translator("Create an Account","Fungua akaunti")}}  </a>
                                     </div>
                                     <!--end::Link-->
                                 </div>

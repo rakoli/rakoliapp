@@ -1,6 +1,6 @@
+@extends('layouts.app')
 
-@include('../layout/header')
-<!--begin::Content-->
+@section('content')
 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
 	<!--begin::Container-->
 	<div id="kt_content_container" class="container-xxl">
@@ -160,5 +160,4 @@
 	</div>
 	<!--end::Container-->
 </div>
-<!--end::Content-->
-@include('../layout/footer')
+@endsection

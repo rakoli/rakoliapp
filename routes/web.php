@@ -5,48 +5,32 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AuthController;
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
 
-Route::get('/', [AuthController::class, 'checkuser']);
+// Default routes
+Auth::routes();
 
-Route::get('/sign-in', function () {
-    return view('welcome');
+
+Route::get('/', function () {
+    return view('auth.login');
 });
 
-
-Route::get('/sign-up', function () {
-    return view('signup');
-});
-Route::get('/password-reset', function () {
-    return view('passwordreset');
-});
-
-
+// This route is used for language
 Route::post('/change-language', [LanguageController::class, 'changeLanguage']);
 
-Route::post('/auth-action', [AuthController::class, 'login']);
-
-Route::get('/auth', [LanguageController::class, 'page']);
-
-Route::get('/logout', [AuthController::class, 'logout']);
+// This route is necessary because we want to create custom session keys
+Route::post('/authenticate', [AuthController::class, 'loginattempty']);
 
 
-Route::middleware(['auth.custom'])->group(function () {
-    Route::group(['prefix'=>'dashboard','as'=>'dashboard'], function(){
-        
-        Route::middleware(['auth.custom'])->get('/', function () {
-            return view('pages/home');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+// All get methods will be loaded with this route
+Route::middleware(['auth'])->group(function () {
+    Route::group(['prefix' => 'dashboard', 'as' => 'dashboard'], function () {
+
+        Route::get('/', function () {
+            return view('dashboard/home');
         });
 
-        Route::get('/view/{pagename}', [DashboardController::class,'loadDynamicView'])->where('pagename', '.*');
+        Route::get('/view/{pagename}', [DashboardController::class, 'loadDynamicView'])->where('pagename', '.*');
     });
 });
