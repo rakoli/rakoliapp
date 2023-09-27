@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -86,11 +87,12 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         Auth::logout();
-
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
-
+        Session::flush();
         return redirect('/');
+    }
+
+    public function checkuser(){ 
+        // User is not authenticated, redirect to the sign-in route
+        return Session::get('id') < 1 ? View('welcome'):redirect('/dashboard');      
     }
 }

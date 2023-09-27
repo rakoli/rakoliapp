@@ -58,40 +58,13 @@
 							<!--begin::Menu-->
 							<div class="menu menu-column menu-title-gray-700 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500 fw-semibold" id="#kt_aside_menu" data-kt-menu="true">
 								<!--begin:Menu item-->
-								<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2">
-									<!--begin:Menu link-->
-									<span class="menu-link menu-center">
-										<span class="menu-icon me-0">
-											<i class="ki-outline ki-home-2 fs-2x"></i>
-										</span>
-										<span class="menu-title"> {{ $translator("Home","Nyumbani")}}</span>
-									</span>
-									<!--end:Menu link-->
-									<!--begin:Menu sub-->
-									<div class="menu-sub menu-sub-dropdown px-2 py-4 w-250px mh-75 overflow-auto">
-										<!--begin:Menu item-->
-										<div class="menu-item">
-											<!--begin:Menu content-->
-											<div class="menu-content">
-												<span class="menu-section fs-5 fw-bolder ps-1 py-1"> {{ $translator("Home","Nyumbani")}}</span>
-											</div>
-											<!--end:Menu content-->
-										</div>
-										<!--end:Menu item-->
-										<!--begin:Menu item-->
-										<div class="menu-item">
-											<!--begin:Menu link-->
-											<a class="menu-link" href="index.html">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
-												<span class="menu-title">Default</span>
-											</a>
-											<!--end:Menu link-->
-										</div>
-									</div>
-									<!--end:Menu sub-->
-								</div>
+								@if(session('type') == 'admin')
+									@include('menus.admin')
+								@elseif(session('type') == 'vas')
+									@include('menus.vas')
+								@elseif(session('type') == 'agent')
+									@include('menus.agent')
+								@endif
 								<!--end:Menu item-->
 								 
 							</div>
@@ -1522,95 +1495,5 @@
 						<!--end::Container-->
 					</div>
 					<!--end::Header-->
-					<!--begin::Toolbar-->
-					<div class="toolbar py-2" id="kt_toolbar">
-						<!--begin::Container-->
-						<div id="kt_toolbar_container" class="container-fluid d-flex align-items-center">
-							<!--begin::Page title-->
-							<div class="flex-grow-1 flex-shrink-0 me-5">
-								<!--begin::Page title-->
-								<div data-kt-swapper="true" data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}" class="page-title d-flex align-items-center flex-wrap me-3 mb-5 mb-lg-0">
-									<!--begin::Title-->
-									<h1 class="d-flex align-items-center text-dark fw-bold my-1 fs-3">My Projects</h1>
-									<!--end::Title-->
-									<!--begin::Separator-->
-									<span class="h-20px border-gray-200 border-start mx-3"></span>
-									<!--end::Separator-->
-									<!--begin::Breadcrumb-->
-									<ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-1">
-										<!--begin::Item-->
-										<li class="breadcrumb-item text-muted">
-											<a href="index.html" class="text-muted text-hover-primary">Home</a>
-										</li>
-										<!--end::Item-->
-										<!--begin::Item-->
-										<li class="breadcrumb-item">
-											<span class="bullet bg-gray-200 w-5px h-2px"></span>
-										</li>
-										<!--end::Item-->
-										<!--begin::Item-->
-										<li class="breadcrumb-item text-muted">Apps</li>
-										<!--end::Item-->
-										<!--begin::Item-->
-										<li class="breadcrumb-item">
-											<span class="bullet bg-gray-200 w-5px h-2px"></span>
-										</li>
-										<!--end::Item-->
-										<!--begin::Item-->
-										<li class="breadcrumb-item text-muted">Projects</li>
-										<!--end::Item-->
-										<!--begin::Item-->
-										<li class="breadcrumb-item">
-											<span class="bullet bg-gray-200 w-5px h-2px"></span>
-										</li>
-										<!--end::Item-->
-										<!--begin::Item-->
-										<li class="breadcrumb-item text-dark">My Projects</li>
-										<!--end::Item-->
-									</ul>
-									<!--end::Breadcrumb-->
-								</div>
-								<!--end::Page title-->
-							</div>
-							<!--end::Page title-->
-							<!--begin::Action group-->
-							<div class="d-flex align-items-center flex-wrap">
-								<!--begin::Wrapper-->
-								<div class="flex-shrink-0 me-2">
-									<ul class="nav">
-										<li class="nav-item">
-											<a class="nav-link btn btn-sm btn-color-muted btn-active-color-primary btn-active-light active fw-semibold fs-7 px-4 me-1" data-bs-toggle="tab" href="#">Day</a>
-										</li>
-										<li class="nav-item">
-											<a class="nav-link btn btn-sm btn-color-muted btn-active-color-primary btn-active-light fw-semibold fs-7 px-4 me-1" data-bs-toggle="tab" href="">Week</a>
-										</li>
-										<li class="nav-item">
-											<a class="nav-link btn btn-sm btn-color-muted btn-active-color-primary btn-active-light fw-semibold fs-7 px-4" data-bs-toggle="tab" href="#">Year</a>
-										</li>
-									</ul>
-								</div>
-								<!--end::Wrapper-->
-								<!--begin::Wrapper-->
-								<div class="d-flex align-items-center">
-									<!--begin::Daterangepicker-->
-									<a href="#" class="btn btn-sm btn-bg-light btn-color-gray-500 btn-active-color-primary me-2" id="kt_dashboard_daterangepicker" data-bs-toggle="tooltip" data-bs-dismiss="click" data-bs-trigger="hover" title="Select dashboard daterange">
-										<span class="fw-semibold me-1" id="kt_dashboard_daterangepicker_title">Range:</span>
-										<span class="fw-bold" id="kt_dashboard_daterangepicker_date">July 19</span>
-									</a>
-									<!--end::Daterangepicker-->
-									<!--begin::Actions-->
-									<div class="d-flex align-items-center me-n2 me-lg-0">
-										<button type="button" class="btn btn-sm btn-icon btn-color-primary btn-active-light btn-active-color-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_campaign">
-											<i class="ki-outline ki-plus-square fs-2"></i>
-										</button>
-									</div>
-									<!--end::Actions-->
-								</div>
-								<!--end::Wrapper-->
-							</div>
-							<!--end::Action group-->
-						</div>
-						<!--end::Container-->
-					</div>
-					<!--end::Toolbar-->
+					 
 					
