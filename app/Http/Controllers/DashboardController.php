@@ -1,6 +1,8 @@
 <?php
+
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -12,14 +14,26 @@ class DashboardController extends Controller
         // You can add validation or security checks here if needed.
 
         // Construct the view name by adding ".blade.php" to the filename.
-        
+
         $viewName = 'dashboard.' . $filename;
 
         // Check if the view exists before returning it.
         if (view()->exists($viewName)) {
-            return View($viewName);
+            $data = $this->processRequest($filename);
+            return View($viewName, $data);
         } else {
             return view('dashboard.404');
+        }
+    }
+
+    private function processRequest($page)
+    {
+        // Your private method logic here
+        if ($page === "users") {
+            $users = User::all();
+            return compact('users');
+        } else {
+            return;
         }
     }
 }

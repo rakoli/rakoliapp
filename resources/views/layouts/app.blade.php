@@ -6,9 +6,7 @@
 
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
-
-        <title>{{ config('app.name', 'RAKOLI') }}</title>
-
+ 
         <!-- Fonts -->
         <link rel="dns-prefetch" href="//fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
@@ -31,14 +29,13 @@
 		<link rel="shortcut icon" href="favicon.ico" />
 		<!--begin::Fonts(mandatory for all pages)-->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
-		<!--end::Fonts-->
-		<!--begin::Vendor Stylesheets(used for this page only)-->
-		<link href="assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
+		<!--end::Fonts--> 
+		<!--begin::Global Stylesheets Bundle(mandatory for all pages)-->
+		<<link href="assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
 		<!--end::Vendor Stylesheets-->
 		<!--begin::Global Stylesheets Bundle(mandatory for all pages)-->
 		<link href="assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
-		<link href="assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
-		<!--end::Global Stylesheets Bundle-->
+		<link href="assets/css/style.bundle.css" rel="stylesheet" type="text/css" /><!--end::Global Stylesheets Bundle-->
 		<script>// Frame-busting to prevent site from being loaded within a frame without permission (click-jacking) if (window.top != window.self) { window.top.location.replace(window.self.location.href); }</script>
 	</head>
 	<!--end::Head-->
@@ -1515,7 +1512,14 @@
 					 
 					
                     <main class="py-4">
-                        @yield('content')
+                        <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+                            <!--begin::Container-->
+                            <div id="kt_content_container" class="container-xxl">
+
+                                @yield('content')
+
+                            </div>
+                        </div>
                     </main>
 
 
@@ -3725,7 +3729,7 @@
 <script src="assets/plugins/custom/datatables/datatables.bundle.js"></script>
 <!--end::Vendors Javascript-->
 <!--begin::Custom Javascript(used for this page only)-->
-<script src="assets/js/custom/apps/projects/list/list.js"></script>
+<script src="assets/js/custom/apps/ecommerce/sales/listing.js"></script>
 <script src="assets/js/widgets.bundle.js"></script>
 <script src="assets/js/custom/widgets.js"></script>
 <script src="assets/js/custom/apps/chat/chat.js"></script>
@@ -3733,8 +3737,6 @@
 <script src="assets/js/custom/utilities/modals/create-campaign.js"></script>
 <script src="assets/js/custom/utilities/modals/users-search.js"></script>
 <script src="{{ asset('assets/js/language.js') }}"></script>
-<script src="assets/js/custom/apps/customers/list/export.js"></script>
-<script src="assets/js/custom/apps/customers/add.js"></script>
 <!--end::Custom Javascript-->
 <!--end::Javascript-->
 </body>
