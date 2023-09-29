@@ -22,17 +22,19 @@ class User extends Authenticatable
         'email',
         'password',
         'country_code',
-        'business_code',
         'current_location_code',
-        'type',
-        'code',
-        'name',
         'phone',
-        'status',
+        'phone_otp',
+        'email_otp',
+        'isVerified',
+        'AuthToken',
         'iddoc_type',
         'iddoc_id',
         'iddoc_path',
-        'password',
+        'is_super_agent',
+        'status',
+        'should_change_password',
+        'code', // Add the 'code' attribute for user registration
     ];
 
     /**
