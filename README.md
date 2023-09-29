@@ -31,7 +31,7 @@ Clone the repository
 
 Switch to the repo folder
 
-    cd rakoliwebapp
+    cd rakoliapp
 
 Install all the dependencies using composer
 
