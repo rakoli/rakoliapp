@@ -58,32 +58,40 @@
                                 </div>
                                 <!--begin::Heading-->
                                 <!--begin::Input group=-->
-                                <div class="row">
-                                    <div class="fv-row mb-4">
-                                        <!--begin::Email-->
-                                        <input type="text" placeholder="{{ $translator("First Name", "Jina la Kwanza") }}" name="first-name" autocomplete="off" class="form-control bg-transparent" />
-                                        <!--end::Email-->
-                                    </div>
-                                    <div class="fv-row mb-4">
-                                        <!--begin::Email-->
-                                        <input type="text" placeholder="{{ $translator("Last Name", "Jina la Mwisho") }}" name="last-name" autocomplete="off" class="form-control bg-transparent" />
-                                        <!--end::Email-->
+                                <div class="fv-row mb-8">
+                                    <div class="d-flex flex-column flex-md-row gap-5">
+                                        <div class="fv-row flex-row-fluid">
+                                            <input type="text" placeholder="{{ $translator("First Name", "Jina la Kwanza") }}" name="first-name" autocomplete="off" class="form-control bg-transparent" />
+                                        </div>
+                                        <div class="fv-row flex-row-fluid">
+                                            <input type="text" placeholder="{{ $translator("Last Name", "Jina la Mwisho") }}" name="last-name" autocomplete="off" class="form-control bg-transparent" />
+                                        </div>
                                     </div>
                                 </div>
+
                                 <div class="fv-row mb-8">
-                                    <!--begin::Email-->
-                                    <select type="text" placeholder="{{ $translator("Select Country", "Chagua Nchi") }}" name="country" autocomplete="off" class="form-control bg-transparent">
-                                        <option value="">{{ $translator("Select Country", "Chagua Nchi") }}</option>    
-                                        <option value="+254">{{ $translator("Kenya", "Kenya") }}</option>    
-                                        <option value="+255">{{ $translator("Tanzania", "Tanzania") }}</option>    
-                                        <option value="+256">{{ $translator("Uganda", "Uganda") }}</option>    
-                                    </select>
-                                    <!--end::Email-->
-                                </div>
-                                <div class="fv-row mb-8">
-                                    <!--begin::Phone-->
-                                    <input type="text" placeholder="{{ $translator("07XXX...", "07XXX...") }}" name="phone" autocomplete="off" class="form-control bg-transparent" />
-                                    <!--end::Phone-->
+                                    <div class="d-flex flex-column flex-md-row gap-5">
+                                        <div class="flex-row-fluid" style="max-width: 120px;">
+                                            <!--begin::Input-->
+                                            <select  id="countrySelect" class="form-control" name="country">
+                                                <option value="">{{ $translator("Your Country", "Nchi yako") }}</option>
+                                                <option value="+254">Kenya</option>
+                                                <option value="+255">Tanzania</option>
+                                                <option value="+256">Uganda</option>
+                                            </select>
+                                            <!--end::Input-->
+                                        </div>
+                                        <div class="fv-row flex-row-fluid" style="max-width: 70px;">
+                                            <!--begin::Input-->
+                                            <input id="codeInput" class="form-control" placeholder="Code" name="code" readonly placeholder="" value="" />
+                                            <!--end::Input-->
+                                        </div>
+                                        <div class="fv-row flex-row-fluid">
+                                            <!--begin::Input-->
+                                            <input class="form-control" name="phone" placeholder="07XX..." value="" />
+                                            <!--end::Input-->
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="fv-row mb-8">
                                     <!--begin::Email-->
