@@ -16,6 +16,7 @@ return [
     'defaults' => [
         'guard' => 'web',
         'passwords' => 'users',
+        'remember' => true, // Enable Remember Me functionality
     ],
 
     /*

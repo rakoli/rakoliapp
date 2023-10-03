@@ -63,10 +63,9 @@ var KTSigninGeneral = function () {
 
                     // Check axios library docs: https://axios-http.com/docs/intro
                     axios.post(submitButton.closest('form').getAttribute('action'), new FormData(form)).then(function (response) {
-                        
-                        
+
+
                         if (parseInt(response.data) == 1) {
-                            console.log(response);
                             form.reset();
 
                             // Show message popup. For more info check the plugin's official documentation: https://sweetalert2.github.io/
@@ -80,13 +79,10 @@ var KTSigninGeneral = function () {
                                 }
                             });
 
-                            const redirectUrl = form.getAttribute('data-kt-redirect-url');
+                            // const redirectUrl = form.getAttribute('data-kt-redirect-url');
+                            location.href = '/dashboard';
 
-                            if (redirectUrl) {
-                                location.href = redirectUrl;
-                            }
                         } else {
-                            console.log('failed');
                             // Show error popup. For more info check the plugin's official documentation: https://sweetalert2.github.io/
                             Swal.fire({
                                 text: "Sorry, the email or password is incorrect, please try again.",
@@ -131,7 +127,7 @@ var KTSigninGeneral = function () {
         });
     }
 
-    var isValidUrl = function(url) {
+    var isValidUrl = function (url) {
         try {
             new URL(url);
             return true;
@@ -146,12 +142,12 @@ var KTSigninGeneral = function () {
         init: function () {
             form = document.querySelector('#kt_sign_in_form');
             submitButton = document.querySelector('#kt_sign_in_submit');
-            
+
             document.querySelector('.fv-help-block');
             handleValidation();
 
             handleSubmitAjax(); // use for ajax submit
-           
+
         }
     };
 }();

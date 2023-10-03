@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Contracts\Session\Session;
-use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -15,7 +13,7 @@ class DashboardController extends Controller
 
         // Construct the view name by adding ".blade.php" to the filename.
 
-        $viewName = 'dashboard.' . $filename;
+        $viewName = 'admin.' . $filename;
 
         // Check if the view exists before returning it.
         if (view()->exists($viewName)) {
@@ -33,7 +31,7 @@ class DashboardController extends Controller
             $users = User::all();
             return compact('users');
         } else {
-            return;
+            return [];
         }
     }
 }

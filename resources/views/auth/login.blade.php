@@ -106,8 +106,14 @@
                                     <!--begin::Input-->
                                     <input required tabindex="2" class="form-control form-control-lg form-control-solid" type="password" placeholder="{{ $translator("Enter Password","Jaza neno siri")}}" autocomplete="off" name="password">
                                     <!--end::Input-->
-                                </div>
+                                </div>                                
                                 <!--end::Input group-->
+                                <div class="fv-row mb-8">
+                                    <label class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="remember" value="1" />
+                                        <span class="form-check-label fw-semibold text-gray-700 fs-base ms-1">{{ $translator("Remember me", "Nikumbuke") }}
+                                    </label>
+                                </div>
                                 <!--begin::Actions-->
                                 <div class="text-center">
                                     <!--begin::Submit button-->

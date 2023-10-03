@@ -28,9 +28,9 @@ Route::middleware(['auth'])->group(function () {
     Route::group(['prefix' => 'dashboard', 'as' => 'dashboard'], function () {
 
         Route::get('/', function () {
-            return view('dashboard/home');
+            return view('admin/home');
         });
 
-        Route::get('/view/{pagename}', [DashboardController::class, 'loadDynamicView'])->where('pagename', '.*');
+        Route::get('/admin/{pagename}', [DashboardController::class, 'loadDynamicView'])->where('pagename', '.*');
     });
 });

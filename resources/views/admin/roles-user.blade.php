@@ -17,8 +17,7 @@
         <!--end::Card header-->
         <!--begin::Card body-->
         <div class="card-body pt-0">
-            <h3>This page is under construction</h3>            
-			<img src="assets/media/underconstruction.png" alt="">  
+            <h3>This page is under constructions</h3>              
         </div>
         <!--end::Card body-->
     </div>
@@ -28,3 +27,4 @@
 <!--end::Main column-->
 
 @endsection
+

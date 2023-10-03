@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+
 class AuthController extends Controller
 {
     /**
@@ -32,7 +33,9 @@ class AuthController extends Controller
         ]);
 
         // Attempt to log in the user
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        $remember = $request->has('remember'); // Check if 'Remember Me' checkbox is checked
+
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $remember)) {
             // Authentication was successful, redirect to the intended page
 
             $user = Auth::user();
@@ -44,15 +47,9 @@ class AuthController extends Controller
             Session::put('current_location_code', $user->current_location_code);
             Session::put('type', $user->type);
             Session::put('code', $user->code);
-            Session::put('name', $user->name);
-            Session::put('phone_otp', $user->phone_otp);
-            Session::put('email_otp', $user->email_otp);
+            Session::put('name', $user->name); 
             Session::put('phone', $user->phone);
-            Session::put('email', $user->email);
-            Session::put('isVerified', $user->isVerified);
-            Session::put('AuthToken', $user->AuthToken);
-            Session::put('phone_verified_at', $user->phone_verified_at);
-            Session::put('email_verified_at', $user->email_verified_at);
+            Session::put('email', $user->email); 
             Session::put('is_super_agent', $user->is_super_agent);
             Session::put('last_login', $user->last_login);
             Session::put('status', $user->status);
@@ -67,10 +64,10 @@ class AuthController extends Controller
             Session::put('remember_token', $user->remember_token);
             Session::put('created_at', $user->created_at);
             Session::put('updated_at', $user->updated_at);
-    
+
             // Redirect to the intended page
             echo 1;
-        }else{
+        } else {
             // Authentication failed, redirect back with an error message
             // return back()->withErrors(['email' => 'Invalid credentials']);
             echo 0;
@@ -90,8 +87,9 @@ class AuthController extends Controller
         return redirect('/');
     }
 
-    public function checkuser(){ 
+    public function checkuser()
+    {
         // User is not authenticated, redirect to the sign-in route
-        return Session::get('id') < 1 ? View('welcome'):redirect('/dashboard');      
+        return Session::get('id') < 1 ? View('welcome') : redirect('/dashboard');
     }
 }
