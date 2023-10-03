@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('phone_otp')->nullable();
             $table->string('email_otp')->nullable();
-            $table->string('phone')->unique();
+            $table->string('phone');
             $table->string('email')->nullable()->unique();
             $table->string('isVerified')->nullable();
             $table->string("AuthToken")->nullable();
