@@ -1,5 +1,7 @@
 <?php
 
+// This is general route for general purpose route registration
+
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\LanguageController;
@@ -20,17 +22,8 @@ Route::post('/change-language', [LanguageController::class, 'changeLanguage']);
 // This route is necessary because we want to create custom session keys
 Route::post('/authenticate', [AuthController::class, 'loginattempty']);
 
-
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-// All get methods will be loaded with this route
-Route::middleware(['auth'])->group(function () {
-    Route::group(['prefix' => 'dashboard', 'as' => 'dashboard'], function () {
-
-        Route::get('/', function () {
-            return view('admin/home');
-        });
-
-        Route::get('/admin/{pagename}', [DashboardController::class, 'loadDynamicView'])->where('pagename', '.*');
-    });
-});
+include('custom-admin.php');
+include('custom-agent.php');
+include('custom-vas.php');

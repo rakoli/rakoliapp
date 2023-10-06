@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class DashboardController extends Controller
+class CustomAgentDashboardController extends Controller
 {
     public function loadDynamicView(Request $request, $filename = "welcome")
     {
@@ -13,7 +13,7 @@ class DashboardController extends Controller
 
         // Construct the view name by adding ".blade.php" to the filename.
 
-        $viewName = 'admin.' . $filename;
+        $viewName = 'agent.' . $filename;
 
         // Check if the view exists before returning it.
         if (view()->exists($viewName)) {

@@ -6,7 +6,7 @@
             <i class="ki-outline ki-home-2 fs-2x"></i>
         </span>
         <span class="menu-title">
-            {{ $translator("Agency", "Shirika") }}
+            {{ $translator('Agency', 'Shirika') }}
         </span>
     </span>
     <!--end:Menu link-->
@@ -17,7 +17,7 @@
             <!--begin:Menu content-->
             <div class="menu-content">
                 <span class="menu-section fs-5 fw-bolder ps-1 py-1">
-                    {{ $translator("Agency", "Shirika") }}
+                    {{ $translator('Agency', 'Shirika') }}
                 </span>
             </div>
             <!--end:Menu content-->
@@ -25,23 +25,23 @@
         <!--end:Menu item-->
         <!--begin:Menu item-->
         <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
-            
+
             <!--begin:Menu sub-->
-            <div class="menu-sub menu-sub-accordion">                
-                <a class="menu-link" href="#">
-                    {{ $translator("Transaction", "Biashara") }}
+            <div class="menu-sub menu-sub-accordion">
+                <a class="menu-link" href="/dashboard/agent/agency-transactions">
+                    {{ $translator('Transaction', 'Biashara') }}
                 </a>
-                <a class="menu-link" href="#">
-                    {{ $translator("Shift", "Mabadiliko") }}
+                <a class="menu-link" href="/dashboard/agent/shift">
+                    {{ $translator('Shift', 'Mabadiliko') }}
                 </a>
-                <a class="menu-link" href="#">
-                    {{ $translator("Tills", "Tills") }}
+                <a class="menu-link" href="/dashboard/agent/tills">
+                    {{ $translator('Tills', 'Tills') }}
                 </a>
-                <a class="menu-link" href="#">
-                    {{ $translator("Networks", "Mfumo wa Mawasiliano") }}
+                <a class="menu-link" href="/dashboard/agent/networks">
+                    {{ $translator('Networks', 'Mfumo wa Mawasiliano') }}
                 </a>
-                <a class="menu-link" href="#">
-                    {{ $translator("Loans", "Mikopo") }}
+                <a class="menu-link" href="/dashboard/agent/loans">
+                    {{ $translator('Loans', 'Mikopo') }}
                 </a>
             </div>
             <!--end:Menu sub-->
@@ -59,7 +59,7 @@
             <i class="ki-outline ki-home-2 fs-2x"></i>
         </span>
         <span class="menu-title">
-            {{ $translator("Exchange", "Kubadilishana") }}
+            {{ $translator('Exchange', 'Kubadilishana') }}
         </span>
     </span>
     <!--end:Menu link-->
@@ -70,7 +70,7 @@
             <!--begin:Menu content-->
             <div class="menu-content">
                 <span class="menu-section fs-5 fw-bolder ps-1 py-1">
-                    {{ $translator("Exchange Management", "Usimamizi wa Kubadilishana") }}
+                    {{ $translator('Exchange Management', 'Usimamizi wa Kubadilishana') }}
                 </span>
             </div>
             <!--end:Menu content-->
@@ -78,23 +78,23 @@
         <!--end:Menu item-->
         <!--begin:Menu item-->
         <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
-            
+
             <!--begin:Menu sub-->
-            <div class="menu-sub menu-sub-accordion">                
-                <a class="menu-link" href="#">
-                    {{ $translator("Requests", "Maombi") }}
+            <div class="menu-sub menu-sub-accordion">
+                <a class="menu-link" href="/dashboard/agent/requests">
+                    {{ $translator('Requests', 'Maombi') }}
                 </a>
-                <a class="menu-link" href="#">
-                    {{ $translator("Pending", "Inasubiri") }}
+                <a class="menu-link" href="/dashboard/agent/pending">
+                    {{ $translator('Pending', 'Inasubiri') }}
                 </a>
-                <a class="menu-link" href="#">
-                    {{ $translator("Transaction", "Biashara") }}
+                <a class="menu-link" href="/dashboard/agent/transaction">
+                    {{ $translator('Transaction', 'Biashara') }}
                 </a>
-                <a class="menu-link" href="#">
-                    {{ $translator("Ads", "Matangazo") }}
+                <a class="menu-link" href="/dashboard/agent/ads">
+                    {{ $translator('Ads', 'Matangazo') }}
                 </a>
-                <a class="menu-link" href="#">
-                    {{ $translator("Security", "Usalama") }}
+                <a class="menu-link" href="/dashboard/agent/security">
+                    {{ $translator('Security', 'Usalama') }}
                 </a>
             </div>
             <!--end:Menu sub-->
@@ -103,42 +103,3 @@
     </div>
     <!--end:Menu sub-->
 </div>
-
-<!-- Continue the structure for other main menu items: VAS, Account, and Reports -->
-
-{{-- 
-Agency
-o Transaction
-o Shift
-o Tills
-o Networks
-o Loans
-
-
-Exchange
-o Request
-o Pending
-o Transaction
-o Ads
-o Security
-
-
-VAS
-o Available,
-o Ongoing
-o Completed
- 
-Account
-o Subscription
-o Referral program
-o Users Management
-o Branch Management
-o Profile
-o Support
-
-Reports
-o Tills
-o Income
-o Expense
-o Loans
-o VAS performance --}}
