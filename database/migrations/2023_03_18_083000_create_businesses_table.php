@@ -20,12 +20,8 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->string('code');
-            $table->foreign('code')->references('code')
-                ->on('users')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-            $table->string('type')->default('type 1');
-            $table->string('walkthrough_step')->nullable()->default(\App\Utils\Enums\WalkThroughStepEnums::BUSINESS->value);
+            $table->string('type')->default('AGENT');
+//            $table->string('walkthrough_step')->nullable()->default(\App\Utils\Enums\WalkThroughStepEnums::BUSINESS->value);
             $table->string('Business_name')->unique();
             $table->string('tax_id')->nullable()->unique();
             $table->string('Business_regno')->nullable()->unique();

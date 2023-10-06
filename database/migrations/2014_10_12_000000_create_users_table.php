@@ -16,6 +16,10 @@ return new class extends Migration
 
             $table->string('country_code')->nullable();
             $table->string('business_code')->nullable();
+            $table->foreign('business_code')->references('code')
+                ->on('businesses')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->string('current_location_code')->nullable();
             $table->string('type')->default("agent");
             $table->string('code')->nullable()->unique();
