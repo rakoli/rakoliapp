@@ -19,7 +19,7 @@ return new class extends Migration
                 ->on('countries')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->string('code');
+            $table->string('code')->unique();
             $table->string('type')->default('AGENT');
 //            $table->string('walkthrough_step')->nullable()->default(\App\Utils\Enums\WalkThroughStepEnums::BUSINESS->value);
             $table->string('Business_name')->unique();
