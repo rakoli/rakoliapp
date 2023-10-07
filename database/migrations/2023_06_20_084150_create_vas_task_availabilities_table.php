@@ -20,7 +20,7 @@ return new class extends Migration
                 ->onUpdate('cascade');
 
             $table->string('agent_code');
-            $table->foreign('agent_code')->references('Business_Code')
+            $table->foreign('agent_code')->references('code')
                 ->on('businesses')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');

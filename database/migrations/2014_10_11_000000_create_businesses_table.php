@@ -20,21 +20,21 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->string('code')->unique();
-            $table->string('type')->default('AGENT');
+            $table->string('type')->default(\App\Utils\Enums\BusinessTypeEnum::AGENCY);
 //            $table->string('walkthrough_step')->nullable()->default(\App\Utils\Enums\WalkThroughStepEnums::BUSINESS->value);
-            $table->string('Business_name')->unique();
-            $table->string('tax_id')->nullable()->unique();
-            $table->string('Business_regno')->nullable()->unique();
-            $table->string('Business_phone_number')->nullable()->unique();
-            $table->string('Business_email')->nullable()->unique();
-            $table->string("Business_Code")->nullable()->unique();
-            $table->string("Package_Code")->nullable();
-            $table->foreign('Package_Code')->references('code')
+            $table->boolean('is_verified')->default(0);
+            $table->string('business_name')->index();
+            $table->string('tax_id')->nullable()->index();
+            $table->string('business_regno')->nullable()->index();
+            $table->string('business_phone_number')->nullable()->index();
+            $table->string('business_email')->nullable()->index();
+            $table->string("package_code")->nullable();
+            $table->foreign('package_code')->references('code')
                 ->on('packages')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->string('Business_location')->nullable();
-            $table->string('status')->default(\App\Utils\Enums\BusinessStatusEnum::ACTIVE->value);//1- Active, 0 - Disabled, 2 - Inactive
+            $table->string('business_location')->nullable();
+            $table->string('status')->default(\App\Utils\Enums\BusinessStatusEnum::ACTIVE);//1- Active, 0 - Disabled, 2 - Inactive
             $table->string('subscription_code')->nullable();
             $table->timestamp('expiry_at')->nullable();
             $table->decimal('balance',12,2)->default(0); //Earning from referral and VAS

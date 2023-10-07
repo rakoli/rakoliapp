@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
 
             $table->string('business_code');
-            $table->foreign('business_code')->references('Business_Code')
+            $table->foreign('business_code')->references('code')
                 ->on('businesses')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
@@ -37,7 +37,7 @@ return new class extends Migration
             $table->decimal('cash_end',12,2);
             $table->string('status')->default('open');
 
-            $table->text('description')->nullable();
+            $table->text('description')->invisible()->nullable();
             $table->string('note')->nullable();
 
             $table->timestamps();

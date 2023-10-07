@@ -11,20 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('package_features', function (Blueprint $table) {
+        Schema::create('packages', function (Blueprint $table) {
             $table->id();
-            $table->string('package_code');
-            $table->foreign('package_code')->references('code')
-                ->on('packages')
+            $table->string('country_code');
+            $table->foreign('country_code')->references('code')
+                ->on('countries')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-
             $table->string('name');
+            $table->string('code')->unique();
+            $table->decimal('price', 12,2)->default('0.00');
+            $table->integer('trial_period_hours')->unsigned()->default(0);
+            $table->integer('package_interval_hours')->unsigned()->default(0);
+            $table->integer('grace_period_hours')->unsigned()->default(0);
             $table->text('description')->nullable();
-            $table->string('value');
-
-            $table->mediumInteger('sort_order')->unsigned()->default(0);
-
             $table->timestamps();
         });
     }
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('package_features');
+        Schema::dropIfExists('packages');
     }
 };

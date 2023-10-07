@@ -23,13 +23,13 @@ return new class extends Migration
                 ->cascadeOnDelete();
 
             $table->string('vas_provider_code'); // vas provider
-            $table->foreign('vas_provider_code')->references('Business_Code')
+            $table->foreign('vas_provider_code')->references('code')
                 ->on('businesses')
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
 
             $table->string('agent_code');
-            $table->foreign('agent_code')->references('Business_Code')
+            $table->foreign('agent_code')->references('code')
                 ->on('businesses')
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();

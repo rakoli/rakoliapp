@@ -21,20 +21,20 @@ return new class extends Migration
                 ->onUpdate('cascade');
 
             $table->string('buyer_code');
-            $table->foreign('buyer_code')->references('Business_Code')
+            $table->foreign('buyer_code')->references('code')
                 ->on('businesses')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
             $table->string('seller_code');
-            $table->foreign('seller_code')->references('Business_Code')
+            $table->foreign('seller_code')->references('code')
                 ->on('businesses')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
             $table->string('user_code');
-            $table->foreign('user_code')->references('Business_Code')
-                ->on('businesses')
+            $table->foreign('user_code')->references('code')
+                ->on('users')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 

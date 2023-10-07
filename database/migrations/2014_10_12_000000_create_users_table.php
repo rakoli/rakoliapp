@@ -13,34 +13,31 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-
             $table->string('country_code')->nullable();
             $table->string('business_code')->nullable();
             $table->foreign('business_code')->references('code')
                 ->on('businesses')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->string('current_location_code')->nullable();
-            $table->string('type')->default("agent");
+            $table->string('type')->default(\App\Utils\Enums\UserTypeEnum::AGENT);
             $table->string('code')->nullable()->unique();
             $table->string('name');
-            $table->string('phone_otp')->nullable();
-            $table->string('email_otp')->nullable();
             $table->string('phone');
             $table->string('email')->nullable()->unique();
-            $table->string('isVerified')->nullable();
-            $table->string("AuthToken")->nullable();
+            $table->boolean('is_super_agent')->default(false);
+            $table->integer('status')->default(\App\Utils\Enums\UserStatusEnum::active);
+            $table->timestamp('last_login')->nullable();
             $table->timestamp('phone_verified_at')->nullable();
             $table->timestamp('email_verified_at')->nullable();
-            $table->boolean('is_super_agent')->default(false);
-
-            $table->timestamp('last_login')->nullable();
-            $table->integer('status')->default(1);
+            $table->string('phone_otp')->nullable();
+            $table->string('email_otp')->nullable();
             $table->boolean('should_change_password')->default(false);
 
             $table->string('iddoc_type')->nullable();
             $table->string('iddoc_id')->nullable()->unique();
             $table->string('iddoc_path')->nullable();
+            $table->boolean('iddoc_verified')->default(0);
+
 
             $table->string('password');
             $table->rememberToken();
