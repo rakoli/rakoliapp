@@ -19,7 +19,7 @@ class KEFSPSeeder extends Seeder
 
             FinancialServiceProvider::create([
                 'country_code' => 'KE',
-                'name' => $fsp['name'],
+                'name' => strtoupper($fsp['name']),
                 'code' => generateCode($fsp['name'],"ke"),
             ]);
 
