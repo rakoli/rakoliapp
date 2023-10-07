@@ -21,8 +21,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('code')->unique();
             $table->decimal('price', 12,2)->default('0.00');
+            $table->string('price_currency');
             $table->integer('trial_period_hours')->unsigned()->default(0);
-            $table->integer('package_interval_hours')->unsigned()->default(0);
+            $table->integer('package_interval_days')->unsigned()->default(365);
             $table->integer('grace_period_hours')->unsigned()->default(0);
             $table->text('description')->nullable();
             $table->timestamps();
