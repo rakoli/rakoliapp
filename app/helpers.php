@@ -36,10 +36,9 @@ if (!function_exists('generateCode')) {
         $code = str($cleanName)->trim()->lower()->value();
         $randomNumbers = rand(10, 999);
         if($prefixText != ''){
-            $prefixText = cleanText($prefixText);
-            $prefixText .= "_";
+            $prefixText = str(cleanText($prefixText))->trim()->lower()->value()."_";
         }
-        $finalText = cleanText($prefixText.$code);
+        $finalText = $prefixText.$code;
         return $finalText."_".$randomNumbers;
     }
 }
