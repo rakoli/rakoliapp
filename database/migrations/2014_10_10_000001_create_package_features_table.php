@@ -21,8 +21,6 @@ return new class extends Migration
 
             $table->string('name');
             $table->text('description')->nullable();
-            $table->string('value');
-
             $table->mediumInteger('sort_order')->unsigned()->default(0);
 
             $table->timestamps();

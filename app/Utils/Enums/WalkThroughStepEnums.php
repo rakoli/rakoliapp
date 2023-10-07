@@ -14,7 +14,7 @@ enum WalkThroughStepEnums : string
     case COMPLETED = "completed";
 
 
-    public function discription()
+    public function description()
     {
         return match ($this){
 

@@ -14,18 +14,35 @@ return new class extends Migration
         Schema::create('locations', function (Blueprint $table) {
             $table->id();
             $table->string('business_code');
-            $table->foreign('business_code')->references('Business_Code')
+            $table->foreign('business_code')->references('code')
                 ->on('businesses')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->string('code')->unique();
-            $table->string('name');
+            $table->string('name')->index();
             $table->decimal('cash_balance',12,2)->default(0);
-            $table->string('region')->nullable(); // fk
-            $table->string('town')->nullable(); // fk
-            $table->string('area')->nullable();
+
+            $table->string('region_code')->nullable();
+            $table->foreign('region_code')->references('code')
+                ->on('regions')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
+
+            $table->string('town_code')->nullable();
+            $table->foreign('town_code')->references('code')
+                ->on('towns')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
+
+            $table->string('area_code')->nullable();
+            $table->foreign('area_code')->references('code')
+                ->on('areas')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
+
             $table->string('pic')->nullable();
-           // $table->string('address')->virtualAs()
+            $table->string('description')->nullable();
+
             $table->timestamps();
         });
     }

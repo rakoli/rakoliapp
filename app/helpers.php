@@ -28,3 +28,26 @@ if (!function_exists('settings')) {
         return $default;
     }
 }
+
+if (!function_exists('generateCode')) {
+    function generateCode(string $name, string $prefixText = ''): string
+    {
+        $cleanName = cleanText($name);
+        $code = str($cleanName)->trim()->lower()->value();
+        $randomNumbers = rand(10, 999);
+        if($prefixText != ''){
+            $prefixText = str(cleanText($prefixText))->trim()->lower()->value()."_";
+        }
+        $finalText = $prefixText.$code;
+        return $finalText."_".$randomNumbers;
+    }
+}
+
+if (!function_exists('cleanText')) {
+    function cleanText(string $text): string
+    {
+        $cleanText = preg_replace('/[^A-Za-z0-9]/', '', $text);
+        $text = str($cleanText)->trim()->lower()->value();
+        return $text;
+    }
+}

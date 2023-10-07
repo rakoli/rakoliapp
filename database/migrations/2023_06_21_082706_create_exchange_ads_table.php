@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
 
             $table->string('business_code');
-            $table->foreign('business_code')->references('Business_Code')
+            $table->foreign('business_code')->references('code')
                 ->on('businesses')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
@@ -29,10 +29,24 @@ return new class extends Migration
 
 
             $table->string('code')->unique();
-            $table->string('region')->nullable();
-            $table->string('town')->nullable();
-            $table->string('area')->nullable();
 
+            $table->string('region_code')->nullable();
+            $table->foreign('region_code')->references('code')
+                ->on('regions')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
+
+            $table->string('town_code')->nullable();
+            $table->foreign('town_code')->references('code')
+                ->on('towns')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
+
+            $table->string('area_code')->nullable();
+            $table->foreign('area_code')->references('code')
+                ->on('areas')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
 
             $table->decimal('min_amount', 12,2);
             $table->decimal('max_amount', 12,2);

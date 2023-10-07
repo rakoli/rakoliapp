@@ -12,12 +12,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-
         $this->call([
             SettingsSeeder::class,
             CountrySeeder::class,
-            UsersSeeder::class,
+            PackagesTableSeeder::class,
+            UsersTableSeeder::class,
+            TZFSPSeeder::class,
+            KEFSPSeeder::class,
+            TzRegionTableSeeder::class,
+            KeRegionTableSeeder::class,
         ]);
-
     }
 }

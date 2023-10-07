@@ -5,7 +5,8 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use Spatie\Permission\PermissionRegistrar;
 
-return new class extends Migration {
+class CreatePermissionTables extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -26,9 +27,7 @@ return new class extends Migration {
 
         Schema::create($tableNames['permissions'], function (Blueprint $table) {
             $table->bigIncrements('id'); // permission id
-            $table->string('type'); // enum <saas, vas, agent>       // For MySQL 8.0 use string('name', 125);
             $table->string('name');       // For MySQL 8.0 use string('name', 125);
-            $table->string('module');       // For MySQL 8.0 use string('name', 125);
             $table->string('guard_name'); // For MySQL 8.0 use string('guard_name', 125);
             $table->timestamps();
 
@@ -41,12 +40,6 @@ return new class extends Migration {
                 $table->unsignedBigInteger($columnNames['team_foreign_key'])->nullable();
                 $table->index($columnNames['team_foreign_key'], 'roles_team_foreign_key_index');
             }
-
-            $table->string('business_code');
-            $table->foreign('business_code')->references('Business_Code')
-                ->on('businesses')
-                ->onDelete('cascade');
-
             $table->string('name');       // For MySQL 8.0 use string('name', 125);
             $table->string('guard_name'); // For MySQL 8.0 use string('guard_name', 125);
             $table->timestamps();
@@ -145,4 +138,4 @@ return new class extends Migration {
         Schema::drop($tableNames['roles']);
         Schema::drop($tableNames['permissions']);
     }
-};
+}

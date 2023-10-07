@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
 
             $table->string('business_code');
-            $table->foreign('business_code')->references('Business_Code')
+            $table->foreign('business_code')->references('code')
                 ->on('businesses')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
@@ -30,7 +30,6 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
-
 
             $table->string('network_code');
             $table->foreign('network_code')->references('code')

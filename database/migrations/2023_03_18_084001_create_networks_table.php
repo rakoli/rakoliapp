@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('networks', function (Blueprint $table) {
             $table->id();
             $table->string('business_code');
-            $table->foreign('business_code')->references('Business_Code')
+            $table->foreign('business_code')->references('code')
                 ->on('businesses')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
@@ -32,13 +32,13 @@ return new class extends Migration
                 ->onUpdate('cascade');
 
             $table->string('code')->unique();
-            $table->string('agent_no');
+            $table->string('agent_no')->index();
             $table->string('name');
             $table->double('balance', 12 ,0);
             $table->string('desc')->nullable();
             $table->timestamps();
 
-            $table->unique(['location_code','fsp_code','agent_no'],'uniq_agen');
+            $table->unique(['location_code','fsp_code','agent_no'],'uniq_agent');
         });
     }
 

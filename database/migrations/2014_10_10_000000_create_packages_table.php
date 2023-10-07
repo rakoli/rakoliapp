@@ -18,16 +18,14 @@ return new class extends Migration
                 ->on('countries')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->string('name')->fulltext();
+            $table->string('name');
             $table->string('code')->unique();
             $table->decimal('price', 12,2)->default('0.00');
-            $table->decimal('signup_fee', 12,2)->default('0.00');
-            $table->integer('trial_period')->unsigned()->default(0);
-            $table->string('trial_interval')->default('day');
-            $table->smallInteger('invoice_period')->unsigned()->default(0);
-            $table->string('invoice_interval')->default('month');
-            $table->smallInteger('grace_period')->unsigned()->default(0);
-            $table->string('grace_interval')->default('day');
+            $table->string('price_currency');
+            $table->integer('trial_period_hours')->unsigned()->default(0);
+            $table->integer('package_interval_days')->unsigned()->default(365);
+            $table->integer('grace_period_hours')->unsigned()->default(0);
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
