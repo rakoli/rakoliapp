@@ -7,5 +7,5 @@ enum BusinessTypeEnum : string
 
     case VAS = "vas";
 
-    case AGENCY = "agency";
+    case AGENCY = "agent";
 }
