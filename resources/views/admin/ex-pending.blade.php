@@ -7,7 +7,7 @@
                 <div class="d-flex align-items-center position-relative my-1">
                     <i class="ki-outline ki-magnifier fs-3 position-absolute ms-5"></i>
                     <input type="text" data-kt-customer-table-filter="search"
-                        class="form-control form-control-solid w-250px ps-12" placeholder="Search Users" />
+                        class="form-control form-control-solid w-250px ps-12" placeholder="Search Ads" />
                 </div>
             </div>
             <div class="card-toolbar">
@@ -72,7 +72,7 @@
                         data-bs-target="#kt_customers_export_modal">
                         <i class="ki-outline ki-exit-up fs-2"></i>Export</button>
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                        data-bs-target="#kt_modal_add_customer">Add Customer</button>
+                        data-bs-target="#kt_modal_add_customer">Add ad</button>
                 </div>
                 <div class="d-flex justify-content-end align-items-center d-none" data-kt-customer-table-toolbar="selected">
                     <div class="fw-bold me-5">
@@ -86,8 +86,6 @@
         <div class="card-body pt-0">
             <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_customers_table">
                 <thead>
-
-
                     <tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
                         <th class="w-10px pe-2">
                             <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
@@ -95,59 +93,48 @@
                                     data-kt-check-target="#kt_customers_table .form-check-input" value="1" />
                             </div>
                         </th>
-                        <th class="min-w-125px">Name</th>
-                        <th class="min-w-125px">Email</th>
-                        <th class="min-w-125px">Phone</th>
-                        <th class="min-w-125px">Country Code</th>
+                        <th class="min-w-125px">Exchange code</th>
+                        <th class="min-w-125px">Buyer Code</th>
+                        <th class="min-w-125px">Seller Code</th>
+                        <th class="min-w-125px">User Code</th>
+                        <th class="min-w-125px">Amount</th>
                         <th class="min-w-125px">Status</th>
                         <th class="text-end min-w-70px">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="fw-semibold text-gray-600">
-                    @foreach ($users as $user)
-                        <tr>
-                            <td>
-                                <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                    <input class="form-check-input" type="checkbox" value="1" />
-                                </div>
-                            </td>
-                            <td>
-                                <a href="/dashboard/view/user-details?id={{ $user->id }}"
-                                    class="text-gray-800 text-hover-primary mb-1">{{ $user->name }}</a>
-                            </td>
-                            <td>
-                                <a href="/dashboard/view/user-details?id={{ $user->id }}"
-                                    class="text-gray-600 text-hover-primary mb-1">{{ $user->email }}</a>
-                            </td>
-                            <td>
-                                <a href="/dashboard/view/user-details?id={{ $user->id }}"
-                                    class="text-gray-600 text-hover-primary mb-1">{{ $user->phone }}</a>
-                            </td>
-                            <td>
-                                <a href="/dashboard/view/user-details?id={{ $user->id }}"
-                                    class="text-gray-600 text-hover-primary mb-1">{{ $user->country_code }}</a>
-                            </td>
-                            <td>{{ $user->type }}</td>
 
-                            <td class="text-end">
-                                <a href="/dashboard/view/user-details?id={{ $user->id }}"
-                                    class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
-                                    data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
-                                    <i class="ki-outline ki-down fs-5 ms-1"></i></a>
-                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
-                                    data-kt-menu="true">
+                    <tr>
+                        <td>
+                            <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                <input class="form-check-input" type="checkbox" value="1" />
+                            </div>
+                        </td>
+
+                        <td>DFKJF</td>
+                        <td>DSFJHFD</td>
+                        <td>GHGFGK</td>
+                        <td>DLFHBS</td>
+                        <td>230000</td>
+                        <td>Pending</td>
+                        <td>{{ date('Y-m-d H:i:s') }}</td>
+                        <td>{{ date('Y-m-d H:i:s') }}</td>
+
+                        <td class="text-end">
+                            <a href="#" class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
+                                data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
+                                <i class="ki-outline ki-down fs-5 ms-1"></i></a>
+                            <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
+                                data-kt-menu="true">
+                                <div class="menu-item px-3">
                                     <div class="menu-item px-3">
-                                        <a href="/dashboard/view/user-details?id={{ $user->id }}"
-                                            class="menu-link px-3">View</a>
-                                    </div>
-                                    <div class="menu-item px-3">
-                                        <a href="/dashboard/view/user-disable?id={{ $user->id }}"
-                                            class="menu-link px-3" data-kt-customer-table-filter="delete_row">Disable</a>
+                                        <a href="#" class="menu-link px-3"
+                                            data-kt-customer-table-filter="delete_row">Disable</a>
                                     </div>
                                 </div>
-                            </td>
-                        </tr>
-                    @endforeach
+                        </td>
+                    </tr>
+
                 </tbody>
             </table>
         </div>
