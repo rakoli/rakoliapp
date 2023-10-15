@@ -170,6 +170,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\GlobalFunctionServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
+        Bugsnag\BugsnagLaravel\BugsnagServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -184,6 +185,7 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
+        'Bugsnag' => Bugsnag\BugsnagLaravel\Facades\Bugsnag::class,
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 

@@ -8,9 +8,10 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AuthController;
 
+Route::get('testing', [\App\Http\Controllers\TestController::class, 'testing']);
+
 // Default routes
 Auth::routes();
-
 
 Route::get('/', function () {
     return view('auth.login');
