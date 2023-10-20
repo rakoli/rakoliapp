@@ -23,7 +23,8 @@ Route::post('/change-language', [LanguageController::class, 'changeLanguage']);
 // This route is necessary because we want to create custom session keys
 Route::post('/authenticate', [AuthController::class, 'loginattempty']);
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('about', [App\Http\Controllers\HomeController::class, 'about'])->name('about');
 
 include('custom-admin.php');
 include('custom-agent.php');
