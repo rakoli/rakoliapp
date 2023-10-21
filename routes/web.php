@@ -5,7 +5,6 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\LanguageController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AuthController;
 
 Route::get('testing', [\App\Http\Controllers\TestController::class, 'testing']);

@@ -1,7 +1,9 @@
-@extends('layouts.app')
+@extends('layouts.auth_basic')
 
-@section('content')
-<div class="container">
+@section('title', 'Confirm')
+
+@section('body')
+
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
@@ -20,7 +22,7 @@
                                 <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
 
                                 @error('password')
-                                    <span class="invalid-feedback" role="alert">
+                                <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
@@ -45,5 +47,9 @@
             </div>
         </div>
     </div>
-</div>
+
+@endsection
+
+@section('js')
+
 @endsection

@@ -1,7 +1,9 @@
-@extends('layouts.app')
+@extends('layouts.auth_basic')
 
-@section('content')
-<div class="container">
+@section('title', 'Verify')
+
+@section('body')
+
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
@@ -24,5 +26,9 @@
             </div>
         </div>
     </div>
-</div>
+
+@endsection
+
+@section('js')
+
 @endsection
