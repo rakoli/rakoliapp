@@ -14,7 +14,7 @@
             <!--begin::Subtitle-->
             <div class="text-gray-500 fw-semibold fs-6">
                 {{ $translator("Have an account?", "Umeshajiunga?") }}
-                <a href="/" class="link-primary fw-bold"> {{ $translator("Sign in", "Ingia") }}  </a>
+                <a href="{{route('login')}}" class="link-primary fw-bold"> {{ $translator("Sign in", "Ingia") }}  </a>
             </div>
             <!--end::Subtitle=-->
         </div>
@@ -119,7 +119,7 @@
         <!--end::Submit button-->
         <!--begin::Sign up-->
         <div class="text-gray-500 text-center fw-semibold fs-6">{{ $translator("Already have an Account?", "Tayari una akaunti?") }}
-            <a href="/" class="link-primary fw-semibold">{{ $translator("Sign in", "Ingia") }}</a></div>
+            <a href="{{route('login')}}" class="link-primary fw-semibold">{{ $translator("Sign in", "Ingia") }}</a></div>
         <!--end::Sign up-->
     </form>
     <!--end::Form-->
