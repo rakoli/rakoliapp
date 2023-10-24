@@ -11,6 +11,7 @@ Route::get('testing', [\App\Http\Controllers\TestController::class, 'testing']);
 
 // Default routes
 Auth::routes();
+Route::get('registration/complete', [App\Http\Controllers\HomeController::class, 'registrationComplete'])->name('registration.complete');
 
 Route::get('/', function () {
     return view('auth.login');

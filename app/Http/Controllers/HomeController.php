@@ -31,4 +31,9 @@ class HomeController extends Controller
         dd('about');
         return view('dashboard.home');
     }
+
+    public function registrationComplete()
+    {
+        return view('auth.registration_complete');
+    }
 }
