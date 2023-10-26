@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CustomAgentDashboardController;
 
 // All get methods will be loaded with this route
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth','onlyagent'])->group(function () {
     Route::group(['prefix' => 'dashboard', 'as' => 'dashboard'], function () {
 
         Route::get('/', function () {

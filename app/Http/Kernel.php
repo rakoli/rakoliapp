@@ -66,6 +66,9 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'checkViewParameter' => \App\Http\Middleware\CheckViewParameter::class,
+        'onlyadmin' => \App\Http\Middleware\OnlyAdminMiddleware::class,
+        'onlyvas' => \App\Http\Middleware\OnlyVASMiddleware::class,
+        'onlyagent' => \App\Http\Middleware\OnlyAgentMiddleware::class,
     ];
 
     protected function bootstrappers()
