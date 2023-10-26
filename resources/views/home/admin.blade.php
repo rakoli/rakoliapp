@@ -1,5 +1,9 @@
 @section('title', "Admin - Dashboard")
 
+@section('aside_background')
+    style="background-color: #570b05"
+@endsection
+
 @section('content')
 
     <!--begin::Container-->

@@ -35,9 +35,12 @@
         <div class="page d-flex flex-row flex-column-fluid">
 
             <!--begin::Aside-->
-            <div id="kt_aside" class="aside overflow-visible pb-5 pt-5 pt-lg-0" data-kt-drawer="true" data-kt-drawer-name="aside" data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'80px', '300px': '100px'}" data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_aside_mobile_toggle">
+            <div id="kt_aside" class="aside overflow-visible pb-5 pt-5 pt-lg-0" data-kt-drawer="true" data-kt-drawer-name="aside"
+                 data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true"
+                 data-kt-drawer-width="{default:'80px', '300px': '100px'}" data-kt-drawer-direction="start"
+                 data-kt-drawer-toggle="#kt_aside_mobile_toggle" @yield('aside_background')>
                 <!--begin::Brand-->
-                <div class="aside-logo py-8" id="kt_aside_logo">
+                <div class="aside-logo py-8" id="kt_aside_logo" @yield('aside_background')>
                     <!--begin::Logo-->
                     <a href="{{route('home')}}" class="d-flex align-items-center">
                         <img alt="Logo" src="{{asset('favicon.ico')}}" class="h-45px logo" />

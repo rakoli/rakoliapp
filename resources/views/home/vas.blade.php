@@ -1,5 +1,10 @@
 @section('title', "VAS - Dashboard")
 
+@section('aside_background')
+
+@endsection
+
+
 @section('content')
 
     <!--begin::Container-->

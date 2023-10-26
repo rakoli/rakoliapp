@@ -1,5 +1,9 @@
 @section('title', "Dashboard")
 
+@section('aside_background')
+    style="background-color: #15302e"
+@endsection
+
 @section('content')
 
     <!--begin::Container-->
