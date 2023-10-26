@@ -18,7 +18,10 @@ Route::post('/authenticate', [AuthController::class, 'loginattempty']); // This 
 
 
 //REGISTRATION ROUTES
-Route::get('registration/complete', [App\Http\Controllers\HomeController::class, 'registrationComplete'])->name('registration.complete');
+Route::get('register/vas', [App\Http\Controllers\Auth\RegisterAgentController::class, 'showRegistrationForm'])->name('register.vas');
+Route::post('register/vas/submit', [App\Http\Controllers\Auth\RegisterAgentController::class, 'register'])->name('register.vas.submit');
+Route::get('registration/agent', [App\Http\Controllers\HomeController::class, 'registrationAgent'])->name('registration.agent');
+Route::get('registration/vas', [App\Http\Controllers\HomeController::class, 'registrationVas'])->name('registration.vas');
 
 
 //LANGUAGE SWITCHER

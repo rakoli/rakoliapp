@@ -1,11 +1,16 @@
 @extends('layouts.auth_basic')
 
-@section('title', 'Agent Registraion')
+@section('title', 'VAS Provider Registration')
+
+@section('aside_color', '#242337')
+
+@section('banner_image', '')
+{{-- Filename in "assets/media/misc/" --}}
 
 @section('body')
 
     <!--begin::Form-->
-    <form class="form w-100" novalidate="novalidate" id="kt_sign_up_form" data-kt-redirect-url="{{route('registration.agent')}}" action="{{route('register')}}">
+    <form class="form w-100" novalidate="novalidate" id="kt_sign_up_form" data-kt-redirect-url="{{route('registration.vas')}}" action="{{route('register.vas.submit')}}" method="post">
         <!--begin::Heading-->
         <div class="text-center mb-11">
             <!--begin::Title-->

@@ -26,8 +26,15 @@ class HomeController extends Controller
         return view('dashboard.home');
     }
 
-    public function registrationComplete()
+    public function registrationAgent()
     {
-        return view('auth.registration_complete');
+
+        return view('auth.registration_agent.index');
+    }
+
+    public function registrationVas()
+    {
+
+        return view('auth.registration_vas.index');
     }
 }

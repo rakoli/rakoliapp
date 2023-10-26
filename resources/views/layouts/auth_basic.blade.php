@@ -1,23 +1,5 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+@include('layouts.components.header_auth')
 
-<!--begin::Head-->
-<head>
-    <title>@yield('title', 'Auth') - {{env('APP_NAME')}}</title>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="shortcut icon" href="{{asset('favicon.ico')}}" />
-    <!--begin::Fonts(mandatory for all pages)-->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
-    <!--end::Fonts-->
-    <!--begin::Global Stylesheets Bundle(mandatory for all pages)-->
-    <link href="{{asset('assets/plugins/global/plugins.bundle.css')}}" rel="stylesheet" type="text/css" />
-    <link href="{{asset('assets/css/style.bundle.css')}}" rel="stylesheet" type="text/css" />
-    <!--end::Global Stylesheets Bundle-->
-    <script>// Frame-busting to prevent site from being loaded within a frame without permission (click-jacking) if (window.top != window.self) { window.top.location.replace(window.self.location.href); }</script>
-</head>
-<!--end::Head-->
 <!--begin::Body-->
 <body id="kt_body" class="auth-bg">
 <!--begin::Theme mode setup on page load-->
@@ -90,7 +72,7 @@
         <!--end::Body-->
 
         <!--begin::Aside-->
-        <div class="d-flex flex-lg-row-fluid w-lg-50 bgi-size-cover bgi-position-center order-1 order-lg-2" style="background-color: #409992">
+        <div class="d-flex flex-lg-row-fluid w-lg-50 bgi-size-cover bgi-position-center order-1 order-lg-2" style="background-color: @yield('aside_color','#409992')">
             <!--begin::Content-->
             <div class="d-flex flex-column flex-center py-7 py-lg-15 px-5 px-md-15 w-100">
                 <!--begin::Logo-->
@@ -99,8 +81,11 @@
                 </a>
                 <!--end::Logo-->
                 <!--begin::Image-->
-                <img class="d-none d-lg-block mx-auto w-275px w-md-50 w-xl-500px mb-10 mb-lg-20" src="{{asset('assets/media/misc/banner.svg')}}" alt="" />
+                <img class="d-none d-lg-block mx-auto w-275px w-md-50 w-xl-500px mb-10 mb-lg-20" src="{{asset('assets/media/misc/')}}@yield('banner_image','/banner.svg')" alt="" />
                 <!--end::Image-->
+                <!--begin::Title-->
+                <h1 class="d-none d-lg-block text-white fs-2qx fw-bolder text-center mb-2">@yield('title', 'Auth')</h1>
+                <!--end::Title-->
             </div>
             <!--end::Content-->
         </div>

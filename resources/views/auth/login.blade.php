@@ -1,6 +1,6 @@
 @extends('layouts.auth_basic')
 
-@section('title', 'Login')
+@section('title', 'Account Login')
 
 @section('body')
 
@@ -58,6 +58,14 @@
         </div>
         <!--end::Submit button-->
 
+        <!--begin::Sign up-->
+        <div class="text-gray-500 text-center fw-semibold fs-6">{{ $translator("Not a Member yet?","Bado hujajisajili?")}}
+            <a href="{{route('register')}}" class="link-primary">{{ $translator("Sign Up","Jiunge")}}</a></div>
+        <!--end::Sign up-->
+        <!--begin::Sign up-->
+        <div class="text-gray-500 text-center fw-semibold fs-6">{{ $translator("Need VAS Provider Account? ","Unahitaji Akaunti ya VAS Provider?")}}
+            <a href="{{route('register.vas')}}" class="link-primary">{{ $translator("Register VAS Account","Sajili Akaunt ya VAS")}}</a></div>
+        <!--end::Sign up-->
 
     </form>
     <!--end::Form-->

@@ -1,23 +1,7 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+@section('title', 'Agent Registration')
 
-<!--begin::Head-->
-<head>
-    <title>Complete Registration - {{env('APP_NAME')}}</title>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="shortcut icon" href="{{asset('favicon.ico')}}" />
-    <!--begin::Fonts(mandatory for all pages)-->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
-    <!--end::Fonts-->
-    <!--begin::Global Stylesheets Bundle(mandatory for all pages)-->
-    <link href="{{asset('assets/plugins/global/plugins.bundle.css')}}" rel="stylesheet" type="text/css" />
-    <link href="{{asset('assets/css/style.bundle.css')}}" rel="stylesheet" type="text/css" />
-    <!--end::Global Stylesheets Bundle-->
-    <script>// Frame-busting to prevent site from being loaded within a frame without permission (click-jacking) if (window.top != window.self) { window.top.location.replace(window.self.location.href); }</script>
-</head>
-<!--end::Head-->
+@include('layouts.components.header_auth')
+
 <!--begin::Body-->
 <body id="kt_body" class="auth-bg">
 <!--begin::Theme mode setup on page load-->
@@ -156,16 +140,16 @@
                     <!--begin::Form-->
                     <form class="my-auto pb-5" novalidate="novalidate" id="kt_create_account_form">
                         <!--begin::Step 1-->
-                        @include('auth.registration_complete.verification')
+                        @include('auth.registration_agent.verification')
                         <!--end::Step 1-->
                         <!--begin::Step 2-->
-                        @include('auth.registration_complete.business_details')
+                        @include('auth.registration_agent.business_details')
                         <!--end::Step 2-->
                         <!--begin::Step 3-->
-                        @include('auth.registration_complete.subscription')
+                        @include('auth.registration_agent.subscription')
                         <!--end::Step 3-->
                         <!--begin::Step 4-->
-                        @include('auth.registration_complete.complete')
+                        @include('auth.registration_agent.complete')
                         <!--end::Step 4-->
                         <!--begin::Actions-->
                         <div class="d-flex flex-stack pt-15">
@@ -174,14 +158,18 @@
                                     <i class="ki-outline ki-arrow-left fs-4 me-1"></i>Previous</button>
                             </div>
                             <div>
+
                                 <button type="submit" class="btn btn-lg btn-primary" data-kt-stepper-action="submit">
 											<span class="indicator-label">{{ $translator("Submit","Nawasilisha")}}
 											<i class="ki-outline ki-arrow-right fs-4 ms-2"></i></span>
                                     <span class="indicator-progress">{{ $translator("Please wait...","Tafadhali subiri...")}}
 											<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                                 </button>
-{{--                                <button type="button" class="btn btn-lg btn-primary" data-kt-stepper-action="next">Continue--}}
-{{--                                    <i class="ki-outline ki-arrow-right fs-4 ms-1"></i></button>--}}
+
+                                <button type="button" class="btn btn-lg btn-primary" data-kt-stepper-action="next">{{ $translator("Continue","Endelea")}}
+                                    <i class="ki-outline ki-arrow-right fs-4 ms-1"></i>
+                                </button>
+
                             </div>
                         </div>
                         <!--end::Actions-->
