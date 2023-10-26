@@ -9,23 +9,23 @@ use App\Http\Controllers\AuthController;
 
 Route::get('testing', [\App\Http\Controllers\TestController::class, 'testing']);
 
-// Default routes
+//BASIC ROUTES
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
+Route::get('home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Auth::routes();
+Route::get('logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
+Route::post('/authenticate', [AuthController::class, 'loginattempty']); // This route is necessary because we want to create custom session keys
+
+
+//REGISTRATION ROUTES
 Route::get('registration/complete', [App\Http\Controllers\HomeController::class, 'registrationComplete'])->name('registration.complete');
 
-Route::get('/', function () {
-    return view('auth.login');
-});
 
-// This route is used for language
+//LANGUAGE SWITCHER
 Route::post('/change-language', [LanguageController::class, 'changeLanguage']);
 
-// This route is necessary because we want to create custom session keys
-Route::post('/authenticate', [AuthController::class, 'loginattempty']);
 
-Route::get('home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('about', [App\Http\Controllers\HomeController::class, 'about'])->name('about');
-
+//USERTYPE SPECIFIC ROUTES
 include('custom-admin.php');
 include('custom-agent.php');
 include('custom-vas.php');

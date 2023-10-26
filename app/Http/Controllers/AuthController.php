@@ -47,9 +47,9 @@ class AuthController extends Controller
             Session::put('current_location_code', $user->current_location_code);
             Session::put('type', $user->type);
             Session::put('code', $user->code);
-            Session::put('name', $user->name); 
+            Session::put('name', $user->name);
             Session::put('phone', $user->phone);
-            Session::put('email', $user->email); 
+            Session::put('email', $user->email);
             Session::put('is_super_agent', $user->is_super_agent);
             Session::put('last_login', $user->last_login);
             Session::put('status', $user->status);
@@ -84,7 +84,7 @@ class AuthController extends Controller
     {
         Auth::logout();
         Session::flush();
-        return redirect('/');
+        return redirect()->route('home');
     }
 
     public function checkuser()

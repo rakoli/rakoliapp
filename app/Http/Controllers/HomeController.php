@@ -26,12 +26,6 @@ class HomeController extends Controller
         return view('dashboard.home');
     }
 
-    public function about()
-    {
-        dd('about');
-        return view('dashboard.home');
-    }
-
     public function registrationComplete()
     {
         return view('auth.registration_complete');

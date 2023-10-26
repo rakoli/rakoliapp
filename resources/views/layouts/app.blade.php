@@ -888,16 +888,6 @@
                             <a href="#" class="text-gray-800 text-hover-primary">{{env('APP_DEV', env('APP_NAME'))}}</a>
                         </div>
                         <!--end::Copyright-->
-                        <!--begin::Menu-->
-                        <ul class="menu menu-gray-600 menu-hover-primary fw-semibold order-1">
-                            <li class="menu-item">
-                                <a href="{{route('about')}}" target="_blank" class="menu-link px-2">About</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="{{env('APP_SUPPORT_URL')}}" target="_blank" class="menu-link px-2">Support</a>
-                            </li>
-                        </ul>
-                        <!--end::Menu-->
                     </div>
                     <!--end::Container-->
                 </div>

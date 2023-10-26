@@ -12,5 +12,6 @@ class TestController extends Controller
     {
 
 
+        return view('frontend.contactus');
     }
 }

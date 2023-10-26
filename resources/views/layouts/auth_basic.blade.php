@@ -82,13 +82,8 @@
                     <!--end::Menu-->
                 </div>
                 <!--end::Languages-->
-                <!--begin::Links-->
-                <div class="d-flex fw-semibold text-primary fs-base gap-5">
-                    <a href="/welcome/terms" target="_blank">{{ $translator("Terms", "Masharti") }}</a>
-                    <a href="/welcome/plans" target="_blank">{{ $translator("Plans", "Mipango") }}</a>
-                    <a href="/welcome/contact" target="_blank">{{ $translator("Contact Us", "Wasiliana Nasi") }}</a>
-                </div>
-                <!--end::Links-->
+
+
             </div>
             <!--end::Footer-->
         </div>
