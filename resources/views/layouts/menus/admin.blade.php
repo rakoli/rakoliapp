@@ -1,22 +1,26 @@
-<div data-kt-menu-placement="right-start" class="menu-item py-2">
+<!-- Home -->
+<div class="menu-item py-2">
     <!--begin:Menu link-->
-    <span class="menu-link menu-center">
+    <a class="menu-link menu-center" href="{{route('home')}}" target="_self">
         <span class="menu-icon me-0">
             <i class="ki-outline ki-home-2 fs-2x"></i>
         </span>
-
-        <span class="menu-title"> <a class="menu-link" href="dashboard">{{ $translator('Home', 'Nyumbani') }} </a></span>
-
-    </span>
+        <span class="menu-title">
+            {{ $translator('Home', 'Nyumbani') }}
+        </span>
+    </a>
     <!--end:Menu link-->
 </div>
+<!-- End: Home -->
+
+<!-- Business and User Management -->
 <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2">
     <!--begin:Menu link-->
     <span class="menu-link menu-center">
         <span class="menu-icon me-0">
-            <i class="ki-outline ki-home-2 fs-2x"></i>
+            <i class="ki-outline ki-profile-user fs-2x"></i>
         </span>
-        <span class="menu-title"> {{ $translator('Users', 'Watumiaji') }}</span>
+        <span class="menu-title"> {{ $translator('Business', 'Biashara') }}</span>
     </span>
     <!--end:Menu link-->
     <!--begin:Menu sub-->
@@ -25,7 +29,7 @@
         <div class="menu-item">
             <!--begin:Menu content-->
             <div class="menu-content">
-                <span class="menu-section fs-5 fw-bolder ps-1 py-1"> {{ $translator('Users', 'Watumiaji') }}</span>
+                <span class="menu-section fs-5 fw-bolder ps-1 py-1"> {{ $translator('Business and User Management', 'Ratibu Biashara na Watumiaji') }}</span>
             </div>
             <!--end:Menu content-->
         </div>
@@ -40,25 +44,14 @@
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">Create User</span>
+                    <span class="menu-title">List Business</span>
                 </a>
-                <a class="menu-link" href="/dashboard/admin/users">
+
+                <a class="menu-link" href="/dashboard/admin/create-user">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">List Users</span>
-                </a>
-                <a class="menu-link" href="/dashboard/admin/roles-user">
-                    <span class="menu-bullet">
-                        <span class="bullet bullet-dot"></span>
-                    </span>
-                    <span class="menu-title">Roles</span>
-                </a>
-                <a class="menu-link" href="/dashboard/admin/permissions">
-                    <span class="menu-bullet">
-                        <span class="bullet bullet-dot"></span>
-                    </span>
-                    <span class="menu-title">User permissions</span>
                 </a>
             </div>
             <!--end:Menu sub-->
@@ -68,12 +61,13 @@
     </div>
     <!--end:Menu sub-->
 </div>
+
 <!-- Exchange -->
 <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2">
     <!--begin:Menu link-->
     <span class="menu-link menu-center">
         <span class="menu-icon me-0">
-            <i class="ki-outline ki-home-2 fs-2x"></i>
+            <i class="ki-outline ki-share fs-2x"></i>
         </span>
         <span class="menu-title">
             {{ $translator('Exchange', 'Mabadilishano') }}
@@ -87,7 +81,7 @@
             <!--begin:Menu content-->
             <div class="menu-content">
                 <span class="menu-section fs-5 fw-bolder ps-1 py-1"
-                    data-kt-menu-translation="English|Swahili">{{ $translator('Exchange', 'Mabadilishano') }}</span>
+                    >{{ $translator('Exchange', 'Mabadilishano') }}</span>
             </div>
             <!--end:Menu content-->
         </div>
@@ -97,14 +91,30 @@
 
             <!--begin:Menu sub-->
             <div class="menu-sub menu-sub-accordion">
-                <a class="menu-link" href="/dashboard/admin/ads"
-                    data-kt-menu-translation="English|Swahili">{{ $translator('Ads', 'Matangazo') }}</a>
-                <a class="menu-link" href="/dashboard/admin/ex-pending"
-                    data-kt-menu-translation="English|Swahili">{{ $translator('Pending Exchanges', 'Mabadilishano yanayosubiri') }}</a>
-                <a class="menu-link" href="/dashboard/admin/transactions"
-                    data-kt-menu-translation="English|Swahili">{{ $translator('Transaction', 'Biashara') }}</a>
-                <a class="menu-link" href="/dashboard/admin/security"
-                    data-kt-menu-translation="English|Swahili">{{ $translator('Security', 'Usalama') }}</a>
+                <a class="menu-link" href="/dashboard/admin/ads">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ $translator('Listing', 'Orodha') }}</span>
+                </a>
+                <a class="menu-link" href="/dashboard/admin/ads">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ $translator('Ads', 'Matangazo') }}</span>
+                </a>
+                <a class="menu-link" href="/dashboard/admin/transactions">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ $translator('Transaction', 'Miamala') }}</span>
+                </a>
+                <a class="menu-link" href="/dashboard/admin/security">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ $translator('Security', 'Usalama') }}</span>
+                </a>
             </div>
             <!--end:Menu sub-->
         </div>
@@ -118,7 +128,7 @@
     <!--begin:Menu link-->
     <span class="menu-link menu-center">
         <span class="menu-icon me-0">
-            <i class="ki-outline ki-home-2 fs-2x"></i>
+            <i class="ki-outline ki-technology fs-2x"></i>
         </span>
         <span class="menu-title">
             {{ $translator('VAS', 'VAS') }}
@@ -131,8 +141,7 @@
         <div class="menu-item">
             <!--begin:Menu content-->
             <div class="menu-content">
-                <span class="menu-section fs-5 fw-bolder ps-1 py-1"
-                    data-kt-menu-translation="English|Swahili">{{ $translator('VAS', 'VAS') }}</span>
+                <span class="menu-section fs-5 fw-bolder ps-1 py-1">{{ $translator('VAS Management', 'Ratibu VAS') }}</span>
             </div>
             <!--end:Menu content-->
         </div>
@@ -142,12 +151,24 @@
 
             <!--begin:Menu sub-->
             <div class="menu-sub menu-sub-accordion">
-                <a class="menu-link" href="/dashboard/admin/vas-available"
-                    data-kt-menu-translation="English|Swahili">{{ $translator('Available', 'Inayopatikana') }}</a>
-                <a class="menu-link" href="/dashboard/admin/vas-ongoing"
-                    data-kt-menu-translation="English|Swahili">{{ $translator('Ongoing', 'Inayoendelea') }}</a>
-                <a class="menu-link" href="/dashboard/admin/vas-completed"
-                    data-kt-menu-translation="English|Swahili">{{ $translator('Completed', 'Iliyomekamilika') }}</a>
+                <a class="menu-link" href="/dashboard/admin/vas-available">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ $translator('Listing', 'Orodha') }}</span>
+                </a>
+                <a class="menu-link" href="/dashboard/admin/vas-ongoing">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ $translator('Ongoing', 'Zinazoendelea') }}</span>
+                </a>
+                <a class="menu-link" href="/dashboard/admin/vas-completed">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ $translator('Configuration', 'Mpangilio') }}</span>
+                </a>
             </div>
             <!--end:Menu sub-->
         </div>
@@ -161,7 +182,7 @@
     <!--begin:Menu link-->
     <span class="menu-link menu-center">
         <span class="menu-icon me-0">
-            <i class="ki-outline ki-home-2 fs-2x"></i>
+            <i class="ki-outline ki-tag fs-2x"></i>
         </span>
         <span class="menu-title">
             {{ $translator('Income', 'Mapato') }}
@@ -174,8 +195,7 @@
         <div class="menu-item">
             <!--begin:Menu content-->
             <div class="menu-content">
-                <span class="menu-section fs-5 fw-bolder ps-1 py-1"
-                    data-kt-menu-translation="English|Swahili">{{ $translator('Income', 'Mapato') }}</span>
+                <span class="menu-section fs-5 fw-bolder ps-1 py-1">{{ $translator('Income', 'Mapato') }}</span>
             </div>
             <!--end:Menu content-->
         </div>
@@ -185,12 +205,24 @@
 
             <!--begin:Menu sub-->
             <div class="menu-sub menu-sub-accordion">
-                <a class="menu-link" href="/dashboard/admin/payments"
-                    data-kt-menu-translation="English|Swahili">{{ $translator('Payments (VAS)', 'Malipo (VAS)') }}</a>
-                <a class="menu-link" href="/dashboard/admin/subscriptions"
-                    data-kt-menu-translation="English|Swahili">{{ $translator('Subscriptions', 'Usimamizi wa Subscriptions na Bei') }}</a>
-                <a class="menu-link" href="/dashboard/admin/ads"
-                    data-kt-menu-translation="English|Swahili">{{ $translator('Ads', 'Matangazo') }}</a>
+                <a class="menu-link" href="/dashboard/admin/payments">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ $translator('Listing', 'Orodha') }}</span>
+                </a>
+                <a class="menu-link" href="/dashboard/admin/subscriptions">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ $translator('Subscription Pricing', 'Bei za Usajili') }}</span>
+                </a>
+                <a class="menu-link" href="/dashboard/admin/ads">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ $translator('Ads', 'Matangazo') }}</span>
+                </a>
             </div>
             <!--end:Menu sub-->
         </div>
@@ -205,7 +237,7 @@
     <!--begin:Menu link-->
     <span class="menu-link menu-center">
         <span class="menu-icon me-0">
-            <i class="ki-outline ki-home-2 fs-2x"></i>
+            <i class="ki-outline ki-setting-2 fs-2x"></i>
         </span>
         <span class="menu-title">
             {{ $translator('System', 'Mfumo') }}
@@ -218,8 +250,7 @@
         <div class="menu-item">
             <!--begin:Menu content-->
             <div class="menu-content">
-                <span class="menu-section fs-5 fw-bolder ps-1 py-1"
-                    data-kt-menu-translation="English|Swahili">{{ $translator('System', 'Mfumo') }}</span>
+                <span class="menu-section fs-5 fw-bolder ps-1 py-1">{{ $translator('System', 'Mfumo') }}</span>
             </div>
             <!--end:Menu content-->
         </div>
@@ -229,14 +260,24 @@
 
             <!--begin:Menu sub-->
             <div class="menu-sub menu-sub-accordion">
-                <a class="menu-link" href="/dashboard/admin/api"
-                    data-kt-menu-translation="English|Swahili">{{ $translator('API', 'API') }}</a>
-                <a class="menu-link" href="/dashboard/admin/maintenance"
-                    data-kt-menu-translation="English|Swahili">{{ $translator('Maintenance', 'Matengenezo') }}</a>
-                <a class="menu-link" href="/dashboard/admin/sms"
-                    data-kt-menu-translation="English|Swahili">{{ $translator('SMS Communication', 'Mawasiliano ya SMS') }}</a>
-                <a class="menu-link" href="/dashboard/admin/email"
-                    data-kt-menu-translation="English|Swahili">{{ $translator('Email Communication', 'Mawasiliano ya Barua pepe') }}</a>
+                <a class="menu-link" href="/dashboard/admin/api">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ $translator('Configuration', 'Mpangilio') }}</span>
+                </a>
+                <a class="menu-link" href="/dashboard/admin/api">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ $translator('Email Notification', 'Taarifa kwa Barua Pepe') }}</span>
+                </a>
+                <a class="menu-link" href="/dashboard/admin/maintenance">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ $translator('SMS', 'Taarifa kwa SMS') }}</span>
+                </a>
             </div>
             <!--end:Menu sub-->
         </div>

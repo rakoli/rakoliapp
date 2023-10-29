@@ -55,11 +55,11 @@
                         <!--begin::Menu-->
                         <div class="menu menu-column menu-title-gray-700 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500 fw-semibold" id="#kt_aside_menu" data-kt-menu="true">
                             @if (session('type') == 'admin')
-                                @include('menus.admin')
+                                @include('layouts.menus.admin')
                             @elseif(session('type') == 'vas')
-                                @include('menus.vas')
+                                @include('layouts.menus.vas')
                             @elseif(session('type') == 'agent')
-                                @include('menus.agent')
+                                @include('layouts.menus.agent')
                             @endif
                         </div>
                         <!--end::Menu-->
@@ -67,83 +67,6 @@
                     <!--end::Aside Menu-->
                 </div>
                 <!--end::Aside menu-->
-                <!--begin::AsideFooter-->
-                <div class="aside-footer flex-column-auto" id="kt_aside_footer">
-                    <!--begin::Menu-->
-                    <div class="d-flex justify-content-center">
-                        <button type="button" class="btn btm-sm btn-icon btn-custom btn-active-color-primary" data-kt-menu-trigger="click" data-kt-menu-overflow="true" data-kt-menu-placement="top-start" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-dismiss="click" title="Quick actions">
-                            <i class="ki-outline ki-notification-status fs-1"></i>
-                        </button>
-                        <!--begin::Menu 2-->
-                        <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-200px" data-kt-menu="true">
-                            <!--begin::Menu item-->
-                            <div class="menu-item px-3">
-                                <div class="menu-content fs-6 text-dark fw-bold px-3 py-4">Quick Actions</div>
-                            </div>
-                            <!--end::Menu item-->
-                            <!--begin::Menu separator-->
-                            <div class="separator mb-3 opacity-75"></div>
-                            <!--end::Menu separator-->
-                            <!--begin::Menu item-->
-                            <div class="menu-item px-3">
-                                <a href="#" class="menu-link px-3">New Ticket</a>
-                            </div>
-                            <!--end::Menu item-->
-                            <!--begin::Menu item-->
-                            <div class="menu-item px-3">
-                                <a href="#" class="menu-link px-3">New Customer</a>
-                            </div>
-                            <!--end::Menu item-->
-                            <!--begin::Menu item-->
-                            <div class="menu-item px-3" data-kt-menu-trigger="hover" data-kt-menu-placement="right-start">
-                                <!--begin::Menu item-->
-                                <a href="#" class="menu-link px-3">
-                                    <span class="menu-title">New Group</span>
-                                    <span class="menu-arrow"></span>
-                                </a>
-                                <!--end::Menu item-->
-                                <!--begin::Menu sub-->
-                                <div class="menu-sub menu-sub-dropdown w-175px py-4">
-                                    <!--begin::Menu item-->
-                                    <div class="menu-item px-3">
-                                        <a href="#" class="menu-link px-3">Admin Group</a>
-                                    </div>
-                                    <!--end::Menu item-->
-                                    <!--begin::Menu item-->
-                                    <div class="menu-item px-3">
-                                        <a href="#" class="menu-link px-3">Staff Group</a>
-                                    </div>
-                                    <!--end::Menu item-->
-                                    <!--begin::Menu item-->
-                                    <div class="menu-item px-3">
-                                        <a href="#" class="menu-link px-3">Member Group</a>
-                                    </div>
-                                    <!--end::Menu item-->
-                                </div>
-                                <!--end::Menu sub-->
-                            </div>
-                            <!--end::Menu item-->
-                            <!--begin::Menu item-->
-                            <div class="menu-item px-3">
-                                <a href="#" class="menu-link px-3">New Contact</a>
-                            </div>
-                            <!--end::Menu item-->
-                            <!--begin::Menu separator-->
-                            <div class="separator mt-3 opacity-75"></div>
-                            <!--end::Menu separator-->
-                            <!--begin::Menu item-->
-                            <div class="menu-item px-3">
-                                <div class="menu-content px-3 py-3">
-                                    <a class="btn btn-primary btn-sm px-4" href="#">Generate Reports</a>
-                                </div>
-                            </div>
-                            <!--end::Menu item-->
-                        </div>
-                        <!--end::Menu 2-->
-                    </div>
-                    <!--end::Menu-->
-                </div>
-                <!--end::AsideFooter-->
             </div>
             <!--end::Aside-->
 
@@ -716,102 +639,46 @@
                                         </div>
                                         <div class="separator my-2"></div>
                                         <div class="menu-item px-5">
-                                            <a href="account/overview.html" class="menu-link px-5">My Profile</a>
+                                            <a href="account/overview.html" class="menu-link px-5">{{ $translator('Profile', 'Wasifu') }}</a>
                                         </div>
                                         <div class="menu-item px-5">
-                                            <a href="apps/projects/list.html" class="menu-link px-5">
-                                                <span class="menu-text">My Projects</span>
-                                                <span class="menu-badge">
-                                                        <span
-                                                            class="badge badge-light-danger badge-circle fw-bold fs-7">3</span>
-                                                    </span>
-                                            </a>
-                                        </div>
-                                        <div class="menu-item px-5"
-                                             data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
-                                             data-kt-menu-placement="left-start" data-kt-menu-offset="-15px, 0">
-                                            <a href="#" class="menu-link px-5">
-                                                <span class="menu-title">My Subscription</span>
-                                                <span class="menu-arrow"></span>
-                                            </a>
-                                            <div class="menu-sub menu-sub-dropdown w-175px py-4">
-                                                <div class="menu-item px-3">
-                                                    <a href="account/referrals.html"
-                                                       class="menu-link px-5">Referrals</a>
-                                                </div>
-                                                <div class="menu-item px-3">
-                                                    <a href="account/billing.html"
-                                                       class="menu-link px-5">Billing</a>
-                                                </div>
-                                                <div class="menu-item px-3">
-                                                    <a href="account/statements.html"
-                                                       class="menu-link px-5">Payments</a>
-                                                </div>
-                                                <div class="menu-item px-3">
-                                                    <a href="account/statements.html"
-                                                       class="menu-link d-flex flex-stack px-5">Statements
-                                                        <span class="ms-2 lh-0" data-bs-toggle="tooltip"
-                                                              title="View your statements">
-                                                                <i class="ki-outline ki-information-5 fs-5"></i>
-                                                            </span></a>
-                                                </div>
-                                                <div class="separator my-2"></div>
-                                                <div class="menu-item px-3">
-                                                    <div class="menu-content px-3">
-                                                        <label
-                                                            class="form-check form-switch form-check-custom form-check-solid">
-                                                            <input class="form-check-input w-30px h-20px"
-                                                                   type="checkbox" value="1" checked="checked"
-                                                                   name="notifications" />
-                                                            <span
-                                                                class="form-check-label text-muted fs-7">Notifications</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="menu-item px-5">
-                                            <a href="account/statements.html" class="menu-link px-5">My
-                                                Statements</a>
+                                            <a href="account/overview.html" class="menu-link px-5">{{ $translator('Change Password', 'Badili Nyuwila') }}</a>
                                         </div>
                                         <div class="separator my-2"></div>
-                                        <div class="menu-item px-5"
-                                             data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
-                                             data-kt-menu-placement="left-start" data-kt-menu-offset="-15px, 0">
-                                            <a href="#" class="menu-link px-5">
-                                                    <span class="menu-title position-relative">Language
-                                                        <span
-                                                            class="fs-8 rounded bg-light px-3 py-2 position-absolute translate-middle-y top-50 end-0">{{ $translator('Swahili', 'Kiswahili') }}
-                                                            <img class="w-15px h-15px rounded-1 ms-2"
-                                                                 src="assets/media/flags/{{ Session::get('lang', 1) == 1 ? 'united-states.svg' : 'tanzania.svg' }}"
-                                                                 alt="" /></span></span>
-                                            </a>
-                                            <div class="menu-sub menu-sub-dropdown w-175px py-4">
-                                                <div class="menu-item px-3">
-                                                    <a data-kt-lang="English" href="#"
-                                                       class="menu-link d-flex px-5 active">
-                                                            <span class="symbol symbol-20px me-4">
-                                                                <img class="rounded-1"
-                                                                     src="assets/media/flags/united-states.svg"
-                                                                     alt="" />
-                                                            </span>English</a>
-                                                </div>
-                                                <div class="menu-item px-3">
-                                                    <a data-kt-lang="Swahili" href="#"
-                                                       class="menu-link d-flex px-5">
-                                                            <span class="symbol symbol-20px me-4">
-                                                                <img class="rounded-1"
-                                                                     src="assets/media/flags/tanzania.svg"
-                                                                     alt="" />
-                                                            </span>Swahili</a>
-                                                </div>
+                                            <div class="menu-item px-5"
+                                                 data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+                                                 data-kt-menu-placement="left-start" data-kt-menu-offset="-15px, 0">
+                                                <a href="#" class="menu-link px-5">
+                                                        <span class="menu-title position-relative">Language
+                                                            <span
+                                                                class="fs-8 rounded bg-light px-3 py-2 position-absolute translate-middle-y top-50 end-0">{{ $translator('Swahili', 'Kiswahili') }}
+                                                                <img class="w-15px h-15px rounded-1 ms-2"
+                                                                     src="assets/media/flags/{{ Session::get('lang', 1) == 1 ? 'united-states.svg' : 'tanzania.svg' }}"
+                                                                     alt="" /></span></span>
+                                                </a>
+                                                <div class="menu-sub menu-sub-dropdown w-175px py-4">
+                                                    <div class="menu-item px-3">
+                                                        <a data-kt-lang="English" href="#"
+                                                           class="menu-link d-flex px-5 active">
+                                                                <span class="symbol symbol-20px me-4">
+                                                                    <img class="rounded-1"
+                                                                         src="assets/media/flags/united-states.svg"
+                                                                         alt="" />
+                                                                </span>English</a>
+                                                    </div>
+                                                    <div class="menu-item px-3">
+                                                        <a data-kt-lang="Swahili" href="#"
+                                                           class="menu-link d-flex px-5">
+                                                                <span class="symbol symbol-20px me-4">
+                                                                    <img class="rounded-1"
+                                                                         src="assets/media/flags/tanzania.svg"
+                                                                         alt="" />
+                                                                </span>Swahili</a>
+                                                    </div>
 
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="menu-item px-5 my-1">
-                                            <a href="account/settings.html" class="menu-link px-5">Account
-                                                Settings</a>
-                                        </div>
+                                        <div class="separator my-2"></div>
                                         <div class="menu-item px-5">
                                             <form id="logout-form" action="{{ url('logout') }}" method="POST">
                                                 {{ csrf_field() }}
