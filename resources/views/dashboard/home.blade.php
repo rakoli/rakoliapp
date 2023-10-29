@@ -2,10 +2,10 @@
 
 @section('content')
     @if (session('type') == 'admin')
-        @include('../home.admin')
+        @include('dashboard.home.admin')
     @elseif(session('type') == 'vas')
-        @include('../home.vas')
+        @include('dashboard.home.vas')
     @elseif(session('type') == 'agent')
-        @include('../home.agent')
+        @include('dashboard.home.agent')
     @endif
 @endsection
