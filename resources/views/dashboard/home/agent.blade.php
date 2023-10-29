@@ -16,16 +16,16 @@
             <!--begin::Col-->
             <div class="col-md-6 col-lg-6 col-xl-6 col-xxl-3 mb-md-5 mb-xl-10">
                 <!--begin::Card widget 1-->
-                <div class="card card-flush bgi-no-repeat bgi-size-contain bgi-position-x-end h-md-50 mb-5 mb-xl-10" style="background-color: #F1416C;background-image:url('assets/media/patterns/vector-1.png')">
+                <div class="card card-flush bgi-no-repeat bgi-size-contain bgi-position-x-end h-md-50 mb-5 mb-xl-10">
                     <!--begin::Header-->
                     <div class="card-header pt-5">
                         <!--begin::Title-->
                         <div class="card-title d-flex flex-column">
                             <!--begin::Amount-->
-                            <span class="fs-2hx fw-bold text-white me-2 lh-1 ls-n2">69</span>
+                            <span class="fs-2hx fw-bold me-2 lh-1 ls-n2">69</span>
                             <!--end::Amount-->
                             <!--begin::Subtitle-->
-                            <span class="text-white opacity-75 pt-1 fw-semibold fs-6">Network Tills</span>
+                            <span class="pt-1 fw-semibold fs-6">Network Tills</span>
                             <!--end::Subtitle-->
                         </div>
                         <!--end::Title-->
@@ -35,7 +35,7 @@
                     <div class="card-body d-flex align-items-end pt-0">
                         <!--begin::Progress-->
                         <div class="d-flex align-items-center flex-column mt-3 w-100">
-                            <div class="d-flex justify-content-between fw-bold fs-6 text-white opacity-75 w-100 mt-auto mb-2">
+                            <div class="d-flex justify-content-between fw-bold fs-6 w-100 mt-auto mb-2">
                                 <span>2 Open Shifts</span>
                             </div>
                         </div>
@@ -88,6 +88,7 @@
 
             <!--begin::Col-->
             <div class="col-md-6 col-lg-6 col-xl-6 col-xxl-3 mb-md-5 mb-xl-10">
+
                 <!--begin::Card widget 3-->
                 <div class="card card-flush h-md-50 mb-5 mb-xl-10">
                     <!--begin::Header-->
@@ -102,14 +103,10 @@
                                 <!--begin::Amount-->
                                 <span class="fs-2hx fw-bold text-dark me-2 lh-1 ls-n2">6,999,700</span>
                                 <!--end::Amount-->
-                                <!--begin::Badge-->
-                                <span class="badge badge-light-success fs-base">
-                                                        <i class="ki-outline ki-arrow-up fs-5 text-success ms-n1"></i>2.2%</span>
-                                <!--end::Badge-->
                             </div>
                             <!--end::Info-->
                             <!--begin::Subtitle-->
-                            <span class="text-gray-400 pt-1 fw-semibold fs-6">Month Exchange Volume</span>
+                            <span class="text-gray-400 pt-1 fw-semibold fs-6">30 day Exchange Volume</span>
                             <!--end::Subtitle-->
                         </div>
                         <!--end::Title-->
@@ -169,6 +166,7 @@
                     <!--end::Card body-->
                 </div>
                 <!--end::Card widget 3-->
+
                 <!--begin::List widget 4-->
                 <div class="card card-flush h-lg-50">
                     <!--begin::Header-->
@@ -176,84 +174,9 @@
                         <!--begin::Title-->
                         <h3 class="card-title align-items-start flex-column">
                             <span class="card-label fw-bold text-dark">Highlights</span>
-                            <span class="text-gray-400 mt-1 fw-semibold fs-6">Latest financials</span>
+                            <span class="text-gray-400 mt-1 fw-semibold fs-6">30 day financials</span>
                         </h3>
                         <!--end::Title-->
-                        <!--begin::Toolbar-->
-                        <div class="card-toolbar">
-                            <!--begin::Menu-->
-                            <button class="btn btn-icon btn-color-gray-400 btn-active-color-primary justify-content-end" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-kt-menu-overflow="true">
-                                <i class="ki-outline ki-dots-square fs-1"></i>
-                            </button>
-                            <!--begin::Menu 2-->
-                            <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-200px" data-kt-menu="true">
-                                <!--begin::Menu item-->
-                                <div class="menu-item px-3">
-                                    <div class="menu-content fs-6 text-dark fw-bold px-3 py-4">Quick Actions</div>
-                                </div>
-                                <!--end::Menu item-->
-                                <!--begin::Menu separator-->
-                                <div class="separator mb-3 opacity-75"></div>
-                                <!--end::Menu separator-->
-                                <!--begin::Menu item-->
-                                <div class="menu-item px-3">
-                                    <a href="#" class="menu-link px-3">New Ticket</a>
-                                </div>
-                                <!--end::Menu item-->
-                                <!--begin::Menu item-->
-                                <div class="menu-item px-3">
-                                    <a href="#" class="menu-link px-3">New Customer</a>
-                                </div>
-                                <!--end::Menu item-->
-                                <!--begin::Menu item-->
-                                <div class="menu-item px-3" data-kt-menu-trigger="hover" data-kt-menu-placement="right-start">
-                                    <!--begin::Menu item-->
-                                    <a href="#" class="menu-link px-3">
-                                        <span class="menu-title">New Group</span>
-                                        <span class="menu-arrow"></span>
-                                    </a>
-                                    <!--end::Menu item-->
-                                    <!--begin::Menu sub-->
-                                    <div class="menu-sub menu-sub-dropdown w-175px py-4">
-                                        <!--begin::Menu item-->
-                                        <div class="menu-item px-3">
-                                            <a href="#" class="menu-link px-3">Admin Group</a>
-                                        </div>
-                                        <!--end::Menu item-->
-                                        <!--begin::Menu item-->
-                                        <div class="menu-item px-3">
-                                            <a href="#" class="menu-link px-3">Staff Group</a>
-                                        </div>
-                                        <!--end::Menu item-->
-                                        <!--begin::Menu item-->
-                                        <div class="menu-item px-3">
-                                            <a href="#" class="menu-link px-3">Member Group</a>
-                                        </div>
-                                        <!--end::Menu item-->
-                                    </div>
-                                    <!--end::Menu sub-->
-                                </div>
-                                <!--end::Menu item-->
-                                <!--begin::Menu item-->
-                                <div class="menu-item px-3">
-                                    <a href="#" class="menu-link px-3">New Contact</a>
-                                </div>
-                                <!--end::Menu item-->
-                                <!--begin::Menu separator-->
-                                <div class="separator mt-3 opacity-75"></div>
-                                <!--end::Menu separator-->
-                                <!--begin::Menu item-->
-                                <div class="menu-item px-3">
-                                    <div class="menu-content px-3 py-3">
-                                        <a class="btn btn-primary btn-sm px-4" href="#">Generate Reports</a>
-                                    </div>
-                                </div>
-                                <!--end::Menu item-->
-                            </div>
-                            <!--end::Menu 2-->
-                            <!--end::Menu-->
-                        </div>
-                        <!--end::Toolbar-->
                     </div>
                     <!--end::Header-->
                     <!--begin::Body-->
@@ -265,11 +188,8 @@
                             <!--end::Section-->
                             <!--begin::Statistics-->
                             <div class="d-flex align-items-senter">
-                                <i class="ki-outline ki-arrow-up-right fs-2 text-success me-2"></i>
                                 <!--begin::Number-->
-                                <span class="text-gray-900 fw-bolder fs-6">7.8</span>
-                                <!--end::Number-->
-                                <span class="text-gray-400 fw-bold fs-6">/10</span>
+                                <span class="text-gray-900 fw-bolder fs-6">Tsh 50,000</span>
                             </div>
                             <!--end::Statistics-->
                         </div>
@@ -284,9 +204,8 @@
                             <!--end::Section-->
                             <!--begin::Statistics-->
                             <div class="d-flex align-items-senter">
-                                <i class="ki-outline ki-arrow-down-right fs-2 text-danger me-2"></i>
                                 <!--begin::Number-->
-                                <span class="text-gray-900 fw-bolder fs-6">730k</span>
+                                <span class="text-gray-900 fw-bolder fs-6">Tsh 20,000</span>
                                 <!--end::Number-->
                             </div>
                             <!--end::Statistics-->
@@ -302,7 +221,6 @@
                             <!--end::Section-->
                             <!--begin::Statistics-->
                             <div class="d-flex align-items-senter">
-                                <i class="ki-outline ki-arrow-up-right fs-2 text-success me-2"></i>
                                 <!--begin::Number-->
                                 <span class="text-gray-900 fw-bolder fs-6">4</span>
                                 <!--end::Number-->
@@ -322,7 +240,7 @@
                 <!--begin::Engage widget 10-->
                 <div class="card card-flush h-md-100">
                     <!--begin::Body-->
-                    <div class="card-body d-flex flex-column justify-content-between mt-9 bgi-no-repeat bgi-size-cover bgi-position-x-center pb-0" style="background-position: 100% 50%; background-image:url('assets/media/stock/900x600/42.png')">
+                    <div class="card-body d-flex flex-column justify-content-between mt-9 bgi-no-repeat bgi-size-cover bgi-position-x-center pb-0" >
                         <!--begin::Wrapper-->
                         <div class="mb-10">
                             <!--begin::Title-->
