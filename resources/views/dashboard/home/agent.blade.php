@@ -106,7 +106,7 @@
                             </div>
                             <!--end::Info-->
                             <!--begin::Subtitle-->
-                            <span class="text-gray-400 pt-1 fw-semibold fs-6">30 day Exchange Volume</span>
+                            <span class="text-gray-400 pt-1 fw-semibold fs-6">30 day shift turnover</span>
                             <!--end::Subtitle-->
                         </div>
                         <!--end::Title-->
