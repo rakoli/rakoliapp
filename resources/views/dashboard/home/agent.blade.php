@@ -25,7 +25,7 @@
                             <span class="fs-2hx fw-bold me-2 lh-1 ls-n2">69</span>
                             <!--end::Amount-->
                             <!--begin::Subtitle-->
-                            <span class="pt-1 fw-semibold fs-6">Network Tills</span>
+                            <span class="text-gray-400 pt-1 fw-semibold fs-6">Network Tills</span>
                             <!--end::Subtitle-->
                         </div>
                         <!--end::Title-->
@@ -54,7 +54,7 @@
                             <span class="fs-2hx fw-bold text-dark me-2 lh-1 ls-n2">03</span>
                             <!--end::Amount-->
                             <!--begin::Subtitle-->
-                            <span class="text-gray-400 pt-1 fw-semibold fs-6">Ongoing VAS</span>
+                            <span class="text-gray-400 pt-1 fw-semibold fs-6">Awarded VAS</span>
                             <!--end::Subtitle-->
                         </div>
                         <!--end::Title-->
@@ -62,23 +62,13 @@
                     <!--end::Header-->
                     <!--begin::Card body-->
                     <div class="card-body d-flex flex-column justify-content-end pe-0">
-                        <!--begin::Title-->
-                        <span class="fs-6 fw-bolder text-gray-800 d-block mb-2">VAS Providers</span>
-                        <!--end::Title-->
-                        <!--begin::Users group-->
-                        <div class="symbol-group symbol-hover flex-nowrap">
-                            <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Alan Warden">
-                                <span class="symbol-label bg-warning text-inverse-warning fw-bold">AW</span>
+                        <!--begin::Progress-->
+                        <div class="d-flex align-items-center flex-column mt-3 w-100">
+                            <div class="d-flex justify-content-between fw-bold fs-6 w-100 mt-auto mb-2">
+                                <span>1 pending exchange</span>
                             </div>
-                            <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Michael Eberon">
-                                <img alt="Pic" src="assets/media/avatars/300-11.jpg" />
-                            </div>
-                            <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Susan Redwood">
-                                <span class="symbol-label bg-primary text-inverse-primary fw-bold">SR</span>
-                            </div>
-
                         </div>
-                        <!--end::Users group-->
+                        <!--end::Progress-->
                     </div>
                     <!--end::Card body-->
                 </div>
