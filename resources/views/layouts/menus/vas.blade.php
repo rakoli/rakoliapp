@@ -182,7 +182,7 @@
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ $translator('Payments’ report', 'Taarifa za malipo') }}</span>
+                    <span class="menu-title">{{ $translator('Payments report', 'Taarifa za malipo') }}</span>
                 </a>
 
             </div>
