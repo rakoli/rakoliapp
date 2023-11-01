@@ -1,3 +1,5 @@
+@extends('layouts.app')
+
 @section('title', "Admin - Dashboard")
 
 @section('aside_background')
@@ -218,7 +220,24 @@
     </div>
     <!--end::Row-->
 
+    <!--begin::Card-->
+    <div class="card">
+        <!--begin::Card body-->
+        <div class="card-body pt-0">
+            <!--begin::Table-->
+                {{ $dataTable->table() }}
+            <!--end::Table-->
+        </div>
+        <!--end::Card body-->
+    </div>
+    <!--end::Card-->
+
     </div>
     <!--end::Container-->
 
+@endsection
+
+
+@section('footer_js')
+    {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
 @endsection

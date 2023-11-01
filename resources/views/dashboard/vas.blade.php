@@ -1,3 +1,5 @@
+@extends('layouts.app')
+
 @section('title', "VAS - Dashboard")
 
 @section('aside_background')

@@ -2,28 +2,48 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\Admin\SystemIncomeDataTable;
+use App\Models\SystemIncome;
+use App\Utils\Enums\UserTypeEnum;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class HomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
+
     public function __construct()
     {
         $this->middleware('auth');
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function index()
+    public function index(SystemIncomeDataTable $dataTable)
     {
-        return view('dashboard.home');
+        //ADMIN DASHBOARD
+        if (auth()->user()->type == UserTypeEnum::ADMIN->value){
+            //Datatable Data
+            if (request()->ajax()) {
+                $recentIncome = SystemIncome::latest()->take(10)->get();
+                return DataTables::of($recentIncome)->toJson();
+            }
+
+            return $dataTable->render('dashboard.admin');
+
+        }
+
+        //VAS DASHBOARD
+        if (auth()->user()->type == UserTypeEnum::VAS->value){
+
+            return view('dashboard.agent');
+        }
+
+        //AGENT DASHBOARD
+        if (auth()->user()->type == UserTypeEnum::AGENT->value){
+
+
+            return view('dashboard.agent');
+        }
+
+        return 'INVALID DASHBOARD REQUEST';
     }
 
     public function registrationAgent()
