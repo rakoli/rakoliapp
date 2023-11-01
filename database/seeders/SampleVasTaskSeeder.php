@@ -2,20 +2,17 @@
 
 namespace Database\Seeders;
 
+use App\Models\VasTask;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class SampleDataSeeder extends Seeder
+class SampleVasTaskSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        $this->call([
-            SampleSystemIncomeSeeder::class,
-            SampleExchangeAdsSeeder::class,
-            SampleVasTaskSeeder::class,
-        ]);
+        VasTask::factory()->count(24)->create();
     }
 }

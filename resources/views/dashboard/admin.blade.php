@@ -6,6 +6,10 @@
     style="background-color: #570b05"
 @endsection
 
+@section('header_js')
+    <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css" />
+@endsection
+
 @section('content')
 
     <!--begin::Container-->
@@ -27,7 +31,7 @@
                     <!--begin::Section-->
                     <div class="d-flex flex-column my-7">
                         <!--begin::Number-->
-                        <span class="fw-semibold fs-3x text-gray-800 lh-1 ls-n2">23</span>
+                        <span class="fw-semibold fs-3x text-gray-800 lh-1 ls-n2">{{number_format_short($stats['business'])}}</span>
                         <!--end::Number-->
                         <!--begin::Follower-->
                         <div class="m-0">
@@ -61,7 +65,7 @@
                     <!--begin::Section-->
                     <div class="d-flex flex-column my-7">
                         <!--begin::Number-->
-                        <span class="fw-semibold fs-3x text-gray-800 lh-1 ls-n2">27.5M</span>
+                        <span class="fw-semibold fs-3x text-gray-800 lh-1 ls-n2">{{number_format_short($stats['total_income'])}}</span>
                         <!--end::Number-->
                         <!--begin::Follower-->
                         <div class="m-0">
@@ -95,7 +99,7 @@
                     <!--begin::Section-->
                     <div class="d-flex flex-column my-7">
                         <!--begin::Number-->
-                        <span class="fw-semibold fs-3x text-gray-800 lh-1 ls-n2">34</span>
+                        <span class="fw-semibold fs-3x text-gray-800 lh-1 ls-n2">{{number_format_short($stats['exchange_listings'])}}</span>
                         <!--end::Number-->
                         <!--begin::Follower-->
                         <div class="m-0">
@@ -129,7 +133,7 @@
                     <!--begin::Section-->
                     <div class="d-flex flex-column my-7">
                         <!--begin::Number-->
-                        <span class="fw-semibold fs-3x text-gray-800 lh-1 ls-n2">87</span>
+                        <span class="fw-semibold fs-3x text-gray-800 lh-1 ls-n2">{{number_format_short($stats['vas_listings'])}}</span>
                         <!--end::Number-->
                         <!--begin::Follower-->
                         <div class="m-0">
@@ -163,7 +167,7 @@
                     <!--begin::Section-->
                     <div class="d-flex flex-column my-7">
                         <!--begin::Number-->
-                        <span class="fw-semibold fs-3x text-gray-800 lh-1 ls-n2">18</span>
+                        <span class="fw-semibold fs-3x text-gray-800 lh-1 ls-n2">{{number_format_short($stats['active_subscription'])}}</span>
                         <!--end::Number-->
                         <!--begin::Follower-->
                         <div class="m-0">
@@ -197,7 +201,7 @@
                     <!--begin::Section-->
                     <div class="d-flex flex-column my-7">
                         <!--begin::Number-->
-                        <span class="fw-semibold fs-3x text-gray-800 lh-1 ls-n2">32</span>
+                        <span class="fw-semibold fs-3x text-gray-800 lh-1 ls-n2">{{number_format_short($stats['users'])}}</span>
                         <!--end::Number-->
                         <!--begin::Follower-->
                         <div class="m-0">
@@ -223,9 +227,9 @@
     <!--begin::Card-->
     <div class="card">
         <!--begin::Card body-->
-        <div class="card-body pt-0">
+        <div class="card-body pt-5">
             <!--begin::Table-->
-                {{ $dataTable->table() }}
+                {!! $dataTableHtml->table(['class' => 'table table-striped table-row-bordered gy-5 gs-7'],true) !!}
             <!--end::Table-->
         </div>
         <!--end::Card body-->
@@ -239,5 +243,6 @@
 
 
 @section('footer_js')
-    {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
+    <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}" type="text/javascript"></script>
+    {!! $dataTableHtml->scripts() !!}
 @endsection

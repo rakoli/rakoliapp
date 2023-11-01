@@ -14,6 +14,12 @@ return new class extends Migration
         Schema::create('exchange_ads', function (Blueprint $table) {
             $table->id();
 
+            $table->string('country_code');
+            $table->foreign('country_code')->references('code')
+                ->on('countries')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
+
             $table->string('business_code');
             $table->foreign('business_code')->references('code')
                 ->on('businesses')

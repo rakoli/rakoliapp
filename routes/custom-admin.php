@@ -5,13 +5,14 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CustomAdminDashboardController;
 
+Route::any('datatable/recentincome', [App\Http\Controllers\Admin\GeneralAdminController::class, 'recentIncomeDatatable'])->name('datatable.recentincome');
+
 // All get methods will be loaded with this route
 Route::middleware(['auth','onlyadmin'])->group(function () {
-    Route::group(['prefix' => 'dashboard', 'as' => 'dashboard'], function () {
 
-        Route::get('/', function () {
-            return view('dashboard/home');
-        });
+//    Route::any('datatable/recentincome', [App\Http\Controllers\Admin\GeneralAdminController::class, 'recentIncomeDatatable'])->name('datatable.recentincome');
+
+    Route::group(['prefix' => 'dashboard', 'as' => 'dashboard'], function () {
         Route::get('/admin/{pagename}', [CustomAdminDashboardController::class, 'loadDynamicView'])->where('pagename', '.*');
     });
 });

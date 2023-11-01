@@ -10,9 +10,9 @@ use App\Http\Controllers\AuthController;
 Route::get('testing', [\App\Http\Controllers\TestController::class, 'testing']);
 
 //BASIC ROUTES
+Auth::routes();
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
 Route::get('home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Auth::routes();
 Route::get('logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 Route::post('/authenticate', [AuthController::class, 'loginattempty']); // This route is necessary because we want to create custom session keys
 

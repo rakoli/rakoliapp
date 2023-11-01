@@ -25,6 +25,7 @@ class ExchangeAdsFactory extends Factory
         $businesses = Business::get('code')->toArray();
 
         return [
+            'country_code' => fake()->randomElement(['tz', 'ke']),
             'business_code' => fake()->randomElement($businesses)['code'],
             'location_code' => Location::first()->code,
             'code' => Str::random(10),

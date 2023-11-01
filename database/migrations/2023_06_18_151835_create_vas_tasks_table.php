@@ -38,9 +38,24 @@ return new class extends Migration
 
             $table->string('task_type')->default(\App\Utils\Enums\TaskTypeEnum::DATA->value);
 
-            $table->string('region')->nullable();
-            $table->string('town')->nullable();
-            $table->string('area')->nullable();
+            $table->string('region_code')->nullable();
+            $table->foreign('region_code')->references('code')
+                ->on('regions')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
+
+            $table->string('town_code')->nullable();
+            $table->foreign('town_code')->references('code')
+                ->on('towns')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
+
+            $table->string('area_code')->nullable();
+            $table->foreign('area_code')->references('code')
+                ->on('areas')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
+
             $table->boolean('is_public')->default(true); //
             $table->integer('no_of_agents')->nullable();
             $table->json('attachments')->invisible()->nullable();
