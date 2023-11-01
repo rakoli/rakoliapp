@@ -5,7 +5,7 @@
 @section('body')
 
     <!--begin::Form-->
-    <form class="form w-100" novalidate="novalidate" id="kt_sign_in_form" data-kt-redirect-url="{{route('home')}}" action="authenticate" method="post">
+    <form class="form w-100" novalidate="novalidate" id="kt_sign_in_form" data-kt-redirect-url="{{route('home')}}" action="{{route('login')}}" method="post">
 
         @csrf
 

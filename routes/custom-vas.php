@@ -9,9 +9,6 @@ use App\Http\Controllers\CustomVasDashboardController;
 Route::middleware(['auth','onlyvas'])->group(function () {
     Route::group(['prefix' => 'dashboard', 'as' => 'dashboard'], function () {
 
-        Route::get('/', function () {
-            return view('dashboard/home');
-        });
         Route::get('/vas/{pagename}', [CustomVasDashboardController::class, 'loadDynamicView'])->where('pagename', '.*');
     });
 });

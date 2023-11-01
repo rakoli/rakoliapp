@@ -14,8 +14,6 @@ Auth::routes();
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
 Route::get('home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
-Route::post('/authenticate', [AuthController::class, 'loginattempty']); // This route is necessary because we want to create custom session keys
-
 
 //REGISTRATION ROUTES
 Route::get('register/vas', [App\Http\Controllers\Auth\RegisterAgentController::class, 'showRegistrationForm'])->name('register.vas');
@@ -23,10 +21,8 @@ Route::post('register/vas/submit', [App\Http\Controllers\Auth\RegisterAgentContr
 Route::get('registration/agent', [App\Http\Controllers\HomeController::class, 'registrationAgent'])->name('registration.agent');
 Route::get('registration/vas', [App\Http\Controllers\HomeController::class, 'registrationVas'])->name('registration.vas');
 
-
 //LANGUAGE SWITCHER
 Route::post('/change-language', [LanguageController::class, 'changeLanguage']);
-
 
 //USERTYPE SPECIFIC ROUTES
 include('custom-admin.php');

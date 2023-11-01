@@ -80,7 +80,7 @@ var KTSigninGeneral = function () {
                             });
 
                             // const redirectUrl = form.getAttribute('data-kt-redirect-url');
-                            location.href = '/dashboard';
+                            location.href = '/home';
 
                         } else {
                             // Show error popup. For more info check the plugin's official documentation: https://sweetalert2.github.io/

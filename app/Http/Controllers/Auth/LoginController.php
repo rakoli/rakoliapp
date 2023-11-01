@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
@@ -53,5 +54,39 @@ class LoginController extends Controller
         Auth::logout();
         Session::flush();
         return redirect()->route('home');
+    }
+
+    public function authenticated(Request $request, $user)
+    {
+        Session::put('id', $user->id);
+        Session::put('country_code', $user->country_code);
+        Session::put('business_code', $user->business_code);
+        Session::put('current_location_code', $user->current_location_code);
+        Session::put('type', $user->type);
+        Session::put('code', $user->code);
+        Session::put('name', $user->name);
+        Session::put('phone', $user->phone);
+        Session::put('email', $user->email);
+        Session::put('is_super_agent', $user->is_super_agent);
+        Session::put('last_login', $user->last_login);
+        Session::put('status', $user->status);
+        Session::put('should_change_password', $user->should_change_password);
+        Session::put('iddoc_type', $user->iddoc_type);
+        Session::put('iddoc_id', $user->iddoc_id);
+        Session::put('iddoc_path', $user->iddoc_path);
+        Session::put('password', $user->password);
+        Session::put('two_factor_secret', $user->two_factor_secret);
+        Session::put('two_factor_recovery_codes', $user->two_factor_recovery_codes);
+        Session::put('two_factor_confirmed_at', $user->two_factor_confirmed_at);
+        Session::put('remember_token', $user->remember_token);
+        Session::put('created_at', $user->created_at);
+        Session::put('updated_at', $user->updated_at);
+
+        return 1;
+    }
+
+    protected function sendFailedLoginResponse(Request $request)
+    {
+        return 0;
     }
 }

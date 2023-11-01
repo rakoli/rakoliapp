@@ -9,9 +9,6 @@ use App\Http\Controllers\CustomAgentDashboardController;
 Route::middleware(['auth','onlyagent'])->group(function () {
     Route::group(['prefix' => 'dashboard', 'as' => 'dashboard'], function () {
 
-        Route::get('/', function () {
-            return view('dashboard/home');
-        });
         Route::get('/agent/{pagename}', [CustomAgentDashboardController::class, 'loadDynamicView'])->where('pagename', '.*');
     });
 });
