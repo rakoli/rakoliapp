@@ -16,9 +16,9 @@ class BusinessScoped implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-        if (auth()->user()->type == UserTypeEnum::AGENT)
+        if (auth()->user() != null && auth()->user()->type == UserTypeEnum::AGENT->value)
         {
-            $builder->where('Business_Code', auth()->user()->Business_Code);
+            $builder->where('business_code', auth()->user()->business_code);
         }
     }
 }

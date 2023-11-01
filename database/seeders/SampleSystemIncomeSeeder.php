@@ -7,7 +7,7 @@ use Database\Factories\SystemIncomeFactory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class SystemIncomeSeeder extends Seeder
+class SampleSystemIncomeSeeder extends Seeder
 {
     /**
      * Run the database seeds.

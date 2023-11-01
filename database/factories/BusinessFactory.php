@@ -1,0 +1,36 @@
+<?php
+
+namespace Database\Factories;
+
+use App\Models\Business;
+use App\Models\Package;
+use App\Utils\Enums\BusinessTypeEnum;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
+
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Business>
+ */
+class BusinessFactory extends Factory
+{
+    protected $model = Business::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        $packages = Package::get('code')->toArray();
+        return [
+            'country_code' => fake()->randomElement(['tz', 'ke']),
+            'code' => Str::random(10),
+            'type' => fake()->randomElement(BusinessTypeEnum::AGENCY::class),
+            'name' => fake()->company,
+            'status' => 1,
+            'package_code' => fake()->randomElement($packages)['code'],
+            'expiry_at' => now()->addDays(random_int(1,30)),
+        ];
+    }
+}

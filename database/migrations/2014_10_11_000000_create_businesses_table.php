@@ -20,7 +20,7 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->string('code')->unique();
-            $table->string('type')->default(\App\Utils\Enums\BusinessTypeEnum::AGENCY);
+            $table->string('type')->default(\App\Utils\Enums\BusinessTypeEnum::AGENCY->value);
 //            $table->string('walkthrough_step')->nullable()->default(\App\Utils\Enums\WalkThroughStepEnums::BUSINESS->value);
             $table->boolean('is_verified')->default(0);
             $table->string('business_name')->index();
@@ -33,10 +33,9 @@ return new class extends Migration
                 ->on('packages')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->string('business_location')->nullable();
-            $table->string('status')->default(\App\Utils\Enums\BusinessStatusEnum::ACTIVE);//1- Active, 0 - Disabled, 2 - Inactive
-            $table->string('subscription_code')->nullable();
             $table->timestamp('expiry_at')->nullable();
+            $table->string('business_location')->nullable();
+            $table->string('status')->default(\App\Utils\Enums\BusinessStatusEnum::ACTIVE->value);//1- Active, 0 - Disabled, 2 - Inactive
             $table->decimal('balance',12,2)->default(0); //Earning from referral and VAS
             $table->timestamps();
         });

@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Business;
+use App\Models\Location;
+use App\Models\Package;
 use App\Models\User;
 use App\Utils\Enums\BusinessStatusEnum;
 use App\Utils\Enums\UserTypeEnum;
@@ -10,6 +12,7 @@ use App\Utils\Enums\WalkThroughStepEnums;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Faker\Factory as Faker;
+use Illuminate\Support\Str;
 
 class UsersTableSeeder extends Seeder
 {
@@ -26,7 +29,7 @@ class UsersTableSeeder extends Seeder
         $name = "Vertice Agents Ltd";
         $agentBusiness = Business::create([
             'country_code' => "TZ",
-            'type' => UserTypeEnum::AGENT,
+            'type' => UserTypeEnum::AGENT->value,
 //                    'walkthrough_step' => WalkThroughStepEnums::BUSINESS->value,
             'code'=> generateCode($name),
             'business_name' => $name,
@@ -35,17 +38,22 @@ class UsersTableSeeder extends Seeder
             'business_phone_number' => '255739466080',
             'business_email' => "agent@rakoli.com",
             'business_location' => $faker->address,
-            'package_code' => null,
-            'subscription_code' => null,
-            'expiry_at' => null,
-            'status' => BusinessStatusEnum::ACTIVE
+            'package_code' => Package::where('name','prosperity')->first()->code,
+            'expiry_at' => now()->addDays(random_int(5,30)),
+            'status' => BusinessStatusEnum::ACTIVE->value
+        ]);
+
+        Location::create([
+            'business_code' => $agentBusiness->code,
+            'code' => Str::random(10) ,
+            'name' => 'Vertice HQ',
         ]);
 
         //VAS BUSINESS
         $name = "Pulsans Advertisement Ltd";
         $vasBusiness = Business::create([
             'country_code' => "TZ",
-            'type' => UserTypeEnum::VAS,
+            'type' => UserTypeEnum::VAS->value,
 //                    'walkthrough_step' => WalkThroughStepEnums::BUSINESS->value,
             'code'=> generateCode($name),
             'business_name' => $name,
@@ -55,9 +63,8 @@ class UsersTableSeeder extends Seeder
             'business_email' => "vas@rakoli.com",
             'business_location' => $faker->address,
             'package_code' => null,
-            'subscription_code' => null,
             'expiry_at' => null,
-            'status' => BusinessStatusEnum::ACTIVE
+            'status' => BusinessStatusEnum::ACTIVE->value
         ]);
 
         // Specific users provided in the data
@@ -68,7 +75,7 @@ class UsersTableSeeder extends Seeder
                 'email' => 'agent@rakoli.com',
                 'code' => generateCode('Elin Erick',),
                 'password' => Hash::make('12345678'),
-                'type' => UserTypeEnum::AGENT,
+                'type' => UserTypeEnum::AGENT->value,
                 'business_code' => $agentBusiness->code,
             ],
             [
@@ -77,7 +84,7 @@ class UsersTableSeeder extends Seeder
                 'email' => 'vas@rakoli.com',
                 'code' => generateCode('Felix Mihayo'),
                 'password' => Hash::make('12345678'),
-                'type' => UserTypeEnum::VAS,
+                'type' => UserTypeEnum::VAS->value,
                 'business_code' => $vasBusiness->code,
             ],
             [
@@ -86,7 +93,7 @@ class UsersTableSeeder extends Seeder
                 'email' => 'admin@rakoli.com',
                 'code' => generateCode('Erick Mabusi'),
                 'password' => Hash::make('12345678'),
-                'type' => UserTypeEnum::ADMIN,
+                'type' => UserTypeEnum::ADMIN->value,
             ],
         ];
 

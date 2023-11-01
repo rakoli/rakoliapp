@@ -35,7 +35,7 @@ class SystemIncomeFactory extends Factory
             'amount_currency' => fake()->randomElement(['tzs', 'kes']),
             'channel' => fake()->randomElement(['mpesa', 'visa','direct']),
             'channel_reference' => Str::random(10),
-            'channel_timestamp' => now(),
+            'channel_timestamp' => now()->subHours(random_int(1,24)),
             'description' => "Description ".Str::random(10),
             'status' => fake()->randomElement(SystemIncomeStatusEnum::class),
         ];
