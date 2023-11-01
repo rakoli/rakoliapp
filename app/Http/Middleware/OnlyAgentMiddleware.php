@@ -16,7 +16,7 @@ class OnlyAgentMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if($request->user()->type != UserTypeEnum::AGENT){
+        if($request->user()->type != UserTypeEnum::AGENT->value){
             return redirect()->route('home');
         }
         return $next($request);

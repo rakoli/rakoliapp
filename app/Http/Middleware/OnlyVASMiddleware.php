@@ -16,7 +16,7 @@ class OnlyVASMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if($request->user()->type != UserTypeEnum::VAS){
+        if($request->user()->type != UserTypeEnum::VAS->value){
             return redirect()->route('home');
         }
         return $next($request);
