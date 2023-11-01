@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('channel_reference');
             $table->string('channel_timestamp')->nullable();
             $table->string('description')->nullable();
-            $table->string('status')->default(\App\Utils\Enums\SystemIncomeStatusEnum::PENDING_VERIFICATION);
+            $table->string('status')->default(\App\Utils\Enums\SystemIncomeStatusEnum::PENDING_VERIFICATION->value);
             $table->timestamps();
         });
     }
