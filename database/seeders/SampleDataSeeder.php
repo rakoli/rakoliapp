@@ -16,6 +16,9 @@ class SampleDataSeeder extends Seeder
             SampleSystemIncomeSeeder::class,
             SampleExchangeAdsSeeder::class,
             SampleVasTaskSeeder::class,
+            SampleVasContractSeeder::class,
+            SampleVasPaymentSeeder::class,
+            SampleVasSubmissionSeeder::class,
         ]);
     }
 }

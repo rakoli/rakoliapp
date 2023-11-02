@@ -7,6 +7,8 @@ use App\Models\Business;
 use App\Models\ExchangeAds;
 use App\Models\SystemIncome;
 use App\Models\User;
+use App\Models\VasPayment;
+use App\Models\VasSubmission;
 use App\Models\VasTask;
 use App\Utils\Enums\UserTypeEnum;
 use Illuminate\Http\Request;
@@ -24,6 +26,8 @@ class HomeController extends Controller
     public function index()
     {
         $stats = null;
+        $dataTable = new DataTables();
+        $builder = $dataTable->getHtmlBuilder();
 
         //ADMIN DASHBOARD
         if (auth()->user()->type == UserTypeEnum::ADMIN->value){
@@ -33,8 +37,7 @@ class HomeController extends Controller
                 return \Yajra\DataTables\Facades\DataTables::of($recentIncome)->toJson();
             }
 
-            $dataTable = new DataTables();
-            $builder = $dataTable->getHtmlBuilder();
+            //Datatable
             $dataTableHtml = $builder->columns([
                 ['data' => 'id' ],
                 ['data' => 'country_code'],
@@ -58,11 +61,28 @@ class HomeController extends Controller
             return view('dashboard.admin', compact('dataTableHtml','stats'));
         }
 
+
         //VAS DASHBOARD
         if (auth()->user()->type == UserTypeEnum::VAS->value){
 
-            return view('dashboard.vas');
+            //Datatable
+            $dataTableHtml = $builder->columns([
+                ['data' => 'id' ],
+                ['data' => 'country_code'],
+                ['data' => 'category'],
+                ['data' => 'amount'],
+                ['data' => 'amount_currency', 'title'=>'Currency'],
+            ])->orderBy(0,'desc');
+
+            //Dashboard Statistics
+            $stats['total_services'] = VasTask::where('vas_provider_code',auth()->user()->business_code)->count();
+            $stats['total_submission'] = Business::where('code',auth()->user()->business_code)->first()->agentsSubmissions()->count();
+            $stats['users'] = User::where('business_code',auth()->user()->business_code)->count();
+            $stats['payments_made'] = VasPayment::where('business_code',auth()->user()->business_code)->get()->sum('amount');
+
+            return view('dashboard.vas', compact('dataTableHtml','stats'));
         }
+
 
         //AGENT DASHBOARD
         if (auth()->user()->type == UserTypeEnum::AGENT->value){

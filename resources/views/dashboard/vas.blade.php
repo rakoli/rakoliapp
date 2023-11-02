@@ -50,7 +50,7 @@
                                         <!--begin::Stats-->
                                         <div class="m-0">
                                             <!--begin::Number-->
-                                            <span class="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">04</span>
+                                            <span class="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">{{number_format_short($stats['total_services'])}}</span>
                                             <!--end::Number-->
                                             <!--begin::Desc-->
                                             <span class="text-gray-500 fw-semibold fs-6">Total Services</span>
@@ -75,10 +75,10 @@
                                         <!--begin::Stats-->
                                         <div class="m-0">
                                             <!--begin::Number-->
-                                            <span class="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">02</span>
+                                            <span class="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">{{number_format_short($stats['total_submission'])}}</span>
                                             <!--end::Number-->
                                             <!--begin::Desc-->
-                                            <span class="text-gray-500 fw-semibold fs-6">Ongoing Services</span>
+                                            <span class="text-gray-500 fw-semibold fs-6">Submissions</span>
                                             <!--end::Desc-->
                                         </div>
                                         <!--end::Stats-->
@@ -100,7 +100,7 @@
                                         <!--begin::Stats-->
                                         <div class="m-0">
                                             <!--begin::Number-->
-                                            <span class="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">01</span>
+                                            <span class="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">{{number_format_short($stats['users'])}}</span>
                                             <!--end::Number-->
                                             <!--begin::Desc-->
                                             <span class="text-gray-500 fw-semibold fs-6">Users</span>
@@ -125,7 +125,7 @@
                                         <!--begin::Stats-->
                                         <div class="m-0">
                                             <!--begin::Number-->
-                                            <span class="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">7.8M</span>
+                                            <span class="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">{{number_format_short($stats['payments_made'])}}</span>
                                             <!--end::Number-->
                                             <!--begin::Desc-->
                                             <span class="text-gray-500 fw-semibold fs-6">Payments Made</span>
