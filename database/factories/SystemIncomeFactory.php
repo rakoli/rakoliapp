@@ -29,7 +29,7 @@ class SystemIncomeFactory extends Factory
     public function definition(): array
     {
         return [
-            'country_code' => fake()->randomElement(['tz', 'ke']),
+            'country_code' => fake()->randomElement(['TZ', 'KE']),
             'category' => fake()->randomElement(SystemIncomeCategoryEnum::class),
             'amount' => fake()->numberBetween(40000, 100000),
             'amount_currency' => fake()->randomElement(['tzs', 'kes']),

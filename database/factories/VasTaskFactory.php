@@ -25,7 +25,7 @@ class VasTaskFactory extends Factory
     public function definition(): array
     {
         return [
-            'country_code' => fake()->randomElement(['tz', 'ke']),
+            'country_code' => fake()->randomElement(['TZ', 'KE']),
             'vas_provider_code' => Business::where('type',BusinessTypeEnum::VAS->value)->first()->code,
             'code' => Str::random(10),
             'time_start' => now()->subHours(random_int(5,24)),

@@ -24,7 +24,7 @@ class BusinessFactory extends Factory
     {
         $packages = Package::get('code')->toArray();
         return [
-            'country_code' => fake()->randomElement(['tz', 'ke']),
+            'country_code' => fake()->randomElement(['TZ', 'KE']),
             'code' => Str::random(10),
             'type' => fake()->randomElement(BusinessTypeEnum::AGENCY::class),
             'name' => fake()->company,

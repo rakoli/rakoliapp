@@ -27,10 +27,11 @@ class VasContractFactory extends Factory
         $tasks = VasTask::get('code')->toarray();
         return [
             'code' => Str::random(10),
-            'country_code' => fake()->randomElement(['tz', 'ke']),
+            'country_code' => fake()->randomElement(['TZ', 'KE']),
             'vas_provider_code' => Business::where('type',BusinessTypeEnum::VAS->value)->first()->code,
             'agent_code' => Business::where('type',BusinessTypeEnum::AGENCY->value)->first()->code,
             'vas_task_code' => fake()->randomElement($tasks)['code'],
+            'title' => fake()->sentence,
             'time_start' => now()->subHours(random_int(5,24)),
             'time_end' => fake()->randomElement([now()->addHours(random_int(16,48)), null]),
         ];

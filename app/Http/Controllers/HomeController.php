@@ -11,6 +11,7 @@ use App\Models\VasPayment;
 use App\Models\VasSubmission;
 use App\Models\VasTask;
 use App\Utils\Enums\UserTypeEnum;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use Yajra\DataTables\Html\Builder;
@@ -33,17 +34,24 @@ class HomeController extends Controller
         if (auth()->user()->type == UserTypeEnum::ADMIN->value){
             //Datatable Data
             if (request()->ajax()) {
-                $recentIncome = SystemIncome::latest()->take(10);
-                return \Yajra\DataTables\Facades\DataTables::of($recentIncome)->toJson();
+
+                $recentIncomes = SystemIncome::with('country')->
+                    orderBy('id','desc')
+                    ->take(10)->get();
+
+                return \Yajra\DataTables\Facades\DataTables::of($recentIncomes)
+                    ->addColumn('amt',
+                    function($recentIncome){
+                        return number_format($recentIncome->amount,2) . ' '.$recentIncome->amount_currency;
+                    })->toJson();
             }
 
             //Datatable
             $dataTableHtml = $builder->columns([
                 ['data' => 'id' ],
-                ['data' => 'country_code'],
+                ['data' => 'country.name', 'title' => 'Country'],
                 ['data' => 'category'],
-                ['data' => 'amount'],
-                ['data' => 'amount_currency', 'title'=>'Currency'],
+                ['data' => 'amt' , 'title' => 'Amount'],
                 ['data' => 'channel'],
                 ['data' => 'channel_reference'],
                 ['data' => 'channel_timestamp'],
@@ -64,14 +72,30 @@ class HomeController extends Controller
 
         //VAS DASHBOARD
         if (auth()->user()->type == UserTypeEnum::VAS->value){
+            //Datatable Data
+            if (request()->ajax()) {
+                $payments = Business::where('code',auth()->user()->business_code)->first()
+                    ->vasPaymentsDone()
+                    ->with('contract')
+                    ->with('payee')
+                    ->take(10)->get();
+
+                return \Yajra\DataTables\Facades\DataTables::of($payments)
+                    ->editColumn('created_at', function($payment) {
+                        return Carbon::parse($payment->created_at)->toDateTimeString();
+                    })
+                    ->addColumn('amt',
+                    function($payment){
+                        return number_format($payment->amount,2) . ' '.$payment->amount_currency;
+                    })->toJson();
+            }
 
             //Datatable
             $dataTableHtml = $builder->columns([
-                ['data' => 'id' ],
-                ['data' => 'country_code'],
-                ['data' => 'category'],
-                ['data' => 'amount'],
-                ['data' => 'amount_currency', 'title'=>'Currency'],
+                ['data' => 'created_at', 'title'=> 'Time' ],
+                ['data' => 'contract.title', 'title'=> 'Contract'],
+                ['data' => 'payee.business_name', 'title'=> 'Contractor'],
+                ['data' => 'amt', 'title'=>'Currency'],
             ])->orderBy(0,'desc');
 
             //Dashboard Statistics
