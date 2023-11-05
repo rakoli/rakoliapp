@@ -40,14 +40,14 @@
             <!--begin:Menu sub-->
             <div class="menu-sub menu-sub-accordion">
 
-                <a class="menu-link" href="/dashboard/admin/create-user">
+                <a class="menu-link" href="{{route('business.listbusiness')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">List Business</span>
                 </a>
 
-                <a class="menu-link" href="/dashboard/admin/create-user">
+                <a class="menu-link" href="{{route('business.listusers')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
