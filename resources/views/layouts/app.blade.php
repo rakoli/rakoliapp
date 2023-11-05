@@ -669,9 +669,9 @@
                                                 <a href="#" class="menu-link px-5">
                                                         <span class="menu-title position-relative">Language
                                                             <span
-                                                                class="fs-8 rounded bg-light px-3 py-2 position-absolute translate-middle-y top-50 end-0">{{ $translator('Swahili', 'Kiswahili') }}
+                                                                class="fs-8 rounded bg-light px-3 py-2 position-absolute translate-middle-y top-50 end-0">{{ Session::get('lang', 1) == 1 ?  "English":"Swahili" }}
                                                                 <img class="w-15px h-15px rounded-1 ms-2"
-                                                                     src="assets/media/flags/{{ Session::get('lang', 1) == 1 ? 'united-states.svg' : 'tanzania.svg' }}"
+                                                                     src="{{url('assets/media/flags')}}{{ Session::get('lang', 1) == 1 ? '/united-states.svg' : '/tanzania.svg' }}"
                                                                      alt="" /></span></span>
                                                 </a>
                                                 <div class="menu-sub menu-sub-dropdown w-175px py-4">
@@ -680,7 +680,7 @@
                                                            class="menu-link d-flex px-5 active">
                                                                 <span class="symbol symbol-20px me-4">
                                                                     <img class="rounded-1"
-                                                                         src="assets/media/flags/united-states.svg"
+                                                                         src="{{asset('assets/media/flags/united-states.svg')}}"
                                                                          alt="" />
                                                                 </span>English</a>
                                                     </div>
@@ -689,7 +689,7 @@
                                                            class="menu-link d-flex px-5">
                                                                 <span class="symbol symbol-20px me-4">
                                                                     <img class="rounded-1"
-                                                                         src="assets/media/flags/tanzania.svg"
+                                                                         src="{{asset('assets/media/flags/tanzania.svg')}}"
                                                                          alt="" />
                                                                 </span>Swahili</a>
                                                     </div>
