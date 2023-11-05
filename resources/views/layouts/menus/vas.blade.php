@@ -43,27 +43,27 @@
 
             <!--begin:Menu sub-->
             <div class="menu-sub menu-sub-accordion">
-                <a class="menu-link" href="/dashboard/vas/create-service"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('services.advertisement')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">Advertisement</span>
                 </a>
-                <a class="menu-link" href="/dashboard/vas/create-service"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('services.data')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">Data</span>
                 </a>
-                <a class="menu-link" href="/dashboard/vas/create-service"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('services.sales')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">Sales</span>
                 </a>
-                <a class="menu-link" href="/dashboard/vas/create-service"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('services.verification')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">Verification</span>
                 </a>
-                <a class="menu-link" href="/dashboard/vas/service-list"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('services.manage')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ $translator('Manage', 'Ratibu') }}</span>

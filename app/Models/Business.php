@@ -54,11 +54,11 @@ class Business extends Model
 
     public function agentsSubmissions(): HasManyThrough
     {
-        return $this->hasManyThrough(VasSubmission::class, VasContract::class,'vas_provider_code','vas_contract_code','code','code');
+        return $this->hasManyThrough(VasSubmission::class, VasContract::class,'vas_business_code','vas_contract_code','code','code');
     }
 
     public function vasPaymentsDone(): HasManyThrough
     {
-        return $this->hasManyThrough(VasPayment::class, VasContract::class,'vas_provider_code','vas_contract_code','code','code');
+        return $this->hasManyThrough(VasPayment::class, VasContract::class,'vas_business_code','vas_contract_code','code','code');
     }
 }

@@ -108,7 +108,7 @@ class HomeController extends Controller
             ])->orderBy(0,'desc');
 
             //Dashboard Statistics
-            $stats['total_services'] = VasTask::where('vas_provider_code',auth()->user()->business_code)->count();
+            $stats['total_services'] = VasTask::where('vas_business_code',auth()->user()->business_code)->count();
             $stats['total_submission'] = Business::where('code',auth()->user()->business_code)->first()->agentsSubmissions()->count();
             $stats['users'] = User::where('business_code',auth()->user()->business_code)->count();
             $stats['payments_made'] = VasPayment::where('business_code',auth()->user()->business_code)->get()->sum('amount');

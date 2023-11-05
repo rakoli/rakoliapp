@@ -7,8 +7,16 @@ use App\Http\Controllers\CustomVasDashboardController;
 
 // All get methods will be loaded with this route
 Route::middleware(['auth','onlyvas'])->group(function () {
-    Route::group(['prefix' => 'dashboard', 'as' => 'dashboard'], function () {
 
-        Route::get('/vas/{pagename}', [CustomVasDashboardController::class, 'loadDynamicView'])->where('pagename', '.*');
+    //Services
+    Route::group(['prefix' => 'services', 'route' => 'services.'], function () {
+
+        Route::get('advertisement', [App\Http\Controllers\Vas\ServiceController::class, 'advertisement'])->name('services.advertisement');
+        Route::get('data', [App\Http\Controllers\Vas\ServiceController::class, 'data'])->name('services.data');
+        Route::get('sales', [App\Http\Controllers\Vas\ServiceController::class, 'sales'])->name('services.sales');
+        Route::get('verification', [App\Http\Controllers\Vas\ServiceController::class, 'verification'])->name('services.verification');
+        Route::get('manage', [App\Http\Controllers\Vas\ServiceController::class, 'manage'])->name('services.manage');
+
     });
+
 });
