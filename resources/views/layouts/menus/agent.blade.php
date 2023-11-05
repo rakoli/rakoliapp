@@ -42,35 +42,35 @@
 
             <!--begin:Menu sub-->
             <div class="menu-sub menu-sub-accordion">
-                <a class="menu-link" href="/dashboard/agent/agency-transactions">
+                <a class="menu-link" href="{{route('agency.transactions')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ $translator('Transaction', 'Biashara') }}</span>
+                    <span class="menu-title">{{ $translator('Transactions', 'Miamala') }}</span>
                 </a>
 
-                <a class="menu-link" href="/dashboard/agent/shift">
+                <a class="menu-link" href="{{route('agency.shift')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ $translator('Shift', 'Mabadiliko') }}</span>
+                    <span class="menu-title">{{ $translator('Shift', 'Shift') }}</span>
                 </a>
 
-                <a class="menu-link" href="/dashboard/agent/tills">
+                <a class="menu-link" href="{{route('agency.tills')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ $translator('Tills', 'Tills') }}</span>
                 </a>
 
-                <a class="menu-link" href="/dashboard/agent/networks">
+                <a class="menu-link" href="{{route('agency.networks')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ $translator('Networks', 'Mfumo wa Mawasiliano') }}</span>
+                    <span class="menu-title">{{ $translator('Networks', 'Mitandao') }}</span>
                 </a>
 
-                <a class="menu-link" href="/dashboard/agent/loans">
+                <a class="menu-link" href="{{route('agency.loans')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>

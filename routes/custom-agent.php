@@ -10,12 +10,14 @@ Route::middleware(['auth','onlyagent'])->group(function () {
 
     //Agency
     Route::group(['prefix' => 'agency', 'route' => 'agency.'], function () {
-        Route::get('transactions', [App\Http\Controllers\TestController::class, 'testing'])->name('agency.transactions');
+
+        Route::get('transactions', [App\Http\Controllers\Agent\AgencyController::class, 'transactions'])->name('agency.transactions');
+        Route::get('shift', [App\Http\Controllers\Agent\AgencyController::class, 'shift'])->name('agency.shift');
+        Route::get('tills', [App\Http\Controllers\Agent\AgencyController::class, 'tills'])->name('agency.tills');
+        Route::get('networks', [App\Http\Controllers\Agent\AgencyController::class, 'networks'])->name('agency.networks');
+        Route::get('loans', [App\Http\Controllers\Agent\AgencyController::class, 'loans'])->name('agency.loans');
 
     });
 
-    Route::group(['prefix' => 'dashboard', 'as' => 'dashboard'], function () {
 
-        Route::get('/agent/{pagename}', [CustomAgentDashboardController::class, 'loadDynamicView'])->where('pagename', '.*');
-    });
 });
