@@ -2,16 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\DataTables\Admin\SystemIncomeDataTable;
 use App\Models\Business;
 use App\Models\ExchangeAds;
+use App\Models\ExchangeTransaction;
+use App\Models\Location;
+use App\Models\Network;
+use App\Models\Shift;
 use App\Models\SystemIncome;
+use App\Models\Transaction;
 use App\Models\User;
+use App\Models\VasContract;
 use App\Models\VasPayment;
 use App\Models\VasSubmission;
 use App\Models\VasTask;
+use App\Utils\Enums\ExchangeTransactionStatusEnum;
+use App\Utils\Enums\ShiftStatusEnum;
+use App\Utils\Enums\TransactionCategoryEnum;
 use App\Utils\Enums\UserTypeEnum;
 use Carbon\Carbon;
+use DebugBar\DebugBar;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use Yajra\DataTables\Html\Builder;
@@ -110,9 +119,67 @@ class HomeController extends Controller
 
         //AGENT DASHBOARD
         if (auth()->user()->type == UserTypeEnum::AGENT->value){
+            //Datatable Data
+            if (request()->ajax()) {
+                $recentTransactions = Transaction::with('location')->with('user')
+                    ->orderBy('id','desc')
+                    ->take(10)->get();
 
+                return \Yajra\DataTables\Facades\DataTables::of($recentTransactions)
+                    ->editColumn('amount', function($payment) {
+                        return number_format($payment->amount,2). ' '.$payment->amount_currency;
+                    })
+                    ->editColumn('balance_new', function($payment) {
+                        return number_format($payment->balance_new,2). ' '.$payment->amount_currency;
+                    })
+                    ->editColumn('created_at', function($payment) {
+                        return Carbon::parse($payment->created_at)->toDateTimeString();
+                    })
+                    ->toJson();
+            }
 
-            return view('dashboard.agent');
+            //Datatable
+            $dataTableHtml = $builder->columns([
+                ['data' => 'created_at', 'title'=> 'Time' ],
+                ['data' => 'location.name', 'title'=> 'Location'],
+                ['data' => 'user.name', 'title'=> 'User'],
+                ['data' => 'type'],
+                ['data' => 'amount'],
+                ['data' => 'balance_new' , 'title'=>'Balance'],
+            ])->orderBy(0,'desc');
+
+            //Dashboard Statistics
+            $stats['networks'] = Network::where('business_code',auth()->user()->business_code)->get()->count();
+            $stats['open_shifts'] = Shift::where('status',ShiftStatusEnum::OPEN)->get()->count();
+
+            $cashBalance = Location::where('business_code',auth()->user()->business_code)->get()->sum('balance');
+            $tillBalance = Network::where('business_code',auth()->user()->business_code)->get()->sum('balance');
+            $stats['cash_balance'] = number_format($cashBalance);
+            $stats['till_balance'] = number_format($tillBalance);
+            $stats['total_location_balance'] = number_format($cashBalance + $tillBalance);
+
+            $stats['awarded_vas'] = VasContract::where('agent_business_code', auth()->user()->business_code)->get()->count();
+            $stats['pending_exchange'] = ExchangeTransaction::where([
+                'trader_business_code' => auth()->user()->business_code,
+                'status' => ExchangeTransactionStatusEnum::OPEN
+            ])->orWhere(function (\Illuminate\Database\Eloquent\Builder $query) {
+                    $query->where('owner_business_code', auth()->user()->business_code)
+                        ->where('status', ExchangeTransactionStatusEnum::OPEN);
+                })->get()->count(); // where (trader_business_code AND status) OR (owner_business_code AND status)
+
+            $stats['highlights']['income'] = number_format(Transaction::where([
+                'business_code' => auth()->user()->business_code,
+                'category' => TransactionCategoryEnum::INCOME,
+            ])->where('created_at','>=',now()->subDays(30))->get()->sum('amount'));
+
+            $stats['highlights']['expense'] = number_format(Transaction::where([
+                'business_code' => auth()->user()->business_code,
+                'category' => TransactionCategoryEnum::EXPENSE,
+            ])->where('created_at','>=',now()->subDays(30))->get()->sum('amount'));
+
+            $stats['highlights']['referrals'] = number_format(Business::where('referral_business_code', auth()->user()->business_code)->get()->count());
+
+            return view('dashboard.agent',compact('dataTableHtml','stats'));
         }
 
         return 'INVALID DASHBOARD REQUEST';

@@ -6,6 +6,10 @@
     style="background-color: #15302e"
 @endsection
 
+@section('header_js')
+    <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css" />
+@endsection
+
 @section('content')
 
     <!--begin::Container-->
@@ -24,7 +28,7 @@
                         <!--begin::Title-->
                         <div class="card-title d-flex flex-column">
                             <!--begin::Amount-->
-                            <span class="fs-2hx fw-bold me-2 lh-1 ls-n2">69</span>
+                            <span class="fs-2hx fw-bold me-2 lh-1 ls-n2">{{$stats['networks']}}</span>
                             <!--end::Amount-->
                             <!--begin::Subtitle-->
                             <span class="text-gray-400 pt-1 fw-semibold fs-6">Network Tills</span>
@@ -38,7 +42,7 @@
                         <!--begin::Progress-->
                         <div class="d-flex align-items-center flex-column mt-3 w-100">
                             <div class="d-flex justify-content-between fw-bold fs-6 w-100 mt-auto mb-2">
-                                <span>2 Open Shifts</span>
+                                <span>{{$stats['open_shifts']}} Open Shifts</span>
                             </div>
                         </div>
                         <!--end::Progress-->
@@ -53,7 +57,7 @@
                         <!--begin::Title-->
                         <div class="card-title d-flex flex-column">
                             <!--begin::Amount-->
-                            <span class="fs-2hx fw-bold text-dark me-2 lh-1 ls-n2">03</span>
+                            <span class="fs-2hx fw-bold text-dark me-2 lh-1 ls-n2">{{$stats['awarded_vas']}}</span>
                             <!--end::Amount-->
                             <!--begin::Subtitle-->
                             <span class="text-gray-400 pt-1 fw-semibold fs-6">Awarded VAS</span>
@@ -67,7 +71,7 @@
                         <!--begin::Progress-->
                         <div class="d-flex align-items-center flex-column mt-3 w-100">
                             <div class="d-flex justify-content-between fw-bold fs-6 w-100 mt-auto mb-2">
-                                <span>1 pending exchange</span>
+                                <span>{{$stats['pending_exchange']}} Pending Exchange</span>
                             </div>
                         </div>
                         <!--end::Progress-->
@@ -90,15 +94,15 @@
                             <!--begin::Info-->
                             <div class="d-flex align-items-center">
                                 <!--begin::Currency-->
-                                <span class="fs-4 fw-semibold text-gray-400 me-1 align-self-start">Tsh</span>
+                                <span class="fs-4 fw-semibold text-gray-400 me-1 align-self-start">{{session('currency')}}</span>
                                 <!--end::Currency-->
                                 <!--begin::Amount-->
-                                <span class="fs-2hx fw-bold text-dark me-2 lh-1 ls-n2">6,999,700</span>
+                                <span class="fs-2hx fw-bold text-dark me-2 lh-1 ls-n2">{{$stats['total_location_balance']}}</span>
                                 <!--end::Amount-->
                             </div>
                             <!--end::Info-->
                             <!--begin::Subtitle-->
-                            <span class="text-gray-400 pt-1 fw-semibold fs-6">30 day shift turnover</span>
+                            <span class="text-gray-400 pt-1 fw-semibold fs-6">Total Balance</span>
                             <!--end::Subtitle-->
                         </div>
                         <!--end::Title-->
@@ -119,10 +123,10 @@
                                 <div class="bullet w-8px h-3px rounded-2 bg-success me-3"></div>
                                 <!--end::Bullet-->
                                 <!--begin::Label-->
-                                <div class="text-gray-500 flex-grow-1 me-4">Mpesa</div>
+                                <div class="text-gray-500 flex-grow-1 me-4">Cash</div>
                                 <!--end::Label-->
                                 <!--begin::Stats-->
-                                <div class="fw-bolder text-gray-700 text-xxl-end">Tsh7,660</div>
+                                <div class="fw-bolder text-gray-700 text-xxl-end">{{session('currency').' '.$stats['cash_balance']}}</div>
                                 <!--end::Stats-->
                             </div>
                             <!--end::Label-->
@@ -132,23 +136,10 @@
                                 <div class="bullet w-8px h-3px rounded-2 bg-primary me-3"></div>
                                 <!--end::Bullet-->
                                 <!--begin::Label-->
-                                <div class="text-gray-500 flex-grow-1 me-4">Airtel Money</div>
+                                <div class="text-gray-500 flex-grow-1 me-4">Network Tills</div>
                                 <!--end::Label-->
                                 <!--begin::Stats-->
-                                <div class="fw-bolder text-gray-700 text-xxl-end">Tsh2,820</div>
-                                <!--end::Stats-->
-                            </div>
-                            <!--end::Label-->
-                            <!--begin::Label-->
-                            <div class="d-flex fw-semibold align-items-center">
-                                <!--begin::Bullet-->
-                                <div class="bullet w-8px h-3px rounded-2 me-3" style="background-color: #E4E6EF"></div>
-                                <!--end::Bullet-->
-                                <!--begin::Label-->
-                                <div class="text-gray-500 flex-grow-1 me-4">Equity</div>
-                                <!--end::Label-->
-                                <!--begin::Stats-->
-                                <div class="fw-bolder text-gray-700 text-xxl-end">Tsh45,257</div>
+                                <div class="fw-bolder text-gray-700 text-xxl-end">{{session('currency').' '.$stats['till_balance']}}</div>
                                 <!--end::Stats-->
                             </div>
                             <!--end::Label-->
@@ -166,7 +157,7 @@
                         <!--begin::Title-->
                         <h3 class="card-title align-items-start flex-column">
                             <span class="card-label fw-bold text-dark">Highlights</span>
-                            <span class="text-gray-400 mt-1 fw-semibold fs-6">30 day financials</span>
+                            <span class="text-gray-400 mt-1 fw-semibold fs-6">30 days financials</span>
                         </h3>
                         <!--end::Title-->
                     </div>
@@ -181,7 +172,7 @@
                             <!--begin::Statistics-->
                             <div class="d-flex align-items-senter">
                                 <!--begin::Number-->
-                                <span class="text-gray-900 fw-bolder fs-6">Tsh 50,000</span>
+                                <span class="text-gray-900 fw-bolder fs-6">{{session('currency').' '.$stats['highlights']['income']}}</span>
                             </div>
                             <!--end::Statistics-->
                         </div>
@@ -197,7 +188,7 @@
                             <!--begin::Statistics-->
                             <div class="d-flex align-items-senter">
                                 <!--begin::Number-->
-                                <span class="text-gray-900 fw-bolder fs-6">Tsh 20,000</span>
+                                <span class="text-gray-900 fw-bolder fs-6">{{session('currency').' '.$stats['highlights']['expense']}}</span>
                                 <!--end::Number-->
                             </div>
                             <!--end::Statistics-->
@@ -214,7 +205,7 @@
                             <!--begin::Statistics-->
                             <div class="d-flex align-items-senter">
                                 <!--begin::Number-->
-                                <span class="text-gray-900 fw-bolder fs-6">4</span>
+                                <span class="text-gray-900 fw-bolder fs-6">{{$stats['highlights']['referrals']}}</span>
                                 <!--end::Number-->
                             </div>
                             <!--end::Statistics-->
@@ -254,8 +245,8 @@
                         </div>
                         <!--begin::Wrapper-->
                         <!--begin::Illustration-->
-                        <img class="mx-auto h-150px h-lg-200px theme-light-show" src="assets/media/illustrations/misc/upgrade.svg" alt="" />
-                        <img class="mx-auto h-150px h-lg-200px theme-dark-show" src="assets/media/illustrations/misc/upgrade-dark.svg" alt="" />
+                        <img class="mx-auto h-150px h-lg-200px theme-light-show" src="{{asset('assets/media/illustrations/misc/upgrade.svg')}}" alt="" />
+                        <img class="mx-auto h-150px h-lg-200px theme-dark-show" src="{{asset('assets/media/illustrations/misc/upgrade-dark.svg')}}" alt="" />
                         <!--end::Illustration-->
                     </div>
                     <!--end::Body-->
@@ -280,12 +271,11 @@
                         <!--begin::Title-->
                         <h3 class="card-title align-items-start flex-column">
                             <span class="card-label fw-bold text-gray-800">Recent Transactions</span>
-                            <span class="text-gray-400 mt-1 fw-semibold fs-6">Updated 37 minutes ago</span>
                         </h3>
                         <!--end::Title-->
                         <!--begin::Toolbar-->
                         <div class="card-toolbar">
-                            <a href="../../demo6/dist/apps/ecommerce/catalog/add-product.html" class="btn btn-sm btn-light">History</a>
+                            <a href="{{route('agency.transactions')}}" class="btn btn-sm btn-light">View Transactions</a>
                         </div>
                         <!--end::Toolbar-->
                     </div>
@@ -293,192 +283,7 @@
                     <!--begin::Body-->
                     <div class="card-body pt-6">
                         <!--begin::Table container-->
-                        <div class="table-responsive">
-                            <!--begin::Table-->
-                            <table class="table table-row-dashed align-middle gs-0 gy-3 my-0">
-                                <!--begin::Table head-->
-                                <thead>
-                                <tr class="fs-7 fw-bold text-gray-400 border-bottom-0">
-                                    <th class="p-0 pb-3 min-w-175px text-start">ITEM</th>
-                                    <th class="p-0 pb-3 min-w-100px text-end">BUDGET</th>
-                                    <th class="p-0 pb-3 min-w-100px text-end">PROGRESS</th>
-                                    <th class="p-0 pb-3 min-w-175px text-end pe-12">STATUS</th>
-                                    <th class="p-0 pb-3 w-125px text-end pe-7">CHART</th>
-                                    <th class="p-0 pb-3 w-50px text-end">VIEW</th>
-                                </tr>
-                                </thead>
-                                <!--end::Table head-->
-                                <!--begin::Table body-->
-                                <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="symbol symbol-50px me-3">
-                                                <img src="assets/media/stock/600x600/img-49.jpg" class="" alt="" />
-                                            </div>
-                                            <div class="d-flex justify-content-start flex-column">
-                                                <a href="#" class="text-gray-800 fw-bold text-hover-primary mb-1 fs-6">Mivy App</a>
-                                                <span class="text-gray-400 fw-semibold d-block fs-7">Jane Cooper</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="text-end pe-0">
-                                        <span class="text-gray-600 fw-bold fs-6">$32,400</span>
-                                    </td>
-                                    <td class="text-end pe-0">
-                                        <!--begin::Label-->
-                                        <span class="badge badge-light-success fs-base">
-                                                                    <i class="ki-outline ki-arrow-up fs-5 text-success ms-n1"></i>9.2%</span>
-                                        <!--end::Label-->
-                                    </td>
-                                    <td class="text-end pe-12">
-                                        <span class="badge py-3 px-4 fs-7 badge-light-primary">In Process</span>
-                                    </td>
-                                    <td class="text-end pe-0">
-                                        <div id="kt_table_widget_14_chart_1" class="h-50px mt-n8 pe-7" data-kt-chart-color="success"></div>
-                                    </td>
-                                    <td class="text-end">
-                                        <a href="#" class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary w-30px h-30px">
-                                            <i class="ki-outline ki-black-right fs-2 text-gray-500"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="symbol symbol-50px me-3">
-                                                <img src="assets/media/stock/600x600/img-40.jpg" class="" alt="" />
-                                            </div>
-                                            <div class="d-flex justify-content-start flex-column">
-                                                <a href="#" class="text-gray-800 fw-bold text-hover-primary mb-1 fs-6">Avionica</a>
-                                                <span class="text-gray-400 fw-semibold d-block fs-7">Esther Howard</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="text-end pe-0">
-                                        <span class="text-gray-600 fw-bold fs-6">$256,910</span>
-                                    </td>
-                                    <td class="text-end pe-0">
-                                        <!--begin::Label-->
-                                        <span class="badge badge-light-danger fs-base">
-                                                                    <i class="ki-outline ki-arrow-down fs-5 text-danger ms-n1"></i>0.4%</span>
-                                        <!--end::Label-->
-                                    </td>
-                                    <td class="text-end pe-12">
-                                        <span class="badge py-3 px-4 fs-7 badge-light-warning">On Hold</span>
-                                    </td>
-                                    <td class="text-end pe-0">
-                                        <div id="kt_table_widget_14_chart_2" class="h-50px mt-n8 pe-7" data-kt-chart-color="danger"></div>
-                                    </td>
-                                    <td class="text-end">
-                                        <a href="#" class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary w-30px h-30px">
-                                            <i class="ki-outline ki-black-right fs-2 text-gray-500"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="symbol symbol-50px me-3">
-                                                <img src="assets/media/stock/600x600/img-39.jpg" class="" alt="" />
-                                            </div>
-                                            <div class="d-flex justify-content-start flex-column">
-                                                <a href="#" class="text-gray-800 fw-bold text-hover-primary mb-1 fs-6">Charto CRM</a>
-                                                <span class="text-gray-400 fw-semibold d-block fs-7">Jenny Wilson</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="text-end pe-0">
-                                        <span class="text-gray-600 fw-bold fs-6">$8,220</span>
-                                    </td>
-                                    <td class="text-end pe-0">
-                                        <!--begin::Label-->
-                                        <span class="badge badge-light-success fs-base">
-                                                                    <i class="ki-outline ki-arrow-up fs-5 text-success ms-n1"></i>9.2%</span>
-                                        <!--end::Label-->
-                                    </td>
-                                    <td class="text-end pe-12">
-                                        <span class="badge py-3 px-4 fs-7 badge-light-primary">In Process</span>
-                                    </td>
-                                    <td class="text-end pe-0">
-                                        <div id="kt_table_widget_14_chart_3" class="h-50px mt-n8 pe-7" data-kt-chart-color="success"></div>
-                                    </td>
-                                    <td class="text-end">
-                                        <a href="#" class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary w-30px h-30px">
-                                            <i class="ki-outline ki-black-right fs-2 text-gray-500"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="symbol symbol-50px me-3">
-                                                <img src="assets/media/stock/600x600/img-47.jpg" class="" alt="" />
-                                            </div>
-                                            <div class="d-flex justify-content-start flex-column">
-                                                <a href="#" class="text-gray-800 fw-bold text-hover-primary mb-1 fs-6">Tower Hill</a>
-                                                <span class="text-gray-400 fw-semibold d-block fs-7">Cody Fisher</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="text-end pe-0">
-                                        <span class="text-gray-600 fw-bold fs-6">$74,000</span>
-                                    </td>
-                                    <td class="text-end pe-0">
-                                        <!--begin::Label-->
-                                        <span class="badge badge-light-success fs-base">
-                                                                    <i class="ki-outline ki-arrow-up fs-5 text-success ms-n1"></i>9.2%</span>
-                                        <!--end::Label-->
-                                    </td>
-                                    <td class="text-end pe-12">
-                                        <span class="badge py-3 px-4 fs-7 badge-light-success">Complated</span>
-                                    </td>
-                                    <td class="text-end pe-0">
-                                        <div id="kt_table_widget_14_chart_4" class="h-50px mt-n8 pe-7" data-kt-chart-color="success"></div>
-                                    </td>
-                                    <td class="text-end">
-                                        <a href="#" class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary w-30px h-30px">
-                                            <i class="ki-outline ki-black-right fs-2 text-gray-500"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="symbol symbol-50px me-3">
-                                                <img src="assets/media/stock/600x600/img-48.jpg" class="" alt="" />
-                                            </div>
-                                            <div class="d-flex justify-content-start flex-column">
-                                                <a href="#" class="text-gray-800 fw-bold text-hover-primary mb-1 fs-6">9 Degree</a>
-                                                <span class="text-gray-400 fw-semibold d-block fs-7">Savannah Nguyen</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="text-end pe-0">
-                                        <span class="text-gray-600 fw-bold fs-6">$183,300</span>
-                                    </td>
-                                    <td class="text-end pe-0">
-                                        <!--begin::Label-->
-                                        <span class="badge badge-light-danger fs-base">
-                                                                    <i class="ki-outline ki-arrow-down fs-5 text-danger ms-n1"></i>0.4%</span>
-                                        <!--end::Label-->
-                                    </td>
-                                    <td class="text-end pe-12">
-                                        <span class="badge py-3 px-4 fs-7 badge-light-primary">In Process</span>
-                                    </td>
-                                    <td class="text-end pe-0">
-                                        <div id="kt_table_widget_14_chart_5" class="h-50px mt-n8 pe-7" data-kt-chart-color="danger"></div>
-                                    </td>
-                                    <td class="text-end">
-                                        <a href="#" class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary w-30px h-30px">
-                                            <i class="ki-outline ki-black-right fs-2 text-gray-500"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                </tbody>
-                                <!--end::Table body-->
-                            </table>
-                        </div>
+                        {!! $dataTableHtml->table(['class' => 'table table-striped table-row-bordered gy-5 gs-7'],true) !!}
                         <!--end::Table-->
                     </div>
                     <!--end: Card Body-->
@@ -492,4 +297,9 @@
     </div>
     <!--end::Container-->
 
+@endsection
+
+@section('footer_js')
+    <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}" type="text/javascript"></script>
+    {!! $dataTableHtml->scripts() !!}
 @endsection

@@ -4,8 +4,6 @@ namespace App\Utils\Enums;
 
 enum TransactionTypeEnum : string
 {
-
-    case MONEY_IN = "money in";
-
-    case MONEY_OUT = "money out";
+    case MONEY_IN = "IN";
+    case MONEY_OUT = "OUT";
 }

@@ -25,7 +25,7 @@ class VasPaymentFactory extends Factory
     public function definition(): array
     {
         $businessCode = Business::where('type',BusinessTypeEnum::VAS->value)->first()->code;
-        $contracts = VasContract::where('vas_provider_code',$businessCode)->get('code')->toArray();
+        $contracts = VasContract::where('vas_business_code',$businessCode)->get('code')->toArray();
         return [
             'business_code' => $businessCode,
             'vas_contract_code' => fake()->randomElement($contracts)['code'],

@@ -23,7 +23,7 @@ class VasSubmissionFactory extends Factory
     public function definition(): array
     {
         $businessCode = Business::where('type',BusinessTypeEnum::VAS->value)->first()->code;
-        $contracts = VasContract::where('vas_provider_code',$businessCode)->get('code')->toArray();
+        $contracts = VasContract::where('vas_business_code',$businessCode)->get('code')->toArray();
         $selectedContractCode = fake()->randomElement($contracts)['code'];
         $selectedContract = VasContract::where('code',$selectedContractCode)->first();
         $submitter = User::where('business_code',$selectedContract->agent_code)->first();

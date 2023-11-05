@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transactions', function (Blueprint $table) {
+        Schema::create('networks', function (Blueprint $table) {
             $table->id();
-
             $table->string('business_code');
             $table->foreign('business_code')->references('code')
                 ->on('businesses')
@@ -26,32 +25,21 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->foreignIdFor(\App\Models\Shift::class)
-                ->constrained()
-                ->cascadeOnDelete()
-                ->cascadeOnUpdate();
-
-            $table->string('network_code');
-            $table->foreign('network_code')->references('code')
-                ->on('networks')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-
-            $table->string('user_code');
-            $table->foreign('user_code')->references('code')
-                ->on('users')
+            $table->string('fsp_code');
+            $table->foreign('fsp_code')->references('code')
+                ->on('financial_service_providers')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
             $table->string('code')->unique();
-            $table->string('type');// enum <TransactionTypeEnum<Money_in, Money_out>>
-            $table->decimal('amount' , 12, 2);
-            $table->decimal('balance_old' , 12, 2);
-            $table->decimal('balance_new' , 12, 2);
-            $table->string('description');
-            $table->text('note')->nullable();
-
+            $table->string('agent_no')->index();
+            $table->string('name');
+            $table->double('balance', 12 ,0);
+            $table->string('balance_currency');
+            $table->string('description')->nullable();
             $table->timestamps();
+
+            $table->unique(['location_code','fsp_code','agent_no'],'uniq_agent');
         });
     }
 
@@ -60,6 +48,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transactions');
+        Schema::dropIfExists('networks');
     }
 };

@@ -21,8 +21,8 @@ return new class extends Migration
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
 
-            $table->string('vas_provider_code')->nullable(); // vas provider
-            $table->foreign('vas_provider_code')->references('code')
+            $table->string('vas_business_code')->nullable(); // vas provider
+            $table->foreign('vas_business_code')->references('code')
                 ->on('businesses')
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();

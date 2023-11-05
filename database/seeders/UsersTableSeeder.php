@@ -47,6 +47,8 @@ class UsersTableSeeder extends Seeder
             'business_code' => $agentBusiness->code,
             'code' => Str::random(10) ,
             'name' => 'Vertice HQ',
+            'balance' => fake()->numberBetween(500000, 5000000),
+            'balance_currency' => fake()->randomElement(['kes','tzs']),
         ]);
 
         //VAS BUSINESS

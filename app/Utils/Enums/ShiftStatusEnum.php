@@ -2,11 +2,9 @@
 
 namespace App\Utils\Enums;
 
-enum ShiftEnum : string
+enum ShiftStatusEnum : string
 {
-
     case OPEN = "open";
-
     case CLOSED = "closed";
-
+    case INREVIEW = "inreview";
 }

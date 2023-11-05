@@ -81,6 +81,10 @@ class LoginController extends Controller
         Session::put('remember_token', $user->remember_token);
         Session::put('created_at', $user->created_at);
         Session::put('updated_at', $user->updated_at);
+        Session::put('updated_at', $user->updated_at);
+
+
+        Session::put('currency', $user->business->country->currency);
 
         return 1;
     }

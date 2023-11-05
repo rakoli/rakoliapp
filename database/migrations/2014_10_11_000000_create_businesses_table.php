@@ -20,6 +20,7 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->string('code')->unique();
+            $table->string('referral_business_code')->nullable();
             $table->string('type')->default(\App\Utils\Enums\BusinessTypeEnum::AGENCY->value);
 //            $table->string('walkthrough_step')->nullable()->default(\App\Utils\Enums\WalkThroughStepEnums::BUSINESS->value);
             $table->boolean('is_verified')->default(0);
@@ -38,6 +39,13 @@ return new class extends Migration
             $table->string('status')->default(\App\Utils\Enums\BusinessStatusEnum::ACTIVE->value);//1- Active, 0 - Disabled, 2 - Inactive
             $table->decimal('balance',12,2)->default(0); //Earning from referral and VAS
             $table->timestamps();
+        });
+
+        Schema::table('businesses', function (Blueprint $table){
+            $table->foreign('referral_business_code', 'parent_business_fk')->references('code')
+                ->on('businesses')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
         });
     }
 

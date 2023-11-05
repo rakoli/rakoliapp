@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('networks', function (Blueprint $table) {
+        Schema::create('transactions', function (Blueprint $table) {
             $table->id();
+
             $table->string('business_code');
             $table->foreign('business_code')->references('code')
                 ->on('businesses')
@@ -25,20 +26,22 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->string('fsp_code');
-            $table->foreign('fsp_code')->references('code')
-                ->on('financial_service_providers')
+            $table->string('user_code');
+            $table->foreign('user_code')->references('code')
+                ->on('users')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->string('code')->unique();
-            $table->string('agent_no')->index();
-            $table->string('name');
-            $table->double('balance', 12 ,0);
-            $table->string('desc')->nullable();
-            $table->timestamps();
+            $table->string('type');// enum <TransactionTypeEnum<Money_in, Money_out>>
+            $table->string('category');// enum <TransactionCategoryEnum<Income, Expense, General>>
+            $table->decimal('amount' , 12, 2);
+            $table->string('amount_currency');
+            $table->decimal('balance_old' , 12, 2);
+            $table->decimal('balance_new' , 12, 2);
+            $table->string('description');
+            $table->text('note')->nullable();
 
-            $table->unique(['location_code','fsp_code','agent_no'],'uniq_agent');
+            $table->timestamps();
         });
     }
 
@@ -47,6 +50,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('networks');
+        Schema::dropIfExists('transactions');
     }
 };

@@ -1,5 +1,6 @@
 <?php
 
+use App\Utils\Enums\ExchangeStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -27,12 +28,10 @@ return new class extends Migration
                 ->onUpdate('cascade');
 
             $table->string('location_code');
-
             $table->foreign('location_code')->references('code')
                 ->on('locations')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-
 
             $table->string('code')->unique();
 
@@ -56,8 +55,10 @@ return new class extends Migration
 
             $table->decimal('min_amount', 12,2);
             $table->decimal('max_amount', 12,2);
-
-            $table->string('status')->default(\App\Utils\Enums\AdsStatusEnum::NEW->value);
+            $table->string('currency');
+            $table->string('status')->default(ExchangeStatusEnum::ACTIVE->value);
+            $table->string('description')->nullable();
+            $table->text('open_note')->nullable();
             $table->timestamps();
         });
     }

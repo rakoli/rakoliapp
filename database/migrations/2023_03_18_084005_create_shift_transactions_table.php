@@ -1,6 +1,5 @@
 <?php
 
-use App\Utils\Enums\ShiftStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('shifts', function (Blueprint $table) {
+        Schema::create('shift_transactions', function (Blueprint $table) {
             $table->id();
 
             $table->string('business_code');
@@ -27,20 +26,31 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
+            $table->foreignIdFor(\App\Models\Shift::class)
+                ->constrained()
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
+
+            $table->string('network_code');
+            $table->foreign('network_code')->references('code')
+                ->on('networks')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+
             $table->string('user_code');
             $table->foreign('user_code')->references('code')
                 ->on('users')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->integer('no')->default(1);//Can be a couple during a day
-            $table->decimal('cash_start',12,2);
-            $table->decimal('cash_end',12,2);
-            $table->string('currency');
-            $table->string('status')->default(ShiftStatusEnum::OPEN);
-
-            $table->text('description')->invisible()->nullable();
-            $table->string('note')->nullable();
+            $table->string('code')->unique();
+            $table->string('type');// enum <TransactionTypeEnum<Money_in, Money_out>>
+            $table->decimal('amount' , 12, 2);
+            $table->string('amount_currency');
+            $table->decimal('balance_old' , 12, 2);
+            $table->decimal('balance_new' , 12, 2);
+            $table->string('description');
+            $table->text('note')->nullable();
 
             $table->timestamps();
         });
@@ -51,6 +61,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('shifts');
+        Schema::dropIfExists('shift_transactions');
     }
 };

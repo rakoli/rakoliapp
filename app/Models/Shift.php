@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Models\Scopes\BusinessScoped;
 use App\Models\Scopes\LocationScoped;
-use App\Utils\Enums\ShiftEnum;
+use App\Utils\Enums\ShiftStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -16,7 +16,7 @@ class Shift extends Model
 
 
     protected $casts = [
-        'status' => ShiftEnum::class
+        'status' => ShiftStatusEnum::class
     ];
 
     protected static function booted()

@@ -18,7 +18,6 @@ class Network extends Model
         static::addGlobalScope(new BusinessScoped());
     }
 
-
     public function business()
     {
         return $this->belongsTo(Business::class,'business_code','code');

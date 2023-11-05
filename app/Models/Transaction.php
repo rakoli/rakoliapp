@@ -4,6 +4,9 @@ namespace App\Models;
 
 use App\Models\Scopes\BusinessScoped;
 use App\Models\Scopes\LocationScoped;
+use Database\Factories\SystemIncomeFactory;
+use Database\Factories\TransactionsFactory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,24 +14,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Transaction extends Model
 {
     use HasFactory;
-    protected static function booted()
+
+    protected static function newFactory(): Factory
     {
-        static::addGlobalScope(new LocationScoped());
-        static::addGlobalScope(new BusinessScoped());
+        return TransactionsFactory::new();
     }
 
-
-    public function business() : BelongsTo
+    public function location(): BelongsTo
     {
-        return  $this->belongsTo(Business::class,'business_code','code');
+        return $this->belongsTo(Location::class, 'location_code', 'code');
     }
 
-    public function network() : BelongsTo
+    public function user(): BelongsTo
     {
-        return  $this->belongsTo(Network::class,'network_code','code')->with('agency');
-    }
-    public function shift() : BelongsTo
-    {
-        return  $this->belongsTo(Shift::class);
+        return $this->belongsTo(User::class, 'user_code', 'code');
     }
 }
