@@ -1,10 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.users.vas')
 
-@section('title', "VAS - Dashboard")
-
-@section('aside_background')
-
-@endsection
+@section('title', "Dashboard")
 
 @section('header_js')
     <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css" />

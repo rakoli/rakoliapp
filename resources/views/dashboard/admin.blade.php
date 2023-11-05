@@ -1,10 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.users.admin')
 
-@section('title', "Admin - Dashboard")
-
-@section('aside_background')
-    style="background-color: #570b05"
-@endsection
+@section('title', "Dashboard")
 
 @section('header_js')
     <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css" />

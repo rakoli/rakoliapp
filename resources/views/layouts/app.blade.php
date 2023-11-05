@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-    <title>@yield('title') - {{env('APP_NAME')}}</title>
+    <title>@yield('title')@yield('sub_title') - {{env('APP_NAME')}}</title>
     <meta charset="utf-8" />
     <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="pragma" content="no-cache">

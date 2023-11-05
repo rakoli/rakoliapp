@@ -1,10 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.users.agent')
 
 @section('title', "Dashboard")
-
-@section('aside_background')
-    style="background-color: #15302e"
-@endsection
 
 @section('header_js')
     <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css" />
