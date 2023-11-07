@@ -1,4 +1,4 @@
-@section('title', 'VAS Registration')
+@section('title', __('VAS Provider Registration'))
 
 @include('layouts.components.header_auth')
 
@@ -44,8 +44,8 @@
                                 <!--end::Icon-->
                                 <!--begin::Label-->
                                 <div class="stepper-label">
-                                    <h3 class="stepper-title fs-2">Verification</h3>
-                                    <div class="stepper-desc fw-normal">Verify your contact information</div>
+                                    <h3 class="stepper-title fs-2">{{__('Verification')}}</h3>
+                                    <div class="stepper-desc fw-normal">{{__('Verify your contact information')}}</div>
                                 </div>
                                 <!--end::Label-->
                             </div>
@@ -67,8 +67,8 @@
                                 <!--end::Icon-->
                                 <!--begin::Label-->
                                 <div class="stepper-label">
-                                    <h3 class="stepper-title fs-2">Business Information</h3>
-                                    <div class="stepper-desc fw-normal">Enter your business information</div>
+                                    <h3 class="stepper-title fs-2">{{__('Business Information')}}</h3>
+                                    <div class="stepper-desc fw-normal">{{__('Enter your business information')}}</div>
                                 </div>
                                 <!--end::Label-->
                             </div>
@@ -90,8 +90,8 @@
                                 <!--end::Icon-->
                                 <!--begin::Label-->
                                 <div class="stepper-label">
-                                    <h3 class="stepper-title fs-2">Document Submission</h3>
-                                    <div class="stepper-desc fw-normal">Upload business legals</div>
+                                    <h3 class="stepper-title fs-2">{{__('Document Submission')}}</h3>
+                                    <div class="stepper-desc fw-normal">{{__('Upload business legals')}}</div>
                                 </div>
                                 <!--end::Label-->
                             </div>
@@ -113,8 +113,8 @@
                                 <!--end::Icon-->
                                 <!--begin::Label-->
                                 <div class="stepper-label">
-                                    <h3 class="stepper-title">Completed</h3>
-                                    <div class="stepper-desc fw-normal">Your account is created</div>
+                                    <h3 class="stepper-title">{{__('Completed')}}</h3>
+                                    <div class="stepper-desc fw-normal">{{__('Your account is created')}}</div>
                                 </div>
                                 <!--end::Label-->
                             </div>
@@ -183,6 +183,49 @@
                 <!--end::Wrapper-->
             </div>
             <!--end::Content-->
+            <!--begin::Footer-->
+            <div class="w-lg-500px d-flex flex-stack px-10 mx-auto">
+                <!--begin::Languages-->
+                <div class="me-10">
+                    <!--begin::Toggle-->
+                    <button class="btn btn-flex btn-link btn-color-gray-700 btn-active-color-primary rotate fs-base" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start" data-kt-menu-offset="0px, 0px">
+                        <img data-kt-element="current-lang-flag" class="w-20px h-20px rounded me-3" src="{{ getLocaleSVGImagePath(session('locale')) }}"  alt="" />
+                        <span data-kt-element="current-lang-name" class="me-1">{{ localeToLanguage(session('locale'))}}</span>
+                        <span class="d-flex flex-center rotate-180">
+                            <i class="ki-outline ki-down fs-5 text-muted m-0"></i>
+                        </span>
+                    </button>
+                    <!--end::Toggle-->
+                    <!--begin::Menu-->
+                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-200px py-4 fs-7" data-kt-menu="true" id="kt_auth_lang_menu">
+                        <!--begin::Menu item-->
+                        <div class="menu-item px-3">
+                            <a href="{{route('languageSwitch',['language'=>'en'])}}" class="menu-link d-flex px-5" data-kt-lang="English">
+										<span class="symbol symbol-20px me-4">
+											<img data-kt-element="lang-flag" class="rounded-1" src="{{ getLocaleSVGImagePath('en') }}" alt="" />
+										</span>
+                                <span data-kt-element="lang-name">{{ $translator("English", "Kiingereza") }}</span>
+                            </a>
+                        </div>
+                        <!--end::Menu item-->
+                        <!--begin::Menu item-->
+                        <div class="menu-item px-3">
+                            <a href="{{route('languageSwitch',['language'=>'sw'])}}" class="menu-link d-flex px-5" data-kt-lang="Swahili">
+										<span class="symbol symbol-20px me-4">
+											<img data-kt-element="lang-flag" class="rounded-1" src="{{ getLocaleSVGImagePath('sw') }}" alt="" />
+										</span>
+                                <span data-kt-element="lang-name">{{ $translator("Swahili", "Kiswahili") }}</span>
+                            </a>
+                        </div>
+                        <!--end::Menu item-->
+                    </div>
+                    <!--end::Menu-->
+                </div>
+                <!--end::Languages-->
+
+
+            </div>
+            <!--end::Footer-->
         </div>
         <!--end::Body-->
     </div>
