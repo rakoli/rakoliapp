@@ -13,6 +13,6 @@ class TestController extends Controller
     {
 
 
-        return view('auth.passwords.reset');
+        return view('auth.registration_agent.index');
     }
 }
