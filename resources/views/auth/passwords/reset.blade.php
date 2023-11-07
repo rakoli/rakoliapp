@@ -1,6 +1,6 @@
 @extends('layouts.auth_basic')
 
-@section('title', 'Reset Password')
+@section('title', __('Reset Password'))
 
 @section('body')
 
@@ -21,11 +21,11 @@
                 <!--begin::Heading-->
                 <div class="text-center mb-10">
                     <!--begin::Title-->
-                    <h1 class="text-dark fw-bolder mb-3">{{ $translator("Setup New Password","Tengeneza Nyuwila Mpya")}}</h1>
+                    <h1 class="text-dark fw-bolder mb-3">{{ __("Setup New Password")}}</h1>
                     <!--end::Title-->
                     <!--begin::Link-->
-                    <div class="text-gray-500 fw-semibold fs-6">{{ $translator("Have you already reset the password?","Je, Umeshatengeneza nyuwila tiari?")}}
-                        <a href="{{route('login')}}" class="link-primary fw-bold">{{ $translator("Sign in","Ingia kwenye account")}}</a></div>
+                    <div class="text-gray-500 fw-semibold fs-6">{{ __("Have you already reset the password?")}}
+                        <a href="{{route('login')}}" class="link-primary fw-bold">{{ __("Sign In")}}</a></div>
                     <!--end::Link-->
                 </div>
                 <!--begin::Heading-->
@@ -38,25 +38,25 @@
 
 
                 <div class="fv-row mb-8">
-                    <input id="password" type="password" placeholder="{{ $translator("Password","Nyuwila")}}" class="form-control bg-transparent @error('password') is-invalid @enderror" name="password" required autocomplete="new-password" autofocus>
+                    <input id="password" type="password" placeholder="{{ __("Password")}}" class="form-control bg-transparent @error('password') is-invalid @enderror" name="password" required autocomplete="new-password" autofocus>
                     <!--begin::Hint-->
-                    <div class="text-muted">{{ $translator("Use 8 or more characters with a mix of letters, numbers & symbols.","Tumia herufi 8 au zaidi zilizo na mchanganyiko wa herufi, nambari na alama.")}}</div>
+                    <div class="text-muted">{{ __("Use 8 or more characters with a mix of letters, numbers & symbols.")}}</div>
                     <!--end::Hint-->
                 </div>
 
                 <div class="fv-row mb-8">
-                    <input id="password-confirm" type="password" placeholder="{{ $translator("Repeat passsword","Rudia Nyuwila")}}" class="form-control bg-transparent" name="password_confirmation" required autocomplete="new-password">
+                    <input id="password-confirm" type="password" placeholder="{{ __("Repeat Password")}}" class="form-control bg-transparent" name="password_confirmation" required autocomplete="new-password">
                 </div>
 
 
                 <div class="d-grid mb-10">
                     <button type="submit" class="btn btn-primary">
                         <!--begin::Indicator label-->
-                        <span class="indicator-label">{{ $translator("Submit","Wasilisha")}}</span>
+                        <span class="indicator-label">{{ __("Submit")}}</span>
                         <!--end::Indicator label-->
                         <!--begin::Indicator progress-->
                         <span class="indicator-progress">
-                            {{ $translator("Please wait...","Tafadhali subiri...")}}
+                            {{ __("Please wait...")}}
                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                         </span>
                         <!--end::Indicator progress-->

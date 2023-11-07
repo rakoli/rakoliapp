@@ -1,6 +1,6 @@
 @extends('layouts.auth_basic')
 
-@section('title', 'Confirm')
+@section('title', __('Confirm'))
 
 @section('body')
 
@@ -16,17 +16,17 @@
         <!--begin::Heading-->
         <div class="text-center mb-10">
             <!--begin::Title-->
-            <h1 class="text-dark fw-bolder mb-3">{{ $translator("Confirm Password","Thibitisha Nyuwila")}}</h1>
+            <h1 class="text-dark fw-bolder mb-3">{{ __("Confirm Password")}}</h1>
             <!--end::Title-->
             <!--begin::Link-->
-            <div class="text-gray-500 fw-semibold fs-6">{{ $translator("Please confirm your password before continuing","Tafadhali thibitisha nyuwila kabla ya kuendelea")}}</div>
+            <div class="text-gray-500 fw-semibold fs-6">{{ __("Please confirm your password before continuing")}}</div>
             <!--end::Link-->
         </div>
         <!--begin::Heading-->
         <!--begin::Input group=-->
         <div class="fv-row mb-8">
             <!--begin::Email-->
-            <input id="password" placeholder="{{ $translator("Password","Nyuwila")}}" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+            <input id="password" placeholder="{{ __("Password")}}" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
             <!--end::Email-->
             @error('password')
             <span class="invalid-feedback" role="alert">
@@ -38,15 +38,15 @@
         <div class="d-flex flex-wrap justify-content-center pb-lg-0">
             <button type="submit" id="kt_password_reset_submit" class="btn btn-primary me-4">
                 <!--begin::Indicator label-->
-                <span class="indicator-label">{{ $translator("Submit","Wasilisha")}}</span>
+                <span class="indicator-label">{{ __("Submit")}}</span>
                 <!--end::Indicator label-->
                 <!--begin::Indicator progress-->
-                <span class="indicator-progress">{{ $translator("Please wait...","Tafadhali subiri...")}}
+                <span class="indicator-progress">{{ __("Please wait...")}}
                     <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                 </span>
                 <!--end::Indicator progress-->
             </button>
-            <a href="{{route('login')}}" class="btn btn-light">{{ $translator("Cancel","Acha")}}</a>
+            <a href="{{route('login')}}" class="btn btn-light">{{ __("Cancel")}}</a>
         </div>
         <!--end::Actions-->
     </form>

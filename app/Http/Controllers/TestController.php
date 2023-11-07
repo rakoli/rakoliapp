@@ -12,10 +12,7 @@ class TestController extends Controller
     public function testing()
     {
 
-        dd(SystemIncome::with('country')->
-        orderBy('id','desc')
-            ->take(10)->get());
 
-        return view('frontend.contactus');
+        return view('auth.passwords.reset');
     }
 }

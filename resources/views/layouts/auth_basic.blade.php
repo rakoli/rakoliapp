@@ -31,8 +31,8 @@
                 <div class="me-10">
                     <!--begin::Toggle-->
                     <button class="btn btn-flex btn-link btn-color-gray-700 btn-active-color-primary rotate fs-base" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start" data-kt-menu-offset="0px, 0px">
-                        <img data-kt-element="current-lang-flag" class="w-20px h-20px rounded me-3" src="{{url('assets/media/flags')}}{{ Session::get('lang', 1) == 1 ? '/united-states.svg':'/tanzania.svg' }}"  alt="" />
-                        <span data-kt-element="current-lang-name" class="me-1">{{ Session::get('lang', 1) == 1 ?  "English":"Swahili" }}</span>
+                        <img data-kt-element="current-lang-flag" class="w-20px h-20px rounded me-3" src="{{ getLocaleSVGImagePath(session('locale')) }}"  alt="" />
+                        <span data-kt-element="current-lang-name" class="me-1">{{ localeToLanguage(session('locale'))}}</span>
                         <span class="d-flex flex-center rotate-180">
                             <i class="ki-outline ki-down fs-5 text-muted m-0"></i>
                         </span>
@@ -42,9 +42,9 @@
                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-200px py-4 fs-7" data-kt-menu="true" id="kt_auth_lang_menu">
                         <!--begin::Menu item-->
                         <div class="menu-item px-3">
-                            <a href="#" class="menu-link d-flex px-5" data-kt-lang="English">
+                            <a href="{{route('languageSwitch',['language'=>'en'])}}" class="menu-link d-flex px-5" data-kt-lang="English">
 										<span class="symbol symbol-20px me-4">
-											<img data-kt-element="lang-flag" class="rounded-1" src="{{asset('assets/media/flags/united-states.svg')}}" alt="" />
+											<img data-kt-element="lang-flag" class="rounded-1" src="{{ getLocaleSVGImagePath('en') }}" alt="" />
 										</span>
                                 <span data-kt-element="lang-name">{{ $translator("English", "Kiingereza") }}</span>
                             </a>
@@ -52,9 +52,9 @@
                         <!--end::Menu item-->
                         <!--begin::Menu item-->
                         <div class="menu-item px-3">
-                            <a href="#" class="menu-link d-flex px-5" data-kt-lang="Swahili">
+                            <a href="{{route('languageSwitch',['language'=>'sw'])}}" class="menu-link d-flex px-5" data-kt-lang="Swahili">
 										<span class="symbol symbol-20px me-4">
-											<img data-kt-element="lang-flag" class="rounded-1" src="{{asset('assets/media/flags/tanzania.svg')}}" alt="" />
+											<img data-kt-element="lang-flag" class="rounded-1" src="{{ getLocaleSVGImagePath('sw') }}" alt="" />
 										</span>
                                 <span data-kt-element="lang-name">{{ $translator("Swahili", "Kiswahili") }}</span>
                             </a>

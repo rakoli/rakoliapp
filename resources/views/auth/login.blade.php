@@ -1,6 +1,6 @@
 @extends('layouts.auth_basic')
 
-@section('title', 'Account Login')
+@section('title', __('Account Login'))
 
 @section('body')
 
@@ -12,12 +12,12 @@
         <!--begin::Heading-->
         <div class="text-center mb-11">
             <!--begin::Title-->
-            <h1 class="text-dark fw-bolder mb-3">{{ $translator("Sign In","Ingia")}}</h1>
+            <h1 class="text-dark fw-bolder mb-3">{{ __("Sign In")}}</h1>
             <!--end::Title-->
             <!--begin::Subtitle-->
             <div class="text-gray-500 fw-semibold fs-6">
-                {{ $translator("New Here?","Huna akaunti?")}}
-                <a href="{{route('register')}}" class="link-primary fw-bold"> {{ $translator("Create an Account","Fungua akaunti")}}  </a>
+                {{ __("New Here?")}}
+                <a href="{{route('register')}}" class="link-primary fw-bold"> {{ __("Create an Account")}}  </a>
             </div>
             <!--end::Subtitle=-->
         </div>
@@ -26,13 +26,13 @@
         <!--begin::Input group=-->
         <div class="fv-row mb-8">
             <!--begin::Email-->
-            <input type="text" placeholder="{{ $translator("Enter Email","Jaza barua pepe")}}" name="email" autocomplete="off" class="form-control bg-transparent" />
+            <input type="text" placeholder="{{ __("Enter Email")}}" name="email" autocomplete="off" class="form-control bg-transparent" />
             <!--end::Email-->
         </div>
         <!--end::Input group=-->
         <div class="fv-row mb-3">
             <!--begin::Password-->
-            <input type="password" placeholder="{{ $translator("Enter Password","Jaza neno siri")}}" name="password" autocomplete="off" class="form-control bg-transparent" />
+            <input type="password" placeholder="{{ __("Enter Password")}}" name="password" autocomplete="off" class="form-control bg-transparent" />
             <!--end::Password-->
         </div>
         <!--end::Input group=-->
@@ -40,7 +40,7 @@
         <div class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8">
             <div></div>
             <!--begin::Link-->
-            <a href="{{url('password/reset')}}" class="link-primary">{{ $translator("Forgot Password?","Umesahau neno la siri?")}}</a>
+            <a href="{{url('password/reset')}}" class="link-primary">{{ __("Forgot Password?")}}</a>
             <!--end::Link-->
         </div>
         <!--end::Wrapper-->
@@ -48,10 +48,10 @@
         <div class="d-grid mb-10">
             <button type="submit" id="kt_sign_in_submit" class="btn btn-primary">
                 <!--begin::Indicator label-->
-                <span class="indicator-label">{{ $translator("Sign In","Ingia")}}</span>
+                <span class="indicator-label">{{ __("Sign In")}}</span>
                 <!--end::Indicator label-->
                 <!--begin::Indicator progress-->
-                <span class="indicator-progress">{{ $translator("Please wait...","Tafadhali subiri...")}}
+                <span class="indicator-progress">{{ __("Please wait...")}}
 										<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                 <!--end::Indicator progress-->
             </button>
@@ -59,12 +59,12 @@
         <!--end::Submit button-->
 
         <!--begin::Sign up-->
-        <div class="text-gray-500 text-center fw-semibold fs-6">{{ $translator("Not a Member yet?","Bado hujajisajili?")}}
-            <a href="{{route('register')}}" class="link-primary">{{ $translator("Sign Up","Jiunge")}}</a></div>
+        <div class="text-gray-500 text-center fw-semibold fs-6">{{ __("Not a Member yet?")}}
+            <a href="{{route('register')}}" class="link-primary">{{ __("Sign Up")}}</a></div>
         <!--end::Sign up-->
         <!--begin::Sign up-->
-        <div class="text-gray-500 text-center fw-semibold fs-6">{{ $translator("Need VAS Provider Account? ","Unahitaji Akaunti ya VAS Provider?")}}
-            <a href="{{route('register.vas')}}" class="link-primary">{{ $translator("Register VAS Account","Sajili Akaunt ya VAS")}}</a></div>
+        <div class="text-gray-500 text-center fw-semibold fs-6">{{ __("Need VAS Provider Account?")}}
+            <a href="{{route('register.vas')}}" class="link-primary">{{ __("Register VAS Account")}}</a></div>
         <!--end::Sign up-->
 
     </form>

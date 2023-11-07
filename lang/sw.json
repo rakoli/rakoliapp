@@ -1,4 +1,46 @@
 {
-    "Enter Email": "Ingiza barua pepe",
-    "Account:": "Compte :"
+    "Account Login": "Ingia Kwenye Akaunti",
+    "Enter Email": "Ingiza Barua Pepe",
+    "Enter Password": "Ingiza Nyuwila",
+    "Sign In": "Ingia",
+    "New Here?": "Mpya Hapa?",
+    "Forgot Password?": "Umesahau Nyuwila?",
+    "Create an Account": "Fungua Akaunti",
+    "Please wait..." : "Tafadhali subiri...",
+    "Not a Member yet?" : "Bado hujajisajili?",
+    "Need VAS Provider Account?" : "Unahitaji Akaunti ya VAS Provider?",
+    "Register VAS Account" : "Sajili Akaunt ya VAS",
+    "Sign Up" : "Jisajili",
+
+
+    "Agent Registration" : "Usajili wa Wakala",
+    "Have an account?" : "Una akaunti?",
+    "First Name" : "Jina la Kwanza",
+    "Last Name" : "Jina la Mwisho",
+    "Your Country" : "Nchi yako",
+    "Code" : "Kodi",
+    "Email" : "Barua Pepe",
+    "Password" : "Nyuwila",
+    "Repeat Password" : "Rudia Nyuwila",
+    "Use 8 or more characters with a mix of letters, numbers & symbols." : "Tumia herufi 8 au zaidi zilizo na mchanganyiko wa herufi, nambari na alama.",
+    "Already have an Account?" : "Tayari una akaunti?",
+    "I Accept the" : "Nakubaliana na",
+    "Terms" : "Masharti",
+
+
+    "VAS Provider Registration" : "Usajili wa VAS Provider",
+    "Confirm" : "Thibitisha",
+    "Confirm Password" : "Thibitisha Nyuwila",
+    "Please confirm your password before continuing" : "Tafadhali thibitisha nyuwila kabla ya kuendelea",
+
+    "Reset Password" : "Badili Nyuwila",
+    "Email Reset Password" : "Barua Pepe ya Kubadili Nyuwila",
+    "Enter your email to reset your password" : "Andika barua pepe kubadili nyuwila",
+    "Have you already reset the password?" : "Je, Umeshatengeneza nyuwila tiari?",
+    "Setup New Password" : "Tengeneza Nyuwila Mpya",
+
+
+    "Account": "Akaunti",
+    "Submit": "Wasilisha",
+    "Cancel": "Sitisha"
 }

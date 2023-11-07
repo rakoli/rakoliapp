@@ -1,6 +1,6 @@
 @extends('layouts.auth_basic')
 
-@section('title', 'Email Reset Password')
+@section('title', __('Email Reset Password'))
 
 @section('body')
 
@@ -16,17 +16,17 @@
         <!--begin::Heading-->
         <div class="text-center mb-10">
             <!--begin::Title-->
-            <h1 class="text-dark fw-bolder mb-3">{{ $translator("Forgot Password ?","Umesahau nyuwila?")}}</h1>
+            <h1 class="text-dark fw-bolder mb-3">{{ __("Forgot Password?")}}</h1>
             <!--end::Title-->
             <!--begin::Link-->
-            <div class="text-gray-500 fw-semibold fs-6">{{ $translator("Enter your email to reset your password.","Andika barua pepe kubadili nyuwila?")}}</div>
+            <div class="text-gray-500 fw-semibold fs-6">{{ __("Enter your email to reset your password")}}</div>
             <!--end::Link-->
         </div>
         <!--begin::Heading-->
         <!--begin::Input group=-->
         <div class="fv-row mb-8">
             <!--begin::Email-->
-            <input type="text" placeholder="Email" name="email" autocomplete="off" class="form-control bg-transparent" />
+            <input type="text" placeholder="{{__('Email')}}" name="email" autocomplete="off" class="form-control bg-transparent" />
             <!--end::Email-->
         </div>
         <!--begin::Actions-->
