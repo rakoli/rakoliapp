@@ -21,7 +21,7 @@ Route::get('registration/agent', [App\Http\Controllers\HomeController::class, 'r
 Route::get('registration/vas', [App\Http\Controllers\HomeController::class, 'registrationVas'])->name('registration.vas');
 
 //LANGUAGE SWITCHER
-Route::post('/change-language', [LanguageController::class, 'changeLanguage']);
+Route::get('lang/switch', [LanguageController::class, 'languageSwitch'])->name('languageSwitch');
 
 //USERTYPE SPECIFIC ROUTES
 include('custom-admin.php');

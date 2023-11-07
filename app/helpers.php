@@ -85,3 +85,33 @@ function number_format_short( $n, $precision = 1 ) {
 
     return $n_format . $suffix;
 }
+
+
+function localeToLanguage($locale) : string
+{
+    $translation = $locale;
+    if($locale == 'en'){
+        $translation  = 'English';
+    }
+    if($locale == 'sw'){
+        $translation  = 'Swahili';
+    }
+    if($locale == 'fr'){
+        $translation  = 'French';
+    }
+    return $translation;
+}
+
+function getLocaleSVGImagePath($locale){
+    $imagePath = '';
+    if($locale == 'en'){
+        $imagePath  = 'united-states.svg';
+    }
+    if($locale == 'sw'){
+        $imagePath  = 'tanzania.svg';
+    }
+    if($locale == 'fr'){
+        $imagePath  = 'france.svg';
+    }
+    return url('assets/media/flags/'.$imagePath);
+}

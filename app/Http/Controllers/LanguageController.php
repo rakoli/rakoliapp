@@ -3,25 +3,24 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 
 class LanguageController extends Controller
 {
-    public function changeLanguage(Request $request)
+
+    public function languageSwitch(Request $request)
     {
-        $lang = $request->input('lang');
-        $lang = $lang == "English" ? 1 : 2;
-        session(['lang' => $lang]);
-        
-        return back();
+        $locale = $request->language;
+
+        if(!in_array($locale, config('app.accepted_locales'))){
+            $locale = 'en';
+        }
+
+        App::setLocale($locale);
+
+        session()->put('locale', $locale);
+
+        return redirect()->back();
     }
 
-    public function auth(Request $request){
-        echo 'invalid';
-    }
-
-    public function page(){
-        $link = $_SERVER;
-
-        print_r($link);
-    }
 }
