@@ -1,6 +1,6 @@
 @extends('layouts.users.agent')
 
-@section('title', "Dashboard")
+@section('title', __("Dashboard"))
 
 @section('header_js')
     <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css" />
@@ -27,7 +27,7 @@
                             <span class="fs-2hx fw-bold me-2 lh-1 ls-n2">{{$stats['networks']}}</span>
                             <!--end::Amount-->
                             <!--begin::Subtitle-->
-                            <span class="text-gray-400 pt-1 fw-semibold fs-6">Network Tills</span>
+                            <span class="text-gray-400 pt-1 fw-semibold fs-6">{{__('Network Tills')}}</span>
                             <!--end::Subtitle-->
                         </div>
                         <!--end::Title-->
@@ -38,7 +38,7 @@
                         <!--begin::Progress-->
                         <div class="d-flex align-items-center flex-column mt-3 w-100">
                             <div class="d-flex justify-content-between fw-bold fs-6 w-100 mt-auto mb-2">
-                                <span>{{$stats['open_shifts']}} Open Shifts</span>
+                                <span>{{$stats['open_shifts']}} {{__('Open Shifts')}}</span>
                             </div>
                         </div>
                         <!--end::Progress-->
@@ -56,7 +56,7 @@
                             <span class="fs-2hx fw-bold text-dark me-2 lh-1 ls-n2">{{$stats['awarded_vas']}}</span>
                             <!--end::Amount-->
                             <!--begin::Subtitle-->
-                            <span class="text-gray-400 pt-1 fw-semibold fs-6">Awarded VAS</span>
+                            <span class="text-gray-400 pt-1 fw-semibold fs-6">{{__('Awarded VAS')}}</span>
                             <!--end::Subtitle-->
                         </div>
                         <!--end::Title-->
@@ -67,7 +67,7 @@
                         <!--begin::Progress-->
                         <div class="d-flex align-items-center flex-column mt-3 w-100">
                             <div class="d-flex justify-content-between fw-bold fs-6 w-100 mt-auto mb-2">
-                                <span>{{$stats['pending_exchange']}} Pending Exchange</span>
+                                <span>{{$stats['pending_exchange']}} {{__('Pending Exchange')}}</span>
                             </div>
                         </div>
                         <!--end::Progress-->
@@ -98,7 +98,7 @@
                             </div>
                             <!--end::Info-->
                             <!--begin::Subtitle-->
-                            <span class="text-gray-400 pt-1 fw-semibold fs-6">Total Balance</span>
+                            <span class="text-gray-400 pt-1 fw-semibold fs-6">{{__('Total Balance')}}</span>
                             <!--end::Subtitle-->
                         </div>
                         <!--end::Title-->
@@ -119,7 +119,7 @@
                                 <div class="bullet w-8px h-3px rounded-2 bg-success me-3"></div>
                                 <!--end::Bullet-->
                                 <!--begin::Label-->
-                                <div class="text-gray-500 flex-grow-1 me-4">Cash</div>
+                                <div class="text-gray-500 flex-grow-1 me-4">{{__('Cash')}}</div>
                                 <!--end::Label-->
                                 <!--begin::Stats-->
                                 <div class="fw-bolder text-gray-700 text-xxl-end">{{session('currency').' '.$stats['cash_balance']}}</div>
@@ -132,7 +132,7 @@
                                 <div class="bullet w-8px h-3px rounded-2 bg-primary me-3"></div>
                                 <!--end::Bullet-->
                                 <!--begin::Label-->
-                                <div class="text-gray-500 flex-grow-1 me-4">Network Tills</div>
+                                <div class="text-gray-500 flex-grow-1 me-4">{{__('Network Tills')}}</div>
                                 <!--end::Label-->
                                 <!--begin::Stats-->
                                 <div class="fw-bolder text-gray-700 text-xxl-end">{{session('currency').' '.$stats['till_balance']}}</div>
@@ -152,8 +152,8 @@
                     <div class="card-header pt-5">
                         <!--begin::Title-->
                         <h3 class="card-title align-items-start flex-column">
-                            <span class="card-label fw-bold text-dark">Highlights</span>
-                            <span class="text-gray-400 mt-1 fw-semibold fs-6">30 days financials</span>
+                            <span class="card-label fw-bold text-dark">{{__('Highlights')}}</span>
+                            <span class="text-gray-400 mt-1 fw-semibold fs-6">{{__('30 days financials')}}</span>
                         </h3>
                         <!--end::Title-->
                     </div>
@@ -163,7 +163,7 @@
                         <!--begin::Item-->
                         <div class="d-flex flex-stack">
                             <!--begin::Section-->
-                            <div class="text-gray-700 fw-semibold fs-6 me-2">Income</div>
+                            <div class="text-gray-700 fw-semibold fs-6 me-2">{{__('Income')}}</div>
                             <!--end::Section-->
                             <!--begin::Statistics-->
                             <div class="d-flex align-items-senter">
@@ -179,7 +179,7 @@
                         <!--begin::Item-->
                         <div class="d-flex flex-stack">
                             <!--begin::Section-->
-                            <div class="text-gray-700 fw-semibold fs-6 me-2">Expenses</div>
+                            <div class="text-gray-700 fw-semibold fs-6 me-2">{{__('Expenses')}}</div>
                             <!--end::Section-->
                             <!--begin::Statistics-->
                             <div class="d-flex align-items-senter">
@@ -196,7 +196,7 @@
                         <!--begin::Item-->
                         <div class="d-flex flex-stack">
                             <!--begin::Section-->
-                            <div class="text-gray-700 fw-semibold fs-6 me-2">Referrals</div>
+                            <div class="text-gray-700 fw-semibold fs-6 me-2">{{__('Referrals')}}</div>
                             <!--end::Section-->
                             <!--begin::Statistics-->
                             <div class="d-flex align-items-senter">
@@ -266,12 +266,12 @@
                     <div class="card-header pt-7">
                         <!--begin::Title-->
                         <h3 class="card-title align-items-start flex-column">
-                            <span class="card-label fw-bold text-gray-800">Recent Transactions</span>
+                            <span class="card-label fw-bold text-gray-800">{{__('Recent Transactions')}}</span>
                         </h3>
                         <!--end::Title-->
                         <!--begin::Toolbar-->
                         <div class="card-toolbar">
-                            <a href="{{route('agency.transactions')}}" class="btn btn-sm btn-light">View Transactions</a>
+                            <a href="{{route('agency.transactions')}}" class="btn btn-sm btn-light">{{__('View Transactions')}}</a>
                         </div>
                         <!--end::Toolbar-->
                     </div>

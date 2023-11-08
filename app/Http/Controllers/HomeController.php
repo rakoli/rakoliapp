@@ -140,12 +140,12 @@ class HomeController extends Controller
 
             //Datatable
             $dataTableHtml = $builder->columns([
-                ['data' => 'created_at', 'title'=> 'Time' ],
-                ['data' => 'location.name', 'title'=> 'Location'],
-                ['data' => 'user.name', 'title'=> 'User'],
-                ['data' => 'type'],
-                ['data' => 'amount'],
-                ['data' => 'balance_new' , 'title'=>'Balance'],
+                ['data' => 'created_at', 'title'=> __('Time') ],
+                ['data' => 'location.name', 'title'=> __('Location')],
+                ['data' => 'user.name', 'title'=> __('User')],
+                ['data' => 'type', 'title'=> __('Type')],
+                ['data' => 'amount', 'title'=> __('Amount')],
+                ['data' => 'balance_new' , 'title'=> __('Balance')],
             ])->orderBy(0,'desc');
 
             //Dashboard Statistics
