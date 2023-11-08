@@ -51,8 +51,10 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
+        $locale = Session::get('locale');
         Auth::logout();
         Session::flush();
+        Session::put('locale', $locale);
         return redirect()->route('home');
     }
 
