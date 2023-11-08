@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title', "VAS")
+@section('title', __("VAS"))
 
-@section('sub_title', " - VAS")
+@section('sub_title', " - ".__("VAS"))
 
 @section('aside_background')
 

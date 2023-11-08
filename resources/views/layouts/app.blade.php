@@ -646,50 +646,50 @@
                                                 </div>
                                                 <div class="d-flex flex-column">
                                                     <div class="fw-bold d-flex align-items-center fs-5">
-                                                        {{ Session::get('name') }}
+                                                        {{ session('name') }}
                                                         <span
-                                                            class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">{{ Str::ucfirst(Session::get('type')) }}</span>
+                                                            class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">{{ Str::ucfirst(__(session('type'))) }}</span>
                                                     </div>
                                                     <a href="#"
-                                                       class="fw-semibold text-muted text-hover-primary fs-7">{{ Session::get('email') }}</a>
+                                                       class="fw-semibold text-muted text-hover-primary fs-7">{{ session('email') }}</a>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="separator my-2"></div>
                                         <div class="menu-item px-5">
-                                            <a href="account/overview.html" class="menu-link px-5">{{ $translator('Profile', 'Wasifu') }}</a>
+                                            <a href="account/overview.html" class="menu-link px-5">{{ __('Profile') }}</a>
                                         </div>
                                         <div class="menu-item px-5">
-                                            <a href="account/overview.html" class="menu-link px-5">{{ $translator('Change Password', 'Badili Nyuwila') }}</a>
+                                            <a href="account/overview.html" class="menu-link px-5">{{ __('Change Password') }}</a>
                                         </div>
                                         <div class="separator my-2"></div>
                                             <div class="menu-item px-5"
                                                  data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
                                                  data-kt-menu-placement="left-start" data-kt-menu-offset="-15px, 0">
                                                 <a href="#" class="menu-link px-5">
-                                                        <span class="menu-title position-relative">Language
+                                                        <span class="menu-title position-relative">{{__('Language')}}
                                                             <span
-                                                                class="fs-8 rounded bg-light px-3 py-2 position-absolute translate-middle-y top-50 end-0">{{ Session::get('lang', 1) == 1 ?  "English":"Swahili" }}
+                                                                class="fs-8 rounded bg-light px-3 py-2 position-absolute translate-middle-y top-50 end-0">{{ localeToLanguage(session('locale'))}}
                                                                 <img class="w-15px h-15px rounded-1 ms-2"
-                                                                     src="{{url('assets/media/flags')}}{{ Session::get('lang', 1) == 1 ? '/united-states.svg' : '/tanzania.svg' }}"
+                                                                     src="{{ getLocaleSVGImagePath(session('locale')) }}"
                                                                      alt="" /></span></span>
                                                 </a>
                                                 <div class="menu-sub menu-sub-dropdown w-175px py-4">
                                                     <div class="menu-item px-3">
-                                                        <a data-kt-lang="English" href="#"
+                                                        <a href="{{route('languageSwitch',['language'=>'en'])}}"
                                                            class="menu-link d-flex px-5 active">
                                                                 <span class="symbol symbol-20px me-4">
                                                                     <img class="rounded-1"
-                                                                         src="{{asset('assets/media/flags/united-states.svg')}}"
+                                                                         src="{{ getLocaleSVGImagePath('en') }}"
                                                                          alt="" />
                                                                 </span>English</a>
                                                     </div>
                                                     <div class="menu-item px-3">
-                                                        <a data-kt-lang="Swahili" href="#"
+                                                        <a href="{{route('languageSwitch',['language'=>'sw'])}}"
                                                            class="menu-link d-flex px-5">
                                                                 <span class="symbol symbol-20px me-4">
                                                                     <img class="rounded-1"
-                                                                         src="{{asset('assets/media/flags/tanzania.svg')}}"
+                                                                         src="{{ getLocaleSVGImagePath('sw') }}"
                                                                          alt="" />
                                                                 </span>Swahili</a>
                                                     </div>
@@ -701,7 +701,7 @@
                                             <form id="logout-form" action="{{ url('logout') }}" method="POST">
                                                 {{ csrf_field() }}
                                                 <button style="width: 100%" class="menu-link px-5"
-                                                        type="submit">Sign Out</button>
+                                                        type="submit">{{__('Sign Out')}}</button>
                                             </form>
 
                                         </div>
@@ -743,7 +743,7 @@
                                     <span class="h-20px border-gray-200 border-start ms-3 mx-2"></span>
                                     <!--end::Separator-->
                                     <!--begin::Description-->
-                                    <small class="text-muted fs-7 fw-semibold my-1 ms-1">{{strtoupper(session('type'))}}</small>
+                                    <small class="text-muted fs-7 fw-semibold my-1 ms-1">{{strtoupper(__(session('type')))}}</small>
                                     <!--end::Description-->
                                 </h1>
                                 <!--end::Title-->

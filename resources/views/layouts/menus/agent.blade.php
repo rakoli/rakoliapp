@@ -6,7 +6,7 @@
             <i class="ki-outline ki-home-2 fs-2x"></i>
         </span>
         <span class="menu-title">
-            {{ $translator('Home', 'Nyumbani') }}
+            {{ __('Home') }}
         </span>
     </a>
     <!--end:Menu link-->
@@ -20,7 +20,7 @@
             <i class="ki-outline ki-shop fs-2x"></i>
         </span>
         <span class="menu-title">
-            {{ $translator('Agency', 'Shirika') }}
+            {{ __('Agency') }}
         </span>
     </span>
     <!--end:Menu link-->
@@ -31,7 +31,7 @@
             <!--begin:Menu content-->
             <div class="menu-content">
                 <span class="menu-section fs-5 fw-bolder ps-1 py-1">
-                    {{ $translator('Agency', 'Shirika') }}
+                    {{ __('Agency') }}
                 </span>
             </div>
             <!--end:Menu content-->
@@ -46,35 +46,35 @@
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ $translator('Transactions', 'Miamala') }}</span>
+                    <span class="menu-title">{{ __('Transactions') }}</span>
                 </a>
 
                 <a class="menu-link" href="{{route('agency.shift')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ $translator('Shift', 'Shift') }}</span>
+                    <span class="menu-title">{{ __('Shift') }}</span>
                 </a>
 
                 <a class="menu-link" href="{{route('agency.tills')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ $translator('Tills', 'Tills') }}</span>
+                    <span class="menu-title">{{ __('Tills') }}</span>
                 </a>
 
                 <a class="menu-link" href="{{route('agency.networks')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ $translator('Networks', 'Mitandao') }}</span>
+                    <span class="menu-title">{{ __('Networks') }}</span>
                 </a>
 
                 <a class="menu-link" href="{{route('agency.loans')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ $translator('Loans', 'Mikopo') }}</span>
+                    <span class="menu-title">{{ __('Loans') }}</span>
                 </a>
 
             </div>
@@ -93,7 +93,7 @@
             <i class="ki-outline ki-share fs-2x"></i>
         </span>
         <span class="menu-title">
-            {{ $translator('Exchange', 'Mabadilishano') }}
+            {{ __('Exchange') }}
         </span>
     </span>
     <!--end:Menu link-->
@@ -104,7 +104,7 @@
             <!--begin:Menu content-->
             <div class="menu-content">
                 <span class="menu-section fs-5 fw-bolder ps-1 py-1">
-                    {{ $translator('Exchange Management', 'Usimamizi wa Kubadilishana') }}
+                    {{ __('Exchange Management') }}
                 </span>
             </div>
             <!--end:Menu content-->
@@ -119,35 +119,35 @@
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ $translator('Requests', 'Maombi') }}</span>
+                    <span class="menu-title">{{ __('Requests') }}</span>
                 </a>
 
                 <a class="menu-link" href="/dashboard/agent/pending">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ $translator('Pending', 'Inasubiri') }}</span>
+                    <span class="menu-title">{{ __('Pending') }}</span>
                 </a>
 
                 <a class="menu-link" href="/dashboard/agent/transaction">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ $translator('Transaction', 'Biashara') }}</span>
+                    <span class="menu-title">{{ __('Transaction') }}</span>
                 </a>
 
                 <a class="menu-link" href="/dashboard/agent/ads">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ $translator('Ads', 'Matangazo') }}</span>
+                    <span class="menu-title">{{ __('Ads') }}</span>
                 </a>
 
                 <a class="menu-link" href="/dashboard/agent/security">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ $translator('Security', 'Usalama') }}</span>
+                    <span class="menu-title">{{ __('Security') }}</span>
                 </a>
 
             </div>
@@ -166,7 +166,7 @@
             <i class="ki-outline ki-bill fs-2x"></i>
         </span>
         <span class="menu-title">
-            {{ $translator('Opportunity', 'Fursa') }}
+            {{ __('Opportunity') }}
         </span>
     </span>
     <!--end:Menu link-->
@@ -177,7 +177,7 @@
             <!--begin:Menu content-->
             <div class="menu-content">
                 <span class="menu-section fs-5 fw-bolder ps-1 py-1">
-                    {{ $translator('VAS Opportunities', 'Fursa za VAS') }}
+                    {{ __('VAS Opportunities') }}
                 </span>
             </div>
             <!--end:Menu content-->
@@ -192,21 +192,21 @@
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ $translator('Available', 'Zilizopo') }}
+                    <span class="menu-title">{{ __('Available') }}
                     </span>
                 </a>
                 <a class="menu-link" href="/dashboard/agent/pending">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ $translator('Ongoing', 'Zilizopatikana') }}
+                    <span class="menu-title">{{ __('Tasks') }} <!--Ongoing-->
                     </span>
                 </a>
                 <a class="menu-link" href="/dashboard/agent/transaction">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ $translator('Completed', 'Zilizokamilika') }}
+                    <span class="menu-title">{{ __('Contracts') }} <!--Completed-->
                     </span>
                 </a>
             </div>
@@ -225,7 +225,7 @@
             <i class="ki-outline ki-gear fs-2x"></i>
         </span>
         <span class="menu-title">
-            {{ $translator('Business', 'Biashara') }}
+            {{ __('Business') }}
         </span>
     </span>
     <!--end:Menu link-->
@@ -236,7 +236,7 @@
             <!--begin:Menu content-->
             <div class="menu-content">
                 <span class="menu-section fs-5 fw-bolder ps-1 py-1">
-                    {{ $translator('Business Management', 'Ratibu Biashara') }}
+                    {{ __('Business Management') }}
                 </span>
             </div>
             <!--end:Menu content-->
@@ -250,37 +250,37 @@
                 <a class="menu-link" href="/dashboard/vas/permission"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ $translator('Subscription', 'Usajili') }}</span>
+                    <span class="menu-title">{{ __('Account Subscription') }}</span>
                 </a>
                 <a class="menu-link" href="/dashboard/vas/permission"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ $translator('Referrals', 'Referrals') }}</span>
+                    <span class="menu-title">{{ __('Referrals',) }}</span>
                 </a>
                 <a class="menu-link" href="/dashboard/vas/permission"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ $translator('Roles', 'Majukumu') }}</span>
+                    <span class="menu-title">{{ __('Roles') }}</span>
                 </a>
                 <a class="menu-link" href="/dashboard/vas/users"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ $translator('Users', 'Watumiaji') }}</span>
+                    <span class="menu-title">{{ __('Users') }}</span>
                 </a>
                 <a class="menu-link" href="/dashboard/vas/payments"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ $translator('Payments', 'Malipo') }}</span>
+                    <span class="menu-title">{{ __('Payments') }}</span>
                 </a>
                 <a class="menu-link" href="/dashboard/vas/profile"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ $translator('Business Profile', 'Wasifu wa Biashara') }}</span>
+                    <span class="menu-title">{{ __('Business Profile') }}</span>
                 </a>
                 <a class="menu-link" href="/dashboard/vas/profile"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ $translator('Branches', 'Matawi') }}</span>
+                    <span class="menu-title">{{ __('Branches') }}</span>
                 </a>
             </div>
             <!--end:Menu sub-->
@@ -298,7 +298,7 @@
             <i class="ki-outline ki-chart-line-up fs-2x"></i>
         </span>
         <span class="menu-title">
-            {{ $translator('Reports', 'Ripoti') }}
+            {{ __('Reports') }}
         </span>
     </span>
     <!--end:Menu link-->
@@ -309,7 +309,7 @@
             <!--begin:Menu content-->
             <div class="menu-content">
                 <span class="menu-section fs-5 fw-bolder ps-1 py-1">
-                    {{ $translator('Reports', 'Ripoti') }}
+                    {{ __('Reports') }}
                 </span>
             </div>
             <!--end:Menu content-->
@@ -324,28 +324,35 @@
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ $translator('Income', 'Mapato') }}
+                    <span class="menu-title">{{ __('Income') }}
                     </span>
                 </a>
                 <a class="menu-link" href="/dashboard/agent/pending">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ $translator('Expenses', 'Matumizi') }}
+                    <span class="menu-title">{{ __('Expenses') }}
                     </span>
                 </a>
                 <a class="menu-link" href="/dashboard/agent/transaction">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ $translator('Loans', 'Mikopo') }}
+                    <span class="menu-title">{{ __('Loans Analysis') }}
                     </span>
                 </a>
                 <a class="menu-link" href="/dashboard/agent/transaction">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ $translator('Tills', 'Tills') }}
+                    <span class="menu-title">{{ __('Tills Report') }}
+                    </span>
+                </a>
+                <a class="menu-link" href="/dashboard/agent/transaction">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ __('Branch Analysis') }}
                     </span>
                 </a>
             </div>

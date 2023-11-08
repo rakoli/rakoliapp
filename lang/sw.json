@@ -1,4 +1,5 @@
 {
+    "###########" : "AUTH AND REGISTRATION",
     "Account Login": "Ingia Kwenye Akaunti",
     "Enter Email": "Ingiza Barua Pepe",
     "Enter Password": "Ingiza Nyuwila",
@@ -11,8 +12,6 @@
     "Need VAS Provider Account?" : "Unahitaji Akaunti ya VAS Provider?",
     "Register VAS Account" : "Sajili Akaunt ya VAS",
     "Sign Up" : "Jisajili",
-
-
     "Agent Registration" : "Usajili wa Wakala",
     "Have an account?" : "Una akaunti?",
     "First Name" : "Jina la Kwanza",
@@ -26,19 +25,15 @@
     "Already have an Account?" : "Tayari una akaunti?",
     "I Accept the" : "Nakubaliana na",
     "Terms" : "Masharti",
-
-
     "VAS Provider Registration" : "Usajili wa VAS Provider",
     "Confirm" : "Thibitisha",
     "Confirm Password" : "Thibitisha Nyuwila",
     "Please confirm your password before continuing" : "Tafadhali thibitisha nyuwila kabla ya kuendelea",
-
     "Reset Password" : "Badili Nyuwila",
     "Email Reset Password" : "Barua Pepe ya Kubadili Nyuwila",
     "Enter your email to reset your password" : "Andika barua pepe kubadili nyuwila",
     "Have you already reset the password?" : "Je, Umeshatengeneza nyuwila tiari?",
     "Setup New Password" : "Tengeneza Nyuwila Mpya",
-
     "Verification" : "Uthibitishaji",
     "Verify your contact information" : "Thibitisha taarifa yako ya mawasiliano",
     "Business Information" : "Taarifa za Biashara",
@@ -51,9 +46,59 @@
     "Continue" : "Endelea",
     "Document Submission" : "Wasilisha Nyaraka",
     "Upload business legals" : "Pakia nyaraka za biashara",
+    "###########" : "END OF AUTH AND REGISTRATION",
 
+    "###########" : "MENU ITEMS",
+    "Home": "Nyumbani",
 
+    "Agency": "Wakala",
+    "Transactions": "Miamala",
+    "Shift": "Shifti",
+    "Tills": "Tili",
+    "Networks": "Mitandao",
+    "Loans": "Mikopo",
+
+    "Exchange": "Mabadilishano",
+    "Exchange Management": "Usimamizi wa Mabadilishano",
+    "Requests": "Maombi",
+    "Pending": "Inayosubiri",
+    "Transaction": "Miamala",
+    "Ads": "Matangazo",
+    "Security": "Usalama",
+
+    "Opportunity": "Fursa",
+    "VAS Opportunities" : "Fursa za VAS",
+    "Available" : "Zilizopo",
+    "Tasks" : "Majukumu",
+    "Contracts" : "Mikataba",
+
+    "Business" : "Biashara",
+    "Business Management" : "Ratibu Biashara",
+    "Account Subscription" : "Usajili wa Akaunti",
+    "Referrals" : "Referrals",
+    "Roles" : "Majukumu",
+    "Users" : "Watumiaji",
+    "Payments" : "Malipo",
+    "Business Profile" : "Wasifu wa Biashara",
+    "Branches" : "Matawi",
+
+    "Reports" : "Ripoti",
+    "Income" : "Mapato",
+    "Expenses" : "Matumizi",
+    "Loans Analysis" : "Tathmini ya Mikopo",
+    "Tills Report" : "Ripoti ya Tili",
+    "Branch Analysis" : "Thamini ya Matawi",
+    "###########" : "END MENU ITEMS",
+
+    "###########" : "LAYOUT HEADER",
     "Account": "Akaunti",
+    "Profile": "Wasifu",
+    "Change Password": "Badili Nyuwila",
+    "agent": "wakala",
+    "Agent": "Wakala",
+    "Language": "Lugha",
     "Submit": "Wasilisha",
-    "Cancel": "Sitisha"
+    "Sign Out": "Toka",
+    "Cancel": "Sitisha",
+    "###########" : "END LAYOUT HEADER"
 }
