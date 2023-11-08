@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 
 class LanguageSwitchMiddleware
@@ -19,8 +20,12 @@ class LanguageSwitchMiddleware
         if (session()->has('locale')) {
             App::setLocale(session()->get('locale'));
         }else{
-            session()->put('locale', config('app.fallback_locale'));
-            App::setLocale(config('app.fallback_locale'));
+            $locale = Cookie::get('locale');
+            if(!in_array($locale, config('app.accepted_locales'))){
+                $locale = config('app.fallback_locale');
+            }
+            session()->put('locale', $locale);
+            App::setLocale($locale);
         }
         return $next($request);
     }
