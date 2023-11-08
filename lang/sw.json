@@ -50,14 +50,12 @@
 
     "###########" : "MENU ITEMS",
     "Home": "Nyumbani",
-
     "Agency": "Wakala",
     "Transactions": "Miamala",
     "Shift": "Shifti",
     "Tills": "Tili",
     "Networks": "Mitandao",
     "Loans": "Mikopo",
-
     "Exchange": "Mabadilishano",
     "Exchange Management": "Usimamizi wa Mabadilishano",
     "Requests": "Maombi",
@@ -65,13 +63,11 @@
     "Transaction": "Miamala",
     "Ads": "Matangazo",
     "Security": "Usalama",
-
     "Opportunity": "Fursa",
     "VAS Opportunities" : "Fursa za VAS",
     "Available" : "Zilizopo",
     "Tasks" : "Majukumu",
     "Contracts" : "Mikataba",
-
     "Business" : "Biashara",
     "Business Management" : "Ratibu Biashara",
     "Account Subscription" : "Usajili wa Akaunti",
@@ -81,15 +77,12 @@
     "Payments" : "Malipo",
     "Business Profile" : "Wasifu wa Biashara",
     "Branches" : "Matawi",
-
     "Reports" : "Ripoti",
     "Income" : "Mapato",
     "Expenses" : "Matumizi",
     "Loans Analysis" : "Tathmini ya Mikopo",
     "Tills Report" : "Ripoti ya Tili",
     "Branch Analysis" : "Thamini ya Matawi",
-
-
     "Services" : "Huduma",
     "Business Services" : "Huduma za Biashara",
     "Advertisement" : "Matangazo",
@@ -97,10 +90,17 @@
     "Sales" : "Mauzo",
     "Review and Verification" : "Ukaguzi na Uhakiki",
     "Manage Services" : "Ratibu Huduma",
-
     "Business Reports" : "Ripoti za Biashara",
     "Payments Report" : "Ripoti ya Malipo",
     "Service Analysis" : "Tathmini ya Huduma",
+    "Business and User Management" : "Uratibu wa Biashara na Watumiaji",
+    "List Business" : "Orodha ya Biashara",
+    "List Users" : "Orodha ya Watumiaji",
+    "Listing" : "Orodha",
+    "VAS Management" : "Uratibu wa VAS",
+    "Configuration" : "Mipangilio",
+    "Income Management" : "Uratibu wa Mapato",
+    "Subscription Pricing" : "Bei za Usajili",
     "###########" : "END MENU ITEMS",
 
     "###########" : "LAYOUT HEADER",
