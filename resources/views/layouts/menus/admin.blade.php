@@ -250,7 +250,7 @@
         <div class="menu-item">
             <!--begin:Menu content-->
             <div class="menu-content">
-                <span class="menu-section fs-5 fw-bolder ps-1 py-1">{{ $translator('System', 'Mfumo') }}</span>
+                <span class="menu-section fs-5 fw-bolder ps-1 py-1">{{ __('System') }}</span>
             </div>
             <!--end:Menu content-->
         </div>
@@ -264,19 +264,19 @@
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ $translator('Configuration', 'Mpangilio') }}</span>
+                    <span class="menu-title">{{ __('Configuration') }}</span>
                 </a>
                 <a class="menu-link" href="/dashboard/admin/api">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ $translator('Email Notification', 'Taarifa kwa Barua Pepe') }}</span>
+                    <span class="menu-title">{{ __('Email Notification') }}</span>
                 </a>
                 <a class="menu-link" href="/dashboard/admin/maintenance">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ $translator('SMS', 'Taarifa kwa SMS') }}</span>
+                    <span class="menu-title">{{ __('SMS') }}</span>
                 </a>
             </div>
             <!--end:Menu sub-->
