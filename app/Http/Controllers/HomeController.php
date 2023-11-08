@@ -101,10 +101,10 @@ class HomeController extends Controller
 
             //Datatable
             $dataTableHtml = $builder->columns([
-                ['data' => 'created_at', 'title'=> 'Time' ],
-                ['data' => 'contract.title', 'title'=> 'Contract'],
-                ['data' => 'payee.business_name', 'title'=> 'Contractor'],
-                ['data' => 'amt', 'title'=>'Currency'],
+                ['data' => 'created_at', 'title'=> __('Time') ],
+                ['data' => 'contract.title', 'title'=> __('Contract')],
+                ['data' => 'payee.business_name', 'title'=> __('Contractor')],
+                ['data' => 'amt', 'title'=> __('Amount')],
             ])->orderBy(0,'desc');
 
             //Dashboard Statistics

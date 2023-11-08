@@ -1,6 +1,6 @@
 @extends('layouts.users.vas')
 
-@section('title', "Dashboard")
+@section('title', __("Dashboard"))
 
 @section('header_js')
     <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css" />
@@ -21,9 +21,9 @@
                     <div class="card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-250px" data-bs-theme="light">
                         <!--begin::Title-->
                         <h3 class="card-title align-items-start flex-column pt-15">
-                            <span class="fw-bold fs-2x mb-3">Provider</span>
+                            <span class="fw-bold fs-2x mb-3">{{__('Provider')}}</span>
                             <div class="fs-4">
-                                <span>Account summary</span>
+                                <span>{{__('Account Summary')}}</span>
                             </div>
                         </h3>
                         <!--end::Title-->
@@ -52,7 +52,7 @@
                                             <span class="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">{{number_format_short($stats['total_services'])}}</span>
                                             <!--end::Number-->
                                             <!--begin::Desc-->
-                                            <span class="text-gray-500 fw-semibold fs-6">Total Services</span>
+                                            <span class="text-gray-500 fw-semibold fs-6">{{__('Total Services')}}</span>
                                             <!--end::Desc-->
                                         </div>
                                         <!--end::Stats-->
@@ -77,7 +77,7 @@
                                             <span class="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">{{number_format_short($stats['total_submission'])}}</span>
                                             <!--end::Number-->
                                             <!--begin::Desc-->
-                                            <span class="text-gray-500 fw-semibold fs-6">Submissions</span>
+                                            <span class="text-gray-500 fw-semibold fs-6">{{__('Submissions')}}</span>
                                             <!--end::Desc-->
                                         </div>
                                         <!--end::Stats-->
@@ -102,7 +102,7 @@
                                             <span class="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">{{number_format_short($stats['users'])}}</span>
                                             <!--end::Number-->
                                             <!--begin::Desc-->
-                                            <span class="text-gray-500 fw-semibold fs-6">Users</span>
+                                            <span class="text-gray-500 fw-semibold fs-6">{{__('Users')}}</span>
                                             <!--end::Desc-->
                                         </div>
                                         <!--end::Stats-->
@@ -127,7 +127,7 @@
                                             <span class="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">{{number_format_short($stats['payments_made'])}}</span>
                                             <!--end::Number-->
                                             <!--begin::Desc-->
-                                            <span class="text-gray-500 fw-semibold fs-6">Payments Made</span>
+                                            <span class="text-gray-500 fw-semibold fs-6">{{__('Payments Made')}}</span>
                                             <!--end::Desc-->
                                         </div>
                                         <!--end::Stats-->
@@ -153,8 +153,8 @@
                     <div class="card-header pt-7">
                         <!--begin::Title-->
                         <h3 class="card-title align-items-start flex-column">
-                            <span class="card-label fw-bold text-gray-800">Service Payments</span>
-                            <span class="text-gray-400 mt-1 fw-semibold fs-6">Recent service payments</span>
+                            <span class="card-label fw-bold text-gray-800">{{__('Service Payments')}}</span>
+                            <span class="text-gray-400 mt-1 fw-semibold fs-6">{{__('Recent service payments')}}</span>
                         </h3>
                         <!--end::Title-->
                         <!--begin::Actions-->
