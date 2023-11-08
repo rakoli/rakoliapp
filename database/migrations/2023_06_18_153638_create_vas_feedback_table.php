@@ -19,13 +19,13 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->string('agent_code')->nullable(); // agency
+            $table->string('agent_business_code')->nullable(); // agency
             $table->foreign('agent_code')->references('code')
                 ->on('businesses')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->string('vas_provider_code')->nullable(); // vas provider
+            $table->string('vas_business_code')->nullable(); // vas provider
             $table->foreign('vas_provider_code')->references('code')
                 ->on('businesses')
                 ->onDelete('cascade')
@@ -46,7 +46,8 @@ return new class extends Migration
 
 
 
-            $table->decimal('rating',12,2);
+            $table->decimal('rating_agent',12,2);
+            $table->decimal('rating_vas_provider',12,2);
 
             $table->text('comment_agent')->invisible()->nullable();
             $table->text('comment_vas_provider')->invisible()->nullable();

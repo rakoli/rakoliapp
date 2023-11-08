@@ -12,25 +12,6 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 class Business extends Model
 {
     use HasFactory;
-    protected $fillable=[
-        'country_code',
-        'code',
-        'Business_name',
-        'tax_id',
-        'Business_regno',
-        'Business_phone_number',
-        'Business_email',
-        "Business_Code",
-        'Business_location',
-        "Package_code"
-
-    ];
-
-
-    protected $casts  = [
-        'walkthrough_step' => WalkThroughStepEnums::class,
-        'status' => BusinessStatusEnum::class,
-    ];
 
     public function country() : BelongsTo
     {
@@ -38,6 +19,11 @@ class Business extends Model
     }
 
     public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'code', 'code');
+    }
+
+    public function users(): BelongsTo //to cover all usage scope
     {
         return $this->belongsTo(User::class, 'code', 'code');
     }
@@ -61,4 +47,105 @@ class Business extends Model
     {
         return $this->hasManyThrough(VasPayment::class, VasContract::class,'vas_business_code','vas_contract_code','code','code');
     }
+
+    public function parent_referral()
+    {
+        return $this->belongsTo(Business::class, 'referral_business_code', 'code');
+    }
+
+    public function referrals()
+    {
+        return $this->hasMany(Business::class, 'referral_business_code', 'code');
+    }
+
+    public function loans()
+    {
+        return $this->hasMany(Loan::class, 'business_code', 'code');
+    }
+
+    public function location_users()
+    {
+        return $this->hasMany(LocationUser::class, 'business_code', 'code');
+    }
+
+    public function locations()
+    {
+        return $this->hasMany(Location::class, 'business_code', 'code');
+    }
+
+    public function networks()
+    {
+        return $this->hasMany(Network::class, 'business_code', 'code');
+    }
+
+    public function shift_networks()
+    {
+        return $this->hasMany(ShiftNetwork::class, 'business_code', 'code');
+    }
+
+    public function shift_transactions()
+    {
+        return $this->hasMany(ShiftTransaction::class, 'business_code', 'code');
+    }
+
+    public function shifts()
+    {
+        return $this->hasMany(Shift::class, 'business_code', 'code');
+    }
+
+    public function shorts()
+    {
+        return $this->hasMany(Short::class, 'business_code', 'code');
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'business_code', 'code');
+    }
+
+    public function exchange_ads()
+    {
+        return $this->hasMany(ExchangeAds::class, 'business_code', 'code');
+    }
+
+    public function exchange_transactions_owned()
+    {// for vas provider
+        return $this->hasMany(ExchangeTransaction::class, 'owner_business_code', 'code');
+    }
+
+    public function exchange_transactions_requested()
+    {//for agent
+        return $this->hasMany(ExchangeTransaction::class, 'trader_business_code', 'code');
+    }
+
+    public function vas_contracts_owned()
+    {//for vas provider
+        return $this->hasMany(VasContract::class, 'vas_business_code', 'code');
+    }
+
+    public function vas_contracts()
+    {//for agent
+        return $this->hasMany(VasContract::class, 'agent_business_code', 'code');
+    }
+
+    public function vas_feedbacks_vas()
+    {//for vas
+        return $this->hasMany(VasFeedback::class, 'vas_business_code', 'code');
+    }
+
+    public function vas_feedbacks_agent()
+    {//for agent
+        return $this->hasMany(VasFeedback::class, 'agent_business_code', 'code');
+    }
+
+    public function vas_tasks()
+    {
+        return $this->hasMany(VasTask::class, 'vas_business_code', 'code');
+    }
+
+    public function vas_task_availabilities()
+    {
+        return $this->hasMany(VasTaskAvailability::class, 'agent_business_code', 'code');
+    }
+
 }

@@ -20,4 +20,35 @@ class Region extends Model
         'code',
         'description'
     ];
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class, 'country_code', 'code');
+    }
+
+    public function areas()
+    {
+        return $this->hasMany(Area::class, 'region_code', 'code');
+    }
+
+    public function towns()
+    {
+        return $this->hasMany(Towns::class, 'region_code', 'code');
+    }
+
+    public function exchange_ads()
+    {
+        return $this->hasMany(ExchangeAds::class, 'region_code', 'code');
+    }
+
+    public function locations()
+    {
+        return $this->hasMany(Location::class, 'region_code', 'code');
+    }
+
+    public function vas_tasks()
+    {
+        return $this->hasMany(VasTask::class, 'region_code', 'code');
+    }
+
 }

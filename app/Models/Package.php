@@ -19,4 +19,10 @@ class Package extends Model
     {
         return  $this->hasMany(PackageFeature::class,'package_code','code');
     }
+
+    public function businesses()
+    {
+        return $this->hasMany(Business::class, 'package_code', 'code');
+    }
+
 }

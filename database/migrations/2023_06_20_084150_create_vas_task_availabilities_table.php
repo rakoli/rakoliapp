@@ -19,8 +19,8 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->string('agent_code');
-            $table->foreign('agent_code')->references('code')
+            $table->string('agent_business_code');
+            $table->foreign('agent_business_code')->references('code')
                 ->on('businesses')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
