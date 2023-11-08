@@ -58,12 +58,12 @@ class HomeController extends Controller
             //Datatable
             $dataTableHtml = $builder->columns([
                 ['data' => 'id' ],
-                ['data' => 'country.name', 'title' => 'Country'],
-                ['data' => 'category'],
-                ['data' => 'amt' , 'title' => 'Amount'],
-                ['data' => 'channel'],
-                ['data' => 'channel_reference'],
-                ['data' => 'channel_timestamp'],
+                ['data' => 'country.name', 'title' => __('Country')],
+                ['data' => 'category', 'title' => __('Category')],
+                ['data' => 'amt' , 'title' => __('Amount')],
+                ['data' => 'channel', 'title' => __('Channel')],
+                ['data' => 'channel_reference', 'title' => __('Channel Reference')],
+                ['data' => 'channel_timestamp', 'title' => __('Channel Time')],
             ])->orderBy(0,'desc');
 
             //Dashboard Statistics

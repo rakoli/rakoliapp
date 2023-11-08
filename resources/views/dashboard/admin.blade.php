@@ -31,7 +31,7 @@
                         <!--end::Number-->
                         <!--begin::Follower-->
                         <div class="m-0">
-                            <span class="fw-semibold fs-6 text-gray-400">Business</span>
+                            <span class="fw-semibold fs-6 text-gray-400">{{__('Business')}}</span>
                         </div>
                         <!--end::Follower-->
                     </div>
@@ -65,7 +65,7 @@
                         <!--end::Number-->
                         <!--begin::Follower-->
                         <div class="m-0">
-                            <span class="fw-semibold fs-6 text-gray-400">Total Income</span>
+                            <span class="fw-semibold fs-6 text-gray-400">{{__('Total Income')}}</span>
                         </div>
                         <!--end::Follower-->
                     </div>
@@ -99,7 +99,7 @@
                         <!--end::Number-->
                         <!--begin::Follower-->
                         <div class="m-0">
-                            <span class="fw-semibold fs-6 text-gray-400">Exchange Listing</span>
+                            <span class="fw-semibold fs-6 text-gray-400">{{__('Exchange Listing')}}</span>
                         </div>
                         <!--end::Follower-->
                     </div>
@@ -133,7 +133,7 @@
                         <!--end::Number-->
                         <!--begin::Follower-->
                         <div class="m-0">
-                            <span class="fw-semibold fs-6 text-gray-400">VAS Listing</span>
+                            <span class="fw-semibold fs-6 text-gray-400">{{__('VAS Listing')}}</span>
                         </div>
                         <!--end::Follower-->
                     </div>
@@ -167,7 +167,7 @@
                         <!--end::Number-->
                         <!--begin::Follower-->
                         <div class="m-0">
-                            <span class="fw-semibold fs-6 text-gray-400">Active Subscription</span>
+                            <span class="fw-semibold fs-6 text-gray-400">{{__('Active Subscription')}}</span>
                         </div>
                         <!--end::Follower-->
                     </div>
@@ -201,7 +201,7 @@
                         <!--end::Number-->
                         <!--begin::Follower-->
                         <div class="m-0">
-                            <span class="fw-semibold fs-6 text-gray-400">Users</span>
+                            <span class="fw-semibold fs-6 text-gray-400">{{__('Users')}}</span>
                         </div>
                         <!--end::Follower-->
                     </div>
