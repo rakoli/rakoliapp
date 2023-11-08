@@ -88,6 +88,19 @@
     "Loans Analysis" : "Tathmini ya Mikopo",
     "Tills Report" : "Ripoti ya Tili",
     "Branch Analysis" : "Thamini ya Matawi",
+
+
+    "Services" : "Huduma",
+    "Business Services" : "Huduma za Biashara",
+    "Advertisement" : "Matangazo",
+    "Data" : "Data",
+    "Sales" : "Mauzo",
+    "Review and Verification" : "Ukaguzi na Uhakiki",
+    "Manage Services" : "Ratibu Huduma",
+
+    "Business Reports" : "Ripoti za Biashara",
+    "Payments Report" : "Ripoti ya Malipo",
+    "Service Analysis" : "Tathmini ya Huduma",
     "###########" : "END MENU ITEMS",
 
     "###########" : "LAYOUT HEADER",
