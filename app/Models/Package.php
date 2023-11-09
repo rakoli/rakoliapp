@@ -15,12 +15,13 @@ class Package extends Model
     {
         return  $this->belongsTo(Country::class,'country_code','code');
     }
+
     public function features() : HasMany
     {
         return  $this->hasMany(PackageFeature::class,'package_code','code');
     }
 
-    public function businesses()
+    public function businesses() : HasMany
     {
         return $this->hasMany(Business::class, 'package_code', 'code');
     }

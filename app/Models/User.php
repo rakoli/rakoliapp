@@ -5,6 +5,8 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -65,64 +67,64 @@ class User extends Authenticatable
         return $this->belongsTo(Business::class,'business_code','code');
     }
 
-    public function loan_payments()
+    public function loan_payments() : HasMany
     {
         return $this->hasMany(LoanPayment::class, 'user_code', 'code');
     }
 
-    public function loans()
+    public function loans() : HasMany
     {
         return $this->hasMany(Loan::class, 'user_code', 'code');
     }
 
-    public function locations()
+    public function locations() : BelongsToMany
     {
         return $this->belongsToMany(Location::class, 'location_users', 'user_code', 'location_code')
             ->withPivot('id', 'business_code')
             ->withTimestamps();
     }
 
-    public function shift_transactions()
+    public function shift_transactions() : HasMany
     {
         return $this->hasMany(ShiftTransaction::class, 'user_code', 'code');
     }
 
-    public function shifts()
+    public function shifts() : HasMany
     {
         return $this->hasMany(Shift::class, 'user_code', 'code');
     }
 
-    public function short_payments()
+    public function short_payments() : HasMany
     {
         return $this->hasMany(ShortPayment::class, 'user_code', 'code');
     }
 
-    public function shorts()
+    public function shorts() : HasMany
     {
         return $this->hasMany(Short::class, 'user_code', 'code');
     }
 
-    public function transactions()
+    public function transactions() : HasMany
     {
         return $this->hasMany(Transaction::class, 'user_code', 'code');
     }
 
-    public function vas_submitter_submissions()
+    public function vas_submitter_submissions() : HasMany
     {
         return $this->hasMany(VasSubmission::class, 'submitter_user_code', 'code');
     }
 
-    public function vas_reviewer_submissions()
+    public function vas_reviewer_submissions() : HasMany
     {
         return $this->hasMany(VasSubmission::class, 'reviewer_user_code', 'code');
     }
 
-    public function vas_chats()
+    public function vas_chats() : HasMany
     {
         return $this->hasMany(VasChat::class, 'sender_code', 'code');
     }
 
-    public function ads_exchange_chats()
+    public function ads_exchange_chats() : HasMany
     {
         return $this->hasMany(AdsExchangeChat::class, 'sender_code', 'code');
     }

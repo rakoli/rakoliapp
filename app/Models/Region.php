@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Region extends Model
 {
@@ -21,32 +23,32 @@ class Region extends Model
         'description'
     ];
 
-    public function country()
+    public function country() : BelongsTo
     {
         return $this->belongsTo(Country::class, 'country_code', 'code');
     }
 
-    public function areas()
+    public function areas() : HasMany
     {
         return $this->hasMany(Area::class, 'region_code', 'code');
     }
 
-    public function towns()
+    public function towns() : HasMany
     {
         return $this->hasMany(Towns::class, 'region_code', 'code');
     }
 
-    public function exchange_ads()
+    public function exchange_ads() : HasMany
     {
         return $this->hasMany(ExchangeAds::class, 'region_code', 'code');
     }
 
-    public function locations()
+    public function locations() : HasMany
     {
         return $this->hasMany(Location::class, 'region_code', 'code');
     }
 
-    public function vas_tasks()
+    public function vas_tasks() : HasMany
     {
         return $this->hasMany(VasTask::class, 'region_code', 'code');
     }

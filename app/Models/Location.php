@@ -41,52 +41,52 @@ class Location extends Model
         );
     }
 
-    public function area()
+    public function area(): BelongsTo
     {
         return $this->belongsTo(Area::class, 'area_code', 'code');
     }
 
-    public function region()
+    public function region(): BelongsTo
     {
         return $this->belongsTo(Region::class, 'region_code', 'code');
     }
 
-    public function town()
+    public function town(): BelongsTo
     {
         return $this->belongsTo(Towns::class, 'town_code', 'code');
     }
 
-    public function exchange_ads()
+    public function exchange_ads() : HasMany
     {
         return $this->hasMany(ExchangeAds::class, 'location_code', 'code');
     }
 
-    public function loans()
+    public function loans() : HasMany
     {
         return $this->hasMany(Loan::class, 'location_code', 'code');
     }
 
-    public function shift_networks()
+    public function shift_networks() : HasMany
     {
         return $this->hasMany(ShiftNetwork::class, 'location_code', 'code');
     }
 
-    public function shift_transactions()
+    public function shift_transactions() : HasMany
     {
         return $this->hasMany(ShiftTransaction::class, 'location_code', 'code');
     }
 
-    public function shifts()
+    public function shifts() : HasMany
     {
         return $this->hasMany(Shift::class, 'location_code', 'code');
     }
 
-    public function shorts()
+    public function shorts() : HasMany
     {
         return $this->hasMany(Short::class, 'location_code', 'code');
     }
 
-    public function transactions()
+    public function transactions() : HasMany
     {
         return $this->hasMany(Transaction::class, 'location_code', 'code');
     }

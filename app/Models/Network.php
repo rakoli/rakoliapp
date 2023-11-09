@@ -6,6 +6,9 @@ use App\Models\Scopes\BusinessScoped;
 use App\Models\Scopes\LocationScoped;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Network extends Model
 {
@@ -18,37 +21,39 @@ class Network extends Model
         static::addGlobalScope(new BusinessScoped());
     }
 
-    public function business()
+    public function business() : BelongsTo
     {
         return $this->belongsTo(Business::class,'business_code','code');
     }
-    public function location()
+
+    public function location() : BelongsTo
     {
         return $this->belongsTo(Location::class,'location_code','code');
     }
-    public function agency()
+
+    public function agency() : BelongsTo
     {
         return $this->belongsTo(FinancialServiceProvider::class,'fsp_code','code');
     }
 
-    public function loans()
+    public function loans() : HasMany
     {
         return $this->hasMany(Loan::class, 'network_code', 'code');
     }
 
-    public function shifts()
+    public function shifts() : BelongsToMany
     {
         return $this->belongsToMany(Shift::class, 'shift_networks', 'network_code')
             ->withPivot('id', 'business_code', 'location_code', 'balance_old', 'balance_new')
             ->withTimestamps();
     }
 
-    public function shift_transactions()
+    public function shift_transactions() : HasMany
     {
         return $this->hasMany(ShiftTransaction::class, 'network_code', 'code');
     }
 
-    public function shorts()
+    public function shorts() : HasMany
     {
         return $this->hasMany(Short::class, 'network_code', 'code');
     }

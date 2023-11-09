@@ -24,17 +24,17 @@ class ShiftNetwork extends Model
         return $this->belongsTo(Network::class,'network_code','code')->with('agency');
     }
 
-    public function business()
+    public function business(): BelongsTo
     {
         return $this->belongsTo(Business::class, 'business_code', 'code');
     }
 
-    public function location()
+    public function location(): BelongsTo
     {
         return $this->belongsTo(Location::class, 'location_code', 'code');
     }
 
-    public function shift()
+    public function shift(): BelongsTo
     {
         return $this->belongsTo(Shift::class);
     }
