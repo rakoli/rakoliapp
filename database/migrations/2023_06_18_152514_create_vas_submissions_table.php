@@ -22,14 +22,14 @@ return new class extends Migration
 
 
 
-            $table->string('submitter_code');
-            $table->foreign('submitter_code')->references('code')
+            $table->string('submitter_user_code');
+            $table->foreign('submitter_user_code')->references('code')
                 ->on('users')
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
 
-            $table->string('reviewer_code')->nullable();
-            $table->foreign('reviewer_code')->references('code')
+            $table->string('reviewer_user_code')->nullable();
+            $table->foreign('reviewer_user_code')->references('code')
                 ->on('users')
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
