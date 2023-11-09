@@ -26,8 +26,8 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->string('initiator_code')->nullable(); // vas provider business
-            $table->foreign('initiator_code')->references('code')
+            $table->string('initiator_user_code')->nullable(); // vas provider intiating user
+            $table->foreign('initiator_user_code')->references('code')
                 ->on('users')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
