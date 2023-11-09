@@ -19,9 +19,24 @@ class ShiftNetwork extends Model
     }
 
 
-
     public function network(): BelongsTo
     {
         return $this->belongsTo(Network::class,'network_code','code')->with('agency');
     }
+
+    public function business()
+    {
+        return $this->belongsTo(Business::class, 'business_code', 'code');
+    }
+
+    public function location()
+    {
+        return $this->belongsTo(Location::class, 'location_code', 'code');
+    }
+
+    public function shift()
+    {
+        return $this->belongsTo(Shift::class);
+    }
+
 }

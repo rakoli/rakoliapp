@@ -40,4 +40,54 @@ class Location extends Model
             'code'
         );
     }
+
+    public function area()
+    {
+        return $this->belongsTo(Area::class, 'area_code', 'code');
+    }
+
+    public function region()
+    {
+        return $this->belongsTo(Region::class, 'region_code', 'code');
+    }
+
+    public function town()
+    {
+        return $this->belongsTo(Towns::class, 'town_code', 'code');
+    }
+
+    public function exchange_ads()
+    {
+        return $this->hasMany(ExchangeAds::class, 'location_code', 'code');
+    }
+
+    public function loans()
+    {
+        return $this->hasMany(Loan::class, 'location_code', 'code');
+    }
+
+    public function shift_networks()
+    {
+        return $this->hasMany(ShiftNetwork::class, 'location_code', 'code');
+    }
+
+    public function shift_transactions()
+    {
+        return $this->hasMany(ShiftTransaction::class, 'location_code', 'code');
+    }
+
+    public function shifts()
+    {
+        return $this->hasMany(Shift::class, 'location_code', 'code');
+    }
+
+    public function shorts()
+    {
+        return $this->hasMany(Short::class, 'location_code', 'code');
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'location_code', 'code');
+    }
 }

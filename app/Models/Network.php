@@ -30,4 +30,26 @@ class Network extends Model
     {
         return $this->belongsTo(FinancialServiceProvider::class,'fsp_code','code');
     }
+
+    public function loans()
+    {
+        return $this->hasMany(Loan::class, 'network_code', 'code');
+    }
+
+    public function shifts()
+    {
+        return $this->belongsToMany(Shift::class, 'shift_networks', 'network_code')
+            ->withPivot('id', 'business_code', 'location_code', 'balance_old', 'balance_new')
+            ->withTimestamps();
+    }
+
+    public function shift_transactions()
+    {
+        return $this->hasMany(ShiftTransaction::class, 'network_code', 'code');
+    }
+
+    public function shorts()
+    {
+        return $this->hasMany(Short::class, 'network_code', 'code');
+    }
 }

@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Loan extends Model
 {
     use HasFactory;
+
     protected static function booted()
     {
         static::addGlobalScope(new BusinessScoped);
@@ -22,6 +23,7 @@ class Loan extends Model
     {
         return  $this->belongsTo(Business::class,'business_code','code');
     }
+
     public function user() : BelongsTo
     {
         return  $this->belongsTo(User::class,'user_code','code');
@@ -31,12 +33,20 @@ class Loan extends Model
     {
         return  $this->belongsTo(Network::class,'network_code','code');
     }
+
     public function payments() : HasMany
     {
         return  $this->hasMany(LoanPayment::class,'loan_code','code');
     }
+
     public function shift() : BelongsTo
     {
         return  $this->belongsTo(Shift::class);
     }
+
+    public function location() : BelongsTo
+    {
+        return $this->belongsTo(Location::class, 'location_code', 'code');
+    }
+
 }

@@ -25,16 +25,16 @@ class Shift extends Model
         static::addGlobalScope(new BusinessScoped());
     }
 
-
-
     public function user()
     {
         return $this->belongsTo(User::class,'user_code','code');
     }
+
     public function business()
     {
         return $this->belongsTo(Business::class,'business_code','code');
     }
+
     public function shiftNetworks() : HasMany
     {
         return $this->hasMany(ShiftNetwork::class,'shift_id','id');
@@ -44,4 +44,32 @@ class Shift extends Model
     {
         return  $this->hasMany(Transaction::class);
     }
+
+    public function location()
+    {
+        return $this->belongsTo(Location::class, 'location_code', 'code');
+    }
+
+    public function loans()
+    {
+        return $this->hasMany(Loan::class);
+    }
+
+    public function networks()
+    {
+        return $this->belongsToMany(Network::class, 'shift_networks', 'shift_id', 'network_code')
+            ->withPivot('id', 'business_code', 'location_code', 'balance_old', 'balance_new')
+            ->withTimestamps();
+    }
+
+    public function shift_transactions()
+    {
+        return $this->hasMany(ShiftTransaction::class);
+    }
+
+    public function shorts()
+    {
+        return $this->hasMany(Short::class);
+    }
+
 }

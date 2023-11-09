@@ -19,5 +19,10 @@ class VasPayment extends Model
     {
         return $this->belongsTo(Business::class,'payee_business_code','code');
     }
+    
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'initiator_code', 'code');
+    }
 
 }

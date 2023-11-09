@@ -32,4 +32,15 @@ class ShiftTransaction extends Model
     {
         return  $this->belongsTo(Shift::class);
     }
+
+    public function location() : BelongsTo
+    {
+        return $this->belongsTo(Location::class, 'location_code', 'code');
+    }
+
+    public function user() : BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_code', 'code');
+    }
+
 }

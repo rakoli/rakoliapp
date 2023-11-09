@@ -17,8 +17,15 @@ class LocationUser extends Pivot
     {
         return  $this->belongsTo(User::class,'user_code','code');
     }
+
     public function location(): BelongsTo
     {
         return  $this->belongsTo(Location::class,'location_code','code');
     }
+
+    public function business(): BelongsTo
+    {
+        return $this->belongsTo(Business::class, 'business_code', 'code');
+    }
+
 }

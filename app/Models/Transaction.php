@@ -29,4 +29,10 @@ class Transaction extends Model
     {
         return $this->belongsTo(User::class, 'user_code', 'code');
     }
+
+    public function business()
+    {
+        return $this->belongsTo(Business::class, 'business_code', 'code');
+    }
+
 }
