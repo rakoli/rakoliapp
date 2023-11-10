@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('code')->nullable()->unique();
             $table->string('fname');
             $table->string('lname');
-            $table->string('phone');
+            $table->string('phone')->index();
             $table->string('email')->nullable()->unique();
             $table->boolean('is_super_agent')->default(false);
             $table->integer('status')->default(\App\Utils\Enums\UserStatusEnum::active);
