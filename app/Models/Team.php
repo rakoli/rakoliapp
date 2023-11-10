@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Utils\Enums\UserTypeEnum;
-use App\Utils\Enums\WalkThroughStepEnums;
+use App\Utils\Enums\AgentRegistrationStepsEnums;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
