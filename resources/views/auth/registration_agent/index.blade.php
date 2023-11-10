@@ -154,10 +154,10 @@
                         <!--end::Step 4-->
                         <!--begin::Actions-->
                         <div class="d-flex flex-stack pt-15">
-                            <div class="mr-2">
-                                <button type="button" class="btn btn-lg btn-light-primary me-3" data-kt-stepper-action="previous">
-                                    <i class="ki-outline ki-arrow-left fs-4 me-1"></i>{{__('Previous')}}</button>
-                            </div>
+{{--                            <div class="mr-2">--}}
+{{--                                <button type="button" class="btn btn-lg btn-light-primary me-3" data-kt-stepper-action="previous">--}}
+{{--                                    <i class="ki-outline ki-arrow-left fs-4 me-1"></i>{{__('Previous')}}</button>--}}
+{{--                            </div>--}}
                             <div>
 
                                 <button type="submit" class="btn btn-lg btn-primary" data-kt-stepper-action="submit">
@@ -240,7 +240,64 @@
 <!--end::Global Javascript Bundle-->
 <!--begin::Custom Javascript(used for this page only)-->
 @yield('js')
-<script src="{{asset('assets/js/custom/utilities/modals/create-account.js')}}"></script>
+
+<script>
+    "use strict";
+
+    var KTCreateAccount = function() {
+
+        var options = {startIndex: {{$step}} };
+
+        var modalElement = document.querySelector("#kt_modal_create_account");
+        var stepperElement = document.querySelector("#kt_create_account_stepper");
+        var formElement = stepperElement.querySelector("#kt_create_account_form");
+        var submitButton = stepperElement.querySelector('[data-kt-stepper-action="submit"]');
+        var nextButton = stepperElement.querySelector('[data-kt-stepper-action="next"]');
+        var stepper = new KTStepper(stepperElement, options);
+
+        return {
+            init: function() {
+                if (modalElement) {
+                    new bootstrap.Modal(modalElement);
+                }
+
+                if (stepperElement) {
+                    stepper.on("kt.stepper.changed", function(e) {
+                        if (stepper.getCurrentStepIndex() === 4) {
+                            submitButton.classList.remove("d-none");
+                            submitButton.classList.add("d-inline-block");
+                            nextButton.classList.add("d-none");
+                        } else if (stepper.getCurrentStepIndex() === 5) {
+                            submitButton.classList.add("d-none");
+                            nextButton.classList.add("d-none");
+                        } else {
+                            submitButton.classList.remove("d-inline-block");
+                            submitButton.classList.remove("d-none");
+                            nextButton.classList.remove("d-none");
+                        }
+                    });
+
+                    stepper.on("kt.stepper.next", function(e) {
+                        stepper.goNext();
+                        KTUtil.scrollTop();
+                    });
+
+                    stepper.on("kt.stepper.previous", function(e) {
+                        stepper.goPrevious();
+                        KTUtil.scrollTop();
+                    });
+                }
+            }
+        };
+    }();
+
+    KTUtil.onDOMContentLoaded(function() {
+        KTCreateAccount.init();
+    });
+</script>
+
+
+{{--<script src="{{asset('assets/js/custom/utilities/modals/create-account.js')}}"></script>--}}
 <!--end::Custom Javascript-->
 <!--end::Javascript-->
 </body>
