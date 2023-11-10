@@ -30,8 +30,8 @@ class VasSubmissionFactory extends Factory
         $reviewer = User::where('business_code',$selectedContract->vas_provider_code)->first();
         return [
             'vas_contract_code' => $selectedContractCode,
-            'submitter_code' => $submitter->code,
-            'reviewer_code' => fake()->randomElement([$reviewer->code,null]),
+            'submitter_user_code' => $submitter->code,
+            'reviewer_user_code' => fake()->randomElement([$reviewer->code,null]),
             'reviewed_at' => fake()->randomElement([now()->subHours(random_int(1,18)), null]),
             'status' => fake()->randomElement(TaskSubmissionStatusEnum::class),
         ];

@@ -29,7 +29,7 @@ class VasPaymentFactory extends Factory
         return [
             'business_code' => $businessCode,
             'vas_contract_code' => fake()->randomElement($contracts)['code'],
-            'initiator_code' => User::where('business_code',$businessCode)->first()->code,
+            'initiator_user_code' => User::where('business_code',$businessCode)->first()->code,
             'payee_business_code' => Business::where('type',BusinessTypeEnum::AGENCY->value)->first()->code,
             'code' => Str::random(10),
             'amount' => fake()->numberBetween(4000, 10000),

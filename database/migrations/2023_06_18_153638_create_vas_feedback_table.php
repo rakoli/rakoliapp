@@ -20,13 +20,13 @@ return new class extends Migration
                 ->onUpdate('cascade');
 
             $table->string('agent_business_code')->nullable(); // agency
-            $table->foreign('agent_code')->references('code')
+            $table->foreign('agent_business_code')->references('code')
                 ->on('businesses')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
             $table->string('vas_business_code')->nullable(); // vas provider
-            $table->foreign('vas_provider_code')->references('code')
+            $table->foreign('vas_business_code')->references('code')
                 ->on('businesses')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
