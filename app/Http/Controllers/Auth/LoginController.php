@@ -71,6 +71,7 @@ class LoginController extends Controller
         Session::put('email', $user->email);
         Session::put('is_super_agent', $user->is_super_agent);
         Session::put('last_login', $user->last_login);
+        Session::put('registration_step', $user->registration_step);
         Session::put('status', $user->status);
         Session::put('should_change_password', $user->should_change_password);
         Session::put('iddoc_type', $user->iddoc_type);
