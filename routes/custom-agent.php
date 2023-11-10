@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CustomAgentDashboardController;
 
 // All get methods will be loaded with this route
-Route::middleware(['auth','onlyagent'])->group(function () {
+Route::middleware(['auth','should_complete_registration','onlyagent'])->group(function () {
 
     //Agency
     Route::group(['prefix' => 'agency', 'route' => 'agency.'], function () {

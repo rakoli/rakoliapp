@@ -30,7 +30,7 @@ class HomeController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth']);
     }
 
     public function index()
@@ -135,6 +135,10 @@ class HomeController extends Controller
                     ->editColumn('created_at', function($payment) {
                         return Carbon::parse($payment->created_at)->toDateTimeString();
                     })
+                    ->addColumn('name',
+                        function($payment){
+                            return $payment->user->fname .' '.$payment->user->lname;
+                        })
                     ->toJson();
             }
 
@@ -142,7 +146,7 @@ class HomeController extends Controller
             $dataTableHtml = $builder->columns([
                 ['data' => 'created_at', 'title'=> __('Time') ],
                 ['data' => 'location.name', 'title'=> __('Location')],
-                ['data' => 'user.name', 'title'=> __('User')],
+                ['data' => 'name', 'title'=> __('User')],
                 ['data' => 'type', 'title'=> __('Type')],
                 ['data' => 'amount', 'title'=> __('Amount')],
                 ['data' => 'balance_new' , 'title'=> __('Balance')],
@@ -185,15 +189,4 @@ class HomeController extends Controller
         return 'INVALID DASHBOARD REQUEST';
     }
 
-    public function registrationAgent()
-    {
-
-        return view('auth.registration_agent.index');
-    }
-
-    public function registrationVas()
-    {
-
-        return view('auth.registration_vas.index');
-    }
 }

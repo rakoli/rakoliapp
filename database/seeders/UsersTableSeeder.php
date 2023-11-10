@@ -30,7 +30,6 @@ class UsersTableSeeder extends Seeder
         $agentBusiness = Business::create([
             'country_code' => "TZ",
             'type' => UserTypeEnum::AGENT->value,
-//                    'walkthrough_step' => WalkThroughStepEnums::BUSINESS->value,
             'code'=> generateCode($name),
             'business_name' => $name,
             'tax_id' => $faker->unique()->numerify('###-###-###'),
@@ -56,7 +55,6 @@ class UsersTableSeeder extends Seeder
         $vasBusiness = Business::create([
             'country_code' => "TZ",
             'type' => UserTypeEnum::VAS->value,
-//                    'walkthrough_step' => WalkThroughStepEnums::BUSINESS->value,
             'code'=> generateCode($name),
             'business_name' => $name,
             'tax_id' => $faker->unique()->numerify('###-###-###'),
@@ -80,6 +78,7 @@ class UsersTableSeeder extends Seeder
                 'password' => Hash::make('12345678'),
                 'type' => UserTypeEnum::AGENT->value,
                 'business_code' => $agentBusiness->code,
+                'registration_step' => 0,
             ],
             [
                 'fname' => 'Felix',
@@ -90,6 +89,7 @@ class UsersTableSeeder extends Seeder
                 'password' => Hash::make('12345678'),
                 'type' => UserTypeEnum::VAS->value,
                 'business_code' => $vasBusiness->code,
+                'registration_step' => 0,
             ],
             [
                 'fname' => 'Erick',
@@ -99,6 +99,7 @@ class UsersTableSeeder extends Seeder
                 'code' => generateCode('Erick Mabusi'),
                 'password' => Hash::make('12345678'),
                 'type' => UserTypeEnum::ADMIN->value,
+                'registration_step' => 0,
             ],
         ];
 
