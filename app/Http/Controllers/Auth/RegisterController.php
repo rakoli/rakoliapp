@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use App\Utils\Enums\UserTypeEnum;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use TimeHunter\LaravelGoogleReCaptchaV3\Validations\GoogleReCaptchaV3ValidationRule;
 
 class RegisterController extends Controller
 {
@@ -41,6 +43,17 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
+
+    /**
+     * Show the application registration form.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function showRegistrationForm()
+    {
+        return view('auth.register');
+    }
+
     /**
      * Get a validator for an incoming registration request.
      *
@@ -50,9 +63,13 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
+            'country_code' => ['exists:countries,dialing_code'],
+            'fname' => ['required', 'string', 'max:20'],
+            'lname' => ['required', 'string', 'max:20'],
+            'phone' => ['required','numeric'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'g-recaptcha-response' => [new GoogleReCaptchaV3ValidationRule('register')],
         ]);
     }
 
@@ -64,8 +81,16 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $country_code = substr($data['country_code'], 1);
+        $plainPhone = substr($data['phone'], 1);
+        $fullPhone = $country_code . $plainPhone;
         return User::create([
-            'name' => $data['name'],
+            'country_code' => $country_code,
+            'code' => generateCode($data['fname'].' '.$data['lname'],'tz'),
+            'type' => UserTypeEnum::AGENT->value,
+            'fname' => $data['fname'],
+            'lname' => $data['lname'],
+            'phone' => $fullPhone,
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);

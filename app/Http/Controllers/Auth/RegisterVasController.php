@@ -5,11 +5,12 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use App\Utils\Enums\UserTypeEnum;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
-class RegisterAgentController extends Controller
+class RegisterVasController extends Controller
 {
     /*
     |--------------------------------------------------------------------------
@@ -61,7 +62,10 @@ class RegisterAgentController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
+            'country_code' => ['required'],
+            'fname' => ['required', 'string', 'max:255'],
+            'lname' => ['required', 'string', 'max:255'],
+            'phone' => ['required'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
@@ -76,8 +80,11 @@ class RegisterAgentController extends Controller
     protected function create(array $data)
     {
         return User::create([
-            'type' => \App\Utils\Enums\UserTypeEnum::VAS,
-            'name' => $data['name'],
+            'country_code' => $data['country_code'],
+            'type' => UserTypeEnum::VAS->value,
+            'fname' => $data['fname'],
+            'lname' => $data['lname'],
+            'phone' => $data['phone'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);

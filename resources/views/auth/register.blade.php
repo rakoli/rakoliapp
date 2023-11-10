@@ -29,7 +29,7 @@
                     <input type="text" placeholder="{{ __("First Name") }}" name="fname" autocomplete="off" class="form-control bg-transparent" />
                 </div>
                 <div class="fv-row flex-row-fluid">
-                    <input type="text" placeholder="{{ __("Last Name") }}" name="fname" autocomplete="off" class="form-control bg-transparent" />
+                    <input type="text" placeholder="{{ __("Last Name") }}" name="lname" autocomplete="off" class="form-control bg-transparent" />
                 </div>
             </div>
         </div>
@@ -53,7 +53,7 @@
                 </div>
                 <div class="fv-row flex-row-fluid">
                     <!--begin::Input-->
-                    <input class="form-control bg-transparent" name="phone" placeholder="07XX..." value="" />
+                    <input class="form-control bg-transparent" name="phone" placeholder="07XX..." value="" maxlength="10" />
                     <!--end::Input-->
                 </div>
             </div>
@@ -94,7 +94,7 @@
         <!--end::Input group=-->
         <div class="fv-row mb-8">
             <!--begin::Repeat Password-->
-            <input placeholder="{{ __("Repeat Password") }}" name="confirm-password" type="password" autocomplete="off" class="form-control bg-transparent" />
+            <input placeholder="{{ __("Repeat Password") }}" name="password_confirmation" type="password" autocomplete="off" class="form-control bg-transparent" />
             <!--end::Repeat Password-->
         </div>
         <!--end::Input group=-->

@@ -15,8 +15,8 @@ Route::get('home', [App\Http\Controllers\HomeController::class, 'index'])->name(
 Route::get('logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
 //REGISTRATION ROUTES
-Route::get('register/vas', [App\Http\Controllers\Auth\RegisterAgentController::class, 'showRegistrationForm'])->name('register.vas');
-Route::post('register/vas/submit', [App\Http\Controllers\Auth\RegisterAgentController::class, 'register'])->name('register.vas.submit');
+Route::get('register/vas', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register.vas');
+Route::post('register/vas/submit', [App\Http\Controllers\Auth\RegisterVasController::class, 'register'])->name('register.vas.submit');
 Route::get('registration/agent', [App\Http\Controllers\HomeController::class, 'registrationAgent'])->name('registration.agent');
 Route::get('registration/vas', [App\Http\Controllers\HomeController::class, 'registrationVas'])->name('registration.vas');
 

@@ -11,8 +11,9 @@ class TestController extends Controller
 {
     public function testing()
     {
+        $step = 1;
 
 
-        return view('auth.registration_vas.index');
+        return view('auth.registration_agent.index', compact('step'));
     }
 }

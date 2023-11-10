@@ -21,7 +21,8 @@ return new class extends Migration
                 ->onUpdate('cascade');
             $table->string('type')->default(\App\Utils\Enums\UserTypeEnum::AGENT);
             $table->string('code')->nullable()->unique();
-            $table->string('name');
+            $table->string('fname');
+            $table->string('lname');
             $table->string('phone');
             $table->string('email')->nullable()->unique();
             $table->boolean('is_super_agent')->default(false);

@@ -23,22 +23,12 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'fname',
+        'lname',
         'email',
         'password',
         'country_code',
-        'current_location_code',
         'phone',
-        'phone_otp',
-        'email_otp',
-        'isVerified',
-        'AuthToken',
-        'iddoc_type',
-        'iddoc_id',
-        'iddoc_path',
-        'is_super_agent',
-        'status',
-        'should_change_password',
         'code', // Add the 'code' attribute for user registration
     ];
 

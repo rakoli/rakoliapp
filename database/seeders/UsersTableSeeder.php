@@ -72,7 +72,8 @@ class UsersTableSeeder extends Seeder
         // Specific users provided in the data
         $users = [
             [
-                'name' => 'Elin Erick',
+                'fname' => 'Elin',
+                'lname' => 'Erick',
                 'phone' => '+255739466080',
                 'email' => 'agent@rakoli.com',
                 'code' => generateCode('Elin Erick',),
@@ -81,7 +82,8 @@ class UsersTableSeeder extends Seeder
                 'business_code' => $agentBusiness->code,
             ],
             [
-                'name' => 'Felix Mihayo',
+                'fname' => 'Felix',
+                'lname' => 'Mihayo',
                 'phone' => '+255753464603',
                 'email' => 'vas@rakoli.com',
                 'code' => generateCode('Felix Mihayo'),
@@ -90,7 +92,8 @@ class UsersTableSeeder extends Seeder
                 'business_code' => $vasBusiness->code,
             ],
             [
-                'name' => 'Erick Mabusi',
+                'fname' => 'Erick',
+                'lname' => 'Mabusi',
                 'phone' => '+255763466080',
                 'email' => 'admin@rakoli.com',
                 'code' => generateCode('Erick Mabusi'),
