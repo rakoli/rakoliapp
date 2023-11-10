@@ -6,6 +6,9 @@
 
     <!--begin::Form-->
     <form class="form w-100" novalidate="novalidate" id="kt_sign_up_form" data-kt-redirect-url="{{route('registration.agent')}}" action="{{route('register')}}">
+
+        @csrf
+
         <!--begin::Heading-->
         <div class="text-center mb-11">
             <!--begin::Title-->
@@ -23,10 +26,10 @@
         <div class="fv-row mb-8">
             <div class="d-flex flex-column flex-md-row gap-5">
                 <div class="fv-row flex-row-fluid">
-                    <input type="text" placeholder="{{ __("First Name") }}" name="first-name" autocomplete="off" class="form-control bg-transparent" />
+                    <input type="text" placeholder="{{ __("First Name") }}" name="fname" autocomplete="off" class="form-control bg-transparent" />
                 </div>
                 <div class="fv-row flex-row-fluid">
-                    <input type="text" placeholder="{{ __("Last Name") }}" name="last-name" autocomplete="off" class="form-control bg-transparent" />
+                    <input type="text" placeholder="{{ __("Last Name") }}" name="fname" autocomplete="off" class="form-control bg-transparent" />
                 </div>
             </div>
         </div>
@@ -45,7 +48,7 @@
                 </div>
                 <div class="fv-row flex-row-fluid" style="max-width: 70px;">
                     <!--begin::Input-->
-                    <input id="codeInput" class="form-control bg-transparent" placeholder="{{__('Code')}}" name="code" readonly placeholder="" value="" />
+                    <input id="codeInput" class="form-control bg-transparent" placeholder="{{__('Code')}}" name="country_code" readonly placeholder="" value="" />
                     <!--end::Input-->
                 </div>
                 <div class="fv-row flex-row-fluid">
@@ -104,6 +107,13 @@
             </label>
         </div>
         <!--end::Accept-->
+
+        <div id="register_captcha_id">
+
+        </div>
+
+        {!!  GoogleReCaptchaV3::renderOne('register_captcha_id','register') !!}
+
         <!--begin::Submit button-->
         <div class="d-grid mb-10">
             <button type="submit" id="kt_sign_up_submit" class="btn btn-primary">
@@ -127,5 +137,6 @@
 @endsection
 
 @section('js')
+    {!!  GoogleReCaptchaV3::init() !!}
     <script src="{{asset('assets/js/custom/authentication/sign-up/general.js')}}"></script>
 @endsection
