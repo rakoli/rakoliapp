@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Models\User;
+use App\Utils\VerifyOTP;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -15,6 +16,7 @@ class SendCodeMail extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
 
     public User $receiver;
+    public $minutes;
 
     /**
      * Create a new message instance.
@@ -22,8 +24,8 @@ class SendCodeMail extends Mailable implements ShouldQueue
     public function __construct(User $user)
     {
         $this->receiver = $user;
+        $this->minutes = VerifyOTP::$validtime/60;
         //Check if code has been set and is valid otherwise through error
-
     }
 
     /**
