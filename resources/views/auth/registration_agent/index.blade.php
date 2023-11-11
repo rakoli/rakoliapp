@@ -293,12 +293,23 @@
 
     KTUtil.onDOMContentLoaded(function() {
         KTCreateAccount.init();
+
+        @if(\App\Utils\VerifyOTP::hasActiveEmailOTP(auth()->user()))
+            emailCodeTimer({{\App\Utils\VerifyOTP::emailOTPTimeRemaining(auth()->user())}})
+        @endif
+
+        @if(\App\Utils\VerifyOTP::hasActivePhoneOTP(auth()->user()))
+            phoneCodeTimer({{\App\Utils\VerifyOTP::phoneOTPTimeRemaining(auth()->user())}})
+        @endif
+
     });
 
 
     //START:: VERIFICATION STEP ACTIONS
     function requestEmailCode() {
         console.log("REQUESTED EMAIL CODE");
+        var request_emailcode_button = document.getElementById("request_emailcode_button");
+        request_emailcode_button.classList.add("disabled")
 
         // Create a new XMLHttpRequest object
         var xhr = new XMLHttpRequest();
@@ -310,16 +321,22 @@
 
         // Set up a function to handle the response
         xhr.onload = function () {
+            var verify_button = document.getElementById("verify_email_button");
+
             var responseData = JSON.parse(xhr.responseText);
             if (xhr.status === 200 && responseData.status === 200) {
                 // Request was successful, handle the response here
                 // console.log("Response Data:", responseData);
                 toastr.success(responseData.message, "Send Email Verification");
+                verify_button.classList.remove("disabled");
+
+                emailCodeTimer({{\App\Utils\VerifyOTP::$validtime}});
             } else {
                 // Request encountered an error
                 // console.error("Request failed with status:", responseData);
                 toastr.error(responseData.message, "Send Email Verification");
             }
+            request_emailcode_button.classList.remove("disabled");
         };
 
         // Set up a function to handle errors
@@ -331,8 +348,34 @@
         xhr.send();
     }
 
+    let emailTimerOn = true;
+    function emailCodeTimer(remaining) {
+        var m = Math.floor(remaining / 60);
+        var s = remaining % 60;
+
+        m = m < 10 ? '0' + m : m;
+        s = s < 10 ? '0' + s : s;
+        document.getElementById('email_timer').innerHTML = 'Time remaining: '+ m + ':' + s;
+        remaining -= 1;
+
+        if(remaining >= 0 && emailTimerOn) {
+            setTimeout(function() {
+                emailCodeTimer(remaining);
+            }, 1000);
+            return;
+        }
+
+        // Do timeout stuff here
+        console.log('EMAIL TIMEOUT STAFF:')
+        document.getElementById("verify_email_button").classList.add("disabled")
+        document.getElementById("request_emailcode_button").classList.remove("disabled")
+
+    }
+
     function requestPhoneCode() {
         console.log("REQUESTED PHONE CODE");
+        var request_phonecode_button = document.getElementById("request_phonecode_button");
+        request_phonecode_button.classList.add("disabled")
 
         // Create a new XMLHttpRequest object
         var xhr = new XMLHttpRequest();
@@ -344,16 +387,23 @@
 
         // Set up a function to handle the response
         xhr.onload = function () {
+            var verify_button = document.getElementById("verify_phone_button");
+
             var responseData = JSON.parse(xhr.responseText);
             if (xhr.status === 200 && responseData.status === 200) {
                 // Request was successful, handle the response here
                 // console.log("Response Data:", responseData);
                 toastr.success(responseData.message, "Send Phone Verification");
+                verify_button.classList.remove("disabled");
+
+                phoneCodeTimer({{\App\Utils\VerifyOTP::$validtime}});
             } else {
                 // Request encountered an error
                 // console.error("Request failed with status:", responseData);
                 toastr.error(responseData.message, "Send Phone Verification");
             }
+
+            request_phonecode_button.classList.remove("disabled");
         };
 
         // Set up a function to handle errors
@@ -363,6 +413,30 @@
 
         // Send the GET request
         xhr.send();
+    }
+
+    let phoneTimerOn = true;
+    function phoneCodeTimer(remaining) {
+        var m = Math.floor(remaining / 60);
+        var s = remaining % 60;
+
+        m = m < 10 ? '0' + m : m;
+        s = s < 10 ? '0' + s : s;
+        document.getElementById('phone_timer').innerHTML = 'Time remaining: '+ m + ':' + s;
+        remaining -= 1;
+
+        if(remaining >= 0 && phoneTimerOn) {
+            setTimeout(function() {
+                phoneCodeTimer(remaining);
+            }, 1000);
+            return;
+        }
+
+        // Do timeout stuff here
+        console.log('PHONE TIMEOUT STAFF:')
+        document.getElementById("verify_phone_button").classList.add("disabled")
+        document.getElementById("request_phonecode_button").classList.remove("disabled")
+
     }
     //END:: VERIFICATION STEP ACTIONS
 </script>

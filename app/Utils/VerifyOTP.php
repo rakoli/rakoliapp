@@ -3,33 +3,44 @@
 namespace App\Utils;
 
 use App\Models\User;
+use Carbon\Carbon;
 use function Laravel\Prompts\select;
 
 class VerifyOTP
 {
 
 //    public int $validtime = 300; //seconds
-    public static int $validtime = 300; //seconds
-    public static int $shouldLockCount = 5; //no of trials
+    public static int $validtime = 60; //seconds
+    public static int $shouldLockCount = 10; //no of trials
 
     public static function generateOTPCode(){
         return random_int(100000, 999999);
     }
 
-    public static function emailOTPTimeLeft(User $user)
+    public static function emailOTPTimePassed(User $user)
     {
         return now()->diffInSeconds($user->email_otp_time);
     }
 
-    public static function phoneOTPTimeLeft(User $user)
+    public static function phoneOTPTimePassed(User $user)
     {
         return now()->diffInSeconds($user->phone_otp_time);
+    }
+
+    public static function emailOTPTimeRemaining(User $user)
+    {
+        return Carbon::create($user->email_otp_time )->addSeconds(self::$validtime)->diffInSeconds(now());
+    }
+
+    public static function phoneOTPTimeRemaining(User $user)
+    {
+        return Carbon::create($user->phone_otp_time )->addSeconds(self::$validtime)->diffInSeconds(now());
     }
 
     public static function isEmailOTPValid($userInput, User $user) : bool
     {
         $validity = false;
-        if($user->email_otp == $userInput && (self::emailOTPTimeLeft($user) <= self::$validtime)){
+        if(self::hasActiveEmailOTP($user)){
             return true;
         }
         return $validity;
@@ -38,7 +49,7 @@ class VerifyOTP
     public static function isPhoneOTPValid($userInput, User $user) : bool
     {
         $validity = false;
-        if($user->phone_otp == $userInput && (self::phoneOTPTimeLeft($user) <= self::$validtime)){
+        if(self::hasActivePhoneOTP($user)){
             return true;
         }
         return $validity;
@@ -46,7 +57,7 @@ class VerifyOTP
 
     public static function hasActiveEmailOTP(User $user) : bool
     {
-        if($user->email_otp != null && (self::emailOTPTimeLeft($user) <= self::$validtime)){
+        if($user->email_otp != null && (self::emailOTPTimePassed($user) <= self::$validtime)){
             return true;
         }
         return false;
@@ -54,7 +65,7 @@ class VerifyOTP
 
     public static function hasActivePhoneOTP(User $user) : bool
     {
-        if($user->phone_otp != null && (self::phoneOTPTimeLeft($user) <= self::$validtime)){
+        if($user->phone_otp != null && (self::phoneOTPTimePassed($user) <= self::$validtime)){
             return true;
         }
         return false;

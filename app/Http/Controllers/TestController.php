@@ -8,6 +8,7 @@ use App\Models\SystemIncome;
 use App\Models\User;
 use App\Utils\SMS;
 use App\Utils\VerifyOTP;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Illuminate\Support\Facades\Mail;
@@ -19,11 +20,11 @@ class TestController extends Controller
     {
         $step = 1;
 
-        $user = User::where('email','agent@rakoli.com')->first();
+        $user = User::where('email','emabusi@gmail.com')->first();
 
-        SMS::sendToUser($user, 'function to send updated');
+//        SMS::sendToUser($user, 'function to send updated');
 
-//        dd(VerifyOTP::shouldLockEmailOTP($user));
+        dd(VerifyOTP::emailOTPTimeLeft($user), Carbon::create($user->email_otp_time)->diffInRealSeconds(now()));
 
 //        dd(RequestEmailVerificationCode::run($user));
 
