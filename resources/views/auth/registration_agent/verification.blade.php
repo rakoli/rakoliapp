@@ -29,7 +29,7 @@
             <div class="input-group input-group-lg mb-5">
                 <span class="input-group-text" id="basic-addon1">Phone code</span>
                 <input type="text" class="form-control" placeholder="Phone Code"/>
-                <button id="request_phone_code" class="btn btn-secondary fw-bold flex-shrink-0 ml-5">Request Code</button>
+                <button id="request_phone_code" type="button" class="btn btn-secondary fw-bold flex-shrink-0 ml-5" onclick="requestPhoneCode()">Request Code</button>
             </div>
         </div>
         <!--end::Input group-->

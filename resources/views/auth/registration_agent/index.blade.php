@@ -330,6 +330,40 @@
         // Send the GET request
         xhr.send();
     }
+
+    function requestPhoneCode() {
+        console.log("REQUESTED PHONE CODE");
+
+        // Create a new XMLHttpRequest object
+        var xhr = new XMLHttpRequest();
+
+        // Configure the GET request
+        xhr.open("GET", "{{route('request.phone.code')}}", true);
+
+        xhr.setRequestHeader("Accept", "application/json");
+
+        // Set up a function to handle the response
+        xhr.onload = function () {
+            var responseData = JSON.parse(xhr.responseText);
+            if (xhr.status === 200 && responseData.status === 200) {
+                // Request was successful, handle the response here
+                // console.log("Response Data:", responseData);
+                toastr.success(responseData.message, "Send Phone Verification");
+            } else {
+                // Request encountered an error
+                // console.error("Request failed with status:", responseData);
+                toastr.error(responseData.message, "Send Phone Verification");
+            }
+        };
+
+        // Set up a function to handle errors
+        xhr.onerror = function () {
+            console.error("Network error occurred");
+        };
+
+        // Send the GET request
+        xhr.send();
+    }
     //END:: VERIFICATION STEP ACTIONS
 </script>
 

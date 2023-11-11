@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\RequestEmailVerificationCode;
+use App\Actions\RequestPhoneVerificationCode;
 use App\Utils\VerifyOTP;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -25,6 +26,7 @@ class RegistrationStepController extends Controller
     public function requestEmailCodeAjax(Request $request)
     {
         $user = $request->user();
+
         if(VerifyOTP::hasActiveEmailOTP($user)){
             return [
                 'status' => 201,
@@ -39,7 +41,7 @@ class RegistrationStepController extends Controller
             ];
         }
 
-        $result = RequestEmailVerificationCode::dispatch($request->user());
+        RequestEmailVerificationCode::dispatch($request->user());
 
         return [
             'status' => 200,
@@ -52,5 +54,31 @@ class RegistrationStepController extends Controller
         $step = auth()->user()->registration_step;
 
         return view('auth.registration_vas.index');
+    }
+
+    public function requestPhoneCodeAjax(Request $request)
+    {
+        $user = $request->user();
+
+        if(VerifyOTP::hasActivePhoneOTP($user)){
+            return [
+                'status' => 201,
+                'message' => 'SMS already sent try again in '. Carbon::create($user->phone_otp_time)->addSeconds(VerifyOTP::$validtime)->diffForHumans()
+            ];
+        }
+
+        if (VerifyOTP::shouldLockPhoneOTP($user)) {
+            return [
+                'status' => 201,
+                'message' => 'Account locked! Reached trial limit'
+            ];
+        }
+
+        RequestPhoneVerificationCode::dispatch($request->user());
+
+        return [
+            'status' => 200,
+            'message' => 'successful'
+        ];
     }
 }

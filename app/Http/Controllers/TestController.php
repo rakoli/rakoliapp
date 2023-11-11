@@ -6,6 +6,7 @@ use App\Actions\RequestEmailVerificationCode;
 use App\Mail\SendCodeMail;
 use App\Models\SystemIncome;
 use App\Models\User;
+use App\Utils\SMS;
 use App\Utils\VerifyOTP;
 use Illuminate\Http\Request;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
@@ -18,9 +19,11 @@ class TestController extends Controller
     {
         $step = 1;
 
-        $user = User::where('email','emabusi@hotmail.com')->first();
+        $user = User::where('email','agent@rakoli.com')->first();
 
-        dd(VerifyOTP::shouldLockEmailOTP($user));
+        SMS::sendToUser($user, 'function to send updated');
+
+//        dd(VerifyOTP::shouldLockEmailOTP($user));
 
 //        dd(RequestEmailVerificationCode::run($user));
 
