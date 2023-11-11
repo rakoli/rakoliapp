@@ -17,7 +17,7 @@
             <div class="text-muted fw-semibold fs-6">Email: {{auth()->user()->email}}</div>
             <div class="input-group input-group-lg mb-5">
                 <span class="input-group-text" id="basic-addon1">Email code</span>
-                <input type="text" class="form-control" placeholder="Email Code"/>
+                <input id="email_code" type="number" class="form-control" placeholder="Email Code"/>
                 <button id="request_emailcode_button" type="button" class="btn btn-secondary fw-bold flex-shrink-0 ml-5" onclick="requestEmailCode()">Request Code</button>
             </div>
             <div id="email_timer" class="text-muted fw-semibold fs-6"></div>
@@ -31,7 +31,7 @@
             <div class="text-muted fw-semibold fs-6">Phone: +{{auth()->user()->phone}}</div>
             <div class="input-group input-group-lg mb-5">
                 <span class="input-group-text" id="basic-addon1">Phone code</span>
-                <input type="text" class="form-control" placeholder="Phone Code"/>
+                <input id="phone_code" type="number" class="form-control" placeholder="Phone Code"/>
                 <button id="request_phonecode_button" type="button" class="btn btn-secondary fw-bold flex-shrink-0 ml-5" onclick="requestPhoneCode()">Request Code</button>
             </div>
             <div id="phone_timer" class="text-muted fw-semibold fs-6"></div>
@@ -46,14 +46,14 @@
             @if(!\App\Utils\VerifyOTP::hasActiveEmailOTP(auth()->user()))
             disabled
             @endif
-            ">
+            " onclick="verifyEmailCode()">
                 Verify Email
             </button>
             <button id="verify_phone_button" type="button" class="btn btn-primary
             @if(!\App\Utils\VerifyOTP::hasActivePhoneOTP(auth()->user()))
             disabled
             @endif
-            ">
+            " onclick="verifyPhoneCode()">
                 Verify Phone
             </button>
         </div>

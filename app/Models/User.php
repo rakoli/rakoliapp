@@ -57,12 +57,12 @@ class User extends Authenticatable
         return $this->fname .' '.$this->lname;
     }
 
-    public function getEmailCode()
+    public function getEmailOTPCode()
     {
         return $this->email_otp;
     }
 
-    public function getPhoneOTP()
+    public function getPhoneOTPCode()
     {
         return $this->phone_otp;
     }

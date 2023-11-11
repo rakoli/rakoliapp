@@ -5,7 +5,7 @@ Thank you for registering at Rakoli. To complete your registration and ensure th
     we need to verify your email address. Please find your verification code below:
 
 <x-mail::panel>
-    Verification Code: {{$receiver->getEmailCode()}}
+    Verification Code: {{$code}}
 </x-mail::panel>
 
 This code will be valid for {{$minutes}} minutes. Once account is successfully verified, and you can start enjoying the benefits of Rakoli.<br>

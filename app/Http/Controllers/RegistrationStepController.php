@@ -49,6 +49,28 @@ class RegistrationStepController extends Controller
         ];
     }
 
+    public function verifyEmailCodeAjax(Request $request)
+    {
+        $user = $request->user();
+
+        $request->validate([
+            'email_code' => 'required|numeric',
+        ]);
+
+        if(VerifyOTP::isEmailOTPValid($request->get('email_code'),$user)){
+            return [
+                'status' => 200,
+                'message' => 'valid'
+            ];
+        }
+
+
+        return [
+            'status' => 201,
+            'message' => 'invalid'
+        ];
+    }
+
     public function registrationVas()
     {
         $step = auth()->user()->registration_step;
@@ -80,5 +102,28 @@ class RegistrationStepController extends Controller
             'status' => 200,
             'message' => 'successful'
         ];
+    }
+
+    public function verifyPhoneCodeAjax(Request $request)
+    {
+        $user = $request->user();
+
+        $request->validate([
+            'phone_code' => 'required|numeric',
+        ]);
+
+        if(VerifyOTP::isPhoneOTPValid($request->get('phone_code'),$user)){
+            return [
+                'status' => 200,
+                'message' => 'valid'
+            ];
+        }
+
+
+        return [
+            'status' => 201,
+            'message' => 'invalid'
+        ];
+
     }
 }

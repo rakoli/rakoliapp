@@ -18,9 +18,11 @@ class RequestEmailVerificationCode
             return false;
         }
 
-        Mail::to($user->email)->send(new SendCodeMail($user));
+        $code = VerifyOTP::generateOTPCode();
 
-        $user->email_otp = VerifyOTP::generateOTPCode();
+        Mail::to($user->email)->send(new SendCodeMail($user, $code));
+
+        $user->email_otp = $code;
         $user->email_otp_time = now();
         $user->email_otp_count = $user->email_otp_count + 1;
         $user->save();

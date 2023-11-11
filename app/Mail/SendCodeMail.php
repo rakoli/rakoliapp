@@ -17,15 +17,20 @@ class SendCodeMail extends Mailable implements ShouldQueue
 
     public User $receiver;
     public $minutes;
+    public $code;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(User $user)
+    public function __construct(User $user, $code = null)
     {
         $this->receiver = $user;
         $this->minutes = VerifyOTP::$validtime/60;
-        //Check if code has been set and is valid otherwise through error
+        if ($code != null) {
+            $this->code = $code;
+        }else{
+            $this->code = $user->getEmailOTPCode();
+        }
     }
 
     /**

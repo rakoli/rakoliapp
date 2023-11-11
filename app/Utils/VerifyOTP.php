@@ -10,7 +10,7 @@ class VerifyOTP
 {
 
 //    public int $validtime = 300; //seconds
-    public static int $validtime = 60; //seconds
+    public static int $validtime = 600; //seconds
     public static int $shouldLockCount = 10; //no of trials
 
     public static function generateOTPCode(){
@@ -40,7 +40,7 @@ class VerifyOTP
     public static function isEmailOTPValid($userInput, User $user) : bool
     {
         $validity = false;
-        if(self::hasActiveEmailOTP($user)){
+        if(self::hasActiveEmailOTP($user) && $userInput == $user->getEmailOTPCode()){
             return true;
         }
         return $validity;
@@ -49,7 +49,7 @@ class VerifyOTP
     public static function isPhoneOTPValid($userInput, User $user) : bool
     {
         $validity = false;
-        if(self::hasActivePhoneOTP($user)){
+        if(self::hasActivePhoneOTP($user) && $userInput == $user->getPhoneOTPCode()){
             return true;
         }
         return $validity;

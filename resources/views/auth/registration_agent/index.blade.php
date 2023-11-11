@@ -341,6 +341,7 @@
 
         // Set up a function to handle errors
         xhr.onerror = function () {
+            toastr.error("Network Error Occurred");
             console.error("Network error occurred");
         };
 
@@ -370,6 +371,50 @@
         document.getElementById("verify_email_button").classList.add("disabled")
         document.getElementById("request_emailcode_button").classList.remove("disabled")
 
+    }
+
+    function verifyEmailCode() {
+        console.log("VERIFYING EMAIL CODE");
+        var inputEmailCode = document.getElementById('email_code').value;
+        var verify_button = document.getElementById("verify_email_button");
+        verify_button.classList.add("disabled")
+
+        // Create a new XMLHttpRequest object
+        var xhr = new XMLHttpRequest();
+
+        // Configure the GET request
+        var url = "{{route('verify.email.code')}}";
+        url = url + "?email_code="+inputEmailCode;
+        xhr.open("GET", url, true);
+
+        xhr.setRequestHeader("Accept", "application/json");
+        xhr.setRequestHeader("X-CSRF-TOKEN", "{{ csrf_token() }}");
+
+        // Set up a function to handle the response
+        xhr.onload = function () {
+
+            var responseData = JSON.parse(xhr.responseText);
+            if (xhr.status === 200 && responseData.status === 200) {
+                // Request was successful, handle the response here
+                // console.log("Response Data:", responseData);
+                toastr.success(responseData.message, "Verify Email Code");
+
+            } else {
+                // Request encountered an error
+                // console.error("Request failed with status:", responseData);
+                toastr.error(responseData.message, "Verify Email Code");
+            }
+            verify_button.classList.remove("disabled");
+        };
+
+        // Set up a function to handle errors
+        xhr.onerror = function () {
+            toastr.error("Network Error Occurred");
+            console.error("Network error occurred");
+        };
+
+        // Sending data with the request
+        xhr.send();
     }
 
     function requestPhoneCode() {
@@ -408,6 +453,7 @@
 
         // Set up a function to handle errors
         xhr.onerror = function () {
+            toastr.error("Network Error Occurred");
             console.error("Network error occurred");
         };
 
@@ -437,6 +483,50 @@
         document.getElementById("verify_phone_button").classList.add("disabled")
         document.getElementById("request_phonecode_button").classList.remove("disabled")
 
+    }
+
+    function verifyPhoneCode() {
+        console.log("VERIFYING PHONE CODE");
+        var inputPhoneCode = document.getElementById('phone_code').value;
+        var verify_button = document.getElementById("verify_phone_button");
+        verify_button.classList.add("disabled")
+
+        // Create a new XMLHttpRequest object
+        var xhr = new XMLHttpRequest();
+
+        // Configure the GET request
+        var url = "{{route('verify.phone.code')}}";
+        url = url + "?phone_code="+inputPhoneCode;
+        xhr.open("GET", url, true);
+
+        xhr.setRequestHeader("Accept", "application/json");
+        xhr.setRequestHeader("X-CSRF-TOKEN", "{{ csrf_token() }}");
+
+        // Set up a function to handle the response
+        xhr.onload = function () {
+
+            var responseData = JSON.parse(xhr.responseText);
+            if (xhr.status === 200 && responseData.status === 200) {
+                // Request was successful, handle the response here
+                // console.log("Response Data:", responseData);
+                toastr.success(responseData.message, "Verify Phone Code");
+
+            } else {
+                // Request encountered an error
+                // console.error("Request failed with status:", responseData);
+                toastr.error(responseData.message, "Verify Phone Code");
+            }
+            verify_button.classList.remove("disabled");
+        };
+
+        // Set up a function to handle errors
+        xhr.onerror = function () {
+            toastr.error("Network Error Occurred");
+            console.error("Network error occurred");
+        };
+
+        // Sending data with the request
+        xhr.send();
     }
     //END:: VERIFICATION STEP ACTIONS
 </script>
