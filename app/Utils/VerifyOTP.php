@@ -23,7 +23,7 @@ class VerifyOTP
 
     public static function phoneOTPTimeLeft(User $user)
     {
-        return now()->diffInSeconds($user->email_otp_time);
+        return now()->diffInSeconds($user->phone_otp_time);
     }
 
     public static function isEmailOTPValid($userInput, User $user) : bool
