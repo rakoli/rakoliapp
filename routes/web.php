@@ -15,9 +15,11 @@ Route::get('home', [App\Http\Controllers\HomeController::class, 'index'])->name(
 Route::get('logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
 //REGISTRATION ROUTES
+Route::get('registration/agent', [App\Http\Controllers\RegistrationStepController::class, 'registrationAgent'])->name('registration.agent');
+Route::get('request/email/code', [App\Http\Controllers\RegistrationStepController::class, 'requestEmailCodeAjax'])->name('request.email.code');
+
 Route::get('register/vas', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register.vas');
 Route::post('register/vas/submit', [App\Http\Controllers\Auth\RegisterVasController::class, 'register'])->name('register.vas.submit');
-Route::get('registration/agent', [App\Http\Controllers\RegistrationStepController::class, 'registrationAgent'])->name('registration.agent');
 Route::get('registration/vas', [App\Http\Controllers\RegistrationStepController::class, 'registrationVas'])->name('registration.vas');
 
 //LANGUAGE SWITCHER

@@ -86,7 +86,7 @@ class LoginController extends Controller
         Session::put('updated_at', $user->updated_at);
         Session::put('updated_at', $user->updated_at);
 
-        if($user->type != 'admin'){
+        if($user->type != 'admin' && $user->registration_step == 0){
             Session::put('currency', $user->business->country->currency);
             Session::put('business_name', $user->business->business_name);
         }else{

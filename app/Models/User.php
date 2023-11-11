@@ -52,6 +52,16 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    public function name()
+    {
+        return $this->fname .' '.$this->lname;
+    }
+
+    public function getEmailCode()
+    {
+        return $this->email_otp;
+    }
+
     public function business() : BelongsTo
     {
         return $this->belongsTo(Business::class,'business_code','code');

@@ -31,9 +31,16 @@ return new class extends Migration
             $table->timestamp('last_login')->nullable();
             $table->timestamp('phone_verified_at')->nullable();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('phone_otp')->nullable();
-            $table->string('email_otp')->nullable();
             $table->boolean('should_change_password')->default(false);
+
+            $table->string('phone_otp')->nullable();
+            $table->timestamp('phone_otp_time')->nullable();
+            $table->integer('phone_otp_count')->nullable();
+
+            $table->string('email_otp')->nullable();
+            $table->timestamp('email_otp_time')->nullable();
+            $table->integer('email_otp_count')->nullable();
+
 
             $table->string('iddoc_type')->nullable();
             $table->string('iddoc_id')->nullable()->unique();

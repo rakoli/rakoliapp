@@ -14,22 +14,22 @@
         <!--end::Heading-->
         <!--begin::Input group-->
         <div class="row mb-5">
-            <div class="text-muted fw-semibold fs-6">Email: emabusi@gmail.com</div>
+            <div class="text-muted fw-semibold fs-6">Email: {{auth()->user()->email}}</div>
             <div class="input-group input-group-lg mb-5">
                 <span class="input-group-text" id="basic-addon1">Email code</span>
                 <input type="text" class="form-control" placeholder="Email Code"/>
-                <button id="request_email_code" class="btn btn-light fw-bold flex-shrink-0 ml-5">Request Code</button>
+                <button id="request_email_code" type="button" class="btn btn-secondary fw-bold flex-shrink-0 ml-5" onclick="requestEmailCode()">Request Code</button>
             </div>
         </div>
         <!--end::Input group-->
 
         <!--begin::Input group-->
         <div class="row">
-            <div class="text-muted fw-semibold fs-6">Phone: +255763466080</div>
+            <div class="text-muted fw-semibold fs-6">Phone: +{{auth()->user()->phone}}</div>
             <div class="input-group input-group-lg mb-5">
                 <span class="input-group-text" id="basic-addon1">Phone code</span>
                 <input type="text" class="form-control" placeholder="Phone Code"/>
-                <button id="request_phone_code" class="btn btn-light fw-bold flex-shrink-0 ml-5">Request Code</button>
+                <button id="request_phone_code" class="btn btn-secondary fw-bold flex-shrink-0 ml-5">Request Code</button>
             </div>
         </div>
         <!--end::Input group-->
