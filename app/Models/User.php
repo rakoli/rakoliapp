@@ -62,6 +62,11 @@ class User extends Authenticatable
         return $this->email_otp;
     }
 
+    public function getPhoneOTP()
+    {
+        return $this->phone_otp;
+    }
+
     public function business() : BelongsTo
     {
         return $this->belongsTo(Business::class,'business_code','code');

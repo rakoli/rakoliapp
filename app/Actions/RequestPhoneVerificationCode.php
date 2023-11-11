@@ -20,7 +20,7 @@ class RequestPhoneVerificationCode
         }
 
         $minutes = (VerifyOTP::$validtime/60);
-        $text = config('app.name') . " verification code: ".$user->phone_otp ."\nValid for ".$minutes." min." ;
+        $text = config('app.name') . " verification code: ".$user->getPhoneOTP() ."\nValid for ".$minutes." min." ;
         SMS::sendToUser($user, $text);
 
         $user->phone_otp = VerifyOTP::generateOTPCode();
