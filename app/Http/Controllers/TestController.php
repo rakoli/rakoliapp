@@ -20,11 +20,11 @@ class TestController extends Controller
     {
         $step = 1;
 
-        $user = User::where('email','emabusi@gmail.com')->first();
+        $user = User::where('email','jmabusi@gmail.com')->first();
 
 //        SMS::sendToUser($user, 'function to send updated');
 
-        dd(VerifyOTP::emailOTPTimeLeft($user), Carbon::create($user->email_otp_time)->diffInRealSeconds(now()));
+        dd(Carbon::create($user->phone_otp_time)->addSeconds(VerifyOTP::$validtime)->diffForHumans(now()), $user->phone_otp_time,VerifyOTP::$validtime,Carbon::create($user->phone_otp_time)->addSeconds(VerifyOTP::$validtime) );
 
 //        dd(RequestEmailVerificationCode::run($user));
 

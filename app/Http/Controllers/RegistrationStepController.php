@@ -27,6 +27,13 @@ class RegistrationStepController extends Controller
     {
         $user = $request->user();
 
+        if($user->email_verified_at != null){
+            return [
+                'status' => 200,
+                'message' => 'Email already verified'
+            ];
+        }
+
         if(VerifyOTP::hasActiveEmailOTP($user)){
             return [
                 'status' => 201,
@@ -53,11 +60,30 @@ class RegistrationStepController extends Controller
     {
         $user = $request->user();
 
+        if($user->email_verified_at != null){
+            return [
+                'status' => 200,
+                'message' => 'Email already verified'
+            ];
+        }
+
         $request->validate([
             'email_code' => 'required|numeric',
         ]);
 
         if(VerifyOTP::isEmailOTPValid($request->get('email_code'),$user)){
+
+            $user->email_verified_at = now();
+            $user->email_otp = null;
+            $user->email_otp_time = null;
+            $user->email_otp_count = null;
+
+            if($user->phone_verified_at != null){
+                $user->registration_step = $user->registration_step + 1;
+            }
+
+            $user->save();
+
             return [
                 'status' => 200,
                 'message' => 'valid'
@@ -81,6 +107,13 @@ class RegistrationStepController extends Controller
     public function requestPhoneCodeAjax(Request $request)
     {
         $user = $request->user();
+
+        if($user->phone_verified_at != null){
+            return [
+                'status' => 200,
+                'message' => 'Phone already verified'
+            ];
+        }
 
         if(VerifyOTP::hasActivePhoneOTP($user)){
             return [
@@ -108,11 +141,30 @@ class RegistrationStepController extends Controller
     {
         $user = $request->user();
 
+        if($user->phone_verified_at != null){
+            return [
+                'status' => 200,
+                'message' => 'Phone already verified'
+            ];
+        }
+
         $request->validate([
             'phone_code' => 'required|numeric',
         ]);
 
         if(VerifyOTP::isPhoneOTPValid($request->get('phone_code'),$user)){
+
+            $user->phone_verified_at = now();
+            $user->phone_otp = null;
+            $user->phone_otp_time = null;
+            $user->phone_otp_count = null;
+
+            if($user->email_verified_at != null){
+                $user->registration_step = $user->registration_step + 1;
+            }
+
+            $user->save();
+
             return [
                 'status' => 200,
                 'message' => 'valid'

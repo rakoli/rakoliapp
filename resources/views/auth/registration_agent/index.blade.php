@@ -328,9 +328,15 @@
                 // Request was successful, handle the response here
                 // console.log("Response Data:", responseData);
                 toastr.success(responseData.message, "Send Email Verification");
-                verify_button.classList.remove("disabled");
 
-                emailCodeTimer({{\App\Utils\VerifyOTP::$validtime}});
+                if(responseData.message === 'Email already verified'){
+                    document.getElementById("email_code").placeholder = "EMAIL ALREADY VERIFIED";
+                    document.getElementById("email_code").setAttribute('readonly', true);
+                }else{
+                    verify_button.classList.remove("disabled");
+                    emailCodeTimer({{\App\Utils\VerifyOTP::$validtime}});
+                }
+
             } else {
                 // Request encountered an error
                 // console.error("Request failed with status:", responseData);
@@ -398,6 +404,11 @@
                 // Request was successful, handle the response here
                 // console.log("Response Data:", responseData);
                 toastr.success(responseData.message, "Verify Email Code");
+                document.getElementById("request_emailcode_button").classList.add("disabled");
+                document.getElementById("email_code").value = "";
+                document.getElementById("email_code").placeholder = "EMAIL VERIFIED";
+                document.getElementById("email_code").classList.add("disabled");
+                document.getElementById("email_code").setAttribute('readonly', true);
 
             } else {
                 // Request encountered an error
@@ -439,9 +450,14 @@
                 // Request was successful, handle the response here
                 // console.log("Response Data:", responseData);
                 toastr.success(responseData.message, "Send Phone Verification");
-                verify_button.classList.remove("disabled");
+                if(responseData.message === 'Phone already verified'){
+                    document.getElementById("phone_code").placeholder = "PHONE ALREADY VERIFIED";
+                    document.getElementById("phone_code").setAttribute('readonly', true);
+                }else{
+                    verify_button.classList.remove("disabled");
+                    phoneCodeTimer({{\App\Utils\VerifyOTP::$validtime}});
+                }
 
-                phoneCodeTimer({{\App\Utils\VerifyOTP::$validtime}});
             } else {
                 // Request encountered an error
                 // console.error("Request failed with status:", responseData);
@@ -508,9 +524,12 @@
             var responseData = JSON.parse(xhr.responseText);
             if (xhr.status === 200 && responseData.status === 200) {
                 // Request was successful, handle the response here
-                // console.log("Response Data:", responseData);
                 toastr.success(responseData.message, "Verify Phone Code");
-
+                document.getElementById("request_phonecode_button").classList.add("disabled");
+                document.getElementById("phone_code").value = "";
+                document.getElementById("phone_code").placeholder = "PHONE VERIFIED";
+                document.getElementById("phone_code").classList.add("disabled");
+                document.getElementById("phone_code").setAttribute('readonly', true);
             } else {
                 // Request encountered an error
                 // console.error("Request failed with status:", responseData);
