@@ -137,6 +137,16 @@
                 <!--begin::Wrapper-->
                 <div class="w-lg-650px w-xl-700px p-10 p-lg-15 mx-auto">
 
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
 
                     <!--begin::Form-->
                     <form class="my-auto pb-5" novalidate="novalidate" id="kt_create_account_form">
@@ -176,6 +186,59 @@
                         <!--end::Actions-->
                     </form>
                     <!--end::Form-->
+
+                    <!--begin::Modal group-->
+                    <div class="modal fade" tabindex="-1" id="edit_contact_modal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 class="modal-title">Edit Contact</h3>
+                                    <!--begin::Close-->
+                                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                                        <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
+                                    </div>
+                                    <!--end::Close-->
+                                </div>
+
+                                <div class="modal-body">
+                                    <p>Modify your submitted contact information</p>
+
+                                    <form class="my-auto pb-5" action="{{route('edit.contact.information')}}" method="POST">
+
+                                        @csrf
+
+                                        <!--begin::Input group-->
+                                        <div class="row mb-5">
+                                            <div class="input-group input-group-lg mb-5">
+                                                <span class="input-group-text" id="basic-addon1">Email</span>
+                                                <input @if(auth()->user()->email_verified_at != null) readonly @endif name="email" type="email" class="form-control" value="@if(auth()->user()->email_verified_at != null) EMAIL ALREADY VERIFIED @else{{auth()->user()->email}}@endif"/>
+                                            </div>
+
+                                        </div>
+                                        <!--end::Input group-->
+
+                                        <!--begin::Input group-->
+                                        <div class="row">
+                                            <div class="input-group input-group-lg mb-5">
+                                                <span class="input-group-text" id="basic-addon1">Phone</span>
+                                                <input @if(auth()->user()->phone_verified_at != null) readonly @endif name="phone" type="text" class="form-control" value="@if(auth()->user()->phone_verified_at != null) PHONE ALREADY VERIFIED @else{{auth()->user()->phone}}@endif"/>
+                                                <div class="text-muted fw-semibold fs-6">Enter phone number using format above starting with country code without + sign e.g 255763987654</div>
+                                            </div>
+                                        </div>
+                                        <!--end::Input group-->
+
+                                        <button type="submit" class="btn btn-primary">Edit changes</button>
+
+                                    </form>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end::Modal group-->
 
                 </div>
                 <!--end::Wrapper-->

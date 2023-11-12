@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\RequestEmailVerificationCode;
 use App\Actions\RequestPhoneVerificationCode;
+use App\Models\User;
 use App\Utils\VerifyOTP;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -171,11 +172,42 @@ class RegistrationStepController extends Controller
             ];
         }
 
-
         return [
             'status' => 201,
             'message' => 'invalid'
         ];
+    }
+
+    public function editContactInformation(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'phone' => 'required|numeric',
+        ]);
+
+        $user = $request->user();
+        $requestEmail = $request->get('email');
+        $requestPhone = $request->get('phone');
+
+        $emailExist = User::where('email',$requestEmail)->where('id', '!=', $user->id)->first();
+
+        if($user->email_verified_at == null || $user->email != $requestEmail){
+            if($emailExist == null){
+                $user->email = $requestEmail;
+            }
+        }
+
+        if($user->phone_verified_at == null || $user->phone != $requestPhone){
+            $user->phone = $requestPhone;
+        }
+
+        if($emailExist != null){
+            return redirect()->back()->withErrors(["Email already exist"]);
+        }
+
+        $user->save();
+
+        return redirect()->back();
 
     }
 }
