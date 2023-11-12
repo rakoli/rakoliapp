@@ -17,8 +17,8 @@
             <div class="text-muted fw-semibold fs-6">Email: {{auth()->user()->email}}</div>
             <div class="input-group input-group-lg mb-5">
                 <span class="input-group-text" id="basic-addon1">Email code</span>
-                <input id="email_code" type="number" class="form-control" placeholder="@if(auth()->user()->email_verified_at != null) EMAIL ALREADY VERIFIED @else EMAIL CODE @endif"/>
-                <button id="request_emailcode_button" type="button" class="btn btn-secondary fw-bold flex-shrink-0 ml-5 @if(auth()->user()->email_verified_at != null)) disabled @endif" onclick="requestEmailCode()">Request Code</button>
+                <input @if(auth()->user()->email_verified_at != null) readonly @endif id="email_code" type="number" class="form-control" placeholder="@if(auth()->user()->email_verified_at != null) EMAIL ALREADY VERIFIED @else EMAIL CODE @endif"/>
+                <button id="request_emailcode_button" type="button" class="btn btn-secondary fw-bold flex-shrink-0 ml-5 @if(auth()->user()->email_verified_at != null) disabled @endif" onclick="requestEmailCode()">Request Code</button>
             </div>
             <div id="email_timer" class="text-muted fw-semibold fs-6"></div>
 
@@ -31,8 +31,8 @@
             <div class="text-muted fw-semibold fs-6">Phone: +{{auth()->user()->phone}}</div>
             <div class="input-group input-group-lg mb-5">
                 <span class="input-group-text" id="basic-addon1">Phone code</span>
-                <input id="phone_code" type="number" class="form-control" placeholder="@if(auth()->user()->phone_verified_at != null) PHONE ALREADY VERIFIED @else PHONE CODE @endif"/>
-                <button id="request_phonecode_button" type="button" class="btn btn-secondary fw-bold flex-shrink-0 ml-5 @if(auth()->user()->phone_verified_at != null)) disabled @endif" onclick="requestPhoneCode()">Request Code</button>
+                <input @if(auth()->user()->phone_verified_at != null) readonly @endif id="phone_code" type="number" class="form-control" placeholder="@if(auth()->user()->phone_verified_at != null) PHONE ALREADY VERIFIED @else PHONE CODE @endif"/>
+                <button id="request_phonecode_button" type="button" class="btn btn-secondary fw-bold flex-shrink-0 ml-5 @if(auth()->user()->phone_verified_at != null) disabled @endif" onclick="requestPhoneCode()">Request Code</button>
             </div>
             <div id="phone_timer" class="text-muted fw-semibold fs-6"></div>
         </div>
