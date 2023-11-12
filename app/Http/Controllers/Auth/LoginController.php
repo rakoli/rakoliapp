@@ -66,7 +66,7 @@ class LoginController extends Controller
         Session::put('current_location_code', $user->current_location_code);
         Session::put('type', $user->type);
         Session::put('code', $user->code);
-        Session::put('name', $user->name);
+        Session::put('name', $user->name());
         Session::put('phone', $user->phone);
         Session::put('email', $user->email);
         Session::put('is_super_agent', $user->is_super_agent);
