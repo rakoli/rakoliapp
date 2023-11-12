@@ -211,7 +211,7 @@
                                         <div class="row mb-5">
                                             <div class="input-group input-group-lg mb-5">
                                                 <span class="input-group-text" id="basic-addon1">Email</span>
-                                                <input @if(auth()->user()->email_verified_at != null) readonly @endif name="email" type="email" class="form-control" value="@if(auth()->user()->email_verified_at != null) EMAIL ALREADY VERIFIED @else{{auth()->user()->email}}@endif"/>
+                                                <input @if(auth()->user()->email_verified_at != null) disabled @endif name="email" type="email" class="form-control" value="@if(auth()->user()->email_verified_at != null) EMAIL ALREADY VERIFIED @else{{auth()->user()->email}}@endif"/>
                                             </div>
 
                                         </div>
@@ -221,13 +221,15 @@
                                         <div class="row">
                                             <div class="input-group input-group-lg mb-5">
                                                 <span class="input-group-text" id="basic-addon1">Phone</span>
-                                                <input @if(auth()->user()->phone_verified_at != null) readonly @endif name="phone" type="text" class="form-control" value="@if(auth()->user()->phone_verified_at != null) PHONE ALREADY VERIFIED @else{{auth()->user()->phone}}@endif"/>
+                                                <input @if(auth()->user()->phone_verified_at != null) disabled @endif name="phone" type="text" class="form-control" value="@if(auth()->user()->phone_verified_at != null) PHONE ALREADY VERIFIED @else{{auth()->user()->phone}}@endif"/>
                                                 <div class="text-muted fw-semibold fs-6">Enter phone number using format above starting with country code without + sign e.g 255763987654</div>
                                             </div>
                                         </div>
                                         <!--end::Input group-->
 
-                                        <button type="submit" class="btn btn-primary">Edit changes</button>
+                                        @if(!(auth()->user()->phone_verified_at != null && auth()->user()->email_verified_at != null))
+                                            <button type="submit" class="btn btn-primary">Edit Contact Information</button>
+                                        @endif
 
                                     </form>
                                 </div>
@@ -394,7 +396,7 @@
 
                 if(responseData.message === 'Email already verified'){
                     document.getElementById("email_code").placeholder = "EMAIL ALREADY VERIFIED";
-                    document.getElementById("email_code").setAttribute('readonly', true);
+                    document.getElementById("email_code").setAttribute('disabled', true);
                 }else{
                     verify_button.classList.remove("disabled");
                     emailCodeTimer({{\App\Utils\VerifyOTP::$validtime}});
@@ -471,7 +473,7 @@
                 document.getElementById("email_code").value = "";
                 document.getElementById("email_code").placeholder = "EMAIL VERIFIED";
                 document.getElementById("email_code").classList.add("disabled");
-                document.getElementById("email_code").setAttribute('readonly', true);
+                document.getElementById("email_code").setAttribute('disabled', true);
 
             } else {
                 // Request encountered an error
@@ -515,7 +517,7 @@
                 toastr.success(responseData.message, "Send Phone Verification");
                 if(responseData.message === 'Phone already verified'){
                     document.getElementById("phone_code").placeholder = "PHONE ALREADY VERIFIED";
-                    document.getElementById("phone_code").setAttribute('readonly', true);
+                    document.getElementById("phone_code").setAttribute('disabled', true);
                 }else{
                     verify_button.classList.remove("disabled");
                     phoneCodeTimer({{\App\Utils\VerifyOTP::$validtime}});
@@ -592,7 +594,7 @@
                 document.getElementById("phone_code").value = "";
                 document.getElementById("phone_code").placeholder = "PHONE VERIFIED";
                 document.getElementById("phone_code").classList.add("disabled");
-                document.getElementById("phone_code").setAttribute('readonly', true);
+                document.getElementById("phone_code").setAttribute('disabled', true);
             } else {
                 // Request encountered an error
                 // console.error("Request failed with status:", responseData);

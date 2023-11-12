@@ -181,8 +181,8 @@ class RegistrationStepController extends Controller
     public function editContactInformation(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
-            'phone' => 'required|numeric',
+            'email' => 'sometimes|email',
+            'phone' => 'sometimes|numeric',
         ]);
 
         $user = $request->user();
@@ -192,13 +192,15 @@ class RegistrationStepController extends Controller
         $emailExist = User::where('email',$requestEmail)->where('id', '!=', $user->id)->first();
 
         if($user->email_verified_at == null || $user->email != $requestEmail){
-            if($emailExist == null){
+            if($emailExist == null && $requestEmail != null ){
                 $user->email = $requestEmail;
             }
         }
 
         if($user->phone_verified_at == null || $user->phone != $requestPhone){
-            $user->phone = $requestPhone;
+            if($requestPhone != null ){
+                $user->phone = $requestPhone;
+            }
         }
 
         if($emailExist != null){
