@@ -67,6 +67,11 @@ class User extends Authenticatable
         return $this->phone_otp;
     }
 
+    public function country() : BelongsTo
+    {
+        return $this->belongsTo(Country::class,'country_code','code');
+    }
+
     public function business() : BelongsTo
     {
         return $this->belongsTo(Business::class,'business_code','code');
