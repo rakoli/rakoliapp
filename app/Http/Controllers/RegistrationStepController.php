@@ -38,14 +38,14 @@ class RegistrationStepController extends Controller
         if(VerifyOTP::hasActiveEmailOTP($user)){
             return [
                 'status' => 201,
-                'message' => 'Email already sent try again in '. Carbon::create($user->email_otp_time)->addSeconds(VerifyOTP::$validtime)->diffForHumans()
+                'message' => __('Email already sent try again in '). Carbon::create($user->email_otp_time)->addSeconds(VerifyOTP::$validtime)->diffForHumans()
             ];
         }
 
         if (VerifyOTP::shouldLockEmailOTP($user)) {
             return [
                 'status' => 201,
-                'message' => 'Account locked! Reached trial limit'
+                'message' => __('Account locked! Reached trial limit')
             ];
         }
 
@@ -119,14 +119,14 @@ class RegistrationStepController extends Controller
         if(VerifyOTP::hasActivePhoneOTP($user)){
             return [
                 'status' => 201,
-                'message' => 'SMS already sent try again in '. Carbon::create($user->phone_otp_time)->addSeconds(VerifyOTP::$validtime)->diffForHumans()
+                'message' => __('SMS already sent try again in '). Carbon::create($user->phone_otp_time)->addSeconds(VerifyOTP::$validtime)->diffForHumans()
             ];
         }
 
         if (VerifyOTP::shouldLockPhoneOTP($user)) {
             return [
                 'status' => 201,
-                'message' => 'Account locked! Reached trial limit'
+                'message' => __('Account locked! Reached trial limit')
             ];
         }
 
@@ -191,20 +191,20 @@ class RegistrationStepController extends Controller
 
         $emailExist = User::where('email',$requestEmail)->where('id', '!=', $user->id)->first();
 
-        if($user->email_verified_at == null || $user->email != $requestEmail){
+        if($user->email_verified_at == null && $user->email != $requestEmail){
             if($emailExist == null && $requestEmail != null ){
                 $user->email = $requestEmail;
             }
         }
 
-        if($user->phone_verified_at == null || $user->phone != $requestPhone){
+        if($user->phone_verified_at == null && $user->phone != $requestPhone){
             if($requestPhone != null ){
                 $user->phone = $requestPhone;
             }
         }
 
         if($emailExist != null){
-            return redirect()->back()->withErrors(["Email already exist"]);
+            return redirect()->back()->withErrors([__("Email already exist")]);
         }
 
         $user->save();

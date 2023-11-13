@@ -192,7 +192,7 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h3 class="modal-title">Edit Contact</h3>
+                                    <h3 class="modal-title">{{__("Edit Contact")}}</h3>
                                     <!--begin::Close-->
                                     <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
                                         <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
@@ -201,7 +201,7 @@
                                 </div>
 
                                 <div class="modal-body">
-                                    <p>Modify your submitted contact information</p>
+                                    <p>{{__("Modify your submitted contact information")}}</p>
 
                                     <form class="my-auto pb-5" action="{{route('edit.contact.information')}}" method="POST">
 
@@ -210,8 +210,8 @@
                                         <!--begin::Input group-->
                                         <div class="row mb-5">
                                             <div class="input-group input-group-lg mb-5">
-                                                <span class="input-group-text" id="basic-addon1">Email</span>
-                                                <input @if(auth()->user()->email_verified_at != null) disabled @endif name="email" type="email" class="form-control" value="@if(auth()->user()->email_verified_at != null) EMAIL ALREADY VERIFIED @else{{auth()->user()->email}}@endif"/>
+                                                <span class="input-group-text" id="basic-addon1">{{__("Email")}}</span>
+                                                <input @if(auth()->user()->email_verified_at != null) disabled @endif name="email" type="email" class="form-control" value="@if(auth()->user()->email_verified_at != null) {{__("EMAIL ALREADY VERIFIED")}} @else{{auth()->user()->email}}@endif"/>
                                             </div>
 
                                         </div>
@@ -220,22 +220,22 @@
                                         <!--begin::Input group-->
                                         <div class="row">
                                             <div class="input-group input-group-lg mb-5">
-                                                <span class="input-group-text" id="basic-addon1">Phone</span>
-                                                <input @if(auth()->user()->phone_verified_at != null) disabled @endif name="phone" type="text" class="form-control" value="@if(auth()->user()->phone_verified_at != null) PHONE ALREADY VERIFIED @else{{auth()->user()->phone}}@endif"/>
-                                                <div class="text-muted fw-semibold fs-6">Enter phone number using format above starting with country code without + sign e.g 255763987654</div>
+                                                <span class="input-group-text" id="basic-addon1">{{__("Phone")}}</span>
+                                                <input @if(auth()->user()->phone_verified_at != null) disabled @endif name="phone" type="text" class="form-control" value="@if(auth()->user()->phone_verified_at != null) {{__("PHONE ALREADY VERIFIED")}} @else{{auth()->user()->phone}}@endif"/>
+                                                <div class="text-muted fw-semibold fs-6">{{__("Enter phone number using format above starting with country code without + sign e.g 255763987654")}}</div>
                                             </div>
                                         </div>
                                         <!--end::Input group-->
 
                                         @if(!(auth()->user()->phone_verified_at != null && auth()->user()->email_verified_at != null))
-                                            <button type="submit" class="btn btn-primary">Edit Contact Information</button>
+                                            <button type="submit" class="btn btn-primary">{{__("Edit Information")}}</button>
                                         @endif
 
                                     </form>
                                 </div>
 
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{__("Close")}}</button>
                                 </div>
                             </div>
                         </div>
@@ -392,10 +392,10 @@
             if (xhr.status === 200 && responseData.status === 200) {
                 // Request was successful, handle the response here
                 // console.log("Response Data:", responseData);
-                toastr.success(responseData.message, "Send Email Verification");
+                toastr.success(responseData.message, "{{__('Send Email Verification')}}");
 
                 if(responseData.message === 'Email already verified'){
-                    document.getElementById("email_code").placeholder = "EMAIL ALREADY VERIFIED";
+                    document.getElementById("email_code").placeholder = "{{__('EMAIL ALREADY VERIFIED')}}";
                     document.getElementById("email_code").setAttribute('disabled', true);
                 }else{
                     verify_button.classList.remove("disabled");
@@ -405,7 +405,7 @@
             } else {
                 // Request encountered an error
                 // console.error("Request failed with status:", responseData);
-                toastr.error(responseData.message, "Send Email Verification");
+                toastr.error(responseData.message, "{{__('Send Email Verification')}}");
             }
             request_emailcode_button.classList.remove("disabled");
         };
@@ -427,7 +427,7 @@
 
         m = m < 10 ? '0' + m : m;
         s = s < 10 ? '0' + s : s;
-        document.getElementById('email_timer').innerHTML = 'Time remaining: '+ m + ':' + s;
+        document.getElementById('email_timer').innerHTML = "{{__('Time remaining')}}: "+ m + ":" + s;
         remaining -= 1;
 
         if(remaining >= 0 && emailTimerOn) {
@@ -468,17 +468,17 @@
             if (xhr.status === 200 && responseData.status === 200) {
                 // Request was successful, handle the response here
                 // console.log("Response Data:", responseData);
-                toastr.success(responseData.message, "Verify Email Code");
+                toastr.success(responseData.message, "{{__('Verify Email Code')}}");
                 document.getElementById("request_emailcode_button").classList.add("disabled");
                 document.getElementById("email_code").value = "";
-                document.getElementById("email_code").placeholder = "EMAIL VERIFIED";
+                document.getElementById("email_code").placeholder = "{{__('EMAIL VERIFIED')}}";
                 document.getElementById("email_code").classList.add("disabled");
                 document.getElementById("email_code").setAttribute('disabled', true);
 
             } else {
                 // Request encountered an error
                 // console.error("Request failed with status:", responseData);
-                toastr.error(responseData.message, "Verify Email Code");
+                toastr.error(responseData.message, "{{__('Verify Email Code')}}");
             }
             verify_button.classList.remove("disabled");
         };
@@ -514,9 +514,9 @@
             if (xhr.status === 200 && responseData.status === 200) {
                 // Request was successful, handle the response here
                 // console.log("Response Data:", responseData);
-                toastr.success(responseData.message, "Send Phone Verification");
+                toastr.success(responseData.message, "{{__('Send Phone Verification')}}");
                 if(responseData.message === 'Phone already verified'){
-                    document.getElementById("phone_code").placeholder = "PHONE ALREADY VERIFIED";
+                    document.getElementById("phone_code").placeholder = "{{__('PHONE ALREADY VERIFIED')}}";
                     document.getElementById("phone_code").setAttribute('disabled', true);
                 }else{
                     verify_button.classList.remove("disabled");
@@ -526,7 +526,7 @@
             } else {
                 // Request encountered an error
                 // console.error("Request failed with status:", responseData);
-                toastr.error(responseData.message, "Send Phone Verification");
+                toastr.error(responseData.message, "{{__('Send Phone Verification')}}");
             }
 
             request_phonecode_button.classList.remove("disabled");
@@ -549,7 +549,7 @@
 
         m = m < 10 ? '0' + m : m;
         s = s < 10 ? '0' + s : s;
-        document.getElementById('phone_timer').innerHTML = 'Time remaining: '+ m + ':' + s;
+        document.getElementById('phone_timer').innerHTML = "{{__('Time remaining')}}: "+ m + ":" + s;
         remaining -= 1;
 
         if(remaining >= 0 && phoneTimerOn) {
@@ -589,16 +589,16 @@
             var responseData = JSON.parse(xhr.responseText);
             if (xhr.status === 200 && responseData.status === 200) {
                 // Request was successful, handle the response here
-                toastr.success(responseData.message, "Verify Phone Code");
+                toastr.success(responseData.message, "{{__('Verify Phone Code')}}");
                 document.getElementById("request_phonecode_button").classList.add("disabled");
                 document.getElementById("phone_code").value = "";
-                document.getElementById("phone_code").placeholder = "PHONE VERIFIED";
+                document.getElementById("phone_code").placeholder = "{{__('PHONE VERIFIED')}}";
                 document.getElementById("phone_code").classList.add("disabled");
                 document.getElementById("phone_code").setAttribute('disabled', true);
             } else {
                 // Request encountered an error
                 // console.error("Request failed with status:", responseData);
-                toastr.error(responseData.message, "Verify Phone Code");
+                toastr.error(responseData.message, "{{__('Verify Phone Code')}}");
             }
             verify_button.classList.remove("disabled");
         };
