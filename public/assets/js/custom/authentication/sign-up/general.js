@@ -196,7 +196,7 @@ var KTSignupGeneral = function() {
                             const t = e.getAttribute("data-kt-redirect-url");
                             t && (location.href = t)
                         } else Swal.fire({
-                            text: "Sorry, looks like there are some errors detected, please try again.",
+                            text: "Sorry, errors on redirect url, please try again or contact support",
                             icon: "error",
                             buttonsStyling: !1,
                             confirmButtonText: "Ok, got it!",
@@ -214,18 +214,19 @@ var KTSignupGeneral = function() {
                             customClass: {
                                 confirmButton: "btn btn-primary"
                             }
-                        })
+                        });
+                        location.reload();
                     })).then((() => {
                         t.removeAttribute("data-kt-indicator"), t.disabled = !1
                     }))) : Swal.fire({
-                        text: "Sorry, looks like there are some errors detected, please try again.",
+                        text: "Sorry, some errors detected, Please refresh page and try again.",
                         icon: "error",
                         buttonsStyling: !1,
                         confirmButtonText: "Ok, got it!",
                         customClass: {
                             confirmButton: "btn btn-primary"
                         }
-                    })
+                    });
                 }))
             })), e.querySelector('input[name="password"]').addEventListener("input", (function() {
                 this.value.length > 0 && r.updateFieldStatus("password", "NotValidated")
