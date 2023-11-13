@@ -75,6 +75,8 @@
     "SMS already sent try again in " : "SMS imeshatumwa jaribu tena baada ya ",
     "Email already sent try again in " : "Baruapepe imeshatumwa jaribu tena baada ya ",
     "Account locked! Reached trial limit" : "Akaunti Imefungwa! Umefika ukomo wa majaribio",
+    "Registration Step" : "Hatua za Usajili",
+    "Complete current step before proceeding" : "Kamilisha hatua ya sasa kabla ya kuendelea",
     "###########" : "END OF AUTH AND REGISTRATION",
 
     "###########" : "MENU ITEMS",

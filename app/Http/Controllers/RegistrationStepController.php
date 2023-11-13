@@ -212,4 +212,26 @@ class RegistrationStepController extends Controller
         return redirect()->back();
 
     }
+
+    public function registrationStepConfirmation(Request $request)
+    {
+        $request->validate([
+            'next_step' => 'required|numeric|min:1',
+        ]);
+
+        $nextStep = $request->get('next_step');
+        $currentRegistrationStep = $request->user()->registration_step;
+
+        if($currentRegistrationStep < $nextStep){
+            return [
+                'status' => 201,
+                'message' => __('Complete current step before proceeding')
+            ];
+        }
+
+        return [
+            'status' => 200,
+            'message' => 'continue'
+        ];
+    }
 }

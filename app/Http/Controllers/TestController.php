@@ -6,6 +6,7 @@ use App\Actions\RequestEmailVerificationCode;
 use App\Mail\SendCodeMail;
 use App\Models\SystemIncome;
 use App\Models\User;
+use App\Utils\Enums\AgentRegistrationStepsEnums;
 use App\Utils\SMS;
 use App\Utils\VerifyOTP;
 use Carbon\Carbon;
@@ -22,9 +23,9 @@ class TestController extends Controller
 
         $user = User::where('email','jmabusi@gmail.com')->first();
 
-//        SMS::sendToUser($user, 'function to send updated');
+        dd(count(AgentRegistrationStepsEnums::cases()));
 
-        dd(Carbon::create($user->phone_otp_time)->addSeconds(VerifyOTP::$validtime)->diffForHumans(now()), $user->phone_otp_time,VerifyOTP::$validtime,Carbon::create($user->phone_otp_time)->addSeconds(VerifyOTP::$validtime) );
+//        SMS::sendToUser($user, 'function to send updated');
 
 //        dd(RequestEmailVerificationCode::run($user));
 

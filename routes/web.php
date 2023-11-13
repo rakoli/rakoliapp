@@ -16,6 +16,7 @@ Route::get('logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'
 
 //REGISTRATION ROUTES
 Route::get('registration/agent', [App\Http\Controllers\RegistrationStepController::class, 'registrationAgent'])->name('registration.agent');
+Route::get('registration/step/confirmation', [App\Http\Controllers\RegistrationStepController::class, 'registrationStepConfirmation'])->name('registration.step.confirmation');
 Route::get('request/email/code', [App\Http\Controllers\RegistrationStepController::class, 'requestEmailCodeAjax'])->name('request.email.code');
 Route::get('request/phone/code', [App\Http\Controllers\RegistrationStepController::class, 'requestPhoneCodeAjax'])->name('request.phone.code');
 Route::get('verify/email/code', [App\Http\Controllers\RegistrationStepController::class, 'verifyEmailCodeAjax'])->name('verify.email.code');

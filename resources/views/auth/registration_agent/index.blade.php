@@ -343,8 +343,9 @@
                     });
 
                     stepper.on("kt.stepper.next", function(e) {
-                        stepper.goNext();
-                        KTUtil.scrollTop();
+
+                        moveToStep(stepper)
+
                     });
 
                     stepper.on("kt.stepper.previous", function(e) {
@@ -369,6 +370,49 @@
 
     });
 
+    //START:: STEP MOVEMENT CONFIRMATION
+    function moveToStep(stepperInstance) {
+        console.log("CONFIRM STEP MOVEMENT");
+
+        // Create a new XMLHttpRequest object
+        var xhr = new XMLHttpRequest();
+
+        // Configure the GET request
+        var url = "{{route('registration.step.confirmation')}}";
+        url = url + "?next_step="+stepperInstance.getNextStepIndex();
+        xhr.open("GET", url, true);
+
+        xhr.setRequestHeader("Accept", "application/json");
+
+        // Set up a function to handle the response
+        xhr.onload = function () {
+
+            var responseData = JSON.parse(xhr.responseText);
+            if (xhr.status === 200 && responseData.status === 200) {
+                // Request was successful, handle the response here
+                // console.log("Response Data:", responseData);
+                stepperInstance.goNext();
+                KTUtil.scrollTop();
+                toastr.success(responseData.message, "{{__('Registration Step')}}");
+
+            } else {
+                // Request encountered an error
+                // console.error("Request failed with status:", responseData);
+                toastr.error(responseData.message, "{{__('Registration Step')}}");
+            }
+
+        };
+
+        // Set up a function to handle errors
+        xhr.onerror = function () {
+            toastr.error("Network Error Occurred");
+            console.error("Network error occurred");
+        };
+
+        // Send the GET request
+        xhr.send();
+    }
+    //END:: STEP MOVEMENT CONFIRMATION
 
     //START:: VERIFICATION STEP ACTIONS
     function requestEmailCode() {
