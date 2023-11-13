@@ -22,11 +22,11 @@ return new class extends Migration
             $table->string('code')->unique();
             $table->string('referral_business_code')->nullable();
             $table->string('type')->default(\App\Utils\Enums\BusinessTypeEnum::AGENCY->value);
-//            $table->string('walkthrough_step')->nullable()->default(\App\Utils\Enums\WalkThroughStepEnums::BUSINESS->value);
             $table->boolean('is_verified')->default(0);
             $table->string('business_name')->index();
             $table->string('tax_id')->nullable()->index();
             $table->string('business_regno')->nullable()->index();
+            $table->timestamp('business_reg_date')->nullable();
             $table->string('business_phone_number')->nullable()->index();
             $table->string('business_email')->nullable()->index();
             $table->string("package_code")->nullable();
@@ -34,7 +34,7 @@ return new class extends Migration
                 ->on('packages')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->timestamp('expiry_at')->nullable();
+            $table->timestamp('package_expiry_at')->nullable();
             $table->string('business_location')->nullable();
             $table->string('status')->default(\App\Utils\Enums\BusinessStatusEnum::ACTIVE->value);//1- Active, 0 - Disabled, 2 - Inactive
             $table->decimal('balance',12,2)->default(0); //Earning from referral and VAS

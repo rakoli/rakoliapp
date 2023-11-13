@@ -13,7 +13,11 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('country_code')->nullable();
+            $table->string('country_code');
+            $table->foreign('country_code')->references('code')
+                ->on('countries')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->string('business_code')->nullable();
             $table->foreign('business_code')->references('code')
                 ->on('businesses')

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Country;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use App\Utils\Enums\UserTypeEnum;
@@ -63,7 +64,7 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'country_code' => ['exists:countries,dialing_code'],
+            'country_dial_code' => ['exists:countries,dialing_code'],
             'fname' => ['required', 'string', 'max:20'],
             'lname' => ['required', 'string', 'max:20'],
             'phone' => ['required','numeric'],
@@ -81,12 +82,13 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $country_code = substr($data['country_code'], 1);
+        $country_code = Country::where('dialing_code',$data['country_dial_code'])->first()->code;
+        $country_dial_code = substr($data['country_code'], 1);
         $plainPhone = substr($data['phone'], 1);
-        $fullPhone = $country_code . $plainPhone;
+        $fullPhone = $country_dial_code . $plainPhone;
         return User::create([
             'country_code' => $country_code,
-            'code' => generateCode($data['fname'].' '.$data['lname'],'tz'),
+            'code' => generateCode($data['fname'].' '.$data['lname'],$country_code),
             'type' => UserTypeEnum::AGENT->value,
             'fname' => $data['fname'],
             'lname' => $data['lname'],

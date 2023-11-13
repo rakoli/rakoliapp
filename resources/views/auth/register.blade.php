@@ -48,7 +48,7 @@
                 </div>
                 <div class="fv-row flex-row-fluid" style="max-width: 70px;">
                     <!--begin::Input-->
-                    <input id="codeInput" class="form-control bg-transparent" placeholder="{{__('Code')}}" name="country_code" readonly placeholder="" value="" />
+                    <input id="codeInput" class="form-control bg-transparent" placeholder="{{__('Code')}}" name="country_dial_code" readonly placeholder="" value="" />
                     <!--end::Input-->
                 </div>
                 <div class="fv-row flex-row-fluid">

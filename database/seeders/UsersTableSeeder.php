@@ -38,7 +38,7 @@ class UsersTableSeeder extends Seeder
             'business_email' => "agent@rakoli.com",
             'business_location' => $faker->address,
             'package_code' => Package::where('name','prosperity')->first()->code,
-            'expiry_at' => now()->addDays(random_int(5,30)),
+            'package_expiry_at' => now()->addDays(random_int(5,30)),
             'status' => BusinessStatusEnum::ACTIVE->value
         ]);
 
@@ -63,7 +63,7 @@ class UsersTableSeeder extends Seeder
             'business_email' => "vas@rakoli.com",
             'business_location' => $faker->address,
             'package_code' => null,
-            'expiry_at' => null,
+            'package_expiry_at' => null,
             'status' => BusinessStatusEnum::ACTIVE->value
         ]);
 
