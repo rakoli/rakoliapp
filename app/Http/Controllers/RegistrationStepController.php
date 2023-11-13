@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\RequestEmailVerificationCode;
 use App\Actions\RequestPhoneVerificationCode;
+use App\Models\Business;
 use App\Models\User;
 use App\Utils\VerifyOTP;
 use Carbon\Carbon;
@@ -191,13 +192,13 @@ class RegistrationStepController extends Controller
 
         $emailExist = User::where('email',$requestEmail)->where('id', '!=', $user->id)->first();
 
-        if($user->email_verified_at == null && $user->email != $requestEmail){
-            if($emailExist == null && $requestEmail != null ){
+        if($user->email_verified_at === null && $user->email != $requestEmail){
+            if($emailExist === null && $requestEmail != null ){
                 $user->email = $requestEmail;
             }
         }
 
-        if($user->phone_verified_at == null && $user->phone != $requestPhone){
+        if($user->phone_verified_at === null && $user->phone != $requestPhone){
             if($requestPhone != null ){
                 $user->phone = $requestPhone;
             }
@@ -232,6 +233,49 @@ class RegistrationStepController extends Controller
         return [
             'status' => 200,
             'message' => 'continue'
+        ];
+    }
+
+    public function updateBusinessDetails(Request $request)
+    {
+        $request->validate([
+            'business_name' => 'required|string|min:1',
+            'reg_id' => 'sometimes|string',
+            'tax_id' => 'sometimes|string',
+            'reg_date' => 'sometimes|date',
+        ]);
+
+        $user = $request->user();
+
+        $regDate = $request->get('reg_date',null);
+        if($regDate != null){
+            $regDate = Carbon::create($regDate);
+        }
+
+        $response = Business::addBusiness([
+                'country_code' => $user->country_code,
+                'code' => generateCode($request->get('business_name'),$user->country_code),
+                'type' => $user->type,
+                'business_name' => $request->get('business_name'),
+                'business_regno' => $request->get('reg_id',null),
+                'tax_id' => $request->get('tax_id',null),
+                'business_reg_date' => $regDate,
+            ]);
+
+        if($response === false){
+            return [
+                'status' => 201,
+                'message' => "Failed to Update Business. Try again!"
+            ];
+        }
+
+        $user->business_code = $response->code;
+        $user->registration_step = $user->registration_step + 1;
+        $user->save();
+
+        return [
+            'status' => 200,
+            'message' => 'updated'
         ];
     }
 }

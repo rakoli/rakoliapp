@@ -70,6 +70,7 @@ class UsersTableSeeder extends Seeder
         // Specific users provided in the data
         $users = [
             [
+                'country_code' => 'TZ',
                 'fname' => 'Elin',
                 'lname' => 'Erick',
                 'phone' => '+255739466080',
@@ -81,6 +82,7 @@ class UsersTableSeeder extends Seeder
                 'registration_step' => 0,
             ],
             [
+                'country_code' => 'TZ',
                 'fname' => 'Felix',
                 'lname' => 'Mihayo',
                 'phone' => '+255753464603',
@@ -92,6 +94,7 @@ class UsersTableSeeder extends Seeder
                 'registration_step' => 0,
             ],
             [
+                'country_code' => 'TZ',
                 'fname' => 'Erick',
                 'lname' => 'Mabusi',
                 'phone' => '+255763466080',

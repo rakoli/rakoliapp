@@ -37,7 +37,7 @@ class BusinessFactory extends Factory
             'business_name' => fake()->company,
             'status' => fake()->randomElement(BusinessStatusEnum::class),
             'package_code' => fake()->randomElement($packages)['code'],
-            'expiry_at' => now()->addDays(random_int(1,30)),
+            'package_expiry_at' => now()->addDays(random_int(1,30)),
         ];
     }
 }

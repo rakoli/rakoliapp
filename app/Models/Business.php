@@ -3,16 +3,56 @@
 namespace App\Models;
 
 use App\Utils\Enums\BusinessStatusEnum;
-use App\Utils\Enums\WalkThroughStepEnums;
+use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class Business extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'country_code',
+        'code',
+        'business_name',
+        'tax_id',
+        'business_regno',
+        'business_reg_date',
+        'business_phone_number',
+        'business_email',
+        'business_location',
+    ];
+
+    public static function addBusiness($data)
+    {
+        DB::beginTransaction();
+
+        try {
+            $businessInstance = self::create($data);
+            $country = Country::where('code',$businessInstance->country_code)->first();
+            $locationName = $businessInstance->business_name . " HQ";
+            Location::create([
+                'business_code' => $businessInstance->code,
+                'code' => generateCode($locationName,$country->code) ,
+                'name' => $locationName,
+                'balance' => 0,
+                'balance_currency' => $country->currency,
+            ]);
+            DB::commit();
+        }catch (\Exception $exception) {
+            DB::rollback();
+            Log::debug("ADD BUSINESS ERROR: ".$exception->getMessage());
+            Bugsnag::notifyException($exception);
+            return false;
+        }
+
+        return $businessInstance;
+    }
 
     public function country() : BelongsTo
     {

@@ -14,6 +14,20 @@ class Location extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'business_code',
+        'code',
+        'name',
+        'balance',
+        'balance_currency',
+        'region_code',
+        'town_code',
+        'area_code',
+        'area_code',
+        'pic',
+        'description',
+    ];
+
     protected static function booted(): void
     {
         static::addGlobalScope(new BusinessScoped);

@@ -23,7 +23,10 @@ class RequestPhoneVerificationCode
         $otp = VerifyOTP::generateOTPCode();
         $minutes = (VerifyOTP::$validtime/60);
         $text = config('app.name') . " verification code: ".$otp ."\nValid for ".$minutes." min." ;
-        SMS::sendToUser($user, $text);
+
+        if(env('APP_ENV') != 'local'){
+            SMS::sendToUser($user, $text);
+        }
 
         Log::debug("SMS: $text");
 

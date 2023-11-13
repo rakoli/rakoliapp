@@ -22,6 +22,7 @@ Route::get('request/phone/code', [App\Http\Controllers\RegistrationStepControlle
 Route::get('verify/email/code', [App\Http\Controllers\RegistrationStepController::class, 'verifyEmailCodeAjax'])->name('verify.email.code');
 Route::get('verify/phone/code', [App\Http\Controllers\RegistrationStepController::class, 'verifyPhoneCodeAjax'])->name('verify.phone.code');
 Route::post('edit/contact/information', [App\Http\Controllers\RegistrationStepController::class, 'editContactInformation'])->name('edit.contact.information');
+Route::get('update/business/details', [App\Http\Controllers\RegistrationStepController::class, 'updateBusinessDetails'])->name('update.business.details');
 
 Route::get('register/vas', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register.vas');
 Route::post('register/vas/submit', [App\Http\Controllers\Auth\RegisterVasController::class, 'register'])->name('register.vas.submit');
