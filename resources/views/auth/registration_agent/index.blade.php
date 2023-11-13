@@ -701,6 +701,10 @@
             if (xhr.status === 200 && responseData.status === 200) {
                 // Request was successful, handle the response here
                 toastr.success(responseData.message, "{{__('Update Business Details')}}");
+                document.getElementById("business_name").classList.add("disabled");
+                document.getElementById("reg_id").classList.add("disabled");
+                document.getElementById("tax_id").classList.add("disabled");
+                document.getElementById("regdate_picker_input").classList.add("disabled");
             } else {
                 // Request encountered an error
                 // console.error("Request failed with status:", responseData);

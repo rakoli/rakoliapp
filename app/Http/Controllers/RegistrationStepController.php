@@ -238,14 +238,21 @@ class RegistrationStepController extends Controller
 
     public function updateBusinessDetails(Request $request)
     {
+        $user = $request->user();
+
+        if($user->business_code != null){
+            return [
+                'status' => 200,
+                'message' => 'business details already updated'
+            ];
+        }
+
         $request->validate([
-            'business_name' => 'required|string|min:1',
+            'business_name' => 'required|string',
             'reg_id' => 'sometimes|string',
             'tax_id' => 'sometimes|string',
             'reg_date' => 'sometimes|date',
         ]);
-
-        $user = $request->user();
 
         $regDate = $request->get('reg_date',null);
         if($regDate != null){
