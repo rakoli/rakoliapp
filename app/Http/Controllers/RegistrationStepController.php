@@ -249,9 +249,9 @@ class RegistrationStepController extends Controller
 
         $request->validate([
             'business_name' => 'required|string',
-            'reg_id' => 'sometimes|string',
-            'tax_id' => 'sometimes|string',
-            'reg_date' => 'sometimes|date',
+            'reg_id' => 'sometimes|string|nullable',
+            'tax_id' => 'sometimes|string|nullable',
+            'reg_date' => 'sometimes|date|nullable',
         ]);
 
         $regDate = $request->get('reg_date',null);

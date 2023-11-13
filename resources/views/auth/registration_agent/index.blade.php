@@ -700,11 +700,20 @@
             var responseData = JSON.parse(xhr.responseText);
             if (xhr.status === 200 && responseData.status === 200) {
                 // Request was successful, handle the response here
-                toastr.success(responseData.message, "{{__('Update Business Details')}}");
+                document.getElementById("business_name").placeholder = "{{__('BUSINESS UPDATED')}}";
                 document.getElementById("business_name").classList.add("disabled");
+                document.getElementById("business_name").setAttribute('disabled', true);
+                document.getElementById("reg_id").placeholder = "{{__('BUSINESS UPDATED')}}";
+                document.getElementById("reg_id").setAttribute('disabled', true);
                 document.getElementById("reg_id").classList.add("disabled");
+                document.getElementById("tax_id").placeholder = "{{__('BUSINESS UPDATED')}}";
+                document.getElementById("tax_id").setAttribute('disabled', true);
                 document.getElementById("tax_id").classList.add("disabled");
+                document.getElementById("regdate_picker_input").placeholder = "{{__('BUSINESS UPDATED')}}";
+                document.getElementById("regdate_picker_input").setAttribute('disabled', true);
                 document.getElementById("regdate_picker_input").classList.add("disabled");
+                toastr.success(responseData.message, "{{__('Update Business Details')}}");
+
             } else {
                 // Request encountered an error
                 // console.error("Request failed with status:", responseData);
