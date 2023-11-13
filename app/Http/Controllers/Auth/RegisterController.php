@@ -83,7 +83,7 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         $country_code = Country::where('dialing_code',$data['country_dial_code'])->first()->code;
-        $country_dial_code = substr($data['country_code'], 1);
+        $country_dial_code = substr($data['country_dial_code'], 1);
         $plainPhone = substr($data['phone'], 1);
         $fullPhone = $country_dial_code . $plainPhone;
         return User::create([
