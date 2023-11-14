@@ -234,12 +234,14 @@ class PackagesTableSeeder extends Seeder
                     'package_code' => $package->code,
                     'feature_code' => $loansFeature->code,
                     'access' => FeatureAccessEnum::AVAILABLE,
+                    'feature_value' => 10,
                     'available' => 1
                 ]);
                 PackageFeature::create([
                     'package_code' => $package->code,
                     'feature_code' => $exchangeAdsFeature->code,
                     'access' => FeatureAccessEnum::AVAILABLE,
+                    'feature_value' => 2,
                     'available' => 1
                 ]);
             }
