@@ -19,6 +19,10 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->string('name');
+            $table->foreign('name')->references('name')
+                ->on('package_names')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->string('code')->unique();
             $table->decimal('price', 12,2)->default('0.00');
             $table->string('price_currency');

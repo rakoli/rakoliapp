@@ -19,7 +19,14 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->string('name');
+            $table->string('feature_code');
+            $table->foreign('feature_code')->references('code')
+                ->on('package_available_features')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+            $table->string('access')->nullable();
+            $table->string('feature_value')->nullable();
+            $table->boolean('available')->default(0);
             $table->text('description')->nullable();
             $table->mediumInteger('sort_order')->unsigned()->default(0);
 
