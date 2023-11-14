@@ -70,7 +70,7 @@ class RegisterController extends Controller
             'phone' => ['required','numeric'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'g-recaptcha-response' => [new GoogleReCaptchaV3ValidationRule('register')],
+//            'g-recaptcha-response' => [new GoogleReCaptchaV3ValidationRule('register')],
         ]);
     }
 

@@ -54,7 +54,7 @@ class PackagesTableSeeder extends Seeder
                 'price' => 150000,
                 'price_currency' => 'tzs',
                 'package_interval_days' => 365,
-                'description' => "Full control of agency business for maximum profit"
+                'description' => "Full control of agency business"
             ],
         ];
 

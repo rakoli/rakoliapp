@@ -14,4 +14,9 @@ class PackageFeature extends Model
     {
         return $this->belongsTo(Package::class, 'package_code', 'code');
     }
+
+    public function feature() : BelongsTo
+    {
+        return $this->belongsTo(PackageAvailableFeatures::class, 'feature_code', 'code');
+    }
 }

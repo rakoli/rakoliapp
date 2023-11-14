@@ -135,7 +135,7 @@
             <!--begin::Content-->
             <div class="d-flex flex-center flex-column flex-column-fluid">
                 <!--begin::Wrapper-->
-                <div class="w-lg-650px w-xl-700px p-10 p-lg-15 mx-auto">
+                <div class="w-lg-750px w-xl-800px mx-auto">
 
                     @if ($errors->any())
                         <div class="alert alert-danger">

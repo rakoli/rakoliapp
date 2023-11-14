@@ -1,83 +1,86 @@
 <div class="" data-kt-stepper-element="content">
     <!--begin::Wrapper-->
-    <div class="w-100">
+    <div class="w-800">
         <!--begin::Heading-->
-        <div class="pb-10 pb-lg-12">
+        <div>
             <!--begin::Title-->
-            <h2 class="fw-bold text-dark">Business Details</h2>
+            <h2 class="fw-bold text-dark">Select Package</h2>
             <!--end::Title-->
             <!--begin::Notice-->
-            <div class="text-muted fw-semibold fs-6">If you need more info, please check out
-                <a href="#" class="link-primary fw-bold">Help Page</a>.</div>
+            <div class="text-muted fw-semibold fs-6">Choose a subscription package that fits your business needs.</div>
             <!--end::Notice-->
         </div>
         <!--end::Heading-->
-        <!--begin::Input group-->
-        <div class="fv-row mb-10">
-            <!--begin::Label-->
-            <label class="form-label required">Business Name</label>
-            <!--end::Label-->
-            <!--begin::Input-->
-            <input name="business_name" class="form-control form-control-lg form-control-solid" value="Keenthemes Inc." />
-            <!--end::Input-->
+        <!--begin::Plans-->
+        <div class="d-flex flex-column">
+
+            <!--begin::Row-->
+            <div class="row">
+                @foreach(\App\Models\Package::where('country_code', auth()->user()->country_code)->get() as $package )
+
+                    <!--begin::Col-->
+                    <div class="col-xl-4">
+                        <div class="d-flex h-100 align-items-center">
+                            <!--begin::Option-->
+                            <div class="w-100 d-flex flex-column flex-center rounded-3 bg-light bg-opacity-75 py-15 px-10">
+                                <!--begin::Heading-->
+                                <div class="mb-7 text-center">
+                                    <!--begin::Title-->
+                                    <h1 class="text-dark mb-5 fw-bolder">{{strtoupper($package->name)}}</h1>
+                                    <!--end::Title-->
+                                    <!--begin::Description-->
+                                    <div class="text-gray-600 fw-semibold mb-5">{{$package->description}}</div>
+                                    <!--end::Description-->
+                                    <!--begin::Price-->
+                                    <div class="text-center">
+                                        <span class="mb-2 text-primary">{{strtoupper($package->price_currency)}}</span>
+                                        <span class="fs-3x fw-bold text-primary">{{number_format_short($package->price)}}</span>
+                                        <span class="fs-7 fw-semibold opacity-50">/
+																<span data-kt-element="period">{{$package->package_interval_days}} days</span></span>
+                                    </div>
+                                    <!--end::Price-->
+                                </div>
+                                <!--end::Heading-->
+                                <!--begin::Features-->
+                                <div class="w-100 mb-5">
+                                    @foreach(\App\Models\PackageFeature::where("package_code", $package->code)->get() as $packageFeature)
+                                        <!--begin::Item-->
+                                        <div class="d-flex align-items-center mb-5">
+                                            <span class="fw-semibold fs-6 text-gray-800 flex-grow-1 pe-3">{{$packageFeature->feature->name}}
+                                                @if($packageFeature->feature->name == 'tills')
+                                                    per branch
+                                                @endif
+                                                @if($packageFeature->feature_value != null)
+                                                    ({{$packageFeature->feature_value}})
+                                                @endif
+                                            </span>
+                                            <i class="ki-outline
+                                            @if($packageFeature->available == true)
+                                                ki-check-circle fs-1 text-success
+                                            @else
+                                                ki-cross-circle fs-1
+                                            @endif"></i>
+                                        </div>
+                                        <!--end::Item-->
+                                    @endforeach
+                                </div>
+                                <!--end::Features-->
+
+                                <!--begin::Select-->
+                                <a href="#" class="btn btn-sm btn-primary">Select</a>
+                                <!--end::Select-->
+                            </div>
+                            <!--end::Option-->
+                        </div>
+                    </div>
+                    <!--end::Col-->
+                @endforeach
+
+            </div>
+            <!--end::Row-->
         </div>
-        <!--end::Input group-->
-        <!--begin::Input group-->
-        <div class="fv-row mb-10">
-            <!--begin::Label-->
-            <label class="d-flex align-items-center form-label">
-                <span class="required">Shortened Descriptor</span>
-                <span class="lh-1 ms-1" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-html="true" data-bs-content="&lt;div class=&#039;p-4 rounded bg-light&#039;&gt; &lt;div class=&#039;d-flex flex-stack text-muted mb-4&#039;&gt; &lt;i class=&quot;ki-outline ki-bank fs-3 me-3&quot;&gt;&lt;/i&gt; &lt;div class=&#039;fw-bold&#039;&gt;INCBANK **** 1245 STATEMENT&lt;/div&gt; &lt;/div&gt; &lt;div class=&#039;d-flex flex-stack fw-semibold text-gray-600&#039;&gt; &lt;div&gt;Amount&lt;/div&gt; &lt;div&gt;Transaction&lt;/div&gt; &lt;/div&gt; &lt;div class=&#039;separator separator-dashed my-2&#039;&gt;&lt;/div&gt; &lt;div class=&#039;d-flex flex-stack text-dark fw-bold mb-2&#039;&gt; &lt;div&gt;USD345.00&lt;/div&gt; &lt;div&gt;KEENTHEMES*&lt;/div&gt; &lt;/div&gt; &lt;div class=&#039;d-flex flex-stack text-muted mb-2&#039;&gt; &lt;div&gt;USD75.00&lt;/div&gt; &lt;div&gt;Hosting fee&lt;/div&gt; &lt;/div&gt; &lt;div class=&#039;d-flex flex-stack text-muted&#039;&gt; &lt;div&gt;USD3,950.00&lt;/div&gt; &lt;div&gt;Payrol&lt;/div&gt; &lt;/div&gt; &lt;/div&gt;">
-													<i class="ki-outline ki-information-5 text-gray-500 fs-6"></i>
-												</span>
-            </label>
-            <!--end::Label-->
-            <!--begin::Input-->
-            <input name="business_descriptor" class="form-control form-control-lg form-control-solid" value="KEENTHEMES" />
-            <!--end::Input-->
-            <!--begin::Hint-->
-            <div class="form-text">Customers will see this shortened version of your statement descriptor</div>
-            <!--end::Hint-->
-        </div>
-        <!--end::Input group-->
-        <!--begin::Input group-->
-        <div class="fv-row mb-10">
-            <!--begin::Label-->
-            <label class="form-label required">Corporation Type</label>
-            <!--end::Label-->
-            <!--begin::Input-->
-            <select name="business_type" class="form-select form-select-lg form-select-solid" data-control="select2" data-placeholder="Select..." data-allow-clear="true" data-hide-search="true">
-                <option></option>
-                <option value="1">S Corporation</option>
-                <option value="1">C Corporation</option>
-                <option value="2">Sole Proprietorship</option>
-                <option value="3">Non-profit</option>
-                <option value="4">Limited Liability</option>
-                <option value="5">General Partnership</option>
-            </select>
-            <!--end::Input-->
-        </div>
-        <!--end::Input group-->
-        <!--begin::Input group-->
-        <div class="fv-row mb-10">
-            <!--end::Label-->
-            <label class="form-label">Business Description</label>
-            <!--end::Label-->
-            <!--begin::Input-->
-            <textarea name="business_description" class="form-control form-control-lg form-control-solid" rows="3"></textarea>
-            <!--end::Input-->
-        </div>
-        <!--end::Input group-->
-        <!--begin::Input group-->
-        <div class="fv-row mb-0">
-            <!--begin::Label-->
-            <label class="fs-6 fw-semibold form-label required">Contact Email</label>
-            <!--end::Label-->
-            <!--begin::Input-->
-            <input name="business_email" class="form-control form-control-lg form-control-solid" value="corp@support.com" />
-            <!--end::Input-->
-        </div>
-        <!--end::Input group-->
+        <!--end::Plans-->
     </div>
     <!--end::Wrapper-->
+
 </div>
