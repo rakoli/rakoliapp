@@ -16,13 +16,14 @@
 
             <!--begin::Row-->
             <div class="row">
+
                 @foreach(\App\Models\Package::where('country_code', auth()->user()->country_code)->get() as $package )
 
                     <!--begin::Col-->
                     <div class="col-xl-4">
-                        <div class="d-flex h-100 align-items-center">
+                        <div class="d-flex h-100 align-items-center m-2">
                             <!--begin::Option-->
-                            <div class="w-100 d-flex flex-column flex-center rounded-3 bg-light bg-opacity-75 py-15 px-10">
+                            <div class="w-100 d-flex flex-column flex-center rounded-3 py-15 px-10 bg-secondary" id="{{$package->code}}" onclick="selectSubscription('{{$package->code}}')">
                                 <!--begin::Heading-->
                                 <div class="mb-7 text-center">
                                     <!--begin::Title-->
@@ -65,21 +66,65 @@
                                     @endforeach
                                 </div>
                                 <!--end::Features-->
-
                                 <!--begin::Select-->
-                                <a href="#" class="btn btn-sm btn-primary">Select</a>
+                                <button type="button" class="btn btn-sm btn-primary" onclick="selectSubscription('{{$package->code}}')">Select</button>
                                 <!--end::Select-->
                             </div>
                             <!--end::Option-->
                         </div>
                     </div>
                     <!--end::Col-->
+
                 @endforeach
 
             </div>
             <!--end::Row-->
         </div>
         <!--end::Plans-->
+        <!--begin::Input group-->
+        <div class="fv-row">
+{{--            <label for="selected_plan" class="required form-label">Selected Plan</label>--}}
+            <input type="hidden" name="selected_plan" id="selected_plan" class="form-control form-control-solid-bg " readonly/>
+        </div>
+        <!--end::Input group-->
+        <!--begin::Notice-->
+        <div class="text-muted fw-semibold fs-6 mb-5 mt-5">Choose payment method below</div>
+        <!--end::Notice-->
+
+
+        <!--begin::Option-->
+        <input type="radio" class="btn-check" name="selected_payment_method" value="apps" checked="checked"  id="kt_radio_buttons_2_option_1"/>
+        <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center mb-5" for="kt_radio_buttons_2_option_1">
+            <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/DPOPay.webp')}}" class="mw-200px mh-70px"></i>
+
+            <span class="d-block fw-semibold text-start">
+                <span class="text-gray-900 fw-bold d-block fs-3">DPO Pay</span>
+                <span class="text-muted fw-semibold fs-6">
+                    Pay with Visa, MasterCard, Paypal and Mobile Money like Mpesa (TZ and KE), Airtel Money, TigoPesa, MTN MoMo Pay and Orange Money
+                </span>
+            </span>
+        </label>
+        <!--end::Option-->
+
+        <!--begin::Option-->
+        <input type="radio" class="btn-check" name="selected_payment_method" value="sms" id="kt_radio_buttons_2_option_2"/>
+        <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center" for="kt_radio_buttons_2_option_2">
+            <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/nmblogo.png')}}" class="mw-200px mh-70px"></i>
+
+            <span class="d-block fw-semibold text-start">
+            <span class="text-gray-900 fw-bold d-block fs-3">NMB Bank (TZ Only)</span>
+            <span class="text-muted fw-semibold fs-6">Pay via NMB Bank Agent and Tanzania local all mobile money providers like Mpesa, TigoPesa, AirtelMoney and HaloPesa.</span>
+        </span>
+        </label>
+        <!--end::Option-->
+
+        <div class="m-5 fv-row">
+            <button id="verify_phone_button" type="button" class="btn btn-primary">
+                {{__('Make Payment')}}
+            </button>
+        </div>
+
+
     </div>
     <!--end::Wrapper-->
 

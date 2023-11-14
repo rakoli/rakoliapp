@@ -734,6 +734,24 @@
     //END:: BUSINESS DETAILS ACTIONS
 
 
+    //END:: SUBSCRIPTION ACTIONS
+    var selectedpackage = "";
+    function selectSubscription(subscriptionCode){
+
+        if(selectedpackage !== ""){
+            document.getElementById(selectedpackage).classList.remove("bg-gray-400");
+            document.getElementById(selectedpackage).classList.add("bg-secondary");
+        }
+        document.getElementById(subscriptionCode).classList.remove("bg-secondary");
+        document.getElementById(subscriptionCode).classList.add("bg-gray-400");
+        document.getElementById('selected_plan').value = subscriptionCode;
+        selectedpackage = subscriptionCode;
+    }
+    //END:: SUBSCRIPTION ACTIONS
+
+
+
+
 </script>
 
 {{--<script src="{{asset('assets/js/custom/utilities/modals/create-account.js')}}"></script>--}}
