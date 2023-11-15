@@ -49,6 +49,8 @@ class TestController extends Controller
         $payment_url = "https://secure.3gdirectpay.com/payv2.php?ID=".$token['transToken'];
 //
         return redirect($payment_url);
+
+
 //        dd(count(AgentRegistrationStepsEnums::cases()));
 
 //        SMS::sendToUser($user, 'function to send updated');
