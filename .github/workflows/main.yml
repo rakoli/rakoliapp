@@ -1,21 +1,19 @@
-name: AWS Cpanel Deploy
+name: Deploy to AWS Cpanel
 on:
   push:
     branches: [ main ]
-
 jobs:
-  build:
+  web-deploy:
+    name: Deploy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      # Here is the deployment action
-      - name: Upload from output to a remote server via FTP
-        uses: modern-dev/ftp-mirror@v2
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          user: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local_dir: "./"
-          remote_dir: "./"
-          delete: "false"
-          exlude: "vendor/ node_modules/"
+    - name: Get latest code
+      uses: actions/checkout@v3
+      
+    - name: Sync files
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      with:
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        server-dir: /
