@@ -285,4 +285,22 @@ class RegistrationStepController extends Controller
             'message' => 'updated'
         ];
     }
+
+    public function paySubscription(Request $request)
+    {
+        $user = $request->user();
+
+        $request->validate([
+            'selected_plan_code' => 'required|exists:packages,code',
+            'payment_method' => 'required|in:dpopay,nmbbank',
+        ]);
+
+
+        dd($request);
+
+        return [
+            'status' => 200,
+            'message' => 'updated'
+        ];
+    }
 }

@@ -22,7 +22,9 @@
         "symfony/mailgun-mailer": "^6.3",
         "timehunter/laravel-google-recaptcha-v3": "^2.5",
         "torann/geoip": "^3.0",
-        "yajra/laravel-datatables": "^10.1"
+        "yajra/laravel-datatables": "^10.1",
+        "zepson/dpo-laravel": "^1.0",
+        "ext-simplexml": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.9",

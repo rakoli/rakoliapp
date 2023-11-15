@@ -23,11 +23,11 @@
                     <div class="col-xl-4">
                         <div class="d-flex h-100 align-items-center m-2">
                             <!--begin::Option-->
-                            <div class="w-100 d-flex flex-column flex-center rounded-3 py-15 px-10 bg-secondary" id="{{$package->code}}" onclick="selectSubscription('{{$package->code}}')">
+                            <div class="w-100 d-flex flex-column flex-center rounded-3 py-15 px-10 bg-secondary" id="{{$package->code}}" onclick="selectSubscription('{{$package->code}}','{{strtoupper($package->name)}}', '{{number_format($package->price)}}', '{{strtoupper($package->price_currency)}}')">
                                 <!--begin::Heading-->
                                 <div class="mb-7 text-center">
                                     <!--begin::Title-->
-                                    <h1 class="text-dark mb-5 fw-bolder">{{strtoupper($package->name)}}</h1>
+                                    <h1 class="text-dark mb-5 fw-bolder" id="package_name">{{strtoupper($package->name)}}</h1>
                                     <!--end::Title-->
                                     <!--begin::Description-->
                                     <div class="text-gray-600 fw-semibold mb-5">{{$package->description}}</div>
@@ -67,7 +67,7 @@
                                 </div>
                                 <!--end::Features-->
                                 <!--begin::Select-->
-                                <button type="button" class="btn btn-sm btn-primary" onclick="selectSubscription('{{$package->code}}')">Select</button>
+                                <button type="button" class="btn btn-sm btn-primary" onclick="selectSubscription('{{$package->code}}','{{strtoupper($package->name)}}', '{{number_format($package->price)}}', '{{strtoupper($package->price_currency)}}')">Select</button>
                                 <!--end::Select-->
                             </div>
                             <!--end::Option-->
@@ -93,8 +93,8 @@
 
 
         <!--begin::Option-->
-        <input type="radio" class="btn-check" name="selected_payment_method" value="apps" checked="checked"  id="kt_radio_buttons_2_option_1"/>
-        <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center mb-5" for="kt_radio_buttons_2_option_1">
+        <input type="radio" class="btn-check" name="selected_payment_method" value="dpopay" checked="checked"  id="dpopay_method" onchange="selectPaymentMethod(this)"/>
+        <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center mb-5" for="dpopay_method">
             <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/DPOPay.webp')}}" class="mw-200px mh-70px"></i>
 
             <span class="d-block fw-semibold text-start">
@@ -107,8 +107,8 @@
         <!--end::Option-->
 
         <!--begin::Option-->
-        <input type="radio" class="btn-check" name="selected_payment_method" value="sms" id="kt_radio_buttons_2_option_2"/>
-        <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center" for="kt_radio_buttons_2_option_2">
+        <input type="radio" class="btn-check" name="selected_payment_method" value="nmbbank" id="nmb_method" onchange="selectPaymentMethod(this)"/>
+        <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center" for="nmb_method">
             <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/nmblogo.png')}}" class="mw-200px mh-70px"></i>
 
             <span class="d-block fw-semibold text-start">
@@ -119,7 +119,7 @@
         <!--end::Option-->
 
         <div class="m-5 fv-row">
-            <button id="verify_phone_button" type="button" class="btn btn-primary">
+            <button id="verify_phone_button" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirm_subscription_details">
                 {{__('Make Payment')}}
             </button>
         </div>

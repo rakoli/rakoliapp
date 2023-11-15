@@ -242,6 +242,51 @@
                     </div>
                     <!--end::Modal group-->
 
+                    <!--begin::Modal group-->
+                    <div class="modal fade" tabindex="-1" id="confirm_subscription_details">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 class="modal-title">{{__("Confirm Subscription Details")}}</h3>
+                                    <!--begin::Close-->
+                                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                                        <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
+                                    </div>
+                                    <!--end::Close-->
+                                </div>
+                                <form class="my-auto pb-5" action="{{route('pay.subscription')}}" method="POST">
+                                    @csrf
+                                    <div class="modal-body">
+
+                                        <input type="hidden" name="selected_plan_code" id="selected_plan_code" class="form-control form-control-solid-bg"/>
+
+                                        <div class="fv-row">
+                                            <label for="selected_plan_name" class="required form-label">Selected Plan</label>
+                                            <input type="text" name="selected_plan_name" id="selected_plan_name" class="form-control form-control-solid-bg" readonly/>
+                                        </div>
+
+                                        <div class="fv-row">
+                                            <label for="plan_price" class="required form-label">Price</label>
+                                            <input type="text" name="plan_price" id="plan_price" class="form-control form-control-solid-bg" readonly/>
+                                        </div>
+
+                                        <div class="fv-row">
+                                            <label for="payment_method" class="required form-label">Payment Method</label>
+                                            <input type="text" name="payment_method" id="payment_method" class="form-control form-control-solid-bg" readonly/>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary" formtarget="_blank">Pay Subscription</button>
+                                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{__("Close")}}</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end::Modal group-->
+
                 </div>
                 <!--end::Wrapper-->
             </div>
@@ -736,16 +781,30 @@
 
     //END:: SUBSCRIPTION ACTIONS
     var selectedpackage = "";
-    function selectSubscription(subscriptionCode){
-
+    var selectedpackageName = "";
+    var selectedpackagePrice = "";
+    var selectedpaymentMethod = "";
+    function selectSubscription(subscriptionCode, subscriptionName, subscriptionPrice, currency){
+        console.log(subscriptionCode);
         if(selectedpackage !== ""){
             document.getElementById(selectedpackage).classList.remove("bg-gray-400");
             document.getElementById(selectedpackage).classList.add("bg-secondary");
         }
         document.getElementById(subscriptionCode).classList.remove("bg-secondary");
         document.getElementById(subscriptionCode).classList.add("bg-gray-400");
-        document.getElementById('selected_plan').value = subscriptionCode;
+        document.getElementById('selected_plan_code').value = subscriptionCode;
+        document.getElementById('selected_plan_name').value = subscriptionName;
+        document.getElementById('plan_price').value = currency + ' ' +subscriptionPrice;
+        document.getElementById('payment_method').value = document.querySelector('input[name="selected_payment_method"]:checked').value;
         selectedpackage = subscriptionCode;
+        selectedpackageName = subscriptionName;
+        selectedpackagePrice = currency + ' ' +subscriptionPrice;
+        selectedpaymentMethod = document.querySelector('input[name="selected_payment_method"]:checked').value;
+    }
+
+    function selectPaymentMethod(method){
+        document.getElementById('payment_method').value = method.value;
+        selectedpaymentMethod = method.value;
     }
     //END:: SUBSCRIPTION ACTIONS
 
