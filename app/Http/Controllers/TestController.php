@@ -29,27 +29,40 @@ class TestController extends Controller
 
         $dpo = new DPOPayment();
         $order = [
-            'paymentAmount' => "60000",
+            'paymentAmount' => "500",
             'paymentCurrency' => "TZS",
             'customerFirstName' => "Erick",
-            'customerLastName' => "Thomas",
+            'customerLastName' => "Boni",
             'customerAddress' => "Tanzania",
             'customerCity' => "Arusha",
             'customerCountryISOCode' => "TZ",
             'customerDialCode' => "TZ",
-            'customerPhone' => "0752991650",
-            'customerEmail' => "novath@gmail.com",
-            'companyRef' => "898TESTREFF"
+            'customerPhone' => "0763466080",
+            'customerEmail' => "emabusi@gmail.com",
+            'companyRef' => "rwa_".random_int(10000,100000)
         ];
+
         // Now make  payment
         $token = $dpo->createToken($order); // return array of response with transaction code
 
         Log::debug($token);
 
-        $payment_url = "https://secure.3gdirectpay.com/payv2.php?ID=".$token['transToken'];
-
+        $payment_url = $dpo->getPaymentUrlWithoutVerifyToken($token);
 //
-        return redirect($payment_url);
+        return redirect($payment_url['result']);
+
+
+//        $token = [
+//            'result' => '000',
+//            'resultExplanation' => 'Transaction created',
+//            'success' => 'true',
+//            'transToken' => 'D4307697-8919-4DD6-95E1-3DB80DED12D8',
+//            'transRef' => 'R51614365',
+//        ];
+//
+//        $url = $dpo->getPaymentUrlWithoutVerifyToken($token);
+//
+//        print_r($url['result']);
 
 
 //        dd(count(AgentRegistrationStepsEnums::cases()));
@@ -59,7 +72,6 @@ class TestController extends Controller
 //        dd(RequestEmailVerificationCode::run($user));
 
 //        Mail::to('emabusi@gmail.com')->send(new SendCodeMail());
-
 
 //        return (new SendCodeMail(User::where('email','agent@rakoli.com')->first()))->render();
     }

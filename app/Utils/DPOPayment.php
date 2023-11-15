@@ -2,6 +2,7 @@
 
 namespace App\Utils;
 
+use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 
@@ -39,15 +40,13 @@ class DPOPayment
         return $this->dpoGateway;
     }
 
-    /**
-     * Create a DPO token for payment processing
-     * @param array $data
-     * @return array
-     */
-    public function createToken(array $data)
+    public function createToken(array $data, $service = null)
     {
         $companyToken      = $this->company_token;
         $accountType       =  $this->company_type;
+        if($service != null){
+            $accountType = $service;
+        }
         $paymentAmount     = $data['paymentAmount'];
         $paymentCurrency   = $data['paymentCurrency'];
         $customerFirstName = $data['customerFirstName'];
@@ -113,8 +112,6 @@ class DPOPayment
 
         curl_close($curl);
 
-        Log::debug($response);
-
         if ($response != '') {
             $xml               = new \SimpleXMLElement($response);
             $result            = $xml->xpath('Result')[0]->__toString();
@@ -126,11 +123,11 @@ class DPOPayment
 
             // Check if token was created successfully
             if ($xml->xpath('Result')[0] != '000') {
-                $returnResult['success'] = 'false';
+                $returnResult['success'] = false;
             } else {
                 $transToken                 = $xml->xpath('TransToken')[0]->__toString();
                 $transRef                   = $xml->xpath('TransRef')[0]->__toString();
-                $returnResult['success']    = 'true';
+                $returnResult['success']    = true;
                 $returnResult['transToken'] = $transToken;
                 $returnResult['transRef']   = $transRef;
             }
@@ -144,11 +141,6 @@ class DPOPayment
         }
     }
 
-    /**
-     * Verify the DPO token created in first step of transaction
-     * @param array $data
-     * @return bool|string
-     */
     public function verifyToken(array $data)
     {
         $companyToken = $data['companyToken'];
@@ -177,52 +169,89 @@ class DPOPayment
 
             if (strlen($err) > 0) {
                 echo "cURL Error #:" . $err;
+                Log::error($err);
+                return [
+                    'success'           => false,
+                    'result'            => !empty($err) ? $err : 'Unknown error occurred in verify token',
+                    'resultExplanation' => !empty($err) ? $err : 'Unknown error occurred in verify token',
+                ];
             } else {
-                return $response;
+                return [
+                    'success'           => true,
+                    'result'            => $response,
+                    'resultExplanation' => 'Successfully executed verify token, check result for interpretation',
+                ];
             }
-        } catch (\Exception $e) {
-            throw $e;
+        } catch (\Exception $exception) {
+            Bugsnag::notifyException($exception);
+            Log::error($exception);
+            return [
+                'success'           => false,
+                'result'            => !empty($exception) ? $exception : 'Unknown error occurred in token creation',
+                'resultExplanation' => !empty($exception) ? $exception : 'Unknown error occurred in token creation',
+            ];
         }
     }
 
-    /**
-     * getPaymentUrl
-     */
-    public function getPaymentUrl(array $data)
+
+    public function getPaymentUrl(array $createTokenData)
     {
         $dpo = new DPOPayment();
-        if ($data['success'] === 'true') {
+        if ($createTokenData['success'] == true) {
 
-            $verify   = $dpo->verifyToken(["companyToken" => config("dpo-laravel.company_token"), "transToken" => $data['transToken']]);
+            $verify   = $dpo->verifyToken(["companyToken" => config("dpo-laravel.company_token"), "transToken" => $createTokenData['transToken']]);
 
-            if (!empty($verify) && $verify != '') {
-                $verify = new \SimpleXMLElement($verify);
+            Log::debug($verify);
+
+            if (!empty($verify['result']) && $verify['result'] != '') {
+                $verify = new \SimpleXMLElement($verify['result']);
 
                 if ($verify->Result->__toString() === '900') {
-                    $payUrl = $dpo->getDpoGateway() . $data['transToken'];
+                    $payUrl = $dpo->getDpoGateway() . $createTokenData['transToken'];
                     // redirect($payUrl);
-                    return $payUrl;
+                    return [
+                        'success'           => true,
+                        'result'            => $payUrl,
+                        'resultExplanation' => 'Generated URL. Check result',
+                    ];
                 }
+            }else{
+
+                Log::error($verify);
+
+                return [
+                    'success'           => false,
+                    'result'            => $verify['result'],
+                    'resultExplanation' => "On getPaymentUrl: Error!Empty Verify Response from DPO",
+                ];
+
             }
         } else {
-            echo 'Something went wrong: ' . $data['resultExplanation'];
-            $url = env("APP_URL") . 'viewinvoice.php?id=' . $data['companyRef'];
-            echo <<<HTML
-                <br><br><a href="$url">Click here to return</a>
-                HTML;
+            return [
+                'success'           => false,
+                'result'            => $createTokenData,
+                'resultExplanation' => "On getPaymentUrl: ".$createTokenData['resultExplanation'],
+            ];
         }
     }
 
-
-    /**
-     * directPayment
-     */
-    public function directPayment(array $data)
+    public function getPaymentUrlWithoutVerifyToken(array $createTokenData)
     {
-        $get_payment_token = $this->createToken($data);
-
-        $payment_url = $this->getPaymentUrl($get_payment_token);
-
-        return Redirect::to($payment_url);
+        $dpo = new DPOPayment();
+        if ($createTokenData['success'] == true) {
+            $payUrl = $dpo->getDpoGateway() . $createTokenData['transToken'];
+            return [
+                'success'           => true,
+                'result'            => $payUrl,
+                'resultExplanation' => 'Generated URL. Check result',
+            ];
+        } else {
+            return [
+                'success'           => false,
+                'result'            => $createTokenData,
+                'resultExplanation' => "On getPaymentUrlWithoutVerifyToken: ".$createTokenData['resultExplanation'],
+            ];
+        }
     }
+
 }

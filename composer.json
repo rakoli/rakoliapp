@@ -23,7 +23,6 @@
         "timehunter/laravel-google-recaptcha-v3": "^2.5",
         "torann/geoip": "^3.0",
         "yajra/laravel-datatables": "^10.1",
-        "zepson/dpo-laravel": "^1.0",
         "ext-simplexml": "*"
     },
     "require-dev": {
