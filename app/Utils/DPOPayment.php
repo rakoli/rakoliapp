@@ -3,6 +3,7 @@
 namespace App\Utils;
 
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
+use http\Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 
@@ -113,13 +114,23 @@ class DPOPayment
         curl_close($curl);
 
         if ($response != '') {
-            $xml               = new \SimpleXMLElement($response);
-            $result            = $xml->xpath('Result')[0]->__toString();
-            $resultExplanation = $xml->xpath('ResultExplanation')[0]->__toString();
-            $returnResult      = [
-                'result'            => $result,
-                'resultExplanation' => $resultExplanation,
-            ];
+            try{
+                $xml = new \SimpleXMLElement($response);
+                $result = $xml->xpath('Result')[0]->__toString();
+                $resultExplanation = $xml->xpath('ResultExplanation')[0]->__toString();
+                $returnResult      = [
+                    'result'            => $result,
+                    'resultExplanation' => $resultExplanation,
+                ];
+            }catch (\Exception $exception){
+                Log::error($response);
+                Bugsnag::notifyException($exception);
+                return [
+                    'success'           => false,
+                    'result'            => $response,
+                    'resultExplanation' => $exception->getMessage(),
+                ];
+            }
 
             // Check if token was created successfully
             if ($xml->xpath('Result')[0] != '000') {

@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\GenerateDPOPayment;
 use App\Actions\RequestEmailVerificationCode;
 use App\Mail\SendCodeMail;
 use App\Models\SystemIncome;
 use App\Models\User;
 use App\Utils\DPOPayment;
+use App\Utils\DPORequestTokenFormat;
 use App\Utils\Enums\AgentRegistrationStepsEnums;
 use App\Utils\SMS;
 use App\Utils\VerifyOTP;
@@ -16,7 +18,6 @@ use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use RuntimeException;
-use Zepson\Dpo\Dpo;
 
 class TestController extends Controller
 {
@@ -26,9 +27,7 @@ class TestController extends Controller
 
 //        $user = User::where('email','jmabusi@gmail.com')->first();
 
-
-        $dpo = new DPOPayment();
-        $order = [
+        $data = [
             'paymentAmount' => "500",
             'paymentCurrency' => "TZS",
             'customerFirstName' => "Erick",
@@ -42,14 +41,39 @@ class TestController extends Controller
             'companyRef' => "rwa_".random_int(10000,100000)
         ];
 
-        // Now make  payment
-        $token = $dpo->createToken($order); // return array of response with transaction code
+        $dpoRequestToken = new DPORequestTokenFormat($data['paymentAmount'],$data['paymentCurrency'],$data['customerFirstName'],
+            $data['customerLastName'],$data['customerAddress'],$data['customerCity'],$data['customerCountryISOCode'],
+            $data['customerDialCode'],$data['customerPhone'],$data['customerEmail'],$data['companyRef']);
 
-        Log::debug($token);
+        $url = GenerateDPOPayment::run($dpoRequestToken,'3165');
 
-        $payment_url = $dpo->getPaymentUrlWithoutVerifyToken($token);
+        dd($url);
+
+
+//        $dpo = new DPOPayment();
+//        $order = [
+//            'paymentAmount' => "500",
+//            'paymentCurrency' => "TZS",
+//            'customerFirstName' => "Erick",
+//            'customerLastName' => "Boni",
+//            'customerAddress' => "Tanzania",
+//            'customerCity' => "Arusha",
+//            'customerCountryISOCode' => "TZ",
+//            'customerDialCode' => "TZ",
+//            'customerPhone' => "0763466080",
+//            'customerEmail' => "emabusi@gmail.com",
+//            'companyRef' => "rwa_".random_int(10000,100000)
+//        ];
 //
-        return redirect($payment_url['result']);
+//        // Now make  payment
+//        $token = $dpo->createToken($order); // return array of response with transaction code
+//
+//        Log::debug($token);
+//
+//        $payment_url = $dpo->getPaymentUrlWithoutVerifyToken($token);
+////
+//        return redirect($payment_url['result']);
+
 
 
 //        $token = [
