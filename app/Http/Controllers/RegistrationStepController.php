@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\GenerateDPOPayment;
 use App\Actions\RequestEmailVerificationCode;
 use App\Actions\RequestPhoneVerificationCode;
 use App\Models\Business;
+use App\Models\Package;
 use App\Models\User;
+use App\Utils\DPORequestTokenFormat;
 use App\Utils\VerifyOTP;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -295,12 +298,40 @@ class RegistrationStepController extends Controller
             'payment_method' => 'required|in:dpopay,nmbbank',
         ]);
 
-
-        dd($request);
-
-        return [
-            'status' => 200,
-            'message' => 'updated'
+        $data = [
+            'paymentAmount' => "500",
+            'paymentCurrency' => "TZS",
+            'customerFirstName' => "Erick",
+            'customerLastName' => "Boni",
+            'customerAddress' => "Tanzania",
+            'customerCity' => "Arusha",
+            'customerCountryISOCode' => "TZ",
+            'customerDialCode' => "TZ",
+            'customerPhone' => "0763466080",
+            'customerEmail' => "emabusi@gmail.com",
+            'companyRef' => "rwa_".random_int(10000,100000)
         ];
+
+        $dpoRequestToken = new DPORequestTokenFormat($data['paymentAmount'],$data['paymentCurrency'],$data['customerFirstName'],
+            $data['customerLastName'],$data['customerAddress'],$data['customerCity'],$data['customerCountryISOCode'],
+            $data['customerDialCode'],$data['customerPhone'],$data['customerEmail'],$data['companyRef']);
+
+        $url = GenerateDPOPayment::run($dpoRequestToken,'3165');
+
+        if($url['success'] == false){
+            redirect()->back()->withErrors(['Error! Failed to request payment, please contact support']);
+        }
+
+        $business = $user->business();
+
+        $package = Package::where('code',$request->get('selected_plan_code'))->first();
+        $business->package_code = $package->code;
+        $business->package_expiry_at = now()->addDays($package->package_interval_days);
+        $business->save();
+
+        $user->registration_step = $user->registration_step + 1;
+        $user->save();
+
+        return redirect($url['result']);
     }
 }

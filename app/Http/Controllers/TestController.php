@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Utils\DPOPayment;
 use App\Utils\DPORequestTokenFormat;
 use App\Utils\Enums\AgentRegistrationStepsEnums;
+use App\Utils\TelegramCommunication;
 use App\Utils\SMS;
 use App\Utils\VerifyOTP;
 use Carbon\Carbon;
@@ -27,27 +28,27 @@ class TestController extends Controller
 
 //        $user = User::where('email','jmabusi@gmail.com')->first();
 
-        $data = [
-            'paymentAmount' => "500",
-            'paymentCurrency' => "TZS",
-            'customerFirstName' => "Erick",
-            'customerLastName' => "Boni",
-            'customerAddress' => "Tanzania",
-            'customerCity' => "Arusha",
-            'customerCountryISOCode' => "TZ",
-            'customerDialCode' => "TZ",
-            'customerPhone' => "0763466080",
-            'customerEmail' => "emabusi@gmail.com",
-            'companyRef' => "rwa_".random_int(10000,100000)
-        ];
-
-        $dpoRequestToken = new DPORequestTokenFormat($data['paymentAmount'],$data['paymentCurrency'],$data['customerFirstName'],
-            $data['customerLastName'],$data['customerAddress'],$data['customerCity'],$data['customerCountryISOCode'],
-            $data['customerDialCode'],$data['customerPhone'],$data['customerEmail'],$data['companyRef']);
-
-        $url = GenerateDPOPayment::run($dpoRequestToken,'3165');
-
-        dd($url);
+//        $data = [
+//            'paymentAmount' => "500",
+//            'paymentCurrency' => "TZS",
+//            'customerFirstName' => "Erick",
+//            'customerLastName' => "Boni",
+//            'customerAddress' => "Tanzania",
+//            'customerCity' => "Arusha",
+//            'customerCountryISOCode' => "TZ",
+//            'customerDialCode' => "TZ",
+//            'customerPhone' => "0763466080",
+//            'customerEmail' => "emabusi@gmail.com",
+//            'companyRef' => "rwa_".random_int(10000,100000)
+//        ];
+//
+//        $dpoRequestToken = new DPORequestTokenFormat($data['paymentAmount'],$data['paymentCurrency'],$data['customerFirstName'],
+//            $data['customerLastName'],$data['customerAddress'],$data['customerCity'],$data['customerCountryISOCode'],
+//            $data['customerDialCode'],$data['customerPhone'],$data['customerEmail'],$data['companyRef']);
+//
+//        $url = GenerateDPOPayment::run($dpoRequestToken,'3165');
+//
+//        dd($url);
 
 
 //        $dpo = new DPOPayment();
