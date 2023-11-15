@@ -135,7 +135,7 @@
             <!--begin::Content-->
             <div class="d-flex flex-center flex-column flex-column-fluid">
                 <!--begin::Wrapper-->
-                <div class="w-lg-750px w-xl-800px mx-auto">
+                <div class="w-lg-750px w-xl-800px p-5 p-lg-10 mx-auto">
 
                     @if ($errors->any())
                         <div class="alert alert-danger">
@@ -149,7 +149,7 @@
 
 
                     <!--begin::Form-->
-                    <form class="my-auto pb-5" novalidate="novalidate" id="kt_create_account_form">
+                    <form class="my-auto pb-5" novalidate="novalidate" id="kt_create_account_form" action="" method="GET">
                         <!--begin::Step 1-->
                         @include('auth.registration_agent.verification')
                         <!--end::Step 1-->
@@ -170,7 +170,7 @@
 {{--                            </div>--}}
                             <div>
 
-                                <button type="submit" class="btn btn-lg btn-primary" data-kt-stepper-action="submit">
+                                <button type="button" class="btn btn-lg btn-primary" data-kt-stepper-action="submit" onclick="moveToComplete()">
 											<span class="indicator-label">{{ __("Submit")}}
 											<i class="ki-outline ki-arrow-right fs-4 ms-2"></i></span>
                                     <span class="indicator-progress">{{ __("Please wait...")}}
@@ -439,7 +439,46 @@
                 stepperInstance.goNext();
                 KTUtil.scrollTop();
                 toastr.success(responseData.message, "{{__('Registration Step')}}");
+            } else {
+                // Request encountered an error
+                // console.error("Request failed with status:", responseData);
+                toastr.error(responseData.message, "{{__('Registration Step')}}");
+            }
 
+        };
+
+        // Set up a function to handle errors
+        xhr.onerror = function () {
+            toastr.error("Network Error Occurred");
+            console.error("Network error occurred");
+        };
+
+        // Send the GET request
+        xhr.send();
+    }
+
+    function moveToComplete() {
+        console.log("COMPLETE REGISTRATION");
+
+        // Create a new XMLHttpRequest object
+        var xhr = new XMLHttpRequest();
+
+        // Configure the GET request
+        var url = "{{route('registration.step.confirmation')}}";
+        url = url + "?next_step="+5;
+        xhr.open("GET", url, true);
+
+        xhr.setRequestHeader("Accept", "application/json");
+
+        // Set up a function to handle the response
+        xhr.onload = function () {
+
+            var responseData = JSON.parse(xhr.responseText);
+            if (xhr.status === 200 && responseData.status === 200) {
+                // Request was successful, handle the response here
+                // console.log("Response Data:", responseData);
+
+                window.location.reload();
             } else {
                 // Request encountered an error
                 // console.error("Request failed with status:", responseData);

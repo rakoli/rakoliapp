@@ -24,6 +24,9 @@ class RegistrationStepController extends Controller
     public function registrationAgent()
     {
         $step = auth()->user()->registration_step;
+        if($step == 0){
+            return redirect()->route('home');
+        }
 
         return view('auth.registration_agent.index', compact('step'));
     }
@@ -100,13 +103,6 @@ class RegistrationStepController extends Controller
             'status' => 201,
             'message' => 'invalid'
         ];
-    }
-
-    public function registrationVas()
-    {
-        $step = auth()->user()->registration_step;
-
-        return view('auth.registration_vas.index');
     }
 
     public function requestPhoneCodeAjax(Request $request)
@@ -226,7 +222,17 @@ class RegistrationStepController extends Controller
         $nextStep = $request->get('next_step');
         $currentRegistrationStep = $request->user()->registration_step;
 
-        if($currentRegistrationStep < $nextStep){
+        if($currentRegistrationStep == 4 && $nextStep == 5){
+            $user = $request->user();
+            $user->registration_step = 0;
+            $user->save();
+            return [
+                'status' => 200,
+                'message' => __('Complete')
+            ];
+        }
+
+        if($currentRegistrationStep < $nextStep ){
             return [
                 'status' => 201,
                 'message' => __('Complete current step before proceeding')
@@ -298,18 +304,20 @@ class RegistrationStepController extends Controller
             'payment_method' => 'required|in:dpopay,nmbbank',
         ]);
 
+        $package = Package::where('code',$request->get('selected_plan_code'))->first();
+
         $data = [
-            'paymentAmount' => "500",
-            'paymentCurrency' => "TZS",
-            'customerFirstName' => "Erick",
-            'customerLastName' => "Boni",
-            'customerAddress' => "Tanzania",
+            'paymentAmount' => $package->price,
+            'paymentCurrency' => $package->price_currency,
+            'customerFirstName' => $user->fname,
+            'customerLastName' => $user->lname,
+            'customerAddress' => $user->country->name,
             'customerCity' => "Arusha",
-            'customerCountryISOCode' => "TZ",
-            'customerDialCode' => "TZ",
-            'customerPhone' => "0763466080",
-            'customerEmail' => "emabusi@gmail.com",
-            'companyRef' => "rwa_".random_int(10000,100000)
+            'customerCountryISOCode' => $user->country->code,
+            'customerDialCode' => $user->country->code,
+            'customerPhone' => $user->phone,
+            'customerEmail' => $user->email,
+            'companyRef' => $user->code
         ];
 
         $dpoRequestToken = new DPORequestTokenFormat($data['paymentAmount'],$data['paymentCurrency'],$data['customerFirstName'],
@@ -322,9 +330,8 @@ class RegistrationStepController extends Controller
             redirect()->back()->withErrors(['Error! Failed to request payment, please contact support']);
         }
 
-        $business = $user->business();
+        $business = $user->business;
 
-        $package = Package::where('code',$request->get('selected_plan_code'))->first();
         $business->package_code = $package->code;
         $business->package_expiry_at = now()->addDays($package->package_interval_days);
         $business->save();
@@ -333,5 +340,14 @@ class RegistrationStepController extends Controller
         $user->save();
 
         return redirect($url['result']);
+    }
+
+    public function registrationVas()
+    {
+        $step = auth()->user()->registration_step;
+        if($step == 0){
+            return redirect()->route('home');
+        }
+        return view('auth.registration_vas.index');
     }
 }
