@@ -144,6 +144,8 @@ class DPOPayment
             }
             return $returnResult;
         } else {
+            Log::error($response);
+            Bugsnag::notifyError('DPO Payment','Empty Response on request');
             return [
                 'success'           => false,
                 'result'            => !empty($error) ? $error : 'Unknown error occurred in token creation',
@@ -181,6 +183,7 @@ class DPOPayment
             if (strlen($err) > 0) {
                 echo "cURL Error #:" . $err;
                 Log::error($err);
+                Bugsnag::notifyError('DPO Payment (VerifyToken)',$err);
                 return [
                     'success'           => false,
                     'result'            => !empty($err) ? $err : 'Unknown error occurred in verify token',
@@ -209,35 +212,41 @@ class DPOPayment
     {
         $dpo = new DPOPayment();
         if ($createTokenData['success'] == true) {
-
             $verify   = $dpo->verifyToken(["companyToken" => config("dpo-laravel.company_token"), "transToken" => $createTokenData['transToken']]);
-
-            Log::debug($verify);
-
             if (!empty($verify['result']) && $verify['result'] != '') {
-                $verify = new \SimpleXMLElement($verify['result']);
+                try{
+                    $verify = new \SimpleXMLElement($verify['result']);
 
-                if ($verify->Result->__toString() === '900') {
-                    $payUrl = $dpo->getDpoGateway() . $createTokenData['transToken'];
-                    // redirect($payUrl);
+                    if ($verify->Result->__toString() === '900') {
+                        $payUrl = $dpo->getDpoGateway() . $createTokenData['transToken'];
+                        // redirect($payUrl);
+                        return [
+                            'success'           => true,
+                            'result'            => $payUrl,
+                            'resultExplanation' => 'Generated URL. Check result',
+                        ];
+                    }
+                }catch (\Exception $exception){
+                    Log::error($exception);
+                    Bugsnag::notifyException($exception);
                     return [
-                        'success'           => true,
-                        'result'            => $payUrl,
-                        'resultExplanation' => 'Generated URL. Check result',
+                        'success'           => false,
+                        'result'            => $verify['result'],
+                        'resultExplanation' => $exception->getMessage(),
                     ];
                 }
             }else{
-
-                Log::error($verify);
-
+                Log::error('DPO Payment getPaymentUrl empty response');
+                Bugsnag::notifyError('DPO Payment','getPaymentUrl empty response');
                 return [
                     'success'           => false,
                     'result'            => $verify['result'],
                     'resultExplanation' => "On getPaymentUrl: Error!Empty Verify Response from DPO",
                 ];
-
             }
         } else {
+            Log::error("On getPaymentUrl: ".$createTokenData['resultExplanation']);
+            Bugsnag::notifyError("On getPaymentUrl: ", $createTokenData['resultExplanation']);
             return [
                 'success'           => false,
                 'result'            => $createTokenData,
