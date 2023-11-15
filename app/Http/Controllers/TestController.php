@@ -47,6 +47,7 @@ class TestController extends Controller
         Log::debug($token);
 
         $payment_url = "https://secure.3gdirectpay.com/payv2.php?ID=".$token['transToken'];
+
 //
         return redirect($payment_url);
 
