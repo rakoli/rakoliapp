@@ -26,9 +26,9 @@ class RequestPhoneVerificationCode
 
         if(env('APP_ENV') != 'local'){
             SMS::sendToUser($user, $text);
+        }else{
+            Log::debug("SMS: $text");
         }
-
-        Log::debug("SMS: $text");
 
         $user->phone_otp = $otp;
         $user->phone_otp_time = now();
