@@ -7,8 +7,12 @@ use App\Models\Country;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use App\Utils\Enums\UserTypeEnum;
+use App\Utils\TelegramCommunication;
+use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use TimeHunter\LaravelGoogleReCaptchaV3\Validations\GoogleReCaptchaV3ValidationRule;
 
@@ -97,4 +101,16 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
         ]);
     }
+
+    protected function registered(Request $request, $user)
+    {
+        $message = "User Registration: A new user $user->fname $user->lname from $user->country_code. Registration process ongoing.";
+        try{
+            TelegramCommunication::updates($message);
+        }catch (\Exception $exception){
+            Log::error($exception);
+            Bugsnag::notifyException($exception);
+        }
+    }
+
 }
