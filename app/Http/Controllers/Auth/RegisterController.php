@@ -67,15 +67,18 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        return Validator::make($data, [
+        $validators = [
             'country_dial_code' => ['exists:countries,dialing_code'],
             'fname' => ['required', 'string', 'max:20'],
             'lname' => ['required', 'string', 'max:20'],
             'phone' => ['required','numeric'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-//            'g-recaptcha-response' => [new GoogleReCaptchaV3ValidationRule('register')],
-        ]);
+        ];
+        if(env('APP_ENV') != 'local'){
+            $validators['g-recaptcha-response'] = [new GoogleReCaptchaV3ValidationRule('register')];
+        }
+        return Validator::make($data,$validators);
     }
 
     /**
