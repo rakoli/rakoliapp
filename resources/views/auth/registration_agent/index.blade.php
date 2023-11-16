@@ -278,7 +278,7 @@
                                     </div>
 
                                     <div class="modal-footer">
-                                        <button type="submit" class="btn btn-primary" formtarget="_blank">Pay Subscription</button>
+                                        <button type="submit" class="btn btn-primary">Pay Subscription</button>
                                         <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{__("Close")}}</button>
                                     </div>
                                 </form>
