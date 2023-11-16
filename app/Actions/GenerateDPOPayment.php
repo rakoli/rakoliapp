@@ -20,7 +20,6 @@ class GenerateDPOPayment
             'customerFirstName' => $tokenRequest->customerFirstName,
             'customerLastName' => $tokenRequest->customerLastName,
             'customerAddress' => $tokenRequest->customerAddress,
-            'customerCity' => $tokenRequest->customerCity,
             'customerCountryISOCode' => $tokenRequest->customerCountryISOCode,
             'customerDialCode' => $tokenRequest->customerDialCode,
             'customerPhone' => $tokenRequest->customerPhone,
@@ -32,7 +31,7 @@ class GenerateDPOPayment
             return $token;
         }
 //        Log::debug($token);
-        $payment_url = $dpo->getPaymentUrlWithoutVerifyToken($token);
-        return $payment_url;
+        $urlResult = $dpo->getPaymentUrlWithoutVerifyToken($token);
+        return $urlResult;
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Actions\InitiateSubscriptionPayment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -137,6 +138,24 @@ class User extends Authenticatable
     public function ads_exchange_chats() : HasMany
     {
         return $this->hasMany(AdsExchangeChat::class, 'sender_code', 'code');
+    }
+
+    public function getBusinessPendingPayments()
+    {
+        return InitiateSubscriptionPayment::where('business_code',$this->business_code)
+            ->where('expiry_time','>',now())
+            ->where('status',0)->get();
+    }
+
+    public function hasPendingPayment() : bool
+    {
+        $initiatedPayments = $this->getBusinessPendingPayments();
+
+        if($initiatedPayments->isEmpty()){
+            return false;
+        }
+
+        return true;
     }
 
 }

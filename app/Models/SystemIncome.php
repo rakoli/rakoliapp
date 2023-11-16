@@ -12,6 +12,18 @@ class SystemIncome extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'country_code',
+        'category',
+        'amount',
+        'amount_currency',
+        'channel',
+        'channel_reference',
+        'channel_timestamp',
+        'description',
+        'status',
+    ];
+
     protected static function newFactory(): Factory
     {
         return SystemIncomeFactory::new();

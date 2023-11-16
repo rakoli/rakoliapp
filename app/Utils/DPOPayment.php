@@ -53,7 +53,6 @@ class DPOPayment
         $customerFirstName = $data['customerFirstName'];
         $customerLastName  = $data['customerLastName'];
         $customerAddress   = $data['customerAddress'];
-        $customerCity      = $data['customerCity'];
         $customerPhone     = $data['customerPhone'];
         $customerCountry     = $data['customerCountryISOCode'];
         $customerDialCode    = $data['customerDialCode'];
@@ -61,6 +60,7 @@ class DPOPayment
         $backURL           = $this->dpo_back_url;
         $customerEmail     = $data['customerEmail'];
         $reference         = $data['companyRef'];
+        $timeLimit = config('dpo-laravel.payment_valid_time_hours');
 
         $odate   = date('Y/m/d H:i');
         $postXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>
@@ -68,13 +68,13 @@ class DPOPayment
                         <CompanyToken>$companyToken</CompanyToken>
                         <Request>createToken</Request>
                         <Transaction>
+                            <PTL>$timeLimit</PTL>
                             <PaymentAmount>$paymentAmount</PaymentAmount>
                             <PaymentCurrency>$paymentCurrency</PaymentCurrency>
                             <CompanyRef>$reference</CompanyRef>
                             <customerFirstName>$customerFirstName</customerFirstName>
                             <customerLastName>$customerLastName</customerLastName>
                             <customerAddress>$customerAddress</customerAddress>
-                            <customerCity>$customerCity</customerCity>
                             <customerPhone>$customerPhone</customerPhone>
                             <customerCountry>$customerCountry</customerCountry>
                             <customerDialCode>$customerDialCode</customerDialCode>
@@ -207,7 +207,6 @@ class DPOPayment
         }
     }
 
-
     public function getPaymentUrl(array $createTokenData)
     {
         $dpo = new DPOPayment();
@@ -224,6 +223,7 @@ class DPOPayment
                             'success'           => true,
                             'result'            => $payUrl,
                             'resultExplanation' => 'Generated URL. Check result',
+                            'transToken'=>$createTokenData['transToken'],
                         ];
                     }
                 }catch (\Exception $exception){
@@ -264,14 +264,55 @@ class DPOPayment
                 'success'           => true,
                 'result'            => $payUrl,
                 'resultExplanation' => 'Generated URL. Check result',
+                'transToken'=>$createTokenData['transToken'],
             ];
         } else {
+            Log::error("On getPaymentUrlWithoutVerifyToken: ".$createTokenData['resultExplanation']);
+            Bugsnag::notifyError("On getPaymentUrlWithoutVerifyToken: ", $createTokenData['resultExplanation']);
             return [
                 'success'           => false,
                 'result'            => $createTokenData,
                 'resultExplanation' => "On getPaymentUrlWithoutVerifyToken: ".$createTokenData['resultExplanation'],
             ];
         }
+    }
+
+    public function isPaymentComplete($transactionToken)
+    {
+        $dpo = new DPOPayment();
+
+        $verify   = $dpo->verifyToken(["companyToken" => config("dpo-laravel.company_token"), "transToken" => $transactionToken]);
+
+        if (!empty($verify['result']) && $verify['result'] != '') {
+            try{
+                $verify = new \SimpleXMLElement($verify['result']);
+
+                if ($verify->Result->__toString() === '000') {
+                    return [
+                        'success'           => true,
+                        'result'            => 'completed',
+                        'resultExplanation' => $verify->ResultExplanation->__toString(),
+                    ];
+                }
+            }catch (\Exception $exception){
+                Log::error($exception);
+                Bugsnag::notifyException($exception);
+                return [
+                    'success'           => false,
+                    'result'            => $verify['result'],
+                    'resultExplanation' => $exception->getMessage(),
+                ];
+            }
+        }else{
+            Log::error('DPO Payment checkPaymentComplete empty response');
+            Bugsnag::notifyError('DPO Payment','checkPaymentComplete empty response');
+            return [
+                'success'           => false,
+                'result'            => $verify['result'],
+                'resultExplanation' => "On checkPaymentComplete: Error!Empty Verify Response from DPO",
+            ];
+        }
+
     }
 
 }

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\CheckUserPendingSystemPayments;
 use App\Actions\GenerateDPOPayment;
+use App\Actions\InitiateSubscriptionPayment;
 use App\Actions\RequestEmailVerificationCode;
 use App\Actions\RequestPhoneVerificationCode;
 use App\Models\Business;
@@ -12,6 +14,7 @@ use App\Utils\DPORequestTokenFormat;
 use App\Utils\VerifyOTP;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class RegistrationStepController extends Controller
 {
@@ -27,8 +30,16 @@ class RegistrationStepController extends Controller
         if($step == 0){
             return redirect()->route('home');
         }
-
-        return view('auth.registration_agent.index', compact('step'));
+        $hasPendingPayment = false;
+        if(auth()->user()->hasPendingPayment()){
+            $hasPendingPayment = true;
+            CheckUserPendingSystemPayments::run(auth()->user());
+            //To redirect to next registration step
+            if(!auth()->user()->hasPendingPayment()){
+                $step = User::where('code',auth()->user()->code)->first()->registration_step;
+            }
+        }
+        return view('auth.registration_agent.index', compact('step','hasPendingPayment'));
     }
 
     public function requestEmailCodeAjax(Request $request)
@@ -301,45 +312,20 @@ class RegistrationStepController extends Controller
 
         $request->validate([
             'selected_plan_code' => 'required|exists:packages,code',
-            'payment_method' => 'required|in:dpopay,nmbbank',
+            'payment_method' => 'required|in:'.implode(',', config('dpo-laravel.accepted_payment_methods')),
         ]);
 
         $package = Package::where('code',$request->get('selected_plan_code'))->first();
 
-        $data = [
-            'paymentAmount' => $package->price,
-            'paymentCurrency' => $package->price_currency,
-            'customerFirstName' => $user->fname,
-            'customerLastName' => $user->lname,
-            'customerAddress' => $user->country->name,
-            'customerCity' => "Arusha",
-            'customerCountryISOCode' => $user->country->code,
-            'customerDialCode' => $user->country->code,
-            'customerPhone' => $user->phone,
-            'customerEmail' => $user->email,
-            'companyRef' => $user->code
-        ];
+        $paymentMethod = $request->get('payment_method');
 
-        $dpoRequestToken = new DPORequestTokenFormat($data['paymentAmount'],$data['paymentCurrency'],$data['customerFirstName'],
-            $data['customerLastName'],$data['customerAddress'],$data['customerCity'],$data['customerCountryISOCode'],
-            $data['customerDialCode'],$data['customerPhone'],$data['customerEmail'],$data['companyRef']);
+        $requestResult = InitiateSubscriptionPayment::run($paymentMethod,$user,$package);
 
-        $url = GenerateDPOPayment::run($dpoRequestToken,'3165');
-
-        if($url['success'] == false){
-            redirect()->back()->withErrors(['Error! Failed to request payment, please contact support']);
+        if($requestResult['success'] == false){
+            return redirect()->back()->withErrors([$requestResult['resultExplanation']]);
         }
 
-        $business = $user->business;
-
-        $business->package_code = $package->code;
-        $business->package_expiry_at = now()->addDays($package->package_interval_days);
-        $business->save();
-
-        $user->registration_step = $user->registration_step + 1;
-        $user->save();
-
-        return redirect($url['result']);
+        return redirect($requestResult['result']);
     }
 
     public function registrationVas()

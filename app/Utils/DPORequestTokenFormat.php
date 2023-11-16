@@ -9,7 +9,6 @@ class DPORequestTokenFormat
     public $customerFirstName;
     public $customerLastName;
     public $customerAddress;
-    public $customerCity;
     public $customerCountryISOCode;
     public $customerDialCode;
     public $customerPhone;
@@ -17,7 +16,7 @@ class DPORequestTokenFormat
     public $companyRef;
 
     public function __construct($paymentAmount,$paymentCurrency,$customerFirstName,$customerLastName,$customerAddress,
-                                $customerCity, $customerCountryISOCode, $customerDialCode,$customerPhone,$customerEmail,
+                                 $customerCountryISOCode, $customerDialCode,$customerPhone,$customerEmail,
                                 $companyRef)
     {
         $this->paymentAmount = $paymentAmount;
@@ -25,7 +24,6 @@ class DPORequestTokenFormat
         $this->customerFirstName = $customerFirstName;
         $this->customerLastName = $customerLastName;
         $this->customerAddress = $customerAddress;
-        $this->customerCity = $customerCity;
         $this->customerCountryISOCode = $customerCountryISOCode;
         $this->customerDialCode = $customerDialCode;
         $this->customerPhone = $customerPhone;

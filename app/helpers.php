@@ -115,3 +115,12 @@ function getLocaleSVGImagePath($locale){
     }
     return url('assets/media/flags/'.$imagePath);
 }
+
+function xmlToArrayConvert($xmlContent){
+    $new = simplexml_load_string($xmlContent);
+    // Convert into json
+    $con = json_encode($new);
+    // Convert into associative array
+    $newArr = json_decode($con, true);
+    return $newArr;
+}
