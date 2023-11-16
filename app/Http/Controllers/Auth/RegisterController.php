@@ -108,12 +108,8 @@ class RegisterController extends Controller
     protected function registered(Request $request, $user)
     {
         $message = "User Registration: A new user $user->fname $user->lname from $user->country_code. Registration process ongoing.";
-        try{
-            TelegramCommunication::updates($message);
-        }catch (\Exception $exception){
-            Log::error($exception);
-            Bugsnag::notifyException($exception);
-        }
+        TelegramCommunication::updates($message);
+
     }
 
 }

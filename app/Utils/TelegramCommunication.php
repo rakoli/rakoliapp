@@ -2,8 +2,10 @@
 
 namespace App\Utils;
 
+use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Exception;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Log;
 
 class TelegramCommunication
 {
@@ -36,8 +38,10 @@ class TelegramCommunication
                 return true;
             }
 
-        } catch (Exception $e) {
-            return $e->getMessage();
+        } catch (Exception $exception) {
+            Log::error($exception);
+            Bugsnag::notifyException($exception);
+            return false;
         }
 
         return false;
