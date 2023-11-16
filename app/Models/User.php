@@ -142,7 +142,7 @@ class User extends Authenticatable
 
     public function getBusinessPendingPayments()
     {
-        return InitiateSubscriptionPayment::where('business_code',$this->business_code)
+        return InitiatedPayment::where('business_code',$this->business_code)
             ->where('expiry_time','>',now())
             ->where('status',0)->get();
     }

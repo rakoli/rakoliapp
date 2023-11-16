@@ -37,7 +37,6 @@ return new class extends Migration
             $table->string('status')->default(\App\Utils\Enums\InitiatedPaymentStatusEnum::INITIATED);
             $table->string('channel_ref_name');
             $table->string('channel_ref');
-            $table->boolean('status')->default(0);
             $table->text('data')->invisible()->nullable();
 
             $table->timestamps();
