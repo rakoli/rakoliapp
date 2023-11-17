@@ -295,7 +295,7 @@ class DPOPayment
                     ];
                 }
             }catch (\Exception $exception){
-                Log::error($exception);
+                Log::error($verify['result']);
                 Bugsnag::notifyException($exception);
                 return [
                     'success'           => false,

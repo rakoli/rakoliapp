@@ -5,6 +5,7 @@ namespace App\Actions;
 use App\Models\InitiatedPayment;
 use App\Models\User;
 use App\Utils\DPOPayment;
+use Illuminate\Support\Facades\Log;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class CheckUserPendingSystemPayments
@@ -20,7 +21,8 @@ class CheckUserPendingSystemPayments
                 $dpo = new DPOPayment();
                 $completionStatus = $dpo->isPaymentComplete($initiatedPayment->channel_ref);
                 if($completionStatus['success']){
-                    CompleteInitiatedPayment::run($initiatedPayment);
+                    Log::info("WANTS TO COMPLETE");
+//                    CompleteInitiatedPayment::run($initiatedPayment);
                 }
 
             }
