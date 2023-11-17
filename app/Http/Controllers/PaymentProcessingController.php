@@ -59,4 +59,15 @@ class PaymentProcessingController extends Controller
 
         return $returnResponse;
     }
+
+    public function pesapalCallback(Request $request)
+    {
+        $response = $request->getContent();
+        Log::info($response);
+        return [
+            'success'           => true,
+            'result'            => 'okay',
+            'resultExplanation' => 'data received successfully',
+        ];
+    }
 }
