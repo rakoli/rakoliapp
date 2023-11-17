@@ -180,6 +180,17 @@ class DPOPayment
 
             curl_close($curl);
 
+//            //For trials
+/*            $response = '<?xml version="1.0" encoding="utf-8"?><API3G><Result>000</Result><ResultExplanation>Transaction paid successfully</ResultExplanation>*/
+//<CustomerName>Erick Thomas</CustomerName><CustomerCredit></CustomerCredit><CustomerCreditType></CustomerCreditType><TransactionApproval></TransactionApproval>
+//<TransactionCurrency>TZS</TransactionCurrency><TransactionAmount>60000.00</TransactionAmount><FraudAlert>001</FraudAlert><FraudExplnation>Low Risk (Not checked)</FraudExplnation>
+//<TransactionNetAmount>0.00</TransactionNetAmount><TransactionSettlementDate>2023/11/15</TransactionSettlementDate><TransactionRollingReserveAmount>0.00</TransactionRollingReserveAmount>
+//<TransactionRollingReserveDate></TransactionRollingReserveDate><CustomerPhone>0752991650</CustomerPhone><CustomerCountry>Tanzania</CustomerCountry><CustomerAddress>Tanzania</CustomerAddress>
+//<CustomerCity>Arusha</CustomerCity><CustomerZip></CustomerZip><MobilePaymentRequest>Pending</MobilePaymentRequest><AccRef></AccRef><TransactionFinalCurrency></TransactionFinalCurrency>
+//<TransactionFinalAmount>0.00</TransactionFinalAmount></API3G>';
+//            $err = null;
+//            //End for trials
+
             if (strlen($err) > 0) {
                 echo "cURL Error #:" . $err;
                 Log::error($err);
@@ -291,6 +302,12 @@ class DPOPayment
                     return [
                         'success'           => true,
                         'result'            => 'completed',
+                        'resultExplanation' => $verify->ResultExplanation->__toString(),
+                    ];
+                }else{
+                    return [
+                        'success'           => false,
+                        'result'            => 'not complete',
                         'resultExplanation' => $verify->ResultExplanation->__toString(),
                     ];
                 }
