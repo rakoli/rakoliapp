@@ -21,8 +21,7 @@ class CheckUserPendingSystemPayments
                 $dpo = new DPOPayment();
                 $completionStatus = $dpo->isPaymentComplete($initiatedPayment->channel_ref);
                 if($completionStatus['success']){
-                    Log::info("WANTS TO COMPLETE");
-//                    CompleteInitiatedPayment::run($initiatedPayment);
+                    CompleteInitiatedPayment::run($initiatedPayment);
                 }
 
             }
