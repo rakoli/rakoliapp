@@ -32,7 +32,7 @@ class RegistrationStepController extends Controller
         }
         $hasPendingPayment = false;
 
-        $initiatedPayments = $this->getBusinessPendingPayments();
+        $initiatedPayments = auth()->user()->getBusinessPendingPayments();
 
         if(!$initiatedPayments->isEmpty()){
             $hasPendingPayment = true;
