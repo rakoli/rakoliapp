@@ -6,6 +6,7 @@ use App\Models\InitiatedPayment;
 use App\Models\Package;
 use App\Models\SystemIncome;
 use App\Models\User;
+use App\Utils\Enums\InitiatedPaymentStatusEnum;
 use App\Utils\Enums\SystemIncomeCategoryEnum;
 use App\Utils\Enums\SystemIncomeStatusEnum;
 use Illuminate\Support\Str;
@@ -51,7 +52,7 @@ class CompleteInitiatedPayment
         ]);
 
         $initiatedPayment->expiry_time = now();
-        $initiatedPayment->status = 1;
+        $initiatedPayment->status = InitiatedPaymentStatusEnum::COMPLETED;
         $initiatedPayment->save();
     }
 }
