@@ -12,9 +12,11 @@ class CheckUserPendingSystemPayments
 {
     use AsAction;
 
-    public function handle(User $user)
+    public function handle(User $user, $initiatedPayments = null)
     {
-        $initiatedPayments = $user->getBusinessPendingPayments();
+        if($initiatedPayments == null){
+            $initiatedPayments = $user->getBusinessPendingPayments();
+        }
 
         foreach ($initiatedPayments as $initiatedPayment) {
             if($initiatedPayment->channel == 'dpopay'){

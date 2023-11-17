@@ -31,9 +31,12 @@ class RegistrationStepController extends Controller
             return redirect()->route('home');
         }
         $hasPendingPayment = false;
-        if(auth()->user()->hasPendingPayment()){
+
+        $initiatedPayments = $this->getBusinessPendingPayments();
+
+        if(!$initiatedPayments->isEmpty()){
             $hasPendingPayment = true;
-            CheckUserPendingSystemPayments::run(auth()->user());
+            CheckUserPendingSystemPayments::run(auth()->user(),$initiatedPayments);
             //To redirect to next registration step
             if(!auth()->user()->hasPendingPayment()){
                 $step = User::where('code',auth()->user()->code)->first()->registration_step;
