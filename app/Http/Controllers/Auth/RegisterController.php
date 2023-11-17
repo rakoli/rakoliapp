@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Actions\SendTelegramNotification;
 use App\Http\Controllers\Controller;
 use App\Models\Country;
 use App\Providers\RouteServiceProvider;
@@ -108,7 +109,8 @@ class RegisterController extends Controller
     protected function registered(Request $request, $user)
     {
         $message = "User Registration: A new user $user->fname $user->lname from $user->country_code. Registration process ongoing.";
-        TelegramCommunication::updates($message);
+
+        SendTelegramNotification::dispatch($message);
 
     }
 
