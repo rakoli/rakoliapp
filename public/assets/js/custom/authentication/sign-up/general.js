@@ -207,7 +207,7 @@ var KTSignupGeneral = function() {
                     })).catch((function(e) {
                         console.log('shida',e.response.data.message,e)
                         Swal.fire({
-                            text: e.response.data.message,
+                            text: 'Failed! Server error',
                             icon: "error",
                             buttonsStyling: !1,
                             confirmButtonText: "Ok, got it!",
