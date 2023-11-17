@@ -106,17 +106,17 @@
         </label>
         <!--end::Option-->
 
-        <!--begin::Option-->
-        <input type="radio" class="btn-check" name="selected_payment_method" value="nmbbank" id="nmb_method" onchange="selectPaymentMethod(this)"/>
-        <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center" for="nmb_method">
-            <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/nmblogo.png')}}" class="mw-200px mh-70px"></i>
+{{--        <!--begin::Option-->--}}
+{{--        <input type="radio" class="btn-check" name="selected_payment_method" value="nmbbank" id="nmb_method" onchange="selectPaymentMethod(this)"/>--}}
+{{--        <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center" for="nmb_method">--}}
+{{--            <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/nmblogo.png')}}" class="mw-200px mh-70px"></i>--}}
 
-            <span class="d-block fw-semibold text-start">
-            <span class="text-gray-900 fw-bold d-block fs-3">NMB Bank (TZ Only)</span>
-            <span class="text-muted fw-semibold fs-6">Pay via NMB Bank Agent and Tanzania local all mobile money providers like Mpesa, TigoPesa, AirtelMoney and HaloPesa.</span>
-        </span>
-        </label>
-        <!--end::Option-->
+{{--            <span class="d-block fw-semibold text-start">--}}
+{{--            <span class="text-gray-900 fw-bold d-block fs-3">NMB Bank (TZ Only)</span>--}}
+{{--            <span class="text-muted fw-semibold fs-6">Pay via NMB Bank Agent and Tanzania local all mobile money providers like Mpesa, TigoPesa, AirtelMoney and HaloPesa.</span>--}}
+{{--        </span>--}}
+{{--        </label>--}}
+{{--        <!--end::Option-->--}}
 
         <div class="m-5 fv-row">
             <button id="verify_phone_button" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirm_subscription_details">

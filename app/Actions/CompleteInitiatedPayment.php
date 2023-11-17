@@ -50,6 +50,7 @@ class CompleteInitiatedPayment
             'status' => SystemIncomeStatusEnum::RECEIVED->value,
         ]);
 
+        $initiatedPayment->expiry_time = now();
         $initiatedPayment->status = 1;
         $initiatedPayment->save();
     }
