@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\GenerateDPOPayment;
 use App\Actions\RequestEmailVerificationCode;
+use App\Actions\SendTelegramNotification;
 use App\Mail\SendCodeMail;
 use App\Models\SystemIncome;
 use App\Models\User;
@@ -28,10 +29,12 @@ class TestController extends Controller
 
 //        $user = User::where('email','jmabusi@gmail.com')->first();
 
-        // Convert xml string into an object
-        $response = '<?xml version="1.0" encoding="utf-8"?><API3G><Result>000</Result><ResultExplanation>Transaction Paid</ResultExplanation><TransactionToken>2F4700BE-20AE-4D60-A478-39A4CCC4B884</TransactionToken><TransactionRef>rwa_21609</TransactionRef><CustomerName>Erick Mabusi</CustomerName><CustomerEmail>emabusi@gmail.com</CustomerEmail><CustomerCredit>8367</CustomerCredit><CustomerCreditType>MASC</CustomerCreditType><TransactionApproval>4444444416</TransactionApproval><TransactionCurrency>TZS</TransactionCurrency><TransactionAmount>500.00</TransactionAmount><FraudAlert>000</FraudAlert><FraudExplnation>Genuine transaction</FraudExplnation><TransactionNetAmount>500.00</TransactionNetAmount><TransactionSettlementDate></TransactionSettlementDate><TransactionRollingReserveAmount>0.00</TransactionRollingReserveAmount><TransactionRollingReserveDate></TransactionRollingReserveDate><CustomerPhone>0763466080</CustomerPhone><CustomerCountry>Tanzania</CustomerCountry><CustomerAddress>Tanzania</CustomerAddress><CustomerCity>Arusha</CustomerCity><CustomerZip></CustomerZip><MobilePaymentRequest>Not sent</MobilePaymentRequest><AccRef></AccRef></API3G>';
+//        dd(config('dpo-laravel.payment_valid_time_hours'),now()->addHours(config('dpo-laravel.payment_valid_time_hours')));
 
-        dd(xmlToArrayConvert($response));
+        // Convert xml string into an object
+/*        $response = '<?xml version="1.0" encoding="utf-8"?><API3G><Result>000</Result><ResultExplanation>Transaction Paid</ResultExplanation><TransactionToken>2F4700BE-20AE-4D60-A478-39A4CCC4B884</TransactionToken><TransactionRef>rwa_21609</TransactionRef><CustomerName>Erick Mabusi</CustomerName><CustomerEmail>emabusi@gmail.com</CustomerEmail><CustomerCredit>8367</CustomerCredit><CustomerCreditType>MASC</CustomerCreditType><TransactionApproval>4444444416</TransactionApproval><TransactionCurrency>TZS</TransactionCurrency><TransactionAmount>500.00</TransactionAmount><FraudAlert>000</FraudAlert><FraudExplnation>Genuine transaction</FraudExplnation><TransactionNetAmount>500.00</TransactionNetAmount><TransactionSettlementDate></TransactionSettlementDate><TransactionRollingReserveAmount>0.00</TransactionRollingReserveAmount><TransactionRollingReserveDate></TransactionRollingReserveDate><CustomerPhone>0763466080</CustomerPhone><CustomerCountry>Tanzania</CustomerCountry><CustomerAddress>Tanzania</CustomerAddress><CustomerCity>Arusha</CustomerCity><CustomerZip></CustomerZip><MobilePaymentRequest>Not sent</MobilePaymentRequest><AccRef></AccRef></API3G>';*/
+//
+//        dd(xmlToArrayConvert($response));
 
 //        $data = [
 //            'paymentAmount' => "500",
