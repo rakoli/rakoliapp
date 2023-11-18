@@ -4,10 +4,10 @@
         <!--begin::Heading-->
         <div>
             <!--begin::Title-->
-            <h2 class="fw-bold text-dark">Select Package</h2>
+            <h2 class="fw-bold text-dark">{{__('Select Package')}}</h2>
             <!--end::Title-->
             <!--begin::Notice-->
-            <div class="text-muted fw-semibold fs-6">Choose a subscription package that fits your business needs.</div>
+            <div class="text-muted fw-semibold fs-6">{{__('Choose a subscription package that fits your business needs')}}.</div>
             <!--end::Notice-->
         </div>
         <!--end::Heading-->
@@ -67,7 +67,7 @@
                                 </div>
                                 <!--end::Features-->
                                 <!--begin::Select-->
-                                <button type="button" class="btn btn-sm btn-primary" onclick="selectSubscription('{{$package->code}}','{{strtoupper($package->name)}}', '{{number_format($package->price)}}', '{{strtoupper($package->price_currency)}}')">Select</button>
+                                <button type="button" class="btn btn-sm btn-primary" onclick="selectSubscription('{{$package->code}}','{{strtoupper($package->name)}}', '{{number_format($package->price)}}', '{{strtoupper($package->price_currency)}}')">{{__('Select')}}</button>
                                 <!--end::Select-->
                             </div>
                             <!--end::Option-->
@@ -88,7 +88,7 @@
         </div>
         <!--end::Input group-->
         <!--begin::Notice-->
-        <div class="text-muted fw-semibold fs-6 mb-5 mt-5">Choose payment method below</div>
+        <div class="text-muted fw-semibold fs-6 mb-5 mt-5">{{__('Choose payment method below')}}</div>
         <!--end::Notice-->
 
 

@@ -178,6 +178,8 @@
                     </form>
                     <!--end::Form-->
 
+                    @include('auth.registration_agent.modal_edit_verificationcontacts')
+
 
                 </div>
                 <!--end::Wrapper-->
@@ -241,7 +243,11 @@
 <!--end::Global Javascript Bundle-->
 <!--begin::Custom Javascript(used for this page only)-->
 @yield('js')
-<script src="{{asset('assets/js/custom/utilities/modals/create-account.js')}}"></script>
+@include('auth.registration_agent.js_steppers_movement')
+@include('auth.registration_agent.js_verification')
+@include('auth.registration_agent.js_businessdetails')
+
+
 <!--end::Custom Javascript-->
 <!--end::Javascript-->
 </body>

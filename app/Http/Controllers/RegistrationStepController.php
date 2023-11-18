@@ -337,6 +337,6 @@ class RegistrationStepController extends Controller
         if($step == 0){
             return redirect()->route('home');
         }
-        return view('auth.registration_vas.index');
+        return view('auth.registration_vas.index', compact('step'));
     }
 }

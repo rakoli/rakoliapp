@@ -25,6 +25,8 @@ class TestController extends Controller
 {
     public function testing()
     {
+
+        return view('auth.registration_vas.index');
 //        $step = 1;
 
 //        $user = User::where('email','jmabusi@gmail.com')->first();

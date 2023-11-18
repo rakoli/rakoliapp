@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Actions\SendTelegramNotification;
 use App\Http\Controllers\Controller;
+use App\Models\Country;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use App\Utils\Enums\UserTypeEnum;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use TimeHunter\LaravelGoogleReCaptchaV3\Validations\GoogleReCaptchaV3ValidationRule;
 
 class RegisterVasController extends Controller
 {
@@ -61,14 +65,18 @@ class RegisterVasController extends Controller
      */
     protected function validator(array $data)
     {
-        return Validator::make($data, [
-            'country_code' => ['required'],
-            'fname' => ['required', 'string', 'max:255'],
-            'lname' => ['required', 'string', 'max:255'],
-            'phone' => ['required'],
+        $validators = [
+            'country_dial_code' => ['exists:countries,dialing_code'],
+            'fname' => ['required', 'string', 'max:20'],
+            'lname' => ['required', 'string', 'max:20'],
+            'phone' => ['required','numeric'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
+        ];
+        if(env('APP_ENV') != 'local'){
+            $validators['g-recaptcha-response'] = [new GoogleReCaptchaV3ValidationRule('register')];
+        }
+        return Validator::make($data,$validators);
     }
 
     /**
@@ -79,14 +87,27 @@ class RegisterVasController extends Controller
      */
     protected function create(array $data)
     {
+        $country_code = Country::where('dialing_code',$data['country_dial_code'])->first()->code;
+        $country_dial_code = substr($data['country_dial_code'], 1);
+        $plainPhone = substr($data['phone'], 1);
+        $fullPhone = $country_dial_code . $plainPhone;
         return User::create([
-            'country_code' => $data['country_code'],
+            'country_code' => $country_code,
+            'code' => generateCode($data['fname'].' '.$data['lname'],$country_code),
             'type' => UserTypeEnum::VAS->value,
             'fname' => $data['fname'],
             'lname' => $data['lname'],
-            'phone' => $data['phone'],
+            'phone' => $fullPhone,
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+    }
+
+    protected function registered(Request $request, $user)
+    {
+        $message = "User Registration: A new VAS user $user->fname $user->lname from $user->country_code. Registration process ongoing.";
+
+        SendTelegramNotification::dispatch($message);
+
     }
 }

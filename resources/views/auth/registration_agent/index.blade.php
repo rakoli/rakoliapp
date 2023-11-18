@@ -187,60 +187,7 @@
                     </form>
                     <!--end::Form-->
 
-                    <!--begin::Modal group-->
-                    <div class="modal fade" tabindex="-1" id="edit_contact_modal">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h3 class="modal-title">{{__("Edit Contact")}}</h3>
-                                    <!--begin::Close-->
-                                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
-                                        <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
-                                    </div>
-                                    <!--end::Close-->
-                                </div>
-
-                                <div class="modal-body">
-                                    <p>{{__("Modify your submitted contact information")}}</p>
-
-                                    <form class="my-auto pb-5" action="{{route('edit.contact.information')}}" method="POST">
-
-                                        @csrf
-
-                                        <!--begin::Input group-->
-                                        <div class="row mb-5">
-                                            <div class="input-group input-group-lg mb-5">
-                                                <span class="input-group-text" id="basic-addon1">{{__("Email")}}</span>
-                                                <input @if(auth()->user()->email_verified_at != null) disabled @endif name="email" type="email" class="form-control" value="@if(auth()->user()->email_verified_at != null) {{__("EMAIL ALREADY VERIFIED")}} @else{{auth()->user()->email}}@endif"/>
-                                            </div>
-
-                                        </div>
-                                        <!--end::Input group-->
-
-                                        <!--begin::Input group-->
-                                        <div class="row">
-                                            <div class="input-group input-group-lg mb-5">
-                                                <span class="input-group-text" id="basic-addon1">{{__("Phone")}}</span>
-                                                <input @if(auth()->user()->phone_verified_at != null) disabled @endif name="phone" type="text" class="form-control" value="@if(auth()->user()->phone_verified_at != null) {{__("PHONE ALREADY VERIFIED")}} @else{{auth()->user()->phone}}@endif"/>
-                                                <div class="text-muted fw-semibold fs-6">{{__("Enter phone number using format above starting with country code without + sign e.g 255763987654")}}</div>
-                                            </div>
-                                        </div>
-                                        <!--end::Input group-->
-
-                                        @if(!(auth()->user()->phone_verified_at != null && auth()->user()->email_verified_at != null))
-                                            <button type="submit" class="btn btn-primary">{{__("Edit Information")}}</button>
-                                        @endif
-
-                                    </form>
-                                </div>
-
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{__("Close")}}</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!--end::Modal group-->
+                    @include('auth.registration_agent.modal_edit_verificationcontacts')
 
                     <!--begin::Modal group-->
                     <div class="modal fade" tabindex="-1" id="confirm_subscription_details">
@@ -261,24 +208,24 @@
                                         <input type="hidden" name="selected_plan_code" id="selected_plan_code" class="form-control form-control-solid-bg"/>
 
                                         <div class="fv-row">
-                                            <label for="selected_plan_name" class="required form-label">Selected Plan</label>
+                                            <label for="selected_plan_name" class="required form-label">{{__('Selected Plan')}}</label>
                                             <input type="text" name="selected_plan_name" id="selected_plan_name" class="form-control form-control-solid-bg" readonly/>
                                         </div>
 
                                         <div class="fv-row">
-                                            <label for="plan_price" class="required form-label">Price</label>
+                                            <label for="plan_price" class="required form-label">{{__('Price')}}</label>
                                             <input type="text" name="plan_price" id="plan_price" class="form-control form-control-solid-bg" readonly/>
                                         </div>
 
                                         <div class="fv-row">
-                                            <label for="payment_method" class="required form-label">Payment Method</label>
+                                            <label for="payment_method" class="required form-label">{{__('Payment Method')}}</label>
                                             <input type="text" name="payment_method" id="payment_method" class="form-control form-control-solid-bg" readonly/>
                                         </div>
 
                                     </div>
 
                                     <div class="modal-footer">
-                                        <button type="submit" class="btn btn-primary">Pay Subscription</button>
+                                        <button type="submit" class="btn btn-primary">{{__('Pay Subscription')}}</button>
                                         <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{__("Close")}}</button>
                                     </div>
                                 </form>
@@ -350,471 +297,18 @@
 <!--end::Global Javascript Bundle-->
 <!--begin::Custom Javascript(used for this page only)-->
 @yield('js')
-
+@include('auth.registration_agent.js_steppers_movement')
+@include('auth.registration_agent.js_verification')
+@include('auth.registration_agent.js_businessdetails')
 <script>
-    "use strict";
-
-    var KTCreateAccount = function() {
-
-        var options = {startIndex: {{$step}} };
-
-        var modalElement = document.querySelector("#kt_modal_create_account");
-        var stepperElement = document.querySelector("#kt_create_account_stepper");
-        var formElement = stepperElement.querySelector("#kt_create_account_form");
-        var submitButton = stepperElement.querySelector('[data-kt-stepper-action="submit"]');
-        var nextButton = stepperElement.querySelector('[data-kt-stepper-action="next"]');
-        var stepper = new KTStepper(stepperElement, options);
-
-        return {
-            init: function() {
-                if (modalElement) {
-                    new bootstrap.Modal(modalElement);
-                }
-
-                if (stepperElement) {
-                    stepper.on("kt.stepper.changed", function(e) {
-                        if (stepper.getCurrentStepIndex() === 4) {
-                            submitButton.classList.remove("d-none");
-                            submitButton.classList.add("d-inline-block");
-                            nextButton.classList.add("d-none");
-                        } else if (stepper.getCurrentStepIndex() === 5) {
-                            submitButton.classList.add("d-none");
-                            nextButton.classList.add("d-none");
-                        } else {
-                            submitButton.classList.remove("d-inline-block");
-                            submitButton.classList.remove("d-none");
-                            nextButton.classList.remove("d-none");
-                        }
-                    });
-
-                    stepper.on("kt.stepper.next", function(e) {
-
-                        moveToStep(stepper)
-
-                    });
-
-                    stepper.on("kt.stepper.previous", function(e) {
-                        stepper.goPrevious();
-                        KTUtil.scrollTop();
-                    });
-                }
-            }
-        };
-    }();
-
-    KTUtil.onDOMContentLoaded(function() {
-        KTCreateAccount.init();
-
-        @if(\App\Utils\VerifyOTP::hasActiveEmailOTP(auth()->user()))
-            emailCodeTimer({{\App\Utils\VerifyOTP::emailOTPTimeRemaining(auth()->user())}})
-        @endif
-
-        @if(\App\Utils\VerifyOTP::hasActivePhoneOTP(auth()->user()))
-            phoneCodeTimer({{\App\Utils\VerifyOTP::phoneOTPTimeRemaining(auth()->user())}})
-        @endif
-
-    });
-
-    //START:: STEP MOVEMENT CONFIRMATION
-    function moveToStep(stepperInstance) {
-        console.log("CONFIRM STEP MOVEMENT");
-
-        // Create a new XMLHttpRequest object
-        var xhr = new XMLHttpRequest();
-
-        // Configure the GET request
-        var url = "{{route('registration.step.confirmation')}}";
-        url = url + "?next_step="+stepperInstance.getNextStepIndex();
-        xhr.open("GET", url, true);
-
-        xhr.setRequestHeader("Accept", "application/json");
-
-        // Set up a function to handle the response
-        xhr.onload = function () {
-
-            var responseData = JSON.parse(xhr.responseText);
-            if (xhr.status === 200 && responseData.status === 200) {
-                // Request was successful, handle the response here
-                // console.log("Response Data:", responseData);
-                stepperInstance.goNext();
-                KTUtil.scrollTop();
-                toastr.success(responseData.message, "{{__('Registration Step')}}");
-            } else {
-                // Request encountered an error
-                // console.error("Request failed with status:", responseData);
-                toastr.error(responseData.message, "{{__('Registration Step')}}");
-            }
-
-        };
-
-        // Set up a function to handle errors
-        xhr.onerror = function () {
-            toastr.error("Network Error Occurred");
-            console.error("Network error occurred");
-        };
-
-        // Send the GET request
-        xhr.send();
-    }
-
-    function moveToComplete() {
-        console.log("COMPLETE REGISTRATION");
-
-        // Create a new XMLHttpRequest object
-        var xhr = new XMLHttpRequest();
-
-        // Configure the GET request
-        var url = "{{route('registration.step.confirmation')}}";
-        url = url + "?next_step="+5;
-        xhr.open("GET", url, true);
-
-        xhr.setRequestHeader("Accept", "application/json");
-
-        // Set up a function to handle the response
-        xhr.onload = function () {
-
-            var responseData = JSON.parse(xhr.responseText);
-            if (xhr.status === 200 && responseData.status === 200) {
-                // Request was successful, handle the response here
-                // console.log("Response Data:", responseData);
-
-                window.location.reload();
-            } else {
-                // Request encountered an error
-                // console.error("Request failed with status:", responseData);
-                toastr.error(responseData.message, "{{__('Registration Step')}}");
-            }
-
-        };
-
-        // Set up a function to handle errors
-        xhr.onerror = function () {
-            toastr.error("Network Error Occurred");
-            console.error("Network error occurred");
-        };
-
-        // Send the GET request
-        xhr.send();
-    }
-    //END:: STEP MOVEMENT CONFIRMATION
 
     //START:: VERIFICATION STEP ACTIONS
-    function requestEmailCode() {
-        console.log("REQUESTED EMAIL CODE");
-        var request_emailcode_button = document.getElementById("request_emailcode_button");
-        request_emailcode_button.classList.add("disabled")
-
-        // Create a new XMLHttpRequest object
-        var xhr = new XMLHttpRequest();
-
-        // Configure the GET request
-        xhr.open("GET", "{{route('request.email.code')}}", true);
-
-        xhr.setRequestHeader("Accept", "application/json");
-
-        // Set up a function to handle the response
-        xhr.onload = function () {
-            var verify_button = document.getElementById("verify_email_button");
-
-            var responseData = JSON.parse(xhr.responseText);
-            if (xhr.status === 200 && responseData.status === 200) {
-                // Request was successful, handle the response here
-                // console.log("Response Data:", responseData);
-                toastr.success(responseData.message, "{{__('Send Email Verification')}}");
-
-                if(responseData.message === 'Email already verified'){
-                    document.getElementById("email_code").placeholder = "{{__('EMAIL ALREADY VERIFIED')}}";
-                    document.getElementById("email_code").setAttribute('disabled', true);
-                }else{
-                    verify_button.classList.remove("disabled");
-                    emailCodeTimer({{\App\Utils\VerifyOTP::$validtime}});
-                }
-
-            } else {
-                // Request encountered an error
-                // console.error("Request failed with status:", responseData);
-                toastr.error(responseData.message, "{{__('Send Email Verification')}}");
-            }
-            request_emailcode_button.classList.remove("disabled");
-        };
-
-        // Set up a function to handle errors
-        xhr.onerror = function () {
-            toastr.error("Network Error Occurred");
-            console.error("Network error occurred");
-        };
-
-        // Send the GET request
-        xhr.send();
-    }
-
-    let emailTimerOn = true;
-    function emailCodeTimer(remaining) {
-        var m = Math.floor(remaining / 60);
-        var s = remaining % 60;
-
-        m = m < 10 ? '0' + m : m;
-        s = s < 10 ? '0' + s : s;
-        document.getElementById('email_timer').innerHTML = "{{__('Time remaining')}}: "+ m + ":" + s;
-        remaining -= 1;
-
-        if(remaining >= 0 && emailTimerOn) {
-            setTimeout(function() {
-                emailCodeTimer(remaining);
-            }, 1000);
-            return;
-        }
-
-        // Do timeout stuff here
-        console.log('EMAIL TIMEOUT STAFF:')
-        document.getElementById("verify_email_button").classList.add("disabled")
-        document.getElementById("request_emailcode_button").classList.remove("disabled")
-
-    }
-
-    function verifyEmailCode() {
-        console.log("VERIFYING EMAIL CODE");
-        var inputEmailCode = document.getElementById('email_code').value;
-        var verify_button = document.getElementById("verify_email_button");
-        verify_button.classList.add("disabled")
-
-        // Create a new XMLHttpRequest object
-        var xhr = new XMLHttpRequest();
-
-        // Configure the GET request
-        var url = "{{route('verify.email.code')}}";
-        url = url + "?email_code="+inputEmailCode;
-        xhr.open("GET", url, true);
-
-        xhr.setRequestHeader("Accept", "application/json");
-        xhr.setRequestHeader("X-CSRF-TOKEN", "{{ csrf_token() }}");
-
-        // Set up a function to handle the response
-        xhr.onload = function () {
-
-            var responseData = JSON.parse(xhr.responseText);
-            if (xhr.status === 200 && responseData.status === 200) {
-                // Request was successful, handle the response here
-                // console.log("Response Data:", responseData);
-                toastr.success(responseData.message, "{{__('Verify Email Code')}}");
-                document.getElementById("request_emailcode_button").classList.add("disabled");
-                document.getElementById("email_code").value = "";
-                document.getElementById("email_code").placeholder = "{{__('EMAIL VERIFIED')}}";
-                document.getElementById("email_code").classList.add("disabled");
-                document.getElementById("email_code").setAttribute('disabled', true);
-
-            } else {
-                // Request encountered an error
-                // console.error("Request failed with status:", responseData);
-                toastr.error(responseData.message, "{{__('Verify Email Code')}}");
-            }
-            verify_button.classList.remove("disabled");
-        };
-
-        // Set up a function to handle errors
-        xhr.onerror = function () {
-            toastr.error("Network Error Occurred");
-            console.error("Network error occurred");
-        };
-
-        // Sending data with the request
-        xhr.send();
-    }
-
-    function requestPhoneCode() {
-        console.log("REQUESTED PHONE CODE");
-        var request_phonecode_button = document.getElementById("request_phonecode_button");
-        request_phonecode_button.classList.add("disabled")
-
-        // Create a new XMLHttpRequest object
-        var xhr = new XMLHttpRequest();
-
-        // Configure the GET request
-        xhr.open("GET", "{{route('request.phone.code')}}", true);
-
-        xhr.setRequestHeader("Accept", "application/json");
-
-        // Set up a function to handle the response
-        xhr.onload = function () {
-            var verify_button = document.getElementById("verify_phone_button");
-
-            var responseData = JSON.parse(xhr.responseText);
-            if (xhr.status === 200 && responseData.status === 200) {
-                // Request was successful, handle the response here
-                // console.log("Response Data:", responseData);
-                toastr.success(responseData.message, "{{__('Send Phone Verification')}}");
-                if(responseData.message === 'Phone already verified'){
-                    document.getElementById("phone_code").placeholder = "{{__('PHONE ALREADY VERIFIED')}}";
-                    document.getElementById("phone_code").setAttribute('disabled', true);
-                }else{
-                    verify_button.classList.remove("disabled");
-                    phoneCodeTimer({{\App\Utils\VerifyOTP::$validtime}});
-                }
-
-            } else {
-                // Request encountered an error
-                // console.error("Request failed with status:", responseData);
-                toastr.error(responseData.message, "{{__('Send Phone Verification')}}");
-            }
-
-            request_phonecode_button.classList.remove("disabled");
-        };
-
-        // Set up a function to handle errors
-        xhr.onerror = function () {
-            toastr.error("Network Error Occurred");
-            console.error("Network error occurred");
-        };
-
-        // Send the GET request
-        xhr.send();
-    }
-
-    let phoneTimerOn = true;
-    function phoneCodeTimer(remaining) {
-        var m = Math.floor(remaining / 60);
-        var s = remaining % 60;
-
-        m = m < 10 ? '0' + m : m;
-        s = s < 10 ? '0' + s : s;
-        document.getElementById('phone_timer').innerHTML = "{{__('Time remaining')}}: "+ m + ":" + s;
-        remaining -= 1;
-
-        if(remaining >= 0 && phoneTimerOn) {
-            setTimeout(function() {
-                phoneCodeTimer(remaining);
-            }, 1000);
-            return;
-        }
-
-        // Do timeout stuff here
-        console.log('PHONE TIMEOUT STAFF:')
-        document.getElementById("verify_phone_button").classList.add("disabled")
-        document.getElementById("request_phonecode_button").classList.remove("disabled")
-
-    }
-
-    function verifyPhoneCode() {
-        console.log("VERIFYING PHONE CODE");
-        var inputPhoneCode = document.getElementById('phone_code').value;
-        var verify_button = document.getElementById("verify_phone_button");
-        verify_button.classList.add("disabled")
-
-        // Create a new XMLHttpRequest object
-        var xhr = new XMLHttpRequest();
-
-        // Configure the GET request
-        var url = "{{route('verify.phone.code')}}";
-        url = url + "?phone_code="+inputPhoneCode;
-        xhr.open("GET", url, true);
-
-        xhr.setRequestHeader("Accept", "application/json");
-        xhr.setRequestHeader("X-CSRF-TOKEN", "{{ csrf_token() }}");
-
-        // Set up a function to handle the response
-        xhr.onload = function () {
-
-            var responseData = JSON.parse(xhr.responseText);
-            if (xhr.status === 200 && responseData.status === 200) {
-                // Request was successful, handle the response here
-                toastr.success(responseData.message, "{{__('Verify Phone Code')}}");
-                document.getElementById("request_phonecode_button").classList.add("disabled");
-                document.getElementById("phone_code").value = "";
-                document.getElementById("phone_code").placeholder = "{{__('PHONE VERIFIED')}}";
-                document.getElementById("phone_code").classList.add("disabled");
-                document.getElementById("phone_code").setAttribute('disabled', true);
-            } else {
-                // Request encountered an error
-                // console.error("Request failed with status:", responseData);
-                toastr.error(responseData.message, "{{__('Verify Phone Code')}}");
-            }
-            verify_button.classList.remove("disabled");
-        };
-
-        // Set up a function to handle errors
-        xhr.onerror = function () {
-            toastr.error("Network Error Occurred");
-            console.error("Network error occurred");
-        };
-
-        // Sending data with the request
-        xhr.send();
-    }
+    //Included Above
     //END:: VERIFICATION STEP ACTIONS
 
 
     //END:: BUSINESS DETAILS ACTIONS
-    new tempusDominus.TempusDominus(document.getElementById("regdate_picker"), {
-        display: {
-            viewMode: "calendar",
-            components: {
-                decades: true,
-                year: true,
-                month: true,
-                date: true,
-                hours: false,
-                minutes: false,
-                seconds: false
-            }
-        }
-    });
-
-    function updateBusinessDetails() {
-        console.log("UPDATE BUSINESS DETAILS");
-
-        var business_name = document.getElementById('business_name').value;
-        var reg_id = document.getElementById('reg_id').value;
-        var tax_id = document.getElementById('tax_id').value;
-        var regdate_picker_input = document.getElementById('regdate_picker_input').value;
-
-        // Create a new XMLHttpRequest object
-        var xhr = new XMLHttpRequest();
-
-        // Configure the GET request
-        var url = "{{route('update.business.details')}}";
-        url = url + "?business_name="+business_name +"&reg_id="+reg_id+"&tax_id="+tax_id+"&reg_date="+regdate_picker_input;
-        xhr.open("GET", url, true);
-
-        xhr.setRequestHeader("Accept", "application/json");
-        xhr.setRequestHeader("X-CSRF-TOKEN", "{{ csrf_token() }}");
-
-        // Set up a function to handle the response
-        xhr.onload = function () {
-
-            var responseData = JSON.parse(xhr.responseText);
-            if (xhr.status === 200 && responseData.status === 200) {
-                // Request was successful, handle the response here
-                document.getElementById("business_name").placeholder = "{{__('BUSINESS UPDATED')}}";
-                document.getElementById("business_name").classList.add("disabled");
-                document.getElementById("business_name").setAttribute('disabled', true);
-                document.getElementById("reg_id").placeholder = "{{__('BUSINESS UPDATED')}}";
-                document.getElementById("reg_id").setAttribute('disabled', true);
-                document.getElementById("reg_id").classList.add("disabled");
-                document.getElementById("tax_id").placeholder = "{{__('BUSINESS UPDATED')}}";
-                document.getElementById("tax_id").setAttribute('disabled', true);
-                document.getElementById("tax_id").classList.add("disabled");
-                document.getElementById("regdate_picker_input").placeholder = "{{__('BUSINESS UPDATED')}}";
-                document.getElementById("regdate_picker_input").setAttribute('disabled', true);
-                document.getElementById("regdate_picker_input").classList.add("disabled");
-                toastr.success(responseData.message, "{{__('Update Business Details')}}");
-
-            } else {
-                // Request encountered an error
-                // console.error("Request failed with status:", responseData);
-                toastr.error(responseData.message, "{{__('Update Business Details')}}");
-            }
-
-        };
-
-        // Set up a function to handle errors
-        xhr.onerror = function () {
-            toastr.error("Network Error Occurred");
-            console.error("Network error occurred");
-        };
-
-        // Sending data with the request
-        xhr.send();
-    }
+    //Included Above
     //END:: BUSINESS DETAILS ACTIONS
 
 
@@ -852,7 +346,6 @@
 
 </script>
 
-{{--<script src="{{asset('assets/js/custom/utilities/modals/create-account.js')}}"></script>--}}
 <!--end::Custom Javascript-->
 <!--end::Javascript-->
 </body>
