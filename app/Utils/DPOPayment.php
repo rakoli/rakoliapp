@@ -23,12 +23,12 @@ class DPOPayment
 
     public function __construct()
     {
-        $this->testMode = config("dpo-laravel.is_test_mode");
-        $this->company_token = config("dpo-laravel.company_token");
-        $this->company_type = config("dpo-laravel.account_type");
-        $this->dpo_back_url = config("dpo-laravel.back_url");
-        $this->dpo_redirect_url = config("dpo-laravel.redirect_url");
-        if (false) {
+        $this->testMode = config("payments.is_test_mode");
+        $this->company_token = config("payments.company_token");
+        $this->company_type = config("payments.account_type");
+        $this->dpo_back_url = config("payments.back_url");
+        $this->dpo_redirect_url = config("payments.redirect_url");
+        if ($this->testMode == true) {
             $this->dpoUrl = self::DPO_URL_TEST;
         } else {
             $this->dpoUrl = self::DPO_URL_LIVE;
@@ -60,7 +60,7 @@ class DPOPayment
         $backURL           = $this->dpo_back_url;
         $customerEmail     = $data['customerEmail'];
         $reference         = $data['companyRef'];
-        $timeLimit = config('dpo-laravel.payment_valid_time_hours');
+        $timeLimit = config('payments.payment_valid_time_hours');
 
         $odate   = date('Y/m/d H:i');
         $postXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>
@@ -222,7 +222,7 @@ class DPOPayment
     {
         $dpo = new DPOPayment();
         if ($createTokenData['success'] == true) {
-            $verify   = $dpo->verifyToken(["companyToken" => config("dpo-laravel.company_token"), "transToken" => $createTokenData['transToken']]);
+            $verify   = $dpo->verifyToken(["companyToken" => config("payments.company_token"), "transToken" => $createTokenData['transToken']]);
             if (!empty($verify['result']) && $verify['result'] != '') {
                 try{
                     $verify = new \SimpleXMLElement($verify['result']);
@@ -292,7 +292,7 @@ class DPOPayment
     {
         $dpo = new DPOPayment();
 
-        $verify   = $dpo->verifyToken(["companyToken" => config("dpo-laravel.company_token"), "transToken" => $transactionToken]);
+        $verify   = $dpo->verifyToken(["companyToken" => config("payments.company_token"), "transToken" => $transactionToken]);
 
         if (!empty($verify['result']) && $verify['result'] != '') {
             $responseArray = [];
