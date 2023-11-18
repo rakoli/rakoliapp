@@ -167,6 +167,9 @@
 											<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                                 </button>
 
+                                <a type="button" class="btn btn-lg btn-primary" href="{{route('logout')}}">{{ __("Sign Out")}}
+                                    <i class="ki-outline ki-exit-left fs-4 ms-1"></i>
+                                </a>
 
                                 <button type="button" class="btn btn-lg btn-primary" data-kt-stepper-action="next">{{ $translator("Continue","Endelea")}}
                                     <i class="ki-outline ki-arrow-right fs-4 ms-1"></i>

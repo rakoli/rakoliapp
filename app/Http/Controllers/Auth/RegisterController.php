@@ -75,10 +75,8 @@ class RegisterController extends Controller
             'phone' => ['required','numeric'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'g-recaptcha-response' => [new GoogleReCaptchaV3ValidationRule('register')],
         ];
-        if(env('APP_ENV') != 'local'){
-            $validators['g-recaptcha-response'] = [new GoogleReCaptchaV3ValidationRule('register')];
-        }
         return Validator::make($data,$validators);
     }
 
@@ -108,9 +106,11 @@ class RegisterController extends Controller
 
     protected function registered(Request $request, $user)
     {
-        $message = "User Registration: A new user $user->fname $user->lname from $user->country_code. Registration process ongoing.";
+        $message = "User Registration: A new $user->type user $user->fname $user->lname from $user->country_code. Registration process ongoing.";
 
         SendTelegramNotification::dispatch($message);
+
+        setupSession($user,true);
 
     }
 

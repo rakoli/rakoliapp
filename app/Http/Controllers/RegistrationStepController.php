@@ -7,6 +7,7 @@ use App\Actions\GenerateDPOPayment;
 use App\Actions\InitiateSubscriptionPayment;
 use App\Actions\RequestEmailVerificationCode;
 use App\Actions\RequestPhoneVerificationCode;
+use App\Actions\SendTelegramNotification;
 use App\Models\Business;
 use App\Models\Package;
 use App\Models\User;
@@ -240,6 +241,10 @@ class RegistrationStepController extends Controller
             $user = $request->user();
             $user->registration_step = 0;
             $user->save();
+
+            $message = "Registration Complete: $user->fname $user->lname ({$user->business->business_name}) has completed registration.";
+            SendTelegramNotification::dispatch($message);
+
             return [
                 'status' => 200,
                 'message' => __('Complete')

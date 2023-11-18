@@ -81,7 +81,7 @@
                 </a>
                 <!--end::Logo-->
                 <!--begin::Image-->
-                <img class="d-none d-lg-block mx-auto w-275px w-md-50 w-xl-500px mb-10 mb-lg-20" src="{{asset('assets/media/misc/')}}@yield('banner_image','/banner.svg')" alt="" />
+                <img class="d-none d-lg-block mx-auto w-275px w-md-50 w-xl-500px mb-10 mb-lg-20" src="@yield('banner_image_url',asset('assets/media/misc/banner.svg'))" alt="" />
                 <!--end::Image-->
                 <!--begin::Title-->
                 <h1 class="d-none d-lg-block text-white fs-2qx fw-bolder text-center mb-2">@yield('title', 'Auth')</h1>
