@@ -40,9 +40,9 @@
                     <!--begin::Input-->
                     <select  id="countrySelect" class="form-control bg-transparent" name="country">
                         <option value="">{{ __("Your Country") }}</option>
-                        <option value="+254">Kenya</option>
-                        <option value="+255">Tanzania</option>
-                        <option value="+256">Uganda</option>
+                        @foreach(\App\Models\Country::all() as $country)
+                            <option value="{{$country->dialing_code}}">{{$country->name}}</option>
+                        @endforeach
                     </select>
                     <!--end::Input-->
                 </div>

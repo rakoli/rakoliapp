@@ -215,7 +215,9 @@ var KTSignupGeneral = function() {
                                 confirmButton: "btn btn-primary"
                             }
                         });
-                        location.reload();
+                        t.setAttribute("data-kt-indicator", "off");
+                        t.disabled = !1;
+                        refreshReCaptchaV3('register_captcha_id','register');
                     })).then((() => {
                         t.removeAttribute("data-kt-indicator"), t.disabled = !1
                     }))) : Swal.fire({
