@@ -28,6 +28,13 @@ Route::post('pay/subscription', [App\Http\Controllers\RegistrationStepController
 Route::get('register/vas', [App\Http\Controllers\Auth\RegisterVasController::class, 'showRegistrationForm'])->name('register.vas');
 Route::post('register/vas/submit', [App\Http\Controllers\Auth\RegisterVasController::class, 'register'])->name('register.vas.submit');
 Route::get('registration/vas', [App\Http\Controllers\RegistrationStepController::class, 'registrationVas'])->name('registration.vas');
+Route::post('registration/vas/{user:code}/uploads', [App\Http\Controllers\RegistrationStepController::class, 'registrationUploads'])->name('registration.vas.uploads');
+
+
+
+
+
+
 
 //LANGUAGE SWITCHER
 Route::get('lang/switch', [LanguageController::class, 'languageSwitch'])->name('languageSwitch');

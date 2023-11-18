@@ -242,11 +242,13 @@
 <script src="{{asset('assets/js/scripts.bundle.js')}}"></script>
 <!--end::Global Javascript Bundle-->
 <!--begin::Custom Javascript(used for this page only)-->
-@yield('js')
+
 @include('auth.registration_agent.js_steppers_movement')
 @include('auth.registration_agent.js_verification')
 @include('auth.registration_agent.js_businessdetails')
 
+@yield('js')
+@stack('js')
 
 <!--end::Custom Javascript-->
 <!--end::Javascript-->

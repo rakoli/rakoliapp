@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Actions\InitiateSubscriptionPayment;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -56,6 +57,11 @@ class User extends Authenticatable
     public function name()
     {
         return $this->fname .' '.$this->lname;
+    }
+
+    public function fullName() : Attribute
+    {
+        return new Attribute(get: fn() => $this->name());
     }
 
     public function getEmailOTPCode()

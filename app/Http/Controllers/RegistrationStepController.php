@@ -331,6 +331,13 @@ class RegistrationStepController extends Controller
         return redirect($requestResult['result']);
     }
 
+
+    public function registrationUploads(Request $request)
+    {
+
+        dd($request->all());
+    }
+
     public function registrationVas()
     {
         $step = auth()->user()->registration_step;
