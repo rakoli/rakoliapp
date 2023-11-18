@@ -295,17 +295,18 @@ class DPOPayment
         $verify   = $dpo->verifyToken(["companyToken" => config("dpo-laravel.company_token"), "transToken" => $transactionToken]);
 
         if (!empty($verify['result']) && $verify['result'] != '') {
+            $responseArray = [];
             try{
                 $verify = new \SimpleXMLElement($verify['result']);
 
                 if ($verify->Result->__toString() === '000') {
-                    return [
+                    $responseArray = [
                         'success'           => true,
                         'result'            => 'completed',
                         'resultExplanation' => $verify->ResultExplanation->__toString(),
                     ];
                 }else{
-                    return [
+                    $responseArray = [
                         'success'           => false,
                         'result'            => 'not complete',
                         'resultExplanation' => $verify->ResultExplanation->__toString(),
@@ -314,12 +315,13 @@ class DPOPayment
             }catch (\Exception $exception){
                 Log::error($verify['result']);
                 Bugsnag::notifyException($exception);
-                return [
+                $responseArray = [
                     'success'           => false,
                     'result'            => $verify['result'],
                     'resultExplanation' => $exception->getMessage(),
                 ];
             }
+            return $responseArray;
         }else{
             Log::error('DPO Payment checkPaymentComplete empty response');
             Bugsnag::notifyError('DPO Payment','checkPaymentComplete empty response');
