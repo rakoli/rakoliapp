@@ -320,7 +320,7 @@ class RegistrationStepController extends Controller
 
         $request->validate([
             'selected_plan_code' => 'required|exists:packages,code',
-            'payment_method' => 'required|in:'.implode(',', config('dpo-laravel.accepted_payment_methods')),
+            'payment_method' => 'required|in:'.implode(',', config('payments.accepted_payment_methods')),
         ]);
 
         $package = Package::where('code',$request->get('selected_plan_code'))->first();

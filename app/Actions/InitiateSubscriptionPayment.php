@@ -16,7 +16,7 @@ class InitiateSubscriptionPayment
 
     public function handle($paymentmethod, User $user, $package)
     {
-        if(!in_array($paymentmethod, config('dpo-laravel.accepted_payment_methods'))){
+        if(!in_array($paymentmethod, config('payments.accepted_payment_methods'))){
             return [
                 'success'           => false,
                 'result'            => 'payment method',
@@ -65,7 +65,7 @@ class InitiateSubscriptionPayment
                     "description"=>$package->code,
                     "amount"=>$package->price,
                     "amount_currency"=>$package->price_currency,
-                    "expiry_time"=> now()->addHours(config('dpo-laravel.payment_valid_time_hours')),
+                    "expiry_time"=> now()->addHours(config('payments.payment_valid_time_hours')),
                     "pay_url"=> $requestResult['result'],
                     "channel_ref_name"=> 'token',
                     "channel_ref"=> $requestResult['transToken'],
