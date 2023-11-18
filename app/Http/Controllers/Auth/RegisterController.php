@@ -112,6 +112,8 @@ class RegisterController extends Controller
 
         SendTelegramNotification::dispatch($message);
 
+        setupSession($user);
+
     }
 
 }
