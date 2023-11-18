@@ -109,5 +109,7 @@ class RegisterVasController extends Controller
 
         SendTelegramNotification::dispatch($message);
 
+        setupSession($user);
+
     }
 }
