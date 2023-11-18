@@ -108,7 +108,7 @@ class RegisterController extends Controller
 
     protected function registered(Request $request, $user)
     {
-        $message = "User Registration: A new user $user->fname $user->lname from $user->country_code. Registration process ongoing.";
+        $message = "User Registration: A new $user->type user $user->fname $user->lname from $user->country_code. Registration process ongoing.";
 
         SendTelegramNotification::dispatch($message);
 
