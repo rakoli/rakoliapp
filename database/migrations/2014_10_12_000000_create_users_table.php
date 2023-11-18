@@ -23,7 +23,7 @@ return new class extends Migration
                 ->on('businesses')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->string('type')->default(\App\Utils\Enums\UserTypeEnum::AGENT);
+            $table->string('type');
             $table->string('code')->nullable()->unique();
             $table->string('fname');
             $table->string('lname');
