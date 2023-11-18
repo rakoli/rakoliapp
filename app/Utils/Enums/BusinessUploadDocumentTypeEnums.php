@@ -2,7 +2,7 @@
 
 namespace App\Utils\Enums;
 
-enum BusinessUploadDocumentTypes : string
+enum BusinessUploadDocumentTypeEnums : string
 {
 
     case TAX_ID = "Tax id";

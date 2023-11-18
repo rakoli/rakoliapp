@@ -23,6 +23,8 @@ return new class extends Migration
             $table->string('document_type');
             $table->string('document_name')->nullable();
             $table->mediumText('document_path')->nullable();
+            $table->boolean('is_approved')->default(false);
+            $table->dateTime('approved_at')->nullable();
 
             $table->timestamps();
         });
