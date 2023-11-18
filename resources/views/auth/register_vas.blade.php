@@ -4,7 +4,7 @@
 
 @section('aside_color', '#242337')
 
-@section('banner_image', '')
+@section('banner_image_url', '')
 {{-- Filename in "assets/media/misc/" --}}
 
 @section('body')

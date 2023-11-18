@@ -2,6 +2,8 @@
 
 @section('title', __('Confirm'))
 
+@section('banner_image_url', '')
+
 @section('body')
 
     @if (session('status'))
