@@ -1,5 +1,5 @@
 <!-- Home -->
-<div class="menu-item py-2">
+<div class="menu-item py-2 {{returnActiveMenuStyle('')}}">
     <!--begin:Menu link-->
     <a class="menu-link menu-center" href="{{route('home')}}" target="_self">
         <span class="menu-icon me-0">
@@ -13,7 +13,7 @@
 </div>
 
 <!-- Agency -->
-<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2">
+<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('agency')}}">
     <!--begin:Menu link-->
     <span class="menu-link menu-center">
         <span class="menu-icon me-0">
@@ -86,9 +86,9 @@
 </div>
 
 <!-- Exchange Management -->
-<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2">
+<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('exchange')}}" >
     <!--begin:Menu link-->
-    <span class="menu-link menu-center">
+    <span class="menu-link menu-center" >
         <span class="menu-icon me-0">
             <i class="ki-outline ki-share fs-2x"></i>
         </span>
@@ -115,35 +115,35 @@
 
             <!--begin:Menu sub-->
             <div class="menu-sub menu-sub-accordion">
-                <a class="menu-link" href="/dashboard/agent/requests">
-                    <span class="menu-bullet">
-                        <span class="bullet bullet-dot"></span>
-                    </span>
-                    <span class="menu-title">{{ __('Requests') }}</span>
-                </a>
-
-                <a class="menu-link" href="/dashboard/agent/pending">
-                    <span class="menu-bullet">
-                        <span class="bullet bullet-dot"></span>
-                    </span>
-                    <span class="menu-title">{{ __('Pending') }}</span>
-                </a>
-
-                <a class="menu-link" href="/dashboard/agent/transaction">
-                    <span class="menu-bullet">
-                        <span class="bullet bullet-dot"></span>
-                    </span>
-                    <span class="menu-title">{{ __('Transaction') }}</span>
-                </a>
-
-                <a class="menu-link" href="/dashboard/agent/ads">
+                <a class="menu-link" href="{{route('exchange.ads')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Ads') }}</span>
                 </a>
 
-                <a class="menu-link" href="/dashboard/agent/security">
+                <a class="menu-link" href="{{route('exchange.orders')}}">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ __('Orders') }}</span>
+                </a>
+
+                <a class="menu-link" href="{{route('exchange.transactions')}}">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ __('Transactions') }}</span>
+                </a>
+
+                <a class="menu-link" href="{{route('exchange.posts')}}">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ __('Posts') }}</span>
+                </a>
+
+                <a class="menu-link" href="{{route('exchange.security')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
@@ -159,7 +159,7 @@
 </div>
 
 <!-- VAS -->
-<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2">
+<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('vas')}}">
     <!--begin:Menu link-->
     <span class="menu-link menu-center">
         <span class="menu-icon me-0">
@@ -218,7 +218,7 @@
 </div>
 
 <!-- Business Management -->
-<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2">
+<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('business')}}">
     <!--begin:Menu link-->
     <span class="menu-link menu-center">
         <span class="menu-icon me-0">
@@ -291,7 +291,7 @@
 </div>
 
 <!-- Reports -->
-<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2">
+<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('reports')}}">
     <!--begin:Menu link-->
     <span class="menu-link menu-center">
         <span class="menu-icon me-0">

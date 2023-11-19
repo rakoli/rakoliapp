@@ -1,5 +1,5 @@
 <!-- Home -->
-<div class="menu-item py-2">
+<div class="menu-item py-2 {{returnActiveMenuStyle('')}}">
     <!--begin:Menu link-->
     <a class="menu-link menu-center" href="{{route('home')}}" target="_self">
         <span class="menu-icon me-0">
@@ -14,7 +14,7 @@
 <!-- End: Home -->
 
 <!-- Services -->
-<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2">
+<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('services')}}">
     <!--begin:Menu link-->
     <span class="menu-link menu-center">
         <span class="menu-icon me-0">
@@ -77,7 +77,7 @@
 </div>
 
 <!-- Business Management -->
-<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2">
+<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('business')}}">
     <!--begin:Menu link-->
     <span class="menu-link menu-center">
         <span class="menu-icon me-0">
@@ -143,7 +143,7 @@
 </div>
 
 <!-- Reports -->
-<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2">
+<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('reports')}}">
     <!--begin:Menu link-->
     <span class="menu-link menu-center">
         <span class="menu-icon me-0">

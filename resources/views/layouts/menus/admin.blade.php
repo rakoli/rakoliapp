@@ -1,5 +1,5 @@
 <!-- Home -->
-<div class="menu-item py-2">
+<div class="menu-item py-2 {{returnActiveMenuStyle('')}}">
     <!--begin:Menu link-->
     <a class="menu-link menu-center" href="{{route('home')}}" target="_self">
         <span class="menu-icon me-0">
@@ -14,7 +14,7 @@
 <!-- End: Home -->
 
 <!-- Business and User Management -->
-<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2">
+<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('business')}}">
     <!--begin:Menu link-->
     <span class="menu-link menu-center">
         <span class="menu-icon me-0">
@@ -63,7 +63,7 @@
 </div>
 
 <!-- Exchange -->
-<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2">
+<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('exchange')}}">
     <!--begin:Menu link-->
     <span class="menu-link menu-center">
         <span class="menu-icon me-0">
@@ -124,7 +124,7 @@
 </div>
 
 <!-- VAS -->
-<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2">
+<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('vas')}}">
     <!--begin:Menu link-->
     <span class="menu-link menu-center">
         <span class="menu-icon me-0">
@@ -178,7 +178,7 @@
 </div>
 
 <!-- Income -->
-<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2">
+<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('income')}}">
     <!--begin:Menu link-->
     <span class="menu-link menu-center">
         <span class="menu-icon me-0">
@@ -232,8 +232,7 @@
 </div>
 
 <!-- System -->
-<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start"
-    class="menu-item py-2">
+<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('system')}}">
     <!--begin:Menu link-->
     <span class="menu-link menu-center">
         <span class="menu-icon me-0">

@@ -148,3 +148,10 @@ function setupSession(User $user, $isRegisteringUser = false){
         Session::put('business_name', 'ADMIN - RAKOLI SYSTEMS');
     }
 }
+
+function returnActiveMenuStyle($menuSection){
+    if($menuSection == cleanText(Request()->route()->getPrefix())){
+        return 'hover';
+    }
+    return '';
+}
