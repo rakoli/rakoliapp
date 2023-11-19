@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Actions\InitiateSubscriptionPayment;
+use App\Utils\Enums\InitiatedPaymentStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -145,7 +146,7 @@ class User extends Authenticatable
     {
         return InitiatedPayment::where('business_code',$this->business_code)
             ->where('expiry_time','>',now())
-            ->where('status',0)->get();
+            ->where('status',InitiatedPaymentStatusEnum::INITIATED->value)->get();
     }
 
     public function hasPendingPayment() : bool

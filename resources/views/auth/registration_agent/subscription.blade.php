@@ -1,6 +1,44 @@
 <div class="" data-kt-stepper-element="content">
     <!--begin::Wrapper-->
     <div class="w-800">
+
+        @if($hasPendingPayment == true)
+            <h3 class="fw-bold text-dark">{{__('Pending Payments')}}</h3>
+
+            <div class="table-responsive">
+                <table class="table table-rounded table-striped border gy-7 gs-7">
+                    <thead>
+                    <tr class="fw-semibold fs-6 text-gray-800 border-bottom border-gray-200">
+                        <th>{{__('Time Left')}}</th>
+                        <th>{{__('Payment For')}}</th>
+                        <th>{{__('Amount Due')}}</th>
+                        <th>{{__('Payment Method')}}</th>
+                        <th>{{__('Pay Link')}}</th>
+                    </tr>
+                    </thead>
+                    <tbody class="table-hover">
+                    @foreach($initiatedPayments as $initiatedPayment)
+                        <tr>
+                            <td>{{\Carbon\Carbon::create($initiatedPayment->expiry_time)->diffForHumans()}}</td>
+                            <td>{{\App\Models\Package::where('code',$initiatedPayment->description)->first()->name}} - {{__('annual subscription')}}</td>
+                            <td>{{strtoupper($initiatedPayment->amount_currency)}} {{number_format($initiatedPayment->amount)}}</td>
+                            <td>{{strtoupper($initiatedPayment->channel)}}</td>
+                            <td>
+                                <a href="{{$initiatedPayment->pay_url}}" class="btn btn-bg-light btn-secondary">{{__('Pay Now')}}</a>
+{{--                                <a type="button" class="btn btn-primary" href="{{$initiatedPayment->pay_url}}">--}}
+{{--                                    {{__('Pay Now')}}--}}
+{{--                                </a>--}}
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+
+        @endif
+
+
         <!--begin::Heading-->
         <div>
             <!--begin::Title-->

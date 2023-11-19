@@ -9,9 +9,11 @@ use App\Actions\RequestEmailVerificationCode;
 use App\Actions\RequestPhoneVerificationCode;
 use App\Actions\SendTelegramNotification;
 use App\Models\Business;
+use App\Models\InitiatedPayment;
 use App\Models\Package;
 use App\Models\User;
 use App\Utils\DPORequestTokenFormat;
+use App\Utils\Enums\InitiatedPaymentStatusEnum;
 use App\Utils\VerifyOTP;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -43,7 +45,7 @@ class RegistrationStepController extends Controller
                 $step = User::where('code',auth()->user()->code)->first()->registration_step;
             }
         }
-        return view('auth.registration_agent.index', compact('step','hasPendingPayment'));
+        return view('auth.registration_agent.index', compact('step','hasPendingPayment','initiatedPayments'));
     }
 
     public function requestEmailCodeAjax(Request $request)
@@ -326,8 +328,17 @@ class RegistrationStepController extends Controller
         ]);
 
         $package = Package::where('code',$request->get('selected_plan_code'))->first();
-
         $paymentMethod = $request->get('payment_method');
+
+        $similarPendingPayment = InitiatedPayment::where('business_code',$user->business_code)
+            ->where('expiry_time','>',now())
+            ->where('channel',$paymentMethod)
+            ->where('description',$package->code)
+            ->where('status',InitiatedPaymentStatusEnum::INITIATED)->get();
+
+        if(!$similarPendingPayment->isEmpty()){
+            return redirect()->back()->withErrors([__('Duplicate request! Pay existing pending payment')]);
+        }
 
         $requestResult = InitiateSubscriptionPayment::run($paymentMethod,$user,$package);
 
