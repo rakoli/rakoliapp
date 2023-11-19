@@ -8,16 +8,29 @@ use App\Http\Controllers\CustomAgentDashboardController;
 // All get methods will be loaded with this route
 Route::middleware(['auth','should_complete_registration','onlyagent'])->group(function () {
 
-    //Agency
-    Route::group(['prefix' => 'agency', 'route' => 'agency.'], function () {
+    //AGENCY MODULE
+    Route::name('agency.')->prefix('agency')->group(function () {
 
-        Route::get('transactions', [App\Http\Controllers\Agent\AgencyController::class, 'transactions'])->name('agency.transactions');
-        Route::get('shift', [App\Http\Controllers\Agent\AgencyController::class, 'shift'])->name('agency.shift');
-        Route::get('tills', [App\Http\Controllers\Agent\AgencyController::class, 'tills'])->name('agency.tills');
-        Route::get('networks', [App\Http\Controllers\Agent\AgencyController::class, 'networks'])->name('agency.networks');
-        Route::get('loans', [App\Http\Controllers\Agent\AgencyController::class, 'loans'])->name('agency.loans');
+        Route::get('transactions', [App\Http\Controllers\Agent\AgencyController::class, 'transactions'])->name('transactions');
+        Route::get('shift', [App\Http\Controllers\Agent\AgencyController::class, 'shift'])->name('shift');
+        Route::get('tills', [App\Http\Controllers\Agent\AgencyController::class, 'tills'])->name('tills');
+        Route::get('networks', [App\Http\Controllers\Agent\AgencyController::class, 'networks'])->name('networks');
+        Route::get('loans', [App\Http\Controllers\Agent\AgencyController::class, 'loans'])->name('loans');
+        Route::get('testing', [App\Http\Controllers\Agent\AgencyController::class, 'loans'])->name('tests');
 
     });
+    //END: AGENCY MODULE
 
+    //EXCHANGE MODULE
+    Route::name('exchange.')->prefix('exchange')->group(function () {
+
+        Route::get('ads', [App\Http\Controllers\Agent\ExchangeController::class, 'ads'])->name('ads');
+        Route::get('orders', [App\Http\Controllers\Agent\ExchangeController::class, 'orders'])->name('orders');
+        Route::get('transactions', [App\Http\Controllers\Agent\ExchangeController::class, 'transactions'])->name('transactions');
+        Route::get('posts', [App\Http\Controllers\Agent\ExchangeController::class, 'posts'])->name('posts');
+        Route::get('security', [App\Http\Controllers\Agent\ExchangeController::class, 'security'])->name('security');
+
+    });
+    //END: EXCHANGE MODULE
 
 });

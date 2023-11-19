@@ -739,6 +739,14 @@
                                 <!--begin::Title-->
                                 <h1 class="d-flex align-items-center text-dark fw-bold my-1 fs-3">@yield('title')
                                     @yield('breadcrumb')
+                                    @if(!empty(cleanText(Request()->route()->getPrefix())))
+                                        <!--begin::Separator-->
+                                        <span class="h-20px border-gray-200 border-start ms-3 mx-2"></span>
+                                        <!--end::Separator-->
+                                        <!--begin::Description-->
+                                        <small class="text-muted fs-7 fw-semibold my-1 ms-1">{{__(ucfirst(cleanText(Request()->route()->getPrefix())))}}</small>
+                                        <!--end::Description-->
+                                    @endif
                                     <!--begin::Separator-->
                                     <span class="h-20px border-gray-200 border-start ms-3 mx-2"></span>
                                     <!--end::Separator-->
