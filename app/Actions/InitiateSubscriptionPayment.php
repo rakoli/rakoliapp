@@ -82,7 +82,7 @@ class InitiateSubscriptionPayment
                 "currency" => $package->price_currency,
                 "amount" => $package->price,
                 "description" => $description,
-                "callback_url" => route('pesapal.callback'),
+                "callback_url" => route('registration.agent'),
                 "notification_id" => config('payments.pesapal_ipnid'),
                 "billing_address" => [
                     "email_address" => $user->email,
