@@ -60,7 +60,7 @@ class InitiateSubscriptionPayment
                 ];
             }
 
-            $saveRecordResult = self::recordPayment($user,$package,$tnxCode,$paymentmethod,$requestResult['result'],$requestResult['transToken']);
+            $saveRecordResult = self::recordPayment($user,$package,$tnxCode,$paymentmethod,$requestResult['result'],$requestResult['transToken'],'token');
 
             if($saveRecordResult['success'] == false){
                 return [
@@ -112,7 +112,7 @@ class InitiateSubscriptionPayment
 
             $apiResponse = $requestResult['result'];
 
-            $recordResult = self::recordPayment($user,$package,$tnxCode,$paymentmethod,$apiResponse->redirect_url,$apiResponse->order_tracking_id);
+            $recordResult = self::recordPayment($user,$package,$tnxCode,$paymentmethod,$apiResponse->redirect_url,$apiResponse->order_tracking_id,'tracking_id');
 
             if($recordResult['success'] == false){
                 return [
@@ -129,7 +129,7 @@ class InitiateSubscriptionPayment
         return $requestResult;
     }
 
-    public static function recordPayment(User $user, Package $package,$tnxCode,$paymentmethod, $url,$reference)
+    public static function recordPayment(User $user, Package $package,$tnxCode,$paymentmethod, $url,$reference,$referenceName)
     {
         try{
             InitiatedPayment::create([
@@ -143,7 +143,7 @@ class InitiateSubscriptionPayment
                 "amount_currency"=>$package->price_currency,
                 "expiry_time"=> now()->addHours(config('payments.payment_valid_time_hours')),
                 "pay_url"=> $url,
-                "channel_ref_name"=> 'token',
+                "channel_ref_name"=> $referenceName,
                 "channel_ref"=> $reference,
             ]);
         }catch (\Exception $exception){
