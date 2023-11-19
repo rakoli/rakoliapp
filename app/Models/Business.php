@@ -71,7 +71,7 @@ class Business extends Model
 
     public function package(): BelongsTo
     {
-        return $this->belongsTo(Package::class, 'code', 'code');
+        return $this->belongsTo(Package::class, 'package_code', 'code');
     }
 
     public function taskSubmissions(): HasManyThrough

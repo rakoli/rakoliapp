@@ -242,7 +242,9 @@ class RegistrationStepController extends Controller
             $user->registration_step = 0;
             $user->save();
 
-            $message = "Registration Complete: $user->fname $user->lname ({$user->business->business_name}) has completed registration.";
+            setupSession($user);//Updating User session
+
+            $message = "Registration Complete: $user->fname $user->lname ({$user->business->business_name}) has completed registration with {$user->business->package->name}.";
             SendTelegramNotification::dispatch($message);
 
             return [
@@ -333,7 +335,7 @@ class RegistrationStepController extends Controller
             return redirect()->back()->withErrors([$requestResult['resultExplanation']]);
         }
 
-        return redirect($requestResult['result']);
+        return redirect($requestResult['url']);
     }
 
     public function registrationVas()

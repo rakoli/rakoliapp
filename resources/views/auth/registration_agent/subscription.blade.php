@@ -91,12 +91,21 @@
         <div class="text-muted fw-semibold fs-6 mb-5 mt-5">{{__('Choose payment method below')}}</div>
         <!--end::Notice-->
 
+        <!--begin::Option-->
+        <input type="radio" class="btn-check" name="selected_payment_method" value="pesapal" id="pesapal" onchange="selectPaymentMethod(this)" checked="checked"/>
+        <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center" for="pesapal">
+            <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/pesapal.png')}}" class="mw-200px mh-70px"></i>
+            <span class="d-block fw-semibold text-start">
+            <span class="text-gray-900 fw-bold d-block fs-3">PesaPal</span>
+            <span class="text-muted fw-semibold fs-6">Pay with Visa, MasterCard, Bank and Mobile Money like Mpesa, Airtel Money, TigoPesa, MTN MoMo Pay and Orange Money</span>
+        </span>
+        </label>
+        <!--end::Option-->
 
         <!--begin::Option-->
-        <input type="radio" class="btn-check" name="selected_payment_method" value="dpopay" checked="checked"  id="dpopay_method" onchange="selectPaymentMethod(this)"/>
+        <input type="radio" class="btn-check" name="selected_payment_method" value="dpopay" id="dpopay_method" onchange="selectPaymentMethod(this)"/>
         <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center mb-5" for="dpopay_method">
             <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/DPOPay.webp')}}" class="mw-200px mh-70px"></i>
-
             <span class="d-block fw-semibold text-start">
                 <span class="text-gray-900 fw-bold d-block fs-3">DPO Pay</span>
                 <span class="text-muted fw-semibold fs-6">
@@ -105,18 +114,6 @@
             </span>
         </label>
         <!--end::Option-->
-
-{{--        <!--begin::Option-->--}}
-{{--        <input type="radio" class="btn-check" name="selected_payment_method" value="nmbbank" id="nmb_method" onchange="selectPaymentMethod(this)"/>--}}
-{{--        <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center" for="nmb_method">--}}
-{{--            <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/nmblogo.png')}}" class="mw-200px mh-70px"></i>--}}
-
-{{--            <span class="d-block fw-semibold text-start">--}}
-{{--            <span class="text-gray-900 fw-bold d-block fs-3">NMB Bank (TZ Only)</span>--}}
-{{--            <span class="text-muted fw-semibold fs-6">Pay via NMB Bank Agent and Tanzania local all mobile money providers like Mpesa, TigoPesa, AirtelMoney and HaloPesa.</span>--}}
-{{--        </span>--}}
-{{--        </label>--}}
-{{--        <!--end::Option-->--}}
 
         <div class="m-5 fv-row">
             <button id="verify_phone_button" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirm_subscription_details">

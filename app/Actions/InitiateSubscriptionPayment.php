@@ -3,9 +3,11 @@
 namespace App\Actions;
 
 use App\Models\InitiatedPayment;
+use App\Models\Package;
 use App\Models\User;
 use App\Utils\DPORequestTokenFormat;
 use App\Utils\Enums\SystemIncomeCategoryEnum;
+use App\Utils\PesaPalPayment;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Illuminate\Support\Facades\Log;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -25,6 +27,9 @@ class InitiateSubscriptionPayment
         }
 
         $tnxCode = generateCode($user->id,$package->name);
+        $business = $user->business;
+        $description = "$package->code for $business->business_name for $package->package_interval_days days";
+        $requestResult = [];
 
         if($paymentmethod == 'dpopay'){
 
@@ -45,7 +50,7 @@ class InitiateSubscriptionPayment
                 $data['customerLastName'],$data['customerAddress'],$data['customerCountryISOCode'],
                 $data['customerDialCode'],$data['customerPhone'],$data['customerEmail'],$data['companyRef']);
 
-            $requestResult = GenerateDPOPayment::run($dpoRequestToken,'5291');
+            $requestResult = GenerateDPOPayment::run($dpoRequestToken,'3854');
 
             if($requestResult['success'] == false){
                 return [
@@ -55,33 +60,107 @@ class InitiateSubscriptionPayment
                 ];
             }
 
-            try{
-                InitiatedPayment::create([
-                    "country_code"=>$user->country->code,
-                    "business_code"=>$user->business->code,
-                    "code"=> $tnxCode,
-                    "channel"=> $paymentmethod,
-                    "income_category"=> SystemIncomeCategoryEnum::SUBSCRIPTION,
-                    "description"=>$package->code,
-                    "amount"=>$package->price,
-                    "amount_currency"=>$package->price_currency,
-                    "expiry_time"=> now()->addHours(config('payments.payment_valid_time_hours')),
-                    "pay_url"=> $requestResult['result'],
-                    "channel_ref_name"=> 'token',
-                    "channel_ref"=> $requestResult['transToken'],
-                ]);
-            }catch (\Exception $exception){
-                Log::error($exception);
-                Bugsnag::notifyException($exception);
+            $saveRecordResult = self::recordPayment($user,$package,$tnxCode,$paymentmethod,$requestResult['result'],$requestResult['transToken']);
+
+            if($saveRecordResult['success'] == false){
                 return [
                     'success'           => false,
-                    'result'            => 'Initiate Error',
-                    'resultExplanation' => 'Unable to setup payment tracking',
+                    'result'            => 'Recording Request Error',
+                    'resultExplanation' => 'Unable to record the payment request',
                 ];
             }
 
-            return $requestResult;
+            $requestResult['url'] = $requestResult['result'];
         }
+
+
+
+        if($paymentmethod == 'pesapal'){
+
+            $paymentParams = [
+                "id" => $tnxCode,
+                "currency" => $package->price_currency,
+                "amount" => $package->price,
+                "description" => $description,
+                "callback_url" => route('pesapal.callback'),
+                "notification_id" => config('payments.pesapal_ipnid'),
+                "billing_address" => [
+                    "email_address" => $user->email,
+                    "phone_number" => "0".substr($user->phone, 3),
+                    "country_code" => $user->country->code,
+                    "first_name" => $user->fname,
+                    "middle_name" => "",
+                    "last_name" =>  $user->lname,
+                    "line_1" => "",
+                    "line_2" => "",
+                    "city" => "",
+                    "state" => "",
+                    "postal_code" => "00".substr($user->country->dialing_code, 1),
+                    "zip_code" => "00".substr($user->country->dialing_code, 1)
+                ]
+            ];
+
+            $requestResult = GeneratePesapalPayment::run($paymentParams);
+
+            if($requestResult['success'] == false){
+                return [
+                    'success'           => false,
+                    'result'            => 'Pesapal Error',
+                    'resultExplanation' => 'Unable to request payment',
+                ];
+            }
+
+            $apiResponse = $requestResult['result'];
+
+            $recordResult = self::recordPayment($user,$package,$tnxCode,$paymentmethod,$apiResponse->redirect_url,$apiResponse->order_tracking_id);
+
+            if($recordResult['success'] == false){
+                return [
+                    'success'           => false,
+                    'result'            => 'Recording Request Error',
+                    'resultExplanation' => 'Unable to record the payment request',
+                ];
+            }
+
+            $requestResult['url'] = $apiResponse->redirect_url;
+        }
+
+
+        return $requestResult;
+    }
+
+    public static function recordPayment(User $user, Package $package,$tnxCode,$paymentmethod, $url,$reference)
+    {
+        try{
+            InitiatedPayment::create([
+                "country_code"=>$user->country->code,
+                "business_code"=>$user->business->code,
+                "code"=> $tnxCode,
+                "channel"=> $paymentmethod,
+                "income_category"=> SystemIncomeCategoryEnum::SUBSCRIPTION,
+                "description"=>$package->code,
+                "amount"=>$package->price,
+                "amount_currency"=>$package->price_currency,
+                "expiry_time"=> now()->addHours(config('payments.payment_valid_time_hours')),
+                "pay_url"=> $url,
+                "channel_ref_name"=> 'token',
+                "channel_ref"=> $reference,
+            ]);
+        }catch (\Exception $exception){
+            Log::error($exception);
+            Bugsnag::notifyException($exception);
+            return [
+                'success'           => false,
+                'result'            => 'Initiate Error',
+                'resultExplanation' => 'Unable to setup payment tracking',
+            ];
+        }
+
+        return [
+            'success'           => true,
+            'result'            => 'successful',
+            'resultExplanation' => 'Recorded transaction successfully',
+        ];
     }
 
 }
