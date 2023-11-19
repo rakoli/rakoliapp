@@ -11,6 +11,8 @@
     <!--begin::Container-->
     <div id="kt_content_container" class="container-xxl">
 
+        @include('agent.exchange._submenu_exchange')
+
 
     </div>
     <!--end::Container-->

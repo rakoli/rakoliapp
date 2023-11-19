@@ -149,9 +149,18 @@ function setupSession(User $user, $isRegisteringUser = false){
     }
 }
 
-function returnActiveMenuStyle($menuSection){
+function returnActiveMenuStyle($menuSection) : string
+{
     if($menuSection == cleanText(Request()->route()->getPrefix())){
         return 'hover';
+    }
+    return '';
+}
+
+function returnActiveSubMenuStyle($subSection) : string
+{
+    if($subSection == cleanText(strstr(Request()->route()->getName(), '.'))){
+        return 'active';
     }
     return '';
 }
