@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -187,6 +188,11 @@ class Business extends Model
     public function vas_task_availabilities(): HasMany
     {
         return $this->hasMany(VasTaskAvailability::class, 'agent_business_code', 'code');
+    }
+
+    public function exchange_stats() : HasOne
+    {
+        return $this->hasOne(ExchangeStat::class,'business_code','code');
     }
 
 }

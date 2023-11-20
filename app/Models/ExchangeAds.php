@@ -41,13 +41,18 @@ class ExchangeAds extends Model
         return $this->belongsTo(Towns::class, 'town_code', 'code');
     }
 
-    public function ads_exchange_chats() : HasMany
+    public function exchange_chats() : HasMany
     {
-        return $this->hasMany(AdsExchangeChat::class, 'exchange_ads_code', 'code');
+        return $this->hasMany(ExchangeChat::class, 'exchange_ads_code', 'code');
     }
 
     public function exchange_transactions(): HasMany
     {
         return $this->hasMany(ExchangeTransaction::class, 'exchange_ads_code', 'code');
+    }
+
+    public function exchange_payment_methods()
+    {
+        return $this->hasMany(ExchangePaymentMethod::class,'exchange_ads_code','code');
     }
 }

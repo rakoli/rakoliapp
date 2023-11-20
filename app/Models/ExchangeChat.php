@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class AdsExchangeChat extends Model
+class ExchangeChat extends Model
 {
     use HasFactory;
 
@@ -19,5 +19,4 @@ class AdsExchangeChat extends Model
     {
         return $this->belongsTo(User::class, 'sender_code', 'code');
     }
-
 }

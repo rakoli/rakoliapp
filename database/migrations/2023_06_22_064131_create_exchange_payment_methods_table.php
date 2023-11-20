@@ -11,23 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ads_exchange_chats', function (Blueprint $table) {
+        Schema::create('exchange_payment_methods', function (Blueprint $table) {
             $table->id();
             $table->string('exchange_ads_code');
             $table->foreign('exchange_ads_code')->references('code')
                 ->on('exchange_ads')
-                ->cascadeOnUpdate()
-                ->cascadeOnDelete();
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+            $table->string('method_name');
+            $table->string('receive_account_number');
+            $table->string('receive_account_name');
+            $table->integer('status');
 
-
-            $table->string('sender_code');
-            $table->foreign('sender_code')->references('code')
-                ->on('users')
-                ->cascadeOnUpdate()
-                ->cascadeOnDelete();
-
-            $table->text('message');
-            $table->text('notes')->nullable();
             $table->timestamps();
         });
     }
@@ -37,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ads_exchange_chats');
+        Schema::dropIfExists('exchange_payment_methods');
     }
 };
