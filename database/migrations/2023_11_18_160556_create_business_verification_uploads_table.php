@@ -19,8 +19,16 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
+            $table->string('approved_by')->nullable();
 
-            $table->string('document_type');
+            $table->foreign('approved_by')->references('code')
+                ->on('users')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+
+
+            $table->string('document_type')->nullable();
+            $table->string('uploader_name')->nullable();
             $table->string('document_name')->nullable();
             $table->mediumText('document_path')->nullable();
             $table->boolean('is_approved')->default(false);

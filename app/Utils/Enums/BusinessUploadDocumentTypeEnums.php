@@ -14,7 +14,6 @@ enum BusinessUploadDocumentTypeEnums : string
     public function label()
     {
         return match ($this){
-
             static::TAX_ID => "Tax Certificate ID",
             static::REGISTRATION => "Business Registration",
             static::NAT => "Identification Document",
