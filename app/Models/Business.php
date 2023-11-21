@@ -44,6 +44,9 @@ class Business extends Model
                 'balance' => 0,
                 'balance_currency' => $country->currency,
             ]);
+            ExchangeStat::create([
+                "business_code"=>"$businessInstance->code"
+            ]);
             DB::commit();
         }catch (\Exception $exception) {
             DB::rollback();
