@@ -5,10 +5,10 @@ namespace App\Utils\Enums;
 enum IDCardType : string
 {
 
-    case NAT_ID = "National_ID_Card";
-    case DRIVER_LICENCE = "Driving_Licence";
+    case NAT_ID = "national_id_card";
+    case DRIVER_LICENCE = "driving_licence";
 
-    case PASSPORT= "PASSPORT";
+    case PASSPORT= "passport";
 
 
     public function label()
