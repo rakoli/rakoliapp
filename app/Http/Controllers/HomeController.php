@@ -65,7 +65,7 @@ class HomeController extends Controller
                 ['data' => 'channel', 'title' => __('Channel')],
                 ['data' => 'channel_reference', 'title' => __('Channel Reference')],
                 ['data' => 'channel_timestamp', 'title' => __('Channel Time')],
-            ])->orderBy(0,'desc');
+            ])->orderBy(0,'desc')->responsive(true);
 
             //Dashboard Statistics
             $businesses = Business::get();
@@ -106,7 +106,7 @@ class HomeController extends Controller
                 ['data' => 'contract.title', 'title'=> __('Contract')],
                 ['data' => 'payee.business_name', 'title'=> __('Contractor')],
                 ['data' => 'amt', 'title'=> __('Amount')],
-            ])->orderBy(0,'desc');
+            ])->orderBy(0,'desc')->responsive(true);
 
             //Dashboard Statistics
             $stats['total_services'] = VasTask::where('vas_business_code',$user->business_code)->count();
@@ -153,7 +153,7 @@ class HomeController extends Controller
                 ['data' => 'type', 'title'=> __('Type')],
                 ['data' => 'amount', 'title'=> __('Amount')],
                 ['data' => 'balance_new' , 'title'=> __('Balance')],
-            ])->orderBy(0,'desc');
+            ])->orderBy(0,'desc')->responsive(true);
 
             //Dashboard Statistics
             $stats['networks'] = Network::where('business_code',$user->business_code)->get()->count();
