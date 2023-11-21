@@ -27,7 +27,7 @@ class UsersTableSeeder extends Seeder
 
         //AGENT BUSINESS
         $name = "Vertice Agents Ltd";
-        $agentBusiness = Business::create([
+        $agentBusiness = Business::addBusiness([
             'country_code' => "TZ",
             'type' => UserTypeEnum::AGENT->value,
             'code'=> generateCode($name),
@@ -45,14 +45,14 @@ class UsersTableSeeder extends Seeder
         Location::create([
             'business_code' => $agentBusiness->code,
             'code' => Str::random(10) ,
-            'name' => 'Vertice HQ',
+            'name' => 'Vertice Branch',
             'balance' => fake()->numberBetween(500000, 5000000),
             'balance_currency' => fake()->randomElement(['kes','tzs']),
         ]);
 
         //VAS BUSINESS
         $name = "Pulsans Advertisement Ltd";
-        $vasBusiness = Business::create([
+        $vasBusiness = Business::addBusiness([
             'country_code' => "TZ",
             'type' => UserTypeEnum::VAS->value,
             'code'=> generateCode($name),
