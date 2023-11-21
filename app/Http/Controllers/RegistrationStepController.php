@@ -343,8 +343,12 @@ class RegistrationStepController extends Controller
     }
 
 
-    public function registrationUploads(Request $request, Business $business)
+    public function registrationUploads(Request $request)
     {
+        /** @var Business $business */
+
+        $business = auth()->user()->business;
+
         $file = $request->file($request->document_name);
 
 
@@ -368,9 +372,12 @@ class RegistrationStepController extends Controller
 
     }
 
-    public function registrationFinish(Request $request, Business $business)
+    public function registrationFinish(Request $request)
     {
         try {
+
+            /** @var Business $business */
+            $business = auth()->user()->business;
 
             if (!filled($business->tax_id)) {
                 throw new \Exception("Business Tax Id is Required");

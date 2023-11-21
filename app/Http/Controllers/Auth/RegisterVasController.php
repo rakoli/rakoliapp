@@ -72,7 +72,7 @@ class RegisterVasController extends Controller
             'phone' => ['required','numeric'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'g-recaptcha-response' => [new GoogleReCaptchaV3ValidationRule('register')],
+         //   'g-recaptcha-response' => [new GoogleReCaptchaV3ValidationRule('register')],
         ];
         return Validator::make($data,$validators);
     }
@@ -85,10 +85,14 @@ class RegisterVasController extends Controller
      */
     protected function create(array $data)
     {
+
+
         $country_code = Country::where('dialing_code',$data['country_dial_code'])->first()->code;
+
         $country_dial_code = substr($data['country_dial_code'], 1);
         $plainPhone = substr($data['phone'], 1);
         $fullPhone = $country_dial_code . $plainPhone;
+
         return User::create([
             'country_code' => $country_code,
             'code' => generateCode($data['fname'].' '.$data['lname'],$country_code),

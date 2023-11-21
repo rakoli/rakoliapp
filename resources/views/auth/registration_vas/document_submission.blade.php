@@ -167,13 +167,12 @@
 
         // add tax
         const taxCertificate = new Dropzone("#tax_certificate_no_file", {
-            url: "{{ route('registration.vas.uploads', ['business' => auth()->user()->business_code]) }}", // Set the url for your upload script location
+            url: "{{ route('registration.vas.uploads') }}", // Set the url for your upload script location
             paramName: "tax_certificate_no_file", // The name that will be used to transfer the file
             maxFiles: 1,
             params: {
                 _token: csrfToken,
                 column_name: "tax_id",
-                column_value: "",
                 document_name: "tax_certificate_no_file",
                 document_type: "{{ \App\Utils\Enums\BusinessUploadDocumentTypeEnums::TAX_ID->value }}"
             },
@@ -217,7 +216,7 @@
 
         // add registartion
         const registartionFile = new Dropzone("#registration_no_file", {
-            url: "{{ route('registration.vas.uploads', ['business' => auth()->user()->business_code]) }}", // Set the url for your upload script location
+            url: "{{ route('registration.vas.uploads') }}", // Set the url for your upload script location
             paramName: "registration_no_file", // The name that will be used to transfer the file
             maxFiles: 1,
             params: {
@@ -264,7 +263,7 @@
 
         // add  identification DOCUMENT
         var idUploads = new Dropzone("#id_front_path", {
-            url: "{{ route('registration.vas.uploads', ['business' => auth()->user()->business_code]) }}",
+            url: "{{ route('registration.vas.uploads') }}",
             paramName: "id_front_path",
             maxFiles: 1,
             params: {
@@ -311,7 +310,7 @@
             var xhr = new XMLHttpRequest();
 
             // Configure the GET request
-            var url = "{{ route('registration.vas.finish', ['business' => auth()->user()->business_code]) }}";
+            var url = "{{ route('registration.vas.finish') }}";
 
             xhr.open("POST", url, true);
 
