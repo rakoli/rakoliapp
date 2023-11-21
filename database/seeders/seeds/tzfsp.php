@@ -23,7 +23,7 @@ return [
     [ "name" => "INTERNATIONAL COMMERCIAL BANK"],
     [ "name" => "AZANIA BANK"],
     [ "name" => "ABSA BANK"],
-    [ "name" => "I & M BANK  "],
+    [ "name" => "I & M BANK"],
     [ "name" => "ABC Bank"],
     [ "name" => "PEOPLES BANK OF ZANZIBAR"],
     [ "name" => "CITIBANK"],
@@ -49,5 +49,6 @@ return [
     [ "name" => "VISIONFUND MICROFINANCE BANK"],
     [ "name" => "MAENDELEO BANK"],
     [ "name" => "TANDAHIMBA COMMUNITY BANK"],
+    [ "name" => "Safe Account"],
 
 ];

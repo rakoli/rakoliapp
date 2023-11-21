@@ -54,5 +54,6 @@ return [
     [ "name" => "Bank of Kigali"],
     [ "name" => "Bank AL Habib"],
     [ "name" => "Banque Misr"],
+    [ "name" => "Safe Account"],
 
 ];

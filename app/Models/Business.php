@@ -99,6 +99,12 @@ class Business extends Model
         return $this->hasMany(Business::class, 'referral_business_code', 'code');
     }
 
+
+    public function verificationUploads(): HasMany
+    {
+        return $this->hasMany(BusinessVerificationUpload::class, 'business_code', 'code');
+    }
+
     public function loans(): HasMany
     {
         return $this->hasMany(Loan::class, 'business_code', 'code');
