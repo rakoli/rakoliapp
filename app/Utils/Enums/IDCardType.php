@@ -10,7 +10,6 @@ enum IDCardType : string
 
     case PASSPORT= "passport";
 
-
     public function label()
     {
         return match ($this){
