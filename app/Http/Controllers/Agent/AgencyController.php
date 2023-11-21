@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Agent;
 
 use App\Http\Controllers\Controller;
+use App\Models\Shift;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class AgencyController extends Controller
 {
@@ -15,6 +17,10 @@ class AgencyController extends Controller
 
     public function shift()
     {
+        if (\request()->ajax())
+        {
+            return  DataTables::eloquent(Shift::query())->toJson();
+        }
 
         return view('agent.agency.shift');
     }

@@ -801,6 +801,7 @@
     <script src="{{ asset('assets/js/language.js') }}"></script>
 
     @yield('footer_js')
+    @stack('js')
 </body>
 
 </html>
