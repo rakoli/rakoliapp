@@ -6,6 +6,7 @@ use App\Actions\GenerateDPOPayment;
 use App\Actions\RequestEmailVerificationCode;
 use App\Actions\SendTelegramNotification;
 use App\Mail\SendCodeMail;
+use App\Models\ExchangeAds;
 use App\Models\SystemIncome;
 use App\Models\User;
 use App\Utils\DPOPayment;
@@ -26,6 +27,9 @@ class TestController extends Controller
 {
     public function testing()
     {
+        $ex = ExchangeAds::first();
+
+        return $ex->business->exchange_stats->getCompletionRate();
 
     }
 }

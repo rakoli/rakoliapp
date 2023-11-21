@@ -25,6 +25,7 @@ Route::middleware(['auth','should_complete_registration','onlyagent'])->group(fu
     Route::name('exchange.')->prefix('exchange')->group(function () {
 
         Route::get('ads', [App\Http\Controllers\Agent\ExchangeController::class, 'ads'])->name('ads');
+        Route::get('ads/view/{id}', [App\Http\Controllers\Agent\ExchangeController::class, 'adsView'])->name('ads.view');
         Route::get('orders', [App\Http\Controllers\Agent\ExchangeController::class, 'orders'])->name('orders');
         Route::get('transactions', [App\Http\Controllers\Agent\ExchangeController::class, 'transactions'])->name('transactions');
         Route::get('posts', [App\Http\Controllers\Agent\ExchangeController::class, 'posts'])->name('posts');

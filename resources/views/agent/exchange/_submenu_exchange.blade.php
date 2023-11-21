@@ -39,7 +39,7 @@
             </ul>
             <!--end::Nav-->
             <!--begin::Action-->
-            <a href="#" data-bs-toggle="modal" data-bs-target="#kt_modal_new_ticket" class="btn btn-primary fw-bold fs-8 fs-lg-base">Create Ticket</a>
+            <a href="#" data-bs-toggle="modal" data-bs-target="#kt_modal_new_ticket" class="btn btn-primary fw-bold fs-8 fs-lg-base">{{__('Create Ad')}}</a>
             <!--end::Action-->
         </div>
         <!--end::Hero nav-->

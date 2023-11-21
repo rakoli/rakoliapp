@@ -153,6 +153,11 @@ class Business extends Model
         return $this->hasMany(ExchangeAds::class, 'business_code', 'code');
     }
 
+    public function exchange_stats() : HasOne
+    {
+        return $this->hasOne(ExchangeStat::class,'business_code','code');
+    }
+
     public function exchange_transactions_owned(): HasMany
     {// for vas provider
         return $this->hasMany(ExchangeTransaction::class, 'owner_business_code', 'code');
@@ -191,11 +196,6 @@ class Business extends Model
     public function vas_task_availabilities(): HasMany
     {
         return $this->hasMany(VasTaskAvailability::class, 'agent_business_code', 'code');
-    }
-
-    public function exchange_stats() : HasOne
-    {
-        return $this->hasOne(ExchangeStat::class,'business_code','code');
     }
 
 }

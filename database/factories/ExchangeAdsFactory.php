@@ -30,10 +30,12 @@ class ExchangeAdsFactory extends Factory
             'business_code' => fake()->randomElement($businesses)['code'],
             'location_code' => Location::first()->code,
             'code' => Str::random(10),
-            'min_amount' => 50000,
-            'max_amount' => 350000,
+            'min_amount' => fake()->numberBetween(50000, 100000),
+            'max_amount' => fake()->numberBetween(1000000, 5000000),
             'currency' => fake()->randomElement(['kes','tzs']),
             'status' => fake()->randomElement(ExchangeStatusEnum::class),
+            'description' => fake()->sentence(20,false),
+            'availability_desc' => fake()->sentence(5,false),
         ];
     }
 }

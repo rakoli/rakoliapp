@@ -164,3 +164,8 @@ function returnActiveSubMenuStyle($subSection) : string
     }
     return '';
 }
+
+function str_camelcase($string) : string
+{
+    return ucwords(strtolower($string));
+}
