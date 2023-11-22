@@ -2,19 +2,22 @@
 
 namespace App\Actions\Agent\Shift;
 
+use App\Events\Shift\ShiftOpened;
 use App\Models\Network;
 use App\Models\Shift;
 use App\Utils\Enums\ShiftStatusEnum;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Lorisleiva\Actions\Concerns\AsAction;
 
 
 class OpenShift
 {
 
+    use AsAction;
 
 
-    public static function handle(float $cashAtHand, string $locationCode, ?string $notes = null)
+    public function handle(float $cashAtHand, string $locationCode, ?string $notes = null)
     {
 
         try {
@@ -23,7 +26,7 @@ class OpenShift
 
             if (Shift::query()->where('status',ShiftStatusEnum::OPEN)->exists())
             {
-                throw new \Exception("Close open shift to continue");
+                throw new \Exception("Close opened shift to continue");
             }
 
 
@@ -51,6 +54,9 @@ class OpenShift
                         'balance_new' =>  $network->balance ,
                     ]);
                 }
+
+
+                event(new ShiftOpened(shift: $shift));
             });
 
 

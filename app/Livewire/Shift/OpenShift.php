@@ -49,8 +49,7 @@ class OpenShift extends Component
 
         try {
 
-
-           \App\Actions\Agent\Shift\OpenShift::handle(
+           \App\Actions\Agent\Shift\OpenShift::run(
                 cashAtHand: $this->cash_at_hand,
                 locationCode: $this->location_code,
                 notes: $this->notes
