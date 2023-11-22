@@ -35,7 +35,7 @@ return new class extends Migration
 
             $table->integer('no')->default(1);//Can be a couple during a day
             $table->decimal('cash_start',12,2);
-            $table->decimal('cash_end',12,2);
+            $table->decimal('cash_end',12,2)->nullable();
             $table->string('currency');
             $table->string('status')->default(ShiftStatusEnum::OPEN);
 

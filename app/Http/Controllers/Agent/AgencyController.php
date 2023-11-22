@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Agent;
 
 use App\Http\Controllers\Controller;
+use App\Models\Network;
 use App\Models\Shift;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -22,7 +23,11 @@ class AgencyController extends Controller
             return  DataTables::eloquent(Shift::query())->toJson();
         }
 
-        return view('agent.agency.shift');
+
+
+        return view('agent.agency.shift')->with([
+
+        ]);
     }
 
     public function tills()

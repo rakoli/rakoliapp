@@ -12,6 +12,7 @@ class ShiftNetwork extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['id'];
     protected static function booted(): void
     {
         static::addGlobalScope(new LocationScoped());

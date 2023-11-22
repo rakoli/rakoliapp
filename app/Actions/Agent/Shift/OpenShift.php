@@ -1,0 +1,74 @@
+<?php
+
+namespace App\Actions\Agent\Shift;
+
+use App\Models\Network;
+use App\Models\Shift;
+use App\Utils\Enums\ShiftStatusEnum;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+
+
+class OpenShift
+{
+
+
+
+    public static function handle(float $cashAtHand, string $locationCode, ?string $notes = null)
+    {
+
+        try {
+            DB::beginTransaction();
+
+
+            if (Shift::query()->where('status',ShiftStatusEnum::OPEN)->exists())
+            {
+                throw new \Exception("Close open shift to continue");
+            }
+
+
+            $nos  = Shift::query()->latest('created_at')->whereDate('created_at', Carbon::today())->pluck('no')->first();
+            tap(Shift::create([
+                'user_code' => auth()->user()->code,
+                'business_code' => auth()->user()->business_code,
+                'location_code' => $locationCode,
+                'cash_start' => $cashAtHand,
+                'cash_end' => $cashAtHand,
+                'currency' => auth()->user()->business->country->currency,
+                'notes' => $notes,
+                'no' => $nos +1
+
+            ]), function (Shift $shift){
+
+
+                foreach (Network::query()->cursor() as $network) {
+
+                    $shift->shiftNetworks()->create([
+                        'business_code' => $shift->business_code,
+                        'location_code' => $shift->location_code,
+                        'network_code' => $network->code,
+                        'balance_old' =>  $network->balance ,
+                        'balance_new' =>  $network->balance ,
+                    ]);
+                }
+            });
+
+
+
+
+            DB::commit();
+
+        }
+        catch (\Exception $e)
+        {
+
+
+            DB::rollBack();
+
+
+            throw new \Exception($e->getMessage());
+        }
+
+    }
+
+}

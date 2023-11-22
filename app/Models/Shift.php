@@ -16,6 +16,7 @@ class Shift extends Model
     use HasFactory;
 
 
+    protected $guarded = ["id"];
 
     protected $casts = [
         'status' => ShiftStatusEnum::class
