@@ -66,16 +66,7 @@
                                    modalTitle="Fill the form below to open a new shift"
                                >
 
-                                   <form wire:submit.prevent="">
-
-
-                                       <x-label label="Closing Balance" for="amount"/>
-                                       <x-input placeholder="cash at hand" id="amount"/>
-
-
-
-
-                                   </form>
+                                 <livewire:shift.close-shift/>
 
 
                                </x-modal>
@@ -146,7 +137,7 @@
 
                             {"data": "created_at", name: "created_at", sortable: true},
                             {"data": "no", name: "no", sortable: true},
-                            {"data": "user_code", name: "user_code", sortable: true},
+                            {"data": "user_name", name: "user_name", sortable: true},
                             {"data": "status", name: "status"},
                             {"data": "cash_start", name: "cash_start", sortable: true},
                             {"data": "cash_end", name: "cash_end"},

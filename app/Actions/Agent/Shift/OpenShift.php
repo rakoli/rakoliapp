@@ -30,7 +30,13 @@ class OpenShift
             }
 
 
-            $nos  = Shift::query()->latest('created_at')->whereDate('created_at', Carbon::today())->pluck('no')->first();
+            // @todo check allowed no of shift for this business per day
+
+            $nos  = Shift::query()->latest('created_at')
+                ->whereDate('created_at', Carbon::today())
+                ->pluck('no')->first();
+
+
             tap(Shift::create([
                 'user_code' => auth()->user()->code,
                 'business_code' => auth()->user()->business_code,

@@ -4,6 +4,8 @@ namespace App\Utils\Traits;
 
 trait InteractsWithSweetAlerts
 {
+
+
     public function confirm($icon, $title, $html, $confirmButtonText, $successEvent, array $params = null, $cancelEvent )
     {
         return $this->dispatch('swal:confirm', ['icon' => $icon, 'title' => $title, 'html' => $html, 'confirmText' => $confirmButtonText, 'successEvent' => $successEvent, 'params' => $params, 'cancelEvent' => $cancelEvent]);

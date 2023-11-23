@@ -1,26 +1,16 @@
 <div>
+    <form wire:submit.prevent="closeShift">
 
-    @if($hasOpenShift)
-        <x-empty
-            heading="There is an opened Shift, Close it to open a new shift">
-            <x-button
-                wire:click="closeShift"
-                class="btn-danger">
-                Close Shift
-            </x-button>
-        </x-empty>
-    @else
-
-        <form wire:submit="openShift">
+        <div class="modal-body">
 
             <div class="row fv-row py-2">
                 <div class="col-6">
-                    <x-label class="" label="{{ __('Cash at hand') }}" for="amount"/>
+                    <x-label class="" label="{{ __('Closing Balance') }}" for="closing_balance"/>
                     <x-input
-                        class="form-control-solid   @error('cash_at_hand') form-control-feedback @enderror"
-                        wire:model.blur="cash_at_hand"
-                        placeholder="{{ __('cash at hand') }}" id="amount"/>
-                    @error('cash_at_hand')
+                        class="form-control-solid   @error('closing_balance') form-control-feedback @enderror"
+                        wire:model.blur="closing_balance"
+                        placeholder="{{ __('Closing Balance') }}" id="closing_balance"/>
+                    @error('closing_balance')
                     <div class="help-block text-danger">
                         {{ $message }}
                     </div>
@@ -77,17 +67,13 @@
                 </div>
             </div>
 
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Save changes</button>
-            </div>
+        </div>
 
 
-        </form>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
 
-    @endif
-
-
-
+    </form>
 </div>
