@@ -21,6 +21,8 @@ class TransactionsController extends Controller
 
 
         if ($request->ajax()) {
+
+
             return (new ShiftTransactionDatatable())->index();
         }
 
