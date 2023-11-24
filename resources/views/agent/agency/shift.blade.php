@@ -63,7 +63,7 @@
                                <x-modal
                                    targetId="closeShift"
                                    label="Close Shift"
-                                   modalTitle="Fill the form below to open a new shift"
+                                   modalTitle="Fill the form below to close shift"
                                >
 
                                  <livewire:shift.close-shift/>
@@ -71,22 +71,9 @@
 
                                </x-modal>
                            </div>
-                            <!--end::Add customer-->
                         </div>
                         <!--end::Toolbar-->
 
-                        <!--begin::Group actions-->
-                        <div class="d-flex justify-content-end align-items-center d-none"
-                             data-kt-docs-table-toolbar="selected">
-                            <div class="fw-bold me-5">
-                                <span class="me-2" data-kt-docs-table-select="selected_count"></span> Selected
-                            </div>
-
-                            <button type="button" class="btn btn-danger" data-bs-toggle="tooltip" title="Coming Soon">
-                                Selection Action
-                            </button>
-                        </div>
-                        <!--end::Group actions-->
                     </div>
                     <!--end::Wrapper-->
 
@@ -98,9 +85,9 @@
                             <th>No</th>
                             <th>Username</th>
                             <th>Status</th>
-                            <th>Status</th>
                             <th>Start Cash</th>
                             <th>EndCash</th>
+                            <th>Action</th>
 
                         </tr>
                         </thead>
@@ -141,6 +128,8 @@
                             {"data": "status", name: "status"},
                             {"data": "cash_start", name: "cash_start", sortable: true},
                             {"data": "cash_end", name: "cash_end"},
+                            {"data": "action", name: "action"},
+
 
                         ],
 

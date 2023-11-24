@@ -126,6 +126,19 @@ function xmlToArrayConvert($xmlContent){
     return $newArr;
 }
 
+
+function currencyCode() : null|string{
+
+    if (auth()->check())
+    {
+        return  auth()->user()->country->currency;
+    }
+
+    return env('DEFAULT_CURRENCY');
+}
+
+
+
 function setupSession(User $user, $isRegisteringUser = false){
 
     Session::put('id', $user->id);

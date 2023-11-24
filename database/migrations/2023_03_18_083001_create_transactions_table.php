@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-
             $table->string('business_code');
             $table->foreign('business_code')->references('code')
                 ->on('businesses')
@@ -35,7 +34,7 @@ return new class extends Migration
             $table->string('type');// enum <TransactionTypeEnum<Money_in, Money_out>>
             $table->string('category');// enum <TransactionCategoryEnum<Income, Expense, General>>
             $table->decimal('amount' , 12, 2);
-            $table->string('amount_currency');
+            $table->string('amount_currency')->nullable();
             $table->decimal('balance_old' , 12, 2);
             $table->decimal('balance_new' , 12, 2);
             $table->string('description');
