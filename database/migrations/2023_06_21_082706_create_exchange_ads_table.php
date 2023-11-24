@@ -58,6 +58,7 @@ return new class extends Migration
             $table->string('currency');
             $table->string('status')->default(ExchangeStatusEnum::ACTIVE->value);
             $table->string('description');
+            $table->text('terms')->nullable();
             $table->string('availability_desc');
             $table->text('open_note')->nullable();
             $table->timestamps();

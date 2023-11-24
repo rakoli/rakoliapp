@@ -18,11 +18,6 @@ class FinancialServiceProvider extends Model
         return $this->belongsTo(related: Country::class , foreignKey: 'country_code', ownerKey: 'code');
     }
 
-    public function exchange_transactions() : HasMany
-    {
-        return $this->hasMany(ExchangeTransaction::class, 'fsp_code', 'code');
-    }
-
     public function networks() : HasMany
     {
         return $this->hasMany(Network::class, 'fsp_code', 'code');

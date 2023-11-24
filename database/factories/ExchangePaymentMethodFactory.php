@@ -26,9 +26,10 @@ class ExchangePaymentMethodFactory extends Factory
         $exchanges = ExchangeAds::get('code')->toArray();
         $fsps = FinancialServiceProvider::get('name')->toArray();
         array_push($fsps, ["name"=>"cash"]);
+        $exchangeAd = fake()->randomElement($exchanges);
 
         return [
-            'exchange_ads_code' => fake()->randomElement($exchanges)['code'],
+            'exchange_ads_code' => $exchangeAd['code'],
             'type' => fake()->randomElement(ExchangePaymentMethodTypeEnum::class),
             'method_name' => fake()->randomElement($fsps)['name'],
             'account_number' => fake()->randomNumber(8),

@@ -22,9 +22,9 @@ class ExchangeStatFactory extends Factory
         return [
             'business_code' => fake()->randomElement($businesses)['code'],
             'no_of_trades_completed' => fake()->numberBetween(50, 100),
-            'no_of_trades_cancelled' => fake()->numberBetween(0, 5),
+            'no_of_trades_cancelled' => fake()->numberBetween(1, 5),
             'no_of_positive_feedback' => fake()->numberBetween(85, 100),
-            'no_of_negative_feedback' => fake()->numberBetween(0, 5),
+            'no_of_negative_feedback' => fake()->numberBetween(1, 5),
             'volume_traded' => fake()->numberBetween(1000000, 15000000),
         ];
     }

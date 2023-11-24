@@ -10,6 +10,21 @@ class ExchangeTransaction extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'exchange_ads_code',
+        'owner_business_code',
+        'trader_business_code',
+        'trader_action_type',
+        'trader_action_method_id',
+        'trader_action_method',
+        'for_method',
+        'amount',
+        'amount_currency',
+        'status',
+        'trader_comments',
+    ];
+
+
     public function exchange_ad() : BelongsTo
     {
         return $this->belongsTo(ExchangeAds::class, 'exchange_ads_code', 'code');

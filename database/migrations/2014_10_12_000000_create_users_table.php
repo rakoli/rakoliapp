@@ -35,6 +35,7 @@ return new class extends Migration
             $table->timestamp('last_login')->nullable();
             $table->timestamp('phone_verified_at')->nullable();
             $table->timestamp('email_verified_at')->nullable();
+            $table->timestamp('id_verified_at')->nullable();
             $table->boolean('should_change_password')->default(false);
 
             $table->string('phone_otp')->nullable();

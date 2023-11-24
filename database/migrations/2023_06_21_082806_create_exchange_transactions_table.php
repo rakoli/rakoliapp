@@ -33,17 +33,19 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->string('type');
-
-            $table->string('fsp_code');
-            $table->foreign('fsp_code')->references('code')
-                ->on('financial_service_providers')
+            $table->string('trader_action_type');//\App\Utils\Enums\ExchangeTransactionTypeEnum::class
+            $table->string('trader_action_method');
+            $table->bigInteger('trader_action_method_id')->unsigned();
+            $table->foreign('trader_action_method_id', 'method_id_fk')->references('id')
+                ->on('exchange_payment_methods')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
+            $table->string('for_method');
 
             $table->decimal('amount',12,2);
             $table->string('amount_currency');
             $table->string('status')->default(ExchangeTransactionStatusEnum::OPEN);
+            $table->text('trader_comments')->nullable();
             $table->timestamps();
         });
     }

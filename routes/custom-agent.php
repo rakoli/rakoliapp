@@ -26,7 +26,9 @@ Route::middleware(['auth','should_complete_registration','onlyagent'])->group(fu
 
         Route::get('ads', [App\Http\Controllers\Agent\ExchangeController::class, 'ads'])->name('ads');
         Route::get('ads/view/{id}', [App\Http\Controllers\Agent\ExchangeController::class, 'adsView'])->name('ads.view');
+        Route::post('ads/open/order', [App\Http\Controllers\Agent\ExchangeController::class, 'adsOpenOrder'])->name('ads.openorder');
         Route::get('orders', [App\Http\Controllers\Agent\ExchangeController::class, 'orders'])->name('orders');
+        Route::get('orders/view/{id}', [App\Http\Controllers\Agent\ExchangeController::class, 'ordersView'])->name('orders.view');
         Route::get('transactions', [App\Http\Controllers\Agent\ExchangeController::class, 'transactions'])->name('transactions');
         Route::get('posts', [App\Http\Controllers\Agent\ExchangeController::class, 'posts'])->name('posts');
         Route::get('security', [App\Http\Controllers\Agent\ExchangeController::class, 'security'])->name('security');

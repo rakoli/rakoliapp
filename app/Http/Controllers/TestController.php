@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Utils\DPOPayment;
 use App\Utils\DPORequestTokenFormat;
 use App\Utils\Enums\AgentRegistrationStepsEnums;
+use App\Utils\Enums\ExchangeTransactionTypeEnum;
 use App\Utils\PesaPalPayment;
 use App\Utils\TelegramCommunication;
 use App\Utils\SMS;
@@ -27,9 +28,6 @@ class TestController extends Controller
 {
     public function testing()
     {
-        $ex = ExchangeAds::first();
-
-        return $ex->business->exchange_stats->getCompletionRate();
-
+       dd(empty(auth()->user()->phone_verified_at));
     }
 }

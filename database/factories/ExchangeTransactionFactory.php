@@ -25,26 +25,28 @@ class ExchangeTransactionFactory extends Factory
      */
     public function definition(): array
     {
-        $agentBusinessCode = Business::where('type', BusinessTypeEnum::AGENCY->value)->first()->code;
-        $vasBusinessCode = Business::where('type', BusinessTypeEnum::VAS->value)->first()->code;
+        $agentBusiness = Business::where('type', BusinessTypeEnum::AGENCY->value)->first();
+        $agentBusinessCode = $agentBusiness->code;
+        $vasBusiness = Business::where('type', BusinessTypeEnum::VAS->value)->first();
+        $vasBusinessCode = $vasBusiness->code;
         $exchangeCode = null;
-        $exchange = ExchangeAds::where('business_code', $agentBusinessCode)->first();
-        if($exchange == null){
-            $exchangeCode = ExchangeAds::first()->code;
-        }else{
-            $exchangeCode = $exchange->code;
-        }
+        $exchange = ExchangeAds::where('business_code', $vasBusinessCode)->first();
+        $exchangeCode = $exchange->code;
         $fsps = FinancialServiceProvider::get('code')->toArray();
+        $paymentMethods = $exchange->exchange_payment_methods->toArray();
 
         return [
             'exchange_ads_code' => $exchangeCode,
             'owner_business_code' => $vasBusinessCode,
             'trader_business_code' => $agentBusinessCode,
-            'type' => fake()->randomElement(ExchangeTransactionTypeEnum::class),
-            'fsp_code' => fake()->randomElement($fsps)['code'],
+            'trader_action_type' => fake()->randomElement(ExchangeTransactionTypeEnum::class),
+            'trader_action_method' => fake()->randomElement($paymentMethods)['method_name'],
+            'trader_action_method_id' => fake()->randomElement($paymentMethods)['id'],
+            'for_method' => fake()->randomElement($fsps)['code'],
             'amount' => fake()->numberBetween(5000, 250000),
             'amount_currency' => fake()->randomElement(['kes','tzs']),
             'status' => fake()->randomElement(ExchangeTransactionStatusEnum::class),
+            'trader_comments' => fake()->sentences(2,true),
         ];
     }
 }

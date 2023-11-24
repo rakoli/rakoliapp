@@ -36,6 +36,7 @@ class ExchangeAdsFactory extends Factory
             'status' => fake()->randomElement(ExchangeStatusEnum::class),
             'description' => fake()->sentence(20,false),
             'availability_desc' => fake()->sentence(5,false),
+            'terms' => fake()->sentence(50,false),
         ];
     }
 }
