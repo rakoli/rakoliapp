@@ -69,20 +69,10 @@
                     <!--end::Wrapper-->
 
 
-                    <table class="table" id="shift-table">
-                        <thead class="tw-bg-gray-50">
-                        <tr>
-                            <th>Transaction Date</th>
-                            <th>Location</th>
-                            <th>User</th>
-                            <th>Type</th>
-                            <th>Old Balance</th>
-                            <th>New Balance</th>
-                            <th>Action</th>
 
-                        </tr>
-                        </thead>
-                    </table>
+
+
+
                 </div>
             </div>
         </div>
@@ -95,100 +85,7 @@
                 type="text/javascript"></script>
         <script>
 
-            // Class definition
-            var KTDatatablesServerSide = function () {
-                // Shared variables
-                var table;
-                var dt;
-                var filterPayment;
-
-                // Private functions
-                var initDatatable = function () {
-                    dt = $("table#shift-transaction-table").DataTable({
-                        sort: false,
-                        "processing": true,
-                        "serverSide": true,
-                        ajax: {
-                            url: "{{ route('agency.transactions') }}",
-                        },
-                        columns: [
-                            {"data": "created_at", name: "created_at", sortable: true},
-                            {"data": "location", name: "no", sortable: true},
-                            {"data": "user_name", name: "user_name", sortable: true},
-                            {"data": "status", name: "status"},
-                            {"data": "cash_start", name: "cash_start", sortable: true},
-                            {"data": "cash_end", name: "cash_end"},
-                            {"data": "action", name: "action"},
-                        ],
-
-                    });
-
-                    table = dt.$;
-
-                    // Re-init functions on every table re-draw -- more info: https://datatables.net/reference/event/draw
-                    dt.on('draw', function () {
-                        KTMenu.createInstances();
-                    });
-                }
-
-                // Search Datatable --- official docs reference: https://datatables.net/reference/api/search()
-                var handleSearchDatatable = function () {
-                    const filterSearch = document.querySelector('[data-kt-docs-table-filter="search"]');
-                    filterSearch.addEventListener('keyup', function (e) {
-                        dt.search(e.target.value).draw();
-                    });
-                }
-
-                // Filter Datatable
-                var handleFilterDatatable = () => {
-                    // Select filter options
-                    filterPayment = document.querySelectorAll('[data-kt-docs-table-filter="payment_type"] [name="payment_type"]');
-                    const filterButton = document.querySelector('[data-kt-docs-table-filter="filter"]');
-
-                    // Filter datatable on submit
-                    filterButton.addEventListener('click', function () {
-                        // Get filter values
-                        let paymentValue = '';
-
-                        // Get payment value
-                        filterPayment.forEach(r => {
-                            if (r.checked) {
-                                paymentValue = r.value;
-                            }
-
-                            // Reset payment value if "All" is selected
-                            if (paymentValue === 'all') {
-                                paymentValue = '';
-                            }
-                        });
-
-                        // Filter datatable --- official docs reference: https://datatables.net/reference/api/search()
-                        dt.search(paymentValue).draw();
-                    });
-                }
-
-
-
-
-                // Public methods
-                return {
-                    init: function () {
-                        initDatatable();
-                        handleSearchDatatable();
-
-
-
-                    }
-                }
-            }();
-
-            // On document ready
-            KTUtil.onDOMContentLoaded(function () {
-                KTDatatablesServerSide.init();
-            });
-
-
-
+            /
 
         </script>
 
