@@ -33,11 +33,6 @@ class OpenShift extends Component
 
     public $hasOpenShift;
 
-    public function mount()
-    {
-        $this->hasOpenShift = Shift::query()->where('status',ShiftStatusEnum::OPEN)->exists();
-
-    }
 
     protected $listeners = [
         'refreshComponent' => '$refresh'
@@ -50,6 +45,8 @@ class OpenShift extends Component
     }
     public function render()
     {
+
+        $this->hasOpenShift = Shift::query()->where('status',ShiftStatusEnum::OPEN)->exists();
 
         $tills = Network::query()->with('agency')->cursor();
 

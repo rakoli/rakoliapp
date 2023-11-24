@@ -3,6 +3,7 @@
 namespace App\Actions\Agent\Shift;
 
 use App\Events\Shift\ShiftOpened;
+use App\Events\Shift\ShitClosedEvent;
 use App\Models\Network;
 use App\Models\Shift;
 use App\Utils\Enums\ShiftStatusEnum;
@@ -31,10 +32,12 @@ class CloseShift
             $shift->updateQuietly([
                 'cash_end'  => $closingBalance,
                 'status' => ShiftStatusEnum::CLOSED,
+                'notes' => str($shift->notes)->append(" $notes")->toString()
             ]);
 
-
             DB::commit();
+
+            event(new ShitClosedEvent(shift: $shift));
 
         }
         catch (\Exception $e)

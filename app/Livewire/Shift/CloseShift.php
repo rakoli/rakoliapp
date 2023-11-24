@@ -38,6 +38,10 @@ class CloseShift extends Component
     public $hasOpenShift;
     public function render()
     {
+
+        $this->hasOpenShift = Shift::query()->where('status',ShiftStatusEnum::OPEN)->exists();
+
+
         $tills = Network::query()->with('agency')->cursor();
 
         $locations = Location::query()->cursor();
