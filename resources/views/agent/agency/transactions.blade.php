@@ -56,7 +56,7 @@
                                 isStacked="true"
                             >
 
-                                <livewire:shift.open-shift lazy />
+                                <livewire:transaction.add-transaction lazy />
 
 
                             </x-modal>
@@ -69,7 +69,7 @@
                     <!--end::Wrapper-->
 
 
-
+                    {!! $dataTableHtml->table(['class' => 'table table-row-bordered table-row-dashed gy-4 align-middle fw-bold' , 'id' => 'transaction-table'],true) !!}
 
 
 

@@ -25,12 +25,13 @@ class TransactionsController extends Controller
         }
 
         $dataTableHtml = $builder->columns([
-            ['data' => 'id', 'title' => __('id')],
-            ['data' => 'business_details', 'title' => __('Business')],
-            ['data' => 'terms', 'title' => __('Terms/Availability')],
-            ['data' => 'limit', 'title' => __('Limit') . ' ' . strtoupper(session('currency'))],
-            ['data' => 'payment', 'title' => __('Payment')],
-            ['data' => 'trade', 'title' => __('Trade')],
+            ['data' => 'created_at', 'title' => __('Date')],
+            ['data' => 'location', 'title' => __('Location')],
+            ['data' => 'user_name', 'title' => __('user')],
+            ['data' => 'balance_old', 'title' => __('Old Balance') . ' ' . strtoupper(session('currency'))],
+            ['data' => 'balance_new', 'title' => __('New Balance')],
+            ['data' => 'type', 'title' => __('Type')],
+            ['data' => 'category', 'title' => __('Category')],
         ])->orderBy(0, 'desc');
 
 

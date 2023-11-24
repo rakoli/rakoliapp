@@ -17,6 +17,9 @@ class Transaction extends Model
 {
     use HasFactory;
 
+    protected $guarded = [
+        'id'
+    ];
     protected $casts = [
         'type'  => TransactionTypeEnum::class,
         'category' => TransactionCategoryEnum::class,
