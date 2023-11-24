@@ -14,4 +14,11 @@ enum TransactionTypeEnum : string
             static::MONEY_IN => "badge badge-primary",
         };
     }
+    public function label()
+    {
+        return match ($this){
+            static::MONEY_OUT => "Money In",
+            static::MONEY_IN => "Money Out",
+        };
+    }
 }

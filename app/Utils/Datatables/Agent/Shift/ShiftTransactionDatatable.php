@@ -6,6 +6,9 @@ use App\Models\Shift;
 use App\Models\ShiftNetwork;
 use App\Models\Transaction;
 use App\Utils\Datatables\LakoriDatatable;
+use App\Utils\Enums\ShiftStatusEnum;
+use App\Utils\Enums\TransactionTypeEnum;
+use Illuminate\Support\HtmlString;
 use Yajra\DataTables\Facades\DataTables;
 
 class ShiftTransactionDatatable
@@ -16,25 +19,33 @@ class ShiftTransactionDatatable
     public function index(): \Illuminate\Http\JsonResponse
     {
 
-        $transactions = Transaction::query();
+        $transactions = Transaction::query()->with('location','user');
 
         return Datatables::eloquent($transactions)
             ->filter(function ($query) {
                 $query->skip(request('start'))->take(request('length'));
             })
             ->order(function ($query) {
-                return $query->orderBy('id', 'desc');
+                return $query->orderBy('created_at', 'desc');
             })
             ->startsWithSearch()
             ->addIndexColumn()
             ->addColumn('created_at', fn(Transaction $shift) => $shift->created_at->format('Y-F-d'))
-            ->addColumn('balance_old', fn(Transaction $transaction) => money($transaction->balance_old, currencyCode()))
+            ->addColumn('balance_old', fn(Transaction $transaction) => money($transaction->balance_old, currencyCode(), true))
             ->addColumn('user_name', fn(Transaction $transaction) => $transaction->user->full_name)
-            ->addColumn('amount', fn(Transaction $transaction) => money($transaction->amount, currencyCode()))
-            ->addColumn('balance_new', fn(Transaction $transaction) => money($transaction->balance_new, currencyCode()))
-            ->addColumn('type', fn(Transaction $transaction) => $transaction->type->color())
+            ->addColumn('amount', fn(Transaction $transaction) => money($transaction->amount, currencyCode() , true))
+            ->addColumn('balance_new', fn(Transaction $transaction) => money($transaction->balance_new, currencyCode(), true))
+            ->addColumn('transaction_type',function (Transaction $shift){
+
+                $table = new self();
+
+                return $shift->type == TransactionTypeEnum::MONEY_IN ?
+                    $table->active($shift->type->label()) :
+                    $table->notActive($shift->type->label());
+            })
+            ->addColumn('location_name', fn(Transaction $transaction) => $transaction->location->name)
             ->addColumn('category', fn(Transaction $transaction) => $transaction->category->value)
-            ->rawColumns(['balance_old','balance_new','type','category'])
+            ->rawColumns(['balance_old','balance_new','transaction_type','category'])
             ->toJson();
     }
 

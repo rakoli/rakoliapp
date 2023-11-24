@@ -83,6 +83,7 @@
 
         <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}"
                 type="text/javascript"></script>
+      {{ $dataTableHtml->scripts()  }}
 
     @endpush
 @endsection

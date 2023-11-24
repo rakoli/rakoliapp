@@ -44,21 +44,21 @@ trait LakoriDatatable
     }
 
 
-    private function active()
+    private function active($label ="Active")
     {
         ob_start();
         ?>
-        <span class='badge badge-success'>Active</span>
+        <span class='badge badge-success'><?= $label ?></span>
         <?php
         return ob_get_clean();
 
     }
 
-    private function notActive()
+    private function notActive($label = "Not Active")
     {
         ob_start();
         ?>
-        <span class='badge badge-warning' style="background-color: #F96E46; color: #fff3cd">Not Active</span>
+        <span class='badge badge-warning' style="background-color: #F96E46; color: #fff3cd"><?= $label ?></span>
         <?php
         return ob_get_clean();
 
