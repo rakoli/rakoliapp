@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use Yajra\DataTables\Html\Builder;
 use Yajra\DataTables\Html\Column;
+use Yajra\DataTables\Html\SearchPane;
 
 class TransactionsController extends Controller
 {
@@ -28,16 +29,16 @@ class TransactionsController extends Controller
         }
 
         $dataTableHtml = $builder->columns([
-            Column::make('id')->title('#')->searchable(),
-            Column::make('created_at')->title(__('date'))->searchable(),
-            Column::make('location.name')->title(__('Location'))->searchable(),
-            Column::make('user_name')->title(__('user'))->searchable(),
-            Column::make('balance_old')->title(__('Old Balance') . ' ' . strtoupper(session('currency')))->searchable(),
-            Column::make('balance_new')->title(__('New Balance'))->searchable(),
-            Column::make('transaction_type')->title(__('Type'))->searchable(),
-            Column::make('category')->title(__('Category'))->searchable(),
+            Column::make('id')->title('#')->searchable(false)->orderable(),
+            Column::make('created_at')->title(__('date'))->searchable()->orderable(),
+            Column::make('location.name')->title(__('Location'))->searchable()->orderable(),
+            Column::make('user_name')->title(__('user'))->searchable()->orderable(),
+            Column::make('balance_old')->title(__('Old Balance') . ' ' . strtoupper(session('currency')))->searchable()->orderable(),
+            Column::make('balance_new')->title(__('New Balance'))->searchable()->orderable(),
+            Column::make('transaction_type')->title(__('Type'))->searchable()->orderable(),
+            Column::make('category')->title(__('Category'))->searchable()->orderable(),
         ])
-            ->orderBy(0, 'desc');
+            ->orderBy(0);
 
 
         return view('agent.agency.transactions')

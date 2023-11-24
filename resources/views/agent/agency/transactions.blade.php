@@ -30,22 +30,14 @@
                     <div class="d-flex flex-stack mb-5">
                         <!--begin::Search-->
                         <div class="d-flex align-items-center position-relative my-1">
-                            <i class="ki-duotone ki-magnifier fs-1 position-absolute ms-6"><span
-                                    class="path1"></span><span class="path2"></span></i>
-                            <x-input type="text" data-kt-docs-table-filter="search"
-                                     class="fform-control-solid w-250px ps-15" placeholder="Search Shits"/>
+
                         </div>
                         <!--end::Search-->
 
                         <!--begin::Toolbar-->
                         <div class="d-flex justify-content-end" data-kt-docs-table-toolbar="base">
                             <!--begin::Filter-->
-                            <button type="button" class="btn btn-light-primary me-3" data-bs-toggle="tooltip"
-                                    title="Coming Soon">
-                                <i class="ki-duotone ki-filter fs-2"><span class="path1"></span><span
-                                        class="path2"></span></i>
-                                Filter
-                            </button>
+
                             <!--end::Filter-->
 
                             <!--begin::Add customer-->
