@@ -25,20 +25,16 @@ class ExchangeTransactionFactory extends Factory
      */
     public function definition(): array
     {
-        $agentBusiness = Business::where('type', BusinessTypeEnum::AGENCY->value)->first();
-        $agentBusinessCode = $agentBusiness->code;
-        $vasBusiness = Business::where('type', BusinessTypeEnum::VAS->value)->first();
-        $vasBusinessCode = $vasBusiness->code;
-        $exchangeCode = null;
-        $exchange = ExchangeAds::where('business_code', $vasBusinessCode)->first();
-        $exchangeCode = $exchange->code;
         $fsps = FinancialServiceProvider::get('code')->toArray();
+        $exchangeAds = fake()->randomElement(ExchangeAds::get(['business_code','code'])->toArray());
+        $exchange = ExchangeAds::where('code', $exchangeAds['code'])->first();
         $paymentMethods = $exchange->exchange_payment_methods->toArray();
+        $traderBusiness = fake()->randomElement(Business::where('code','!=',$exchangeAds['business_code'])->get(['code'])->toArray());
 
         return [
-            'exchange_ads_code' => $exchangeCode,
-            'owner_business_code' => $vasBusinessCode,
-            'trader_business_code' => $agentBusinessCode,
+            'exchange_ads_code' => $exchangeAds['code'],
+            'owner_business_code' => $exchangeAds['business_code'],
+            'trader_business_code' => $traderBusiness['code'],
             'trader_action_type' => fake()->randomElement(ExchangeTransactionTypeEnum::class),
             'trader_action_method' => fake()->randomElement($paymentMethods)['method_name'],
             'trader_action_method_id' => fake()->randomElement($paymentMethods)['id'],

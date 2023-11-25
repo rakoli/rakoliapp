@@ -6,9 +6,11 @@ use App\Models\Business;
 use App\Models\ExchangeAds;
 use App\Models\ExchangePaymentMethod;
 use App\Models\ExchangeStat;
+use App\Models\ExchangeTransaction;
 use App\Models\Location;
 use App\Utils\Enums\ExchangePaymentMethodTypeEnum;
 use App\Utils\Enums\ExchangeStatusEnum;
+use Database\Factories\ExchangeTransactionFactory;
 use Illuminate\Database\Seeder;
 
 class SampleBusinessSeeder extends Seeder
@@ -30,6 +32,8 @@ class SampleBusinessSeeder extends Seeder
                     ->has(ExchangePaymentMethod::factory()->state(function (array $attributes) {
                         return ['type' => ExchangePaymentMethodTypeEnum::OWNER_SEND];
                     })->count(2),'exchange_payment_methods')
-            ,'exchange_ads')->create();
+                    ->has(ExchangeTransaction::factory()->count(2),'exchange_transactions')
+                    ->count(1)
+                ,'exchange_ads')->create();
     }
 }
