@@ -139,7 +139,7 @@ class User extends Authenticatable
 
     public function ads_exchange_chats() : HasMany
     {
-        return $this->hasMany(AdsExchangeChat::class, 'sender_code', 'code');
+        return $this->hasMany(ExchangeChat::class, 'sender_code', 'code');
     }
 
     public function getBusinessPendingPayments()
