@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Agent;
 
 use App\Http\Controllers\Controller;
+use App\Models\Business;
 use App\Models\ExchangeAds;
 use App\Models\ExchangePaymentMethod;
 use App\Models\ExchangeStat;
@@ -13,24 +14,73 @@ use App\Utils\Enums\ExchangeTransactionStatusEnum;
 use App\Utils\Enums\ExchangeTransactionTypeEnum;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\DataTables;
 
 class ExchangeController extends Controller
 {
-    public function ads()
+    public function ads(Request $request)
     {
         $stats = null;
         $dataTable = new DataTables();
         $builder = $dataTable->getHtmlBuilder();
+        $orderBy = null;
+        $orderByFilter = null;
+        if($request->get('order_by')){
+            $orderBy = ['order_by'=>$request->get('order_by')];
+            $orderByFilter = $request->get('order_by');
+        }
 
         if (request()->ajax()) {
 
             $ads = ExchangeAds::where('status', ExchangeStatusEnum::ACTIVE->value)
                 ->with('exchange_payment_methods')
                 ->with('business')
-                ->limit(50)->get();
+                ->with('business_stats');
 
-            return \Yajra\DataTables\Facades\DataTables::of($ads)
+            Log::info($request->get('order_by'));
+
+            if($request->get('order_by') == 'last_seen'){
+                $ads->withAggregate('business','last_seen')
+                    ->orderByDesc('business_last_seen');
+            }
+
+            if($request->get('order_by') == 'trades'){
+                $ads->withAggregate('business_stats','no_of_trades_completed')
+                    ->orderByDesc('business_stats_no_of_trades_completed');
+            }
+
+            if($request->get('order_by') == 'completion'){
+                $ads->withAggregate('business_stats','completion')
+                    ->orderByDesc('business_stats_completion');
+            }
+
+            if($request->get('order_by') == 'feedback' || $request->get('order_by') == null){
+                $ads->withAggregate('business_stats','feedback')
+                    ->orderByDesc('business_stats_feedback');
+            }
+
+            if($request->get('order_by') == 'recent'){
+                $ads->latest();
+            }
+
+            if($request->get('order_by') == 'min_amount_asc'){
+                $ads->orderBy('min_amount','asc');
+            }
+
+            if($request->get('order_by') == 'min_amount_desc'){
+                $ads->orderBy('min_amount','desc');
+            }
+
+            if($request->get('order_by') == 'max_amount_asc'){
+                $ads->orderBy('max_amount','asc');
+            }
+
+            if($request->get('order_by') == 'max_amount_desc'){
+                $ads->orderBy('max_amount','desc');
+            }
+
+            return \Yajra\DataTables\Facades\DataTables::eloquent($ads)
                 ->addColumn('business_details', function(ExchangeAds $ad) {
                     return view('agent.exchange.ads_datatable_components._business_details', compact( 'ad'));
                 })
@@ -63,10 +113,14 @@ class ExchangeController extends Controller
             ['data' => 'limit' , 'title' => __('Limit in').' '.strtoupper(session('currency'))],
             ['data' => 'payment', 'title' => __('Payment')],
             ['data' => 'trade', 'title' => __('general.exchange.trade')],
-        ])->responsive(true)->ordering(false)->info();
+        ])->responsive(true)
+            ->ordering(false)
+            ->ajax(route('exchange.ads',$orderBy))
+            ->paging(true)
+            ->dom('frtilp')
+            ->lengthMenu([[25, 50, 100, -1], [25, 50, 100, "All"]]);
 
-
-        return view('agent.exchange.ads', compact('dataTableHtml','stats'));
+        return view('agent.exchange.ads', compact('dataTableHtml','stats','orderByFilter'));
     }
 
     public function adsView(Request $request, $id)

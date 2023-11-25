@@ -72,6 +72,7 @@ class Kernel extends HttpKernel
         'onlyvas' => \App\Http\Middleware\OnlyVASMiddleware::class,
         'onlyagent' => \App\Http\Middleware\OnlyAgentMiddleware::class,
         'should_complete_registration' => \App\Http\Middleware\ShouldCompleteRegistrationMiddleware::class,
+        'lastseen_update' => \App\Http\Middleware\LastseenUpdateMiddleware::class,
     ];
 
     protected function bootstrappers()

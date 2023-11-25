@@ -22,7 +22,7 @@ Route::middleware(['auth','should_complete_registration','onlyagent'])->group(fu
     //END: AGENCY MODULE
 
     //EXCHANGE MODULE
-    Route::name('exchange.')->prefix('exchange')->group(function () {
+    Route::name('exchange.')->prefix('exchange')->middleware('lastseen_update')->group(function () {
 
         Route::get('ads', [App\Http\Controllers\Agent\ExchangeController::class, 'ads'])->name('ads');
         Route::get('ads/view/{id}', [App\Http\Controllers\Agent\ExchangeController::class, 'adsView'])->name('ads.view');

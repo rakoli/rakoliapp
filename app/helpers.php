@@ -147,6 +147,8 @@ function setupSession(User $user, $isRegisteringUser = false){
     }else{
         Session::put('business_name', 'ADMIN - RAKOLI SYSTEMS');
     }
+
+    $user->lastSeenUpdate();
 }
 
 function returnActiveMenuStyle($menuSection) : string

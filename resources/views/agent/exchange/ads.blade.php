@@ -20,36 +20,23 @@
                 <div class="card-title flex-column">
                     <h3 class="fw-bold mb-1">{{__("Exchange Advertisements")}}</h3>
                 </div>
-{{--                <!--begin::Card title-->--}}
-{{--                <!--begin::Card toolbar-->--}}
-{{--                <div class="card-toolbar my-1">--}}
-{{--                    <!--begin::Select-->--}}
-{{--                    <div class="me-6 my-1">--}}
-{{--                        <select id="kt_filter_year" name="year" data-control="select2" data-hide-search="true" class="w-125px form-select form-select-solid form-select-sm">--}}
-{{--                            <option value="All" selected="selected">Region</option>--}}
-{{--                            <option value="thisyear">Dar es salaam</option>--}}
-{{--                            <option value="thismonth">Arusha</option>--}}
-{{--                        </select>--}}
-{{--                    </div>--}}
-{{--                    <!--end::Select-->--}}
-{{--                    <!--begin::Select-->--}}
-{{--                    <div class="me-4 my-1">--}}
-{{--                        <select id="kt_filter_orders" name="orders" data-control="select2" data-hide-search="true" class="w-125px form-select form-select-solid form-select-sm">--}}
-{{--                            <option value="All" selected="selected">Sub Region</option>--}}
-{{--                            <option value="Approved">Kinondoni</option>--}}
-{{--                            <option value="Declined">Orkesumet</option>--}}
-{{--                        </select>--}}
-{{--                    </div>--}}
-{{--                    <!--end::Select-->--}}
-{{--                    <!--begin::Search-->--}}
-{{--                    <div class="d-flex align-items-center position-relative my-1">--}}
-{{--                        <i class="ki-outline ki-magnifier fs-3 position-absolute ms-3"></i>--}}
-{{--                        <input type="text" id="kt_filter_search" class="form-control form-control-solid form-select-sm w-200px ps-9" placeholder="Search Advertisements" />--}}
-{{--                    </div>--}}
-{{--                    <!--end::Search-->--}}
-
-{{--                </div>--}}
-{{--                <!--begin::Card toolbar-->--}}
+                <!--begin::Card title-->
+                <!--begin::Card toolbar-->
+                <div class="card-toolbar my-1">
+                    <select id="exchange_filter" name="exchange_filter" class="w-125px form-select form-select-solid" onchange="filterChanged(this.value)">
+                        <option value="feedback" @if($orderByFilter == 'feedback') selected @endif>{{__("Feedback Rating")}}</option>
+                        <option value="last_seen" @if($orderByFilter == 'last_seen') selected @endif>{{__("Last Seen")}}</option>
+                        <option value="completion" @if($orderByFilter == 'completion') selected @endif>{{__("Completion")}}</option>
+                        <option value="trades" @if($orderByFilter == 'trades') selected @endif>{{__("No of Trades")}}</option>
+                        <option value="recent" @if($orderByFilter == 'recent') selected @endif>{{__("Recent")}}</option>
+                        <option value="min_amount_asc" @if($orderByFilter == 'min_amount_asc') selected @endif>{{__("Min Amount - Ascending")}}</option>
+                        <option value="min_amount_desc" @if($orderByFilter == 'min_amount_desc') selected @endif>{{__("Min Amount - Descending")}}</option>
+                        <option value="max_amount_asc" @if($orderByFilter == 'max_amount_asc') selected @endif>{{__("Max Amount - Ascending")}}</option>
+                        <option value="max_amount_desc" @if($orderByFilter == 'max_amount_desc') selected @endif>{{__("Max Amount - Descending")}}</option>
+                    </select>
+                    <a href="#" class="btn btn-secondary m-5" onclick="filterAction()">{{__('Filter')}}</a>
+                </div>
+                <!--begin::Card toolbar-->
             </div>
             <!--end::Card header-->
             <!--begin::Card body-->
@@ -72,6 +59,30 @@
 @endsection
 
 @section('footer_js')
+
+    <script>
+        var filterValue = getSelectValue('exchange_filter');
+
+        function filterChanged(selectedFilter){
+            filterValue = selectedFilter;
+        }
+
+        function filterAction(){
+            console.log(filterValue);
+            location.href = "{{route('exchange.ads')}}"+"?order_by="+filterValue;
+
+        }
+
+        function getSelectValue(selectorId) {
+            var selectedIndex = document.getElementById(selectorId).selectedIndex;
+            var selectedValue = document.getElementById(selectorId).options[selectedIndex].value;
+            return selectedValue;
+        }
+
+    </script>
+
+    {!! $dataTableHtml->scripts(attributes: ['type' => 'module']) !!}
+
     <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}" type="text/javascript"></script>
-    {!! $dataTableHtml->scripts() !!}
+
 @endsection

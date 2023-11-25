@@ -6,10 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\Builder;
 
 class ExchangeAds extends Model
 {
     use HasFactory;
+
+    protected $appends = ['completion','feedback','trades'];
 
     public function area() : BelongsTo
     {
@@ -54,5 +59,43 @@ class ExchangeAds extends Model
     public function exchange_payment_methods()
     {
         return $this->hasMany(ExchangePaymentMethod::class,'exchange_ads_code','code');
+    }
+
+    public function business_stats(): hasOneThrough
+    {
+        return $this->hasOneThrough(ExchangeStat::class, Business::class,'code','business_code','business_code','code');
+    }
+
+    public function getCompletionAttribute()
+    {
+        if($this->business == null){
+            return null;
+        }
+        if($this->business->exchange_stats == null){
+            return null;
+        }
+        return $this->business->exchange_stats->getCompletionRatePercentage();
+    }
+
+    public function getFeedbackAttribute()
+    {
+        if($this->business == null){
+            return null;
+        }
+        if($this->business->exchange_stats == null){
+            return null;
+        }
+        return $this->business->exchange_stats->getFeedbackRatePercentage();
+    }
+
+    public function getTradesAttribute()
+    {
+        if($this->business == null){
+            return null;
+        }
+        if($this->business->exchange_stats == null){
+            return null;
+        }
+        return $this->business->exchange_stats->no_of_trades_completed;
     }
 }

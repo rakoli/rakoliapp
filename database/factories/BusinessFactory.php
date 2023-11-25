@@ -39,6 +39,7 @@ class BusinessFactory extends Factory
             'package_code' => fake()->randomElement($packages)['code'],
             'package_expiry_at' => now()->addDays(random_int(1,30)),
             'business_location' => fake()->address,
+            'last_seen' => now()->subMinutes(random_int(1,180)),
         ];
     }
 }

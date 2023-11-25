@@ -20,7 +20,7 @@ class SampleBusinessSeeder extends Seeder
      */
     public function run(): void
     {
-        Business::factory()->count(8)
+        Business::factory()->count(35)
             ->has(ExchangeStat::factory(),'exchange_stats')
             ->has(Location::factory()->count(2),'locations')
             ->has(ExchangeAds::factory()

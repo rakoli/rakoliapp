@@ -38,6 +38,7 @@ return new class extends Migration
             $table->string('business_location')->nullable();
             $table->string('status')->default(\App\Utils\Enums\BusinessStatusEnum::ACTIVE->value);//1- Active, 0 - Disabled, 2 - Inactive
             $table->decimal('balance',12,2)->default(0); //Earning from referral and VAS
+            $table->timestamp('last_seen')->nullable();
             $table->timestamps();
         });
 

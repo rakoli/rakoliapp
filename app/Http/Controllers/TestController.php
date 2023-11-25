@@ -7,6 +7,7 @@ use App\Actions\RequestEmailVerificationCode;
 use App\Actions\SendTelegramNotification;
 use App\Mail\SendCodeMail;
 use App\Models\ExchangeAds;
+use App\Models\ExchangeStat;
 use App\Models\SystemIncome;
 use App\Models\User;
 use App\Utils\DPOPayment;
@@ -28,6 +29,6 @@ class TestController extends Controller
 {
     public function testing()
     {
-       dd(empty(auth()->user()->phone_verified_at));
+
     }
 }
