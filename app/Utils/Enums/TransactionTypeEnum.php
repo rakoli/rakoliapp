@@ -10,15 +10,15 @@ enum TransactionTypeEnum : string
     public function color()
     {
         return match ($this){
-            static::MONEY_OUT => "badge badge-warning",
+            static::MONEY_OUT => "badge badge-danger",
             static::MONEY_IN => "badge badge-primary",
         };
     }
     public function label()
     {
         return match ($this){
-            static::MONEY_OUT => "Money In",
-            static::MONEY_IN => "Money Out",
+            static::MONEY_OUT => "Money Out",
+            static::MONEY_IN => "Money In",
         };
     }
 }

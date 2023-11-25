@@ -54,6 +54,16 @@ trait LakoriDatatable
 
     }
 
+    private function status(string $label ="Active", string $badgeClass = "badge badge-success")
+    {
+        ob_start();
+        ?>
+        <span class='<?= $badgeClass?>'><?= $label ?></span>
+        <?php
+        return ob_get_clean();
+
+    }
+
     private function notActive($label = "Not Active")
     {
         ob_start();

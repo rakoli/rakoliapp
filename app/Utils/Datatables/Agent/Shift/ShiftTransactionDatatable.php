@@ -39,9 +39,10 @@ class ShiftTransactionDatatable
 
                 $table = new self();
 
-                return $shift->type == TransactionTypeEnum::MONEY_IN ?
-                    $table->active($shift->type->label()) :
-                    $table->notActive($shift->type->label());
+                return $table->status(
+                    label: $shift->type->label(),
+                    badgeClass: $shift->type->color()
+                );
             })
             ->addColumn('location_name', fn(Transaction $transaction) => $transaction->location->name)
             ->addColumn('category', fn(Transaction $transaction) => $transaction->category->value)
