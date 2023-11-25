@@ -28,11 +28,7 @@ class AgencyController extends Controller
     }
 
 
-    public function networks()
-    {
 
-        return view('agent.agency.networks');
-    }
 
     public function loans()
     {

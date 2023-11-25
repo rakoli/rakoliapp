@@ -15,6 +15,8 @@ class Network extends Model
     use HasFactory;
 
 
+    protected $guarded = [];
+
     protected static function booted()
     {
         static::addGlobalScope(new LocationScoped());
