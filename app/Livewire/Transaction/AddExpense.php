@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Transaction;
 
+use App\Actions\Agent\Shift\AddIncomeExpenseTransaction;
 use App\Models\Location;
 use App\Models\Network;
 use App\Utils\Enums\TransactionCategoryEnum;
@@ -18,9 +19,6 @@ class AddExpense extends Component
 
     #[Validate('required', as:  "Location is required ")]
     public $location_code;
-
-    #[Validate('required', as:  "network /Till is required ")]
-    public $till_code;
 
     #[Validate('required|numeric', as:  "Amount is required ")]
     public $amount;
@@ -39,8 +37,7 @@ class AddExpense extends Component
             $validated['category'] =  TransactionCategoryEnum::EXPENSE;
             $validated['type'] =  TransactionTypeEnum::MONEY_OUT->value;
 
-            \App\Actions\Agent\Shift\AddTransaction::run($validated);
-
+            AddIncomeExpenseTransaction::run($validated);
 
             $this->dismissModal('add-expenses');
 

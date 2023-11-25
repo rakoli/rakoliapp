@@ -37,32 +37,7 @@
                 </div>
 
             </div>
-            <div class="row fv-row py-3">
 
-
-
-                <div class="col-6 py-3">
-                    <x-label class="" label="Select till" for="till_code"/>
-
-                    <x-select2
-                        class="form-control-solid  form-control @error('till_code') form-control-error @enderror"
-                        wire:model.blur="till_code"
-                        placeholder="{{ __('Select a till') }}"
-                        id="till_code">
-                        <option value="">{{ __('Select till ') }}</option>
-
-                        @foreach($tills as $till)
-                            <option value="{{ $till->code }}">{{ $till->agency->name }}</option>
-                        @endforeach
-                    </x-select2>
-                    @error('till_code')
-                    <div class="help-block text-danger">
-                        {{ $message }}
-                    </div>
-                    @enderror
-
-                </div>
-            </div>
 
             <div class="row fv-row py-3">
                 <div class="col-12">
