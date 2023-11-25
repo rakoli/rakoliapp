@@ -44,9 +44,17 @@ class ShiftTransactionDatatable
                     badgeClass: $shift->type->color()
                 );
             })
+            ->addColumn('actions', function(){
+
+                return (new self())->buttons([
+                    'Tills' => "#",
+                    'Transaction' => "#",
+
+                ]);
+            })
             ->addColumn('location_name', fn(Transaction $transaction) => $transaction->location->name)
             ->addColumn('category', fn(Transaction $transaction) => $transaction->category->value)
-            ->rawColumns(['balance_old','balance_new','transaction_type','category'])
+            ->rawColumns(['balance_old','balance_new','transaction_type','category','actions'])
             ->toJson();
     }
 

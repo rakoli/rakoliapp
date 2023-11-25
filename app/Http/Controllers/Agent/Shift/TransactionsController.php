@@ -34,9 +34,11 @@ class TransactionsController extends Controller
             Column::make('location.name')->title(__('Location'))->searchable()->orderable(),
             Column::make('user_name')->title(__('user'))->searchable()->orderable(),
             Column::make('balance_old')->title(__('Old Balance') . ' ' . strtoupper(session('currency')))->searchable()->orderable(),
+            Column::make('amount')->title(__('Amount Transacted') . ' ' . strtoupper(session('currency')))->searchable()->orderable(),
             Column::make('balance_new')->title(__('New Balance'))->searchable()->orderable(),
             Column::make('transaction_type')->title(__('Type'))->searchable()->orderable(),
             Column::make('category')->title(__('Category'))->searchable()->orderable(),
+            Column::make('actions')->title(__('Actions')),
         ])
             ->orderBy(0);
 

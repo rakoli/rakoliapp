@@ -35,7 +35,7 @@
                         <!--end::Search-->
 
                         <!--begin::Toolbar-->
-                        <div class="d-flex justify-content-end" data-kt-docs-table-toolbar="base">
+                        <div class="d-flex justify-content-end gap-2" data-kt-docs-table-toolbar="base">
                             <!--begin::Filter-->
 
                             <!--end::Filter-->
@@ -49,6 +49,28 @@
                             >
 
                                 <livewire:transaction.add-transaction lazy />
+
+
+                            </x-modal>
+
+                            <x-modal
+                                targetId="add-expenses"
+                                label="Add Expenses"
+                                modalTitle="Fill the form below record a Expenses"
+                                isStacked="true"
+                            >
+
+                                <livewire:transaction.add-expense lazy />
+
+
+                            </x-modal>  <x-modal
+                                targetId="add-income"
+                                label="Add Income"
+                                modalTitle="Fill the form below record a income"
+                                isStacked="true"
+                            >
+
+                                <livewire:transaction.add-income lazy />
 
 
                             </x-modal>
