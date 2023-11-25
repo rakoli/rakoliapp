@@ -20,21 +20,24 @@
                             <div class="py-5 fs-6">
 
                                 <!--begin::Details item-->
-                                <div class="fw-bold mt-5">Business</div>
+                                <div class="fw-bold mt-5">{{__("Business")}}</div>
                                 <div class="text-gray-600">{{$exchangeAd->business->business_name}}</div>
                                 <!--begin::Details item-->
                                 <!--begin::Details item-->
-                                <div class="fw-bold mt-5">Trades</div>
+                                <div class="fw-bold mt-5">{{__("general.exchange.trade")}}</div>
                                 <div class="text-gray-600">
                                     <div class="text-gray-600">
-                                        {{$exchangeAd->business->exchange_stats->no_of_trades_completed}} trades |
-                                        {{$exchangeAd->business->exchange_stats->getCompletionRatePercentage()}}% completion |
-                                        <i class="ki-solid ki-like fs-6"></i> {{$exchangeAd->business->exchange_stats->getFeedbackRatePercentage()}}%
+                                        {{$exchangeAd->trades}} {{__("trades")}} |
+                                        {{$exchangeAd->completion}}% {{__('completion')}} |
+                                        <i class="ki-solid ki-like fs-6"></i> {{$exchangeAd->feedback}}%
+                                    </div>
+                                    <div class="text-gray-600">
+                                        {{__("Exchange Volume")}}: {{number_format($exchangeAd->business->exchange_stats->volume_traded)}} {{session('currency')}}
                                     </div>
                                 </div>
                                 <!--begin::Details item-->
                                 <!--begin::Details item-->
-                                <div class="fw-bold mt-5">Address</div>
+                                <div class="fw-bold mt-5">{{__("Address")}}</div>
                                 <div class="text-gray-600">
                                     @if(!empty($exchangeAd->business->business_location))
                                         {{$exchangeAd->business->business_location}}
@@ -44,9 +47,9 @@
                                 </div>
                                 <!--begin::Details item-->
                                 <!--begin::Details item-->
-                                <div class="fw-bold mt-5">Verification</div>
+                                <div class="fw-bold mt-5">{{__('Verification')}}</div>
                                 <div class="text-gray-600">
-                                    Phone
+                                    {{__("Phone")}}
                                     @if(!empty(auth()->user()->phone_verified_at))
                                         <i class="ki-duotone ki-verify fs-3">
                                             <span class="path1"></span>
@@ -60,7 +63,7 @@
                                         </i>
                                     @endif
                                     |
-                                    Identification
+                                    {{__("Identification")}}
                                     @if(!empty(auth()->user()->id_verified_at))
                                         <i class="ki-duotone ki-verify fs-3">
                                             <span class="path1"></span>
@@ -75,11 +78,11 @@
                                     @endif
                                 </div>
                                 <!--begin::Details item-->
-                                <div class="fw-bold mt-5">Exchange Availability</div>
+                                <div class="fw-bold mt-5">{{__("Exchange Availability")}}</div>
                                 <div class="text-gray-600">{{$exchangeAd->availability_desc}}</div>
                                 <!--begin::Details item-->
                                 <!--begin::Details item-->
-                                <div class="fw-bold mt-5">Terms</div>
+                                <div class="fw-bold mt-5">{{__("Terms")}}</div>
                                 <div class="text-gray-600">{{$exchangeAd->terms}}</div>
                                 <!--begin::Details item-->
                             </div>
@@ -100,7 +103,7 @@
                     <div class="card-header border-0">
                         <!--begin::Card title-->
                         <div class="card-title">
-                            <h2 class="fw-bold">Trade</h2>
+                            <h2 class="fw-bold">{{__("general.exchange.trade")}}</h2>
                         </div>
                         <!--end::Card title-->
                     </div>
@@ -118,16 +121,16 @@
                                 <div class="col-md-3 text-md-end">
                                     <!--begin::Label-->
                                     <label class="fs-6 fw-semibold form-label mt-3">
-                                        Action
+                                        {{__("Action")}}
                                     </label>
                                     <!--end::Label-->
                                 </div>
                                 <div class="col-md-9">
                                     <!--begin::Select2-->
                                     <select class="form-select form-select-solid" name="action_select" id="action_select" onchange="actionChanged(this.value)">
-                                        <option selected disabled>Selected desired action</option>
-                                        <option value="buy">Buy (Get)</option>
-                                        <option value="sell">Sell (Give)</option>
+                                        <option selected disabled>{{__("Selected desired action")}}</option>
+                                        <option value="buy">{{__("Buy (Get)")}}</option>
+                                        <option value="sell">{{__("Sell (Give)")}}</option>
                                     </select>
                                     <!--end::Select2-->
                                 </div>
@@ -139,14 +142,14 @@
                                 <div class="col-md-3 text-md-end">
                                     <!--begin::Label-->
                                     <label class="fs-6 fw-semibold form-label mt-3">
-                                        Action Payment
+                                        {{__("Action Payment")}}
                                     </label>
                                     <!--end::Label-->
                                 </div>
                                 <div class="col-md-9">
                                     <!--begin::Select2-->
                                     <select class="form-select form-select-solid" name="action_method_select" id="action_method_select">
-                                        <option disabled>Select the action payment method</option>
+                                        <option disabled>{{__("Select the action payment method")}}</option>
                                     </select>
                                     <!--end::Select2-->
                                 </div>
@@ -158,14 +161,14 @@
                                 <div class="col-md-3 text-md-end">
                                     <!--begin::Label-->
                                     <label class="fs-6 fw-semibold form-label mt-3">
-                                        For
+                                        {{__("For")}}
                                     </label>
                                     <!--end::Label-->
                                 </div>
                                 <div class="col-md-9">
                                     <!--begin::Select2-->
                                     <select class="form-select form-select-solid" name="action_for_select" id="action_for_select">
-                                        <option disabled>Select the for payment method</option>
+                                        <option disabled>{{__("Select the for payment method")}}</option>
                                     </select>
                                     <!--end::Select2-->
                                 </div>
@@ -177,12 +180,12 @@
                                 <div class="col-md-3 text-md-end">
                                     <!--begin::Label-->
                                     <label class="fs-6 fw-semibold form-label mt-3">
-                                        Amount
+                                        {{__("Amount")}}
                                     </label>
                                     <!--end::Label-->
                                 </div>
                                 <div class="col-md-9">
-                                    <input id="amount" name="amount" type="number" class="form-control" placeholder="amount for trade" min="{{$exchangeAd->min_amount}}" max="{{$exchangeAd->max_amount}}"/>
+                                    <input id="amount" name="amount" type="number" class="form-control" placeholder="{{__("amount for trade")}}" min="{{$exchangeAd->min_amount}}" max="{{$exchangeAd->max_amount}}"/>
                                     <div class="text-gray-600">{{number_format($exchangeAd->min_amount)}} - {{number_format($exchangeAd->max_amount)}} {{$exchangeAd->currency}}</div>
                                 </div>
                             </div>
@@ -193,7 +196,7 @@
                                 <div class="col-md-3 text-md-end">
                                     <!--begin::Label-->
                                     <label class="fs-6 fw-semibold form-label mt-3">
-                                        Comment
+                                        {{__("Comment")}}
                                     </label>
                                     <!--end::Label-->
                                 </div>
@@ -210,12 +213,12 @@
                                 <div class="col-md-9 offset-md-3">
                                     <div class="d-flex">
                                         <!--begin::Button-->
-                                        <a href="{{route('exchange.ads')}}" class="btn btn-light me-3">Cancel</a>
+                                        <a href="{{route('exchange.ads')}}" class="btn btn-light me-3">{{__("Cancel")}}</a>
                                         <!--end::Button-->
                                         <!--begin::Button-->
                                         <button type="submit" class="btn btn-primary" id="kt_submit">
-                                            <span class="indicator-label">Open Trade</span>
-                                            <span class="indicator-progress">Please wait...
+                                            <span class="indicator-label">{{__("Open Trade")}}</span>
+                                            <span class="indicator-progress">{{__("Please wait...")}}
 																<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                                         </button>
                                         <!--end::Button-->
