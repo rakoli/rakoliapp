@@ -2,8 +2,11 @@
 
 namespace App\Utils\Datatables;
 
+use Yajra\DataTables\Html\Builder;
+
 trait LakoriDatatable
 {
+
 
 
     protected function buttons($actions)
