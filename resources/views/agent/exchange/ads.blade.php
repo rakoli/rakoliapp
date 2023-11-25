@@ -18,37 +18,38 @@
             <div class="card-header mt-5">
                 <!--begin::Card title-->
                 <div class="card-title flex-column">
-                    <h3 class="fw-bold mb-1">Exchange Advertisements</h3>
+                    <h3 class="fw-bold mb-1">{{__("Exchange Advertisements")}}</h3>
                 </div>
-                <!--begin::Card title-->
-                <!--begin::Card toolbar-->
-                <div class="card-toolbar my-1">
-                    <!--begin::Select-->
-                    <div class="me-6 my-1">
-                        <select id="kt_filter_year" name="year" data-control="select2" data-hide-search="true" class="w-125px form-select form-select-solid form-select-sm">
-                            <option value="All" selected="selected">Region</option>
-                            <option value="thisyear">Dar es salaam</option>
-                            <option value="thismonth">Arusha</option>
-                        </select>
-                    </div>
-                    <!--end::Select-->
-                    <!--begin::Select-->
-                    <div class="me-4 my-1">
-                        <select id="kt_filter_orders" name="orders" data-control="select2" data-hide-search="true" class="w-125px form-select form-select-solid form-select-sm">
-                            <option value="All" selected="selected">Sub Region</option>
-                            <option value="Approved">Kinondoni</option>
-                            <option value="Declined">Orkesumet</option>
-                        </select>
-                    </div>
-                    <!--end::Select-->
-                    <!--begin::Search-->
-                    <div class="d-flex align-items-center position-relative my-1">
-                        <i class="ki-outline ki-magnifier fs-3 position-absolute ms-3"></i>
-                        <input type="text" id="kt_filter_search" class="form-control form-control-solid form-select-sm w-200px ps-9" placeholder="Search Advertisements" />
-                    </div>
-                    <!--end::Search-->
-                </div>
-                <!--begin::Card toolbar-->
+{{--                <!--begin::Card title-->--}}
+{{--                <!--begin::Card toolbar-->--}}
+{{--                <div class="card-toolbar my-1">--}}
+{{--                    <!--begin::Select-->--}}
+{{--                    <div class="me-6 my-1">--}}
+{{--                        <select id="kt_filter_year" name="year" data-control="select2" data-hide-search="true" class="w-125px form-select form-select-solid form-select-sm">--}}
+{{--                            <option value="All" selected="selected">Region</option>--}}
+{{--                            <option value="thisyear">Dar es salaam</option>--}}
+{{--                            <option value="thismonth">Arusha</option>--}}
+{{--                        </select>--}}
+{{--                    </div>--}}
+{{--                    <!--end::Select-->--}}
+{{--                    <!--begin::Select-->--}}
+{{--                    <div class="me-4 my-1">--}}
+{{--                        <select id="kt_filter_orders" name="orders" data-control="select2" data-hide-search="true" class="w-125px form-select form-select-solid form-select-sm">--}}
+{{--                            <option value="All" selected="selected">Sub Region</option>--}}
+{{--                            <option value="Approved">Kinondoni</option>--}}
+{{--                            <option value="Declined">Orkesumet</option>--}}
+{{--                        </select>--}}
+{{--                    </div>--}}
+{{--                    <!--end::Select-->--}}
+{{--                    <!--begin::Search-->--}}
+{{--                    <div class="d-flex align-items-center position-relative my-1">--}}
+{{--                        <i class="ki-outline ki-magnifier fs-3 position-absolute ms-3"></i>--}}
+{{--                        <input type="text" id="kt_filter_search" class="form-control form-control-solid form-select-sm w-200px ps-9" placeholder="Search Advertisements" />--}}
+{{--                    </div>--}}
+{{--                    <!--end::Search-->--}}
+
+{{--                </div>--}}
+{{--                <!--begin::Card toolbar-->--}}
             </div>
             <!--end::Card header-->
             <!--begin::Card body-->

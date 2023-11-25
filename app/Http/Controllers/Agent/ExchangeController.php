@@ -48,7 +48,7 @@ class ExchangeController extends Controller
                     return view('agent.exchange.ads_datatable_components._payment', compact( 'ad','buyMethods','sellMethods','lastBuy', 'lastSell'));
                 })
                 ->addColumn('trade', function(ExchangeAds $ad) {
-                    return '<a href="'.route('exchange.ads.view',$ad->id).'" class="btn btn-light btn-sm">View Ad</a>';
+                    return '<a href="'.route('exchange.ads.view',$ad->id).'" class="btn btn-light btn-sm">'.__("View Ad").'</a>';
                 })
                 ->rawColumns(['business_details','terms','limit','payment','trade'])
                 ->addIndexColumn()
@@ -59,11 +59,11 @@ class ExchangeController extends Controller
         $dataTableHtml = $builder->columns([
             ['data' => 'id', 'title' => __('id')],
             ['data' => 'business_details', 'title' => __('Business')],
-            ['data' => 'terms', 'title' => __('Terms/Availability')],
-            ['data' => 'limit' , 'title' => __('Limit'). ' in '.strtoupper(session('currency'))],
+            ['data' => 'terms', 'title' => __('Terms')],
+            ['data' => 'limit' , 'title' => __('Limit in').' '.strtoupper(session('currency'))],
             ['data' => 'payment', 'title' => __('Payment')],
-            ['data' => 'trade', 'title' => __('Trade')],
-        ])->orderBy(0,'desc')->responsive(true);
+            ['data' => 'trade', 'title' => __('general.exchange.trade')],
+        ])->responsive(true)->ordering(false)->info();
 
 
         return view('agent.exchange.ads', compact('dataTableHtml','stats'));
