@@ -38,15 +38,7 @@ class NetworkDatatable implements HasDatatable
             ->addColumn('location_name', fn(Network $record) => $record->location->name)
             ->addColumn('agency_name', fn(Network $record) => $record->agency->name)
             ->addColumn('balance', fn(Network $record) => money($record->balance, currencyCode(), true))
-            ->addColumn('actions', function(Network $record){
-
-                return (new self())->buttons([
-                    'Tills' => url('/home'),
-                    'Transaction' => "#",
-
-                ]);
-            })
-            ->rawColumns(['balance','actions','agency_name','location_name'])
+            ->rawColumns(['balance','agency_name','location_name'])
             ->toJson();
     }
 
@@ -57,8 +49,8 @@ class NetworkDatatable implements HasDatatable
             Column::make('created_at')->title(__('date'))->searchable()->orderable(),
             Column::make('location_name')->title(__('Location'))->searchable()->orderable(),
             Column::make('agency_name')->title(__('Agency'))->searchable()->orderable(),
+            Column::make('agent_no')->title(__('Agent No'))->searchable()->orderable(),
             Column::make('balance')->title(__('Balance') . ' ' . strtoupper(session('currency')))->searchable()->orderable(),
-            C
         ])
             ->orderBy(0);
     }

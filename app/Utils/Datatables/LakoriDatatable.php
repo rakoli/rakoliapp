@@ -15,28 +15,33 @@ trait LakoriDatatable
         ?>
 
 
-            <a href="#" class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                Actions
-                <i class="ki-outline ki-down fs-5 ms-1"></i>                    </a>
-            <!--begin::Menu-->
-            <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4" data-kt-menu="true">
-                <!--begin::Menu item-->
-                <div class="menu-item px-3">
-                    <a href="/metronic8/demo29/../demo29/apps/customers/view.html" class="menu-link px-3">
-                        View
-                    </a>
-                </div>
-                <!--end::Menu item-->
+        <a href="#" class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
+           data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+            Actions
+            <i class="ki-outline ki-down fs-5 ms-1"></i>
+        </a>
+        <!--begin::Menu-->
+        <div
+            class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
+            data-kt-menu="true">
 
-                <!--begin::Menu item-->
+            <?php
+            foreach ($actions as $name => $route) {
+
+
+                ?>
                 <div class="menu-item px-3">
-                    <a href="#" class="menu-link px-3" data-kt-customer-table-filter="delete_row">
-                        Delete
-                    </a>
+
+                    <a class="menu-link px-3" href="<?= $route ?>"><?= $name ?></a>
                 </div>
-                <!--end::Menu item-->
-            </div>
-            <!--end::Menu-->
+                <?php
+            }
+            ?>
+
+            <!--end::Menu item-->
+        </div>
+
+        <!--end::Menu-->
 
 
         <?php

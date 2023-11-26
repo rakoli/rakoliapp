@@ -2,9 +2,9 @@
 
 @section('title', "Networks")
 
-@section('header_js')
+@push('styles')
     <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css" />
-@endsection
+@endpush
 
 @section('breadcrumb')
     <!--begin::Separator-->
@@ -48,7 +48,7 @@
                                 isStacked="true"
                             >
 
-                                <livewire:transaction.add-transaction lazy />
+                                <livewire:shift.add-network lazy />
 
 
                             </x-modal>
@@ -75,8 +75,13 @@
 
         <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}"
                 type="text/javascript"></script>
-        {{ $dataTableHtml->scripts()  }}
+        {{ $dataTableHtml->scripts(attributes: ['type' => 'module'])  }}
 
+        <script>
+            $('#agency').select2({
+
+            });
+        </script>
 
     @endpush
 @endsection

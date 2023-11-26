@@ -97,7 +97,7 @@
 
         <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}"
                 type="text/javascript"></script>
-      {{ $dataTableHtml->scripts()  }}
+      {{ $dataTableHtml->scripts(attributes: ['type' => 'module'])  }}
 
     @endpush
 @endsection
