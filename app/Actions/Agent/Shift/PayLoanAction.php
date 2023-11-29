@@ -16,7 +16,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsAction;
 
-class PayLoan
+class PayLoanAction
 {
     use  AsAction;
 
@@ -29,8 +29,8 @@ class PayLoan
         try {
 
 
-           throw_if(condition:  ! Shift::query()->where('status', ShiftStatusEnum::OPEN)->exists(),
-               // exception: new \Exception("You cannot transact without an open shift")
+           throw_if(condition:  $loan->payments()->sum('amount') + $data['amount'] > $loan->amount,
+               exception: new \Exception("You cannot receive more than balance {$loan->balance}")
             );
 
 
@@ -48,6 +48,20 @@ class PayLoan
                    'payment_method' => $data['payment_method'] ?? null,
                    'deposited_at' => Carbon::parse($data['deposited_at']),
                 ]);
+
+            $loan->refresh();
+
+
+            if ($loan->payments()->sum('amount') != $loan->amount){
+                $loan->updateQuietly([
+                    'status' => LoanPaymentStatusEnum::PARTIALLY
+                ]);
+            }
+            else{
+                $loan->updateQuietly([
+                    'status' => LoanPaymentStatusEnum::FULL_PAID
+                ]);
+            }
 
 
             event(new LoanPaidEvent(payment: $payment));

@@ -66,6 +66,7 @@ class LoanDatatable implements HasDatatable
                 ],
             ]))
             ->addColumn('amount', fn(Loan $record) => money($record->amount, currencyCode(), true))
+            ->addColumn('balance', fn(Loan $record) => money($record->balance, currencyCode(), true))
             ->rawColumns(['balance', 'agency_name', "action", 'location_name', 'user_name', 'type', 'status'])
             ->toJson();
     }
@@ -82,6 +83,7 @@ class LoanDatatable implements HasDatatable
             Column::make('status')->title(__('status'))->searchable()->orderable(),
             Column::make('type')->title(__('type'))->searchable()->orderable(),
             Column::make('amount')->title(__('amount') . ' ' . strtoupper(session('currency')))->searchable()->orderable(),
+            Column::make('balance')->title(__('balance') . ' ' . strtoupper(session('currency')))->searchable()->orderable(),
             Column::make('action')->data('action')->title(__('action')),
 
         ])

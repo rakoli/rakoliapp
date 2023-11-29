@@ -71,12 +71,7 @@
     </div>
 
 
-    <x-modal
-        targetId="pay-loan-modal"
-        modalTitle="fill the form below to pay this loan"
-        >
 
-    </x-modal>
     @push('js')
 
 

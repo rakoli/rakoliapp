@@ -1,6 +1,6 @@
 @extends('layouts.users.agent')
 
-@section('title', "Loans")
+@section('title', "Loans Payment")
 
 
 @section('breadcrumb')
@@ -23,7 +23,24 @@
                 <div class="card-body fs-6 py-15 px-10 py-lg-15 px-lg-15 text-gray-700">
 
 
-                    <livewire:shift.pay-loan :loan="$loan"/>
+                    <x-modal_with_button
+                        targetId="receive-loan-payment"
+                        label="receive Payment"
+                        modalTitle="Fill the form below record Loan payment"
+                        isStacked="true"
+                    >
+
+                        <livewire:shift.pay-loan :loan="$loan" lazy/>
+
+
+                    </x-modal_with_button>
+
+
+
+                    {!! $datatableHtml->table(['class' => 'table table-row-bordered table-row-dashed gy-4 align-middle fw-bold' , 'id' => 'loans-payment-table']) !!}
+
+
+
 
 
 
@@ -33,5 +50,31 @@
     </div>
 
 
+    @push('js')
+
+
+        <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}"
+                type="text/javascript"></script>
+        {{ $datatableHtml->scripts()  }}
+
+        <script>
+
+
+            $(document).ready(function (){
+
+                window.LaravelDataTables['loans-payment-table'].on('draw', function () {
+                    KTMenu.createInstances();
+                })
+            })
+
+
+
+            // // Re-init functions on every table re-draw -- more info: https://datatables.net/reference/event/draw
+            // dt.on('draw', function () {
+            //     KTMenu.createInstances();
+            // });
+        </script>
+
+    @endpush
 
 @endsection

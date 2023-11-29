@@ -6,6 +6,7 @@ use App\Models\Scopes\BusinessScoped;
 use App\Models\Scopes\LocationScoped;
 use App\Utils\Enums\LoanPaymentStatusEnum;
 use App\Utils\Enums\LoanTypeEnum;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -60,4 +61,10 @@ class Loan extends Model
         return $this->belongsTo(Location::class, 'location_code', 'code');
     }
 
+    public function balance() : Attribute
+    {
+        return  new Attribute(
+            get: fn() : float => $this->amount - $this->payments()->sum('amount')
+        );
+    }
 }

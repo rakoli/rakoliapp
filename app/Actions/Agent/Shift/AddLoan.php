@@ -52,7 +52,7 @@ class AddLoan
                 'type' => LoanTypeEnum::tryFrom($data['type']),
                 'status' =>  LoanPaymentStatusEnum::UN_PAID,
                 'shift_id' => $shiftId,
-                'code' => generateCode(name: $shiftId."-". $data['amount'], prefixText: $data['network_code']),
+                'code' => generateCode(name:  time(), prefixText: $data['network_code']),
                 'notes'  => $data['notes']
             ]);
 
