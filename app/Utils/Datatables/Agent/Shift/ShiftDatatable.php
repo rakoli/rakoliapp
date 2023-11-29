@@ -31,9 +31,14 @@ class ShiftDatatable
             ->addColumn('action', function(Shift  $shift){
 
                 return (new self())->buttons([
-                    'Tills' => route('agency.shift.till', $shift),
-                    'Transaction' => route('agency.transactions'),
-                  //  'Close Shift' => route('shift.show', $shift)
+                    'Tills' => [
+                        'route' => route('agency.shift.till', $shift),
+                        'attributes' => null
+                    ],
+                    'Transaction' => [
+                        'route' => route('agency.transactions'),
+                        'attributes' => route('agency.transactions'),
+                    ],
                 ]);
             })
             ->addColumn('status',function (Shift $shift){

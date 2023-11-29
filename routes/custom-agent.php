@@ -26,7 +26,8 @@ Route::middleware(['auth','should_complete_registration','onlyagent'])->group(fu
         });
         Route::get('tills', [App\Http\Controllers\Agent\AgencyController::class, 'tills'])->name('agency.tills');
         Route::get('networks', NetworkController::class)->name('agency.networks');
-        Route::get('loans', LoanController::class)->name('agency.loans');
+        Route::get('loans', [LoanController::class, 'index'])->name('agency.loans');
+        Route::get('loans/{loan}/pay', [LoanController::class , 'pay'])->name('agency.loans.pay');
 
     });
 

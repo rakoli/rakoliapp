@@ -47,7 +47,7 @@
                             <!--end::Filter-->
 
                             <!--begin::Add customer-->
-                            <x-modal
+                            <x-modal_with_button
                                 targetId="openShift"
                                 label="Open Shift"
                                 modalTitle="Fill the form below to open a new shift"
@@ -57,10 +57,10 @@
                             <livewire:shift.open-shift lazy />
 
 
-                            </x-modal>
+                            </x-modal_with_button>
 
                            <div class="mx-6">
-                               <x-modal
+                               <x-modal_with_button
                                    targetId="closeShift"
                                    label="Close Shift"
                                    modalTitle="Fill the form below to close shift"
@@ -69,7 +69,7 @@
                                  <livewire:shift.close-shift/>
 
 
-                               </x-modal>
+                               </x-modal_with_button>
                            </div>
                         </div>
                         <!--end::Toolbar-->

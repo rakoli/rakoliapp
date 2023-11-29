@@ -41,7 +41,7 @@
                             <!--end::Filter-->
 
                             <!--begin::Add customer-->
-                            <x-modal
+                            <x-modal_with_button
                                 targetId="add-network"
                                 label="Add Network"
                                 modalTitle="Fill the form below record a network"
@@ -51,7 +51,7 @@
                                 <livewire:shift.add-network lazy />
 
 
-                            </x-modal>
+                            </x-modal_with_button>
 
 
                         </div>
@@ -78,9 +78,12 @@
         {{ $dataTableHtml->scripts(attributes: ['type' => 'module'])  }}
 
         <script>
-            $('#agency').select2({
+            $(document).ready(function (){
 
-            });
+                window.LaravelDataTables['network-table'].on('draw', function () {
+                    KTMenu.createInstances();
+                })
+            })
         </script>
 
     @endpush

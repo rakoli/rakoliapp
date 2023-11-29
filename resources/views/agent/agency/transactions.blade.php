@@ -41,7 +41,7 @@
                             <!--end::Filter-->
 
                             <!--begin::Add customer-->
-                            <x-modal
+                            <x-modal_with_button
                                 targetId="add-transaction"
                                 label="Add Transaction"
                                 modalTitle="Fill the form below record a transaction"
@@ -51,9 +51,9 @@
                                 <livewire:transaction.add-transaction lazy />
 
 
-                            </x-modal>
+                            </x-modal_with_button>
 
-                            <x-modal
+                            <x-modal_with_button
                                 targetId="add-expenses"
                                 label="Add Expenses"
                                 modalTitle="Fill the form below record a Expenses"
@@ -63,7 +63,7 @@
                                 <livewire:transaction.add-expense lazy />
 
 
-                            </x-modal>  <x-modal
+                            </x-modal_with_button>  <x-modal_with_button
                                 targetId="add-income"
                                 label="Add Income"
                                 modalTitle="Fill the form below record a income"
@@ -73,7 +73,7 @@
                                 <livewire:transaction.add-income lazy />
 
 
-                            </x-modal>
+                            </x-modal_with_button>
 
 
                         </div>
@@ -98,6 +98,15 @@
         <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}"
                 type="text/javascript"></script>
       {{ $dataTableHtml->scripts(attributes: ['type' => 'module'])  }}
+
+        <script>
+            $(document).ready(function (){
+
+                window.LaravelDataTables['transaction-table'].on('draw', function () {
+                    KTMenu.createInstances();
+                })
+            })
+        </script>
 
     @endpush
 @endsection

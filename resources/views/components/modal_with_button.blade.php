@@ -1,8 +1,12 @@
 @props([
     'targetId',
+    'label',
     'modalTitle',
     'isStacked' => false
 ])
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#{{ $targetId }}">
+    {{ __($label) }}
+</button>
 
 <div class="modal fade" tabindex="-1" id="{{ $targetId }}">
     <div class="modal-dialog modal-lg  modal-dialog-centered">

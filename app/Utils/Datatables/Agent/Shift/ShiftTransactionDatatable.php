@@ -49,11 +49,7 @@ class ShiftTransactionDatatable implements HasDatatable
             })
             ->addColumn('actions', function(Transaction $transaction){
 
-                return (new self())->buttons([
-                    'Tills' => url('/home'),
-                    'Transaction' => "#",
 
-                ]);
             })
             ->addColumn('location_name', fn(Transaction $transaction) => $transaction->location->name)
             ->addColumn('category', fn(Transaction $transaction) => $transaction->category->value)

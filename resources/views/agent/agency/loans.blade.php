@@ -41,7 +41,7 @@
                             <!--end::Filter-->
 
                             <!--begin::Add customer-->
-                            <x-modal
+                            <x-modal_with_button
                                 targetId="add-loan"
                                 label="Add Loan"
                                 modalTitle="Fill the form below record a Loan"
@@ -51,7 +51,7 @@
                                 <livewire:shift.add-loan lazy />
 
 
-                            </x-modal>
+                            </x-modal_with_button>
 
 
                         </div>
@@ -61,7 +61,7 @@
                     <!--end::Wrapper-->
 
 
-                    {!! $datatableHtml->table(['class' => 'table table-row-bordered table-row-dashed gy-4 align-middle fw-bold' , 'id' => 'loans-table'],true) !!}
+                    {!! $datatableHtml->table(['class' => 'table table-row-bordered table-row-dashed gy-4 align-middle fw-bold' , 'id' => 'loans-table']) !!}
 
 
 
@@ -70,17 +70,36 @@
         </div>
     </div>
 
+
+    <x-modal
+        targetId="pay-loan-modal"
+        modalTitle="fill the form below to pay this loan"
+        >
+
+    </x-modal>
     @push('js')
 
 
         <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}"
                 type="text/javascript"></script>
-        {{ $datatableHtml->scripts(attributes: ['type' => 'module'])  }}
+        {{ $datatableHtml->scripts(attributes:[ "ajax" => route('agency.loans')])  }}
 
         <script>
-            $('#agency').select2({
 
-            });
+
+            $(document).ready(function (){
+
+                window.LaravelDataTables['loans-table'].on('draw', function () {
+                    KTMenu.createInstances();
+                })
+            })
+
+
+
+            // // Re-init functions on every table re-draw -- more info: https://datatables.net/reference/event/draw
+            // dt.on('draw', function () {
+            //     KTMenu.createInstances();
+            // });
         </script>
 
     @endpush

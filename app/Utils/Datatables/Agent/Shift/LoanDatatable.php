@@ -25,7 +25,7 @@ class LoanDatatable implements HasDatatable
     public function index(): \Illuminate\Http\JsonResponse
     {
 
-        $transactions = Loan::query()->with('location','shift','network.agency','user');
+        $transactions = Loan::query()->with('location', 'shift', 'network.agency', 'user');
 
         return Datatables::eloquent($transactions)
             ->filter(function ($query) {
@@ -40,7 +40,7 @@ class LoanDatatable implements HasDatatable
             ->addColumn('location_name', fn(Loan $record) => $record->location->name)
             ->addColumn('user_name', fn(Loan $record) => $record->user->full_name)
             ->addColumn('agency_name', fn(Loan $record) => $record->network->agency->name)
-            ->addColumn('status',function (Loan $record){
+            ->addColumn('status', function (Loan $record) {
 
                 $table = new self();
 
@@ -49,7 +49,7 @@ class LoanDatatable implements HasDatatable
                     badgeClass: $record->status->color()
                 );
             })
-           ->addColumn('type',function (Loan $record){
+            ->addColumn('type', function (Loan $record) {
 
                 $table = new self();
 
@@ -58,17 +58,21 @@ class LoanDatatable implements HasDatatable
                     badgeClass: $record->type->color()
                 );
             })
-           ->addColumn('action',function (Loan $record){
+            ->addColumn('action', fn(Loan $record) => (new self())->buttons([
 
-               return view('agent.agency.loans.pay', ['loan' => $record]);
-            })
+                'pay' => [
+                    'route' => route('agency.loans.pay', $record),
+                    'attributes' => ''
+                ],
+            ]))
             ->addColumn('amount', fn(Loan $record) => money($record->amount, currencyCode(), true))
-            ->rawColumns(['balance','agency_name','location_name','user_name','type','status','action'])
+            ->rawColumns(['balance', 'agency_name', "action", 'location_name', 'user_name', 'type', 'status'])
             ->toJson();
     }
 
     public function columns(Builder $datatableBuilder): Builder
     {
+
         return $datatableBuilder->columns([
             Column::make('id')->title('#')->searchable(false)->orderable(),
             Column::make('created_at')->title(__('date'))->searchable()->orderable(),
@@ -78,7 +82,7 @@ class LoanDatatable implements HasDatatable
             Column::make('status')->title(__('status'))->searchable()->orderable(),
             Column::make('type')->title(__('type'))->searchable()->orderable(),
             Column::make('amount')->title(__('amount') . ' ' . strtoupper(session('currency')))->searchable()->orderable(),
-            Column::make('action')->title(__('action')),
+            Column::make('action')->data('action')->title(__('action')),
 
         ])
             ->orderBy(0);
