@@ -2,6 +2,7 @@
 
 /// This is custom route only for agent routes. All agent routes will be registered in here
 
+use App\Http\Controllers\Agent\Shift\LoanController;
 use App\Http\Controllers\Agent\Shift\NetworkController;
 use App\Http\Controllers\Agent\Shift\TillController;
 use App\Http\Controllers\Agent\Shift\TransactionsController;
@@ -25,7 +26,7 @@ Route::middleware(['auth','should_complete_registration','onlyagent'])->group(fu
         });
         Route::get('tills', [App\Http\Controllers\Agent\AgencyController::class, 'tills'])->name('agency.tills');
         Route::get('networks', NetworkController::class)->name('agency.networks');
-        Route::get('loans', [App\Http\Controllers\Agent\AgencyController::class, 'loans'])->name('agency.loans');
+        Route::get('loans', LoanController::class)->name('agency.loans');
 
     });
 

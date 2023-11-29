@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Models\Scopes\BusinessScoped;
 use App\Models\Scopes\LocationScoped;
+use App\Utils\Enums\LoanPaymentStatusEnum;
+use App\Utils\Enums\LoanTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,6 +15,15 @@ class Loan extends Model
 {
     use HasFactory;
 
+    protected $casts  = [
+        'status' => LoanPaymentStatusEnum::class,
+        'type'  => LoanTypeEnum::class,
+    ];
+
+
+    protected $guarded = [
+        'id'
+    ];
     protected static function booted()
     {
         static::addGlobalScope(new BusinessScoped);
