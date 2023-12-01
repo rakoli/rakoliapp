@@ -163,8 +163,10 @@ class User extends Authenticatable
     public function lastSeenUpdate()
     {
         $busines = $this->business;
-        $busines->last_seen = now();
-        $busines->save();
+        if($busines != null){
+            $busines->last_seen = now();
+            $busines->save();
+        }
     }
 
 }
