@@ -67,6 +67,16 @@ class UsersTableSeeder extends Seeder
             'status' => BusinessStatusEnum::ACTIVE->value
         ]);
 
+        //ADMIN BUSINESS
+        $name = "RAKOLI SYSTEMS (ADMIN)";
+        $adminBusiness = Business::addBusiness([
+            'country_code' => "TZ",
+            'type' => UserTypeEnum::ADMIN->value,
+            'code'=> generateCode($name),
+            'business_name' => $name,
+            'status' => BusinessStatusEnum::ACTIVE->value
+        ]);
+
         // Specific users provided in the data
         $users = [
             [
@@ -102,6 +112,7 @@ class UsersTableSeeder extends Seeder
                 'code' => generateCode('Erick Mabusi'),
                 'password' => Hash::make('12345678'),
                 'type' => UserTypeEnum::ADMIN->value,
+                'business_code' => $adminBusiness->code,
                 'registration_step' => 0,
             ],
         ];
