@@ -11,6 +11,17 @@ class ExchangeStat extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'business_code',
+        'no_of_trades_completed',
+        'no_of_trades_cancelled',
+        'no_of_positive_feedback',
+        'no_of_negative_feedback',
+        'volume_traded',
+        'completion',
+        'feedback',
+    ];
+
     protected static function booted(): void
     {
         parent::boot();
