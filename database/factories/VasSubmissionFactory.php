@@ -26,8 +26,8 @@ class VasSubmissionFactory extends Factory
         $contracts = VasContract::where('vas_business_code',$businessCode)->get('code')->toArray();
         $selectedContractCode = fake()->randomElement($contracts)['code'];
         $selectedContract = VasContract::where('code',$selectedContractCode)->first();
-        $submitter = User::where('business_code',$selectedContract->agent_code)->first();
-        $reviewer = User::where('business_code',$selectedContract->vas_provider_code)->first();
+        $submitter = User::where('business_code',$selectedContract->agent_business_code)->first();
+        $reviewer = User::where('business_code',$selectedContract->vas_business_code)->first();
         return [
             'vas_contract_code' => $selectedContractCode,
             'submitter_user_code' => $submitter->code,
