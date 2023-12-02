@@ -4,6 +4,6 @@ namespace App\Utils\Enums;
 
 enum ExchangePaymentMethodTypeEnum : string
 {
-    case OWNER_RECEIVE = "sell"; //OWNER_SELL
-    case OWNER_SEND = "buy";//OWNER_BUY
+    case OWNER_SELL = "sell";//OWNER_SELL
+    case OWNER_BUY = "buy";//OWNER_BUY
 }

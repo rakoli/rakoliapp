@@ -31,10 +31,10 @@ class SampleBusinessSeeder extends Seeder
                 ->state(function (array $attributes) {
                     return ['status' => ExchangeStatusEnum::ACTIVE->value];
                 })->has(ExchangePaymentMethod::factory()->state(function (array $attributes) {
-                        return ['type' => ExchangePaymentMethodTypeEnum::OWNER_RECEIVE->value];
+                        return ['type' => ExchangePaymentMethodTypeEnum::OWNER_SELL->value];
                     })->count(3),'exchange_payment_methods')
                     ->has(ExchangePaymentMethod::factory()->state(function (array $attributes) {
-                        return ['type' => ExchangePaymentMethodTypeEnum::OWNER_SEND->value];
+                        return ['type' => ExchangePaymentMethodTypeEnum::OWNER_BUY->value];
                     })->count(2),'exchange_payment_methods')
                     ->has(ExchangeTransaction::factory()
                             ->has(ExchangeChat::factory()->count(2),'exchange_chats')

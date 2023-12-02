@@ -19,10 +19,10 @@ class SampleExchangeAdsSeeder extends Seeder
     public function run(): void
     {
         ExchangeAds::factory()->has(ExchangePaymentMethod::factory()->state(function (array $attributes) {
-            return ['type' => ExchangePaymentMethodTypeEnum::OWNER_RECEIVE];
+            return ['type' => ExchangePaymentMethodTypeEnum::OWNER_SELL];
         })->count(3),'exchange_payment_methods')
             ->has(ExchangePaymentMethod::factory()->state(function (array $attributes) {
-                return ['type' => ExchangePaymentMethodTypeEnum::OWNER_SEND];
+                return ['type' => ExchangePaymentMethodTypeEnum::OWNER_BUY];
             })->count(2),'exchange_payment_methods')
             ->has(ExchangeTransaction::factory()->count(2),'exchange_transactions')
             ->count(7)->create();
@@ -33,10 +33,10 @@ class SampleExchangeAdsSeeder extends Seeder
             $businessCode = $user->business_code;
 
             ExchangeAds::factory()->has(ExchangePaymentMethod::factory()->state(function (array $attributes) {
-                return ['type' => ExchangePaymentMethodTypeEnum::OWNER_RECEIVE];
+                return ['type' => ExchangePaymentMethodTypeEnum::OWNER_SELL];
             })->count(3),'exchange_payment_methods')
                 ->has(ExchangePaymentMethod::factory()->state(function (array $attributes) {
-                    return ['type' => ExchangePaymentMethodTypeEnum::OWNER_SEND];
+                    return ['type' => ExchangePaymentMethodTypeEnum::OWNER_BUY];
                 })->count(2),'exchange_payment_methods')
                 ->has(ExchangeTransaction::factory()->count(2),'exchange_transactions')
                 ->count(7)->create(['business_code'=>$businessCode]);

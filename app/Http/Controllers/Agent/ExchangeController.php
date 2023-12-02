@@ -93,9 +93,9 @@ class ExchangeController extends Controller
                     return view('agent.exchange.ads_datatable_components._limit', compact( 'ad'));
                 })
                 ->addColumn('payment', function(ExchangeAds $ad) {
-                    $buyMethods = $ad->exchange_payment_methods->where('type',\App\Utils\Enums\ExchangePaymentMethodTypeEnum::OWNER_SEND->value)->where('status',1);
+                    $buyMethods = $ad->exchange_payment_methods->where('type',\App\Utils\Enums\ExchangePaymentMethodTypeEnum::OWNER_BUY->value)->where('status',1);
                     $lastBuy = $buyMethods->last();
-                    $sellMethods = $ad->exchange_payment_methods->where('type',\App\Utils\Enums\ExchangePaymentMethodTypeEnum::OWNER_RECEIVE->value)->where('status',1);
+                    $sellMethods = $ad->exchange_payment_methods->where('type',\App\Utils\Enums\ExchangePaymentMethodTypeEnum::OWNER_SELL->value)->where('status',1);
                     $lastSell = $sellMethods->last();
                     return view('agent.exchange.ads_datatable_components._payment', compact( 'ad','buyMethods','sellMethods','lastBuy', 'lastSell'));
                 })
@@ -135,11 +135,11 @@ class ExchangeController extends Controller
             return redirect()->back()->withErrors(['Invalid Exchange Ad']);
         }
         $buyMethods = $exchangeAd->exchange_payment_methods()
-            ->where('type',\App\Utils\Enums\ExchangePaymentMethodTypeEnum::OWNER_SEND->value)
+            ->where('type',\App\Utils\Enums\ExchangePaymentMethodTypeEnum::OWNER_BUY->value)
             ->where('status', 1)
             ->get(['id','method_name','type']);
         $sellMethods = $exchangeAd->exchange_payment_methods()
-            ->where('type',\App\Utils\Enums\ExchangePaymentMethodTypeEnum::OWNER_RECEIVE->value)
+            ->where('type',\App\Utils\Enums\ExchangePaymentMethodTypeEnum::OWNER_SELL->value)
             ->where('status', 1)
             ->get(['id','method_name','type']);
 
