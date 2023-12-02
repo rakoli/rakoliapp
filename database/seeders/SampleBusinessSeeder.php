@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Business;
 use App\Models\ExchangeAds;
+use App\Models\ExchangeChat;
 use App\Models\ExchangePaymentMethod;
 use App\Models\ExchangeStat;
 use App\Models\ExchangeTransaction;
@@ -32,8 +33,9 @@ class SampleBusinessSeeder extends Seeder
                     ->has(ExchangePaymentMethod::factory()->state(function (array $attributes) {
                         return ['type' => ExchangePaymentMethodTypeEnum::OWNER_SEND];
                     })->count(2),'exchange_payment_methods')
-                    ->has(ExchangeTransaction::factory()->count(2),'exchange_transactions')
-                    ->count(1)
-                ,'exchange_ads')->create();
+                    ->has(ExchangeTransaction::factory()
+                            ->has(ExchangeChat::factory()->count(2),'exchange_chats')
+                            ->count(2),'exchange_transactions')
+                    ->count(2),'exchange_ads')->create();
     }
 }

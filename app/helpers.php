@@ -171,3 +171,21 @@ function str_camelcase($string) : string
 {
     return ucwords(strtolower($string));
 }
+
+function tradeOrderInvence($type) : string
+{
+    if($type == "sell"){
+        return "buy";
+    }
+
+    if($type == "buy"){
+        return "sell";
+    }
+
+    return $type;
+}
+
+function idNumberDisplay($number)
+{
+    return str_pad("$number", 5,'0',STR_PAD_LEFT);
+}

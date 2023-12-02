@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('exchange_chats', function (Blueprint $table) {
             $table->id();
-            $table->string('exchange_ads_code');
-            $table->foreign('exchange_ads_code')->references('code')
-                ->on('exchange_ads')
+            $table->bigInteger('exchange_trnx_id')->unsigned();
+            $table->foreign('exchange_trnx_id')->references('id')
+                ->on('exchange_transactions')
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
 

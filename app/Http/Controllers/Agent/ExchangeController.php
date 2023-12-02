@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Agent;
 
+use App\Events\ExchangeChatEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Business;
 use App\Models\ExchangeAds;
+use App\Models\ExchangeChat;
 use App\Models\ExchangePaymentMethod;
 use App\Models\ExchangeStat;
 use App\Models\ExchangeTransaction;
@@ -14,6 +16,7 @@ use App\Utils\Enums\ExchangeTransactionStatusEnum;
 use App\Utils\Enums\ExchangeTransactionTypeEnum;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\DataTables;
 
@@ -37,8 +40,6 @@ class ExchangeController extends Controller
                 ->with('exchange_payment_methods')
                 ->with('business')
                 ->with('business_stats');
-
-            Log::info($request->get('order_by'));
 
             if($request->get('order_by') == 'last_seen'){
                 $ads->withAggregate('business','last_seen')
@@ -102,6 +103,9 @@ class ExchangeController extends Controller
                 })
                 ->rawColumns(['business_details','terms','limit','payment','trade'])
                 ->addIndexColumn()
+                ->editColumn('id',function($exchange) {
+                    return idNumberDisplay($exchange->id);
+                })
                 ->toJson();
         }
 
@@ -157,6 +161,10 @@ class ExchangeController extends Controller
         $ams = ExchangePaymentMethod::where('id',$request->get('action_method_select'))->first();
         $trader = ExchangePaymentMethod::where('id',$request->get('action_for_select'))->first();
 
+        if($exchange->business->code == $request->user()->business->code){
+            return redirect()->back()->withErrors(['Not authorized to trade with you own business']);
+        }
+
         $exchangeTransaction = ExchangeTransaction::create([
             'exchange_ads_code' => $exchangeCode,
             'owner_business_code' => $exchange->business->code,
@@ -181,15 +189,104 @@ class ExchangeController extends Controller
 
     public function orders()
     {
+        $user = \auth()->user();
+        $dataTable = new DataTables();
+        $builder = $dataTable->getHtmlBuilder();
 
-        return view('agent.exchange.orders');
+
+        if (request()->ajax()) {
+
+            $exchangeTransactions = ExchangeTransaction::where([
+                'trader_business_code' => $user->business_code,
+                'status' => ExchangeTransactionStatusEnum::OPEN
+            ])->orWhere(function (\Illuminate\Database\Eloquent\Builder $query) {
+                $query->where('owner_business_code', auth()->user()->business_code)
+                    ->where('status', ExchangeTransactionStatusEnum::OPEN);
+            })->with('owner_business')
+                ->with('trader_business')
+                ->orderBy('id','desc');
+
+            return \Yajra\DataTables\Facades\DataTables::eloquent($exchangeTransactions)
+                ->addColumn('trade', function(ExchangeTransaction $trn) {
+                    return '<a href="'.route('exchange.orders.view',$trn->id).'" class="btn btn-light btn-sm">'.__("Open").'</a>';
+                })
+                ->editColumn('trader_action_method', function($trn) {
+                    return str_camelcase($trn->trader_action_method);
+                })
+                ->editColumn('for_method', function($trn) {
+                    return str_camelcase($trn->for_method);
+                })
+                ->editColumn('amount', function($trn) {
+                    return number_format($trn->amount,2);
+                })
+                ->addIndexColumn()
+                ->rawColumns(['amount','trade'])
+                ->editColumn('id',function($exchange) {
+                    return idNumberDisplay($exchange->id);
+                })
+                ->toJson();
+        }
+
+        //Datatable
+        $dataTableHtml = $builder->columns([
+            ['data' => 'id', 'title' => __('id')],
+            ['data' => 'owner_business.business_name', 'title' => "Business"],
+            ['data' => 'trader_business.business_name', 'title' => "Trader"],
+            ['data' => 'trader_action_type' , 'title' => "Action"],
+            ['data' => 'trader_action_method', 'title' => "Action Method"],
+            ['data' => 'for_method', 'title' => "For"],
+            ['data' => 'amount', 'title' => "Amount"],
+            ['data' => 'trade', 'title' => "Trade"],
+        ])->responsive(true)
+            ->ordering(false)
+            ->ajax(route('exchange.orders'))
+            ->paging(true)
+            ->dom('frtilp')
+            ->lengthMenu([[25, 50, 100, -1], [25, 50, 100, "All"]])
+            ->setTableHeadClass('fw-semibold fs-6 text-gray-800 border-bottom border-gray-200');
+
+        return view('agent.exchange.orders', compact('dataTableHtml'));
     }
 
     public function ordersView(Request $request, $id)
     {
+        $exchangeTransaction = ExchangeTransaction::with('exchange_chats')->where('id',$id)->first();
+        if(empty($exchangeTransaction)){
+            return redirect()->back()->withErrors(['Invalid Exchange Ad']);
+        }
 
-        dd($id, $request);
+        $isAllowed = $exchangeTransaction->isUserAllowed($request->user());
+        if($isAllowed == false){
+            return redirect()->route('exchange.orders')->withErrors(['Not authorized to access transaction']);
+        }
 
+        $exchangeAd = ExchangeAds::where('code',$exchangeTransaction->exchange_ads_code)->first();
+
+        $chatMessages = $exchangeTransaction->exchange_chats->sortBy('id');
+
+        return view('agent.exchange.orders_view',compact('exchangeAd','exchangeTransaction','chatMessages'));
+    }
+
+    public function ordersReceiveMessage(Request $request)
+    {
+        $request->validate([
+            'ex_trans_id' => 'required|exists:exchange_transactions,id',
+            'message' => 'required|string|min:1|max:200',
+        ]);
+        $chatId = $request->get('ex_trans_id');
+        $user = $request->user();
+        ExchangeChat::create([
+            'exchange_trnx_id' => $chatId,
+            'sender_code' => $user->code,
+            'message' => $request->get('message'),
+        ]);
+
+        event(new ExchangeChatEvent($chatId,$request->get('message'),$user->name(),$user->business->business_name,now()->toDateTimeString('minute'),$user->id));
+
+        return [
+            'status' => 200,
+            'message' => "successful"
+        ];
     }
 
     public function transactions()

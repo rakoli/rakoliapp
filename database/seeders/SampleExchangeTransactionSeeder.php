@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\ExchangeChat;
 use App\Models\ExchangeTransaction;
 use App\Models\Shift;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -14,7 +15,9 @@ class SampleExchangeTransactionSeeder extends Seeder
      */
     public function run(): void
     {
-        ExchangeTransaction::factory()->count(7)->create();
+        ExchangeTransaction::factory()
+            ->has(ExchangeChat::factory()->count(2),'exchange_chats')
+            ->count(7)->create();
 
     }
 }

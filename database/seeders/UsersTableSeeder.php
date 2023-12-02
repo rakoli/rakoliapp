@@ -68,7 +68,7 @@ class UsersTableSeeder extends Seeder
         ]);
 
         //ADMIN BUSINESS
-        $name = "RAKOLI SYSTEMS (ADMIN)";
+        $name = "RAKOLI SYSTEMS";
         $adminBusiness = Business::addBusiness([
             'country_code' => "TZ",
             'type' => UserTypeEnum::ADMIN->value,

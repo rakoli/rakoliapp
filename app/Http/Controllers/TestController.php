@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Actions\GenerateDPOPayment;
 use App\Actions\RequestEmailVerificationCode;
 use App\Actions\SendTelegramNotification;
+use App\Events\ExchangeChatEvent;
 use App\Mail\SendCodeMail;
 use App\Models\ExchangeAds;
 use App\Models\ExchangeStat;
