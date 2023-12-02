@@ -52,7 +52,23 @@
                         </div>
                         <!--end::Details content-->
                     </div>
-                    <!--end::Card body-->
+                    <!--end::Card Footer (Actions)-->
+                    <div class="card-body pt-5">
+
+                        @if($exchangeTransaction->isTrader(auth()->user()))
+                            <button type="button" class="btn btn-primary btn-text-danger" data-bs-toggle="modal" data-bs-target="#cancel_modal">
+                                {{__('Cancel')}}
+                            </button>
+                            <button type="button" class="btn btn-primary btn-text-warning" data-bs-toggle="modal" data-bs-target="#report_modal">
+                                {{__('Report')}}
+                            </button>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#complete_modal">
+                                {{__('Complete')}}
+                            </button>
+                        @endif
+
+                    </div>
+                    <!--end::Card Footer (Actions)-->
                 </div>
                 <!--end::Card-->
             </div>
@@ -216,6 +232,83 @@
                 <!--end::Messenger-->
             </div>
             <!--end::Content-->
+
+            <!--begin::ACTION MODULES-->
+            <div class="modal fade" tabindex="-1" id="complete_modal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title">{{__("Complete Exchange")}}</h3>
+                            <!--begin::Close-->
+                            <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                                <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
+                            </div>
+                            <!--end::Close-->
+                        </div>
+
+                        <div class="modal-body">
+                            <p>{{__("general.exchange.trades.complete.confirmation")}}</p>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{__("Close")}}</button>
+                            <button type="submit" class="btn btn-primary">{{__('Complete Exchange')}}</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" tabindex="-1" id="report_modal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title">{{__("Report Exchange")}}</h3>
+                            <!--begin::Close-->
+                            <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                                <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
+                            </div>
+                            <!--end::Close-->
+                        </div>
+
+                        <div class="modal-body">
+                            <p>Modal body text goes here.</p>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{__("Close")}}</button>
+                            <button type="submit" class="btn btn-primary">{{__('Report Exchange')}}</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" tabindex="-1" id="cancel_modal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title">{{__("Cancel Exchange")}}</h3>
+                            <!--begin::Close-->
+                            <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                                <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
+                            </div>
+                            <!--end::Close-->
+                        </div>
+
+                        <div class="modal-body">
+                            <p>{{__("general.exchange.trades.cancel.confirmation")}}</p>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{__("Close")}}</button>
+                            <button type="submit" class="btn btn-primary">{{__('Cancel Exchange')}}</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!--end::ACTION MODULES-->
 
         </div>
         <!--end::Layout-->

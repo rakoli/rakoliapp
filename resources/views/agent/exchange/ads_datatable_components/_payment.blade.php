@@ -1,10 +1,10 @@
 <div class="d-flex flex-column justify-content-center w-250px">
     <div class="fs-6 text-gray-600">
-        {{__('Buy (Get)')}} <div class="fw-semibold text-muted">
-            @if(!empty($buyMethods))
-                @foreach($buyMethods as $method)
+        {{__('Buy (Receive)')}} <div class="fw-semibold text-muted">
+            @if(!empty($sellMethods))
+                @foreach($sellMethods as $method)
                     {{str_camelcase($method->method_name)}}
-                    @if($lastBuy->id != $method->id)
+                    @if($lastSell->id != $method->id)
                         |
                     @endif
                 @endforeach
@@ -20,10 +20,10 @@
     <div class="fs-6 text-gray-600">
         {{__('Sell (Give)')}} <div class="fw-semibold text-muted">
             @if(!empty($buyMethods))
-                @foreach($sellMethods as $method)
+                @foreach($buyMethods as $method)
                     {{str_camelcase($method->method_name)}}
-                    @if($lastSell->id != $method->id)
-                    |
+                    @if($lastBuy->id != $method->id)
+                        |
                     @endif
                 @endforeach
             @else

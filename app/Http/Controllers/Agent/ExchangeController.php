@@ -11,6 +11,7 @@ use App\Models\ExchangePaymentMethod;
 use App\Models\ExchangeStat;
 use App\Models\ExchangeTransaction;
 use App\Models\SystemIncome;
+use App\Models\User;
 use App\Utils\Enums\ExchangeStatusEnum;
 use App\Utils\Enums\ExchangeTransactionStatusEnum;
 use App\Utils\Enums\ExchangeTransactionTypeEnum;
@@ -147,27 +148,28 @@ class ExchangeController extends Controller
 
     public function adsOpenOrder(Request $request)
     {
-        $exchange = ExchangeAds::where('id',$request->get('exchange_id'))->first();
+        $exchangeAd = ExchangeAds::where('id',$request->get('exchange_id'))->first();
         $request->validate([
             'exchange_id' => 'required|exists:exchange_ads,id',
             'action_select' => 'required|in:'.implode(',',ExchangeTransactionTypeEnum::toArray()),
             'action_method_select' => 'required|exists:exchange_payment_methods,id',
             'action_for_select' => 'required|exists:exchange_payment_methods,id',
-            'amount' => 'required|numeric|min:'.$exchange->min_amount.'|max:'.$exchange->max_amount,
+            'amount' => 'required|numeric|min:'.$exchangeAd->min_amount.'|max:'.$exchangeAd->max_amount,
             'comment' => 'sometimes|string',
         ]);
-        $exchangeCode = $exchange->code;
+        $exchangeAdCode = $exchangeAd->code;
 
         $ams = ExchangePaymentMethod::where('id',$request->get('action_method_select'))->first();
         $trader = ExchangePaymentMethod::where('id',$request->get('action_for_select'))->first();
+        $comment = $request->get('comment');
 
-        if($exchange->business->code == $request->user()->business->code){
+        if($exchangeAd->business->code == $request->user()->business->code){
             return redirect()->back()->withErrors(['Not authorized to trade with you own business']);
         }
 
         $exchangeTransaction = ExchangeTransaction::create([
-            'exchange_ads_code' => $exchangeCode,
-            'owner_business_code' => $exchange->business->code,
+            'exchange_ads_code' => $exchangeAdCode,
+            'owner_business_code' => $exchangeAd->business->code,
             'trader_business_code' => $request->user()->business->code,
             'trader_action_type' => $request->get('action_select'),
             'trader_action_method_id' => $ams->id,
@@ -176,8 +178,26 @@ class ExchangeController extends Controller
             'amount' => $request->get('amount'),
             'amount_currency' => session('currency'),
             'status' => ExchangeTransactionStatusEnum::OPEN,
-            'trader_comments' => $request->get('comment'),
+            'trader_comments' => $comment,
         ]);
+
+        $adOwner = User::where('business_code',$exchangeAd->business_code)->first();
+        $openNote = $exchangeAd->open_note;
+        if($openNote != null){
+            ExchangeChat::create([
+                'exchange_trnx_id' => $exchangeTransaction->id,
+                'sender_code' => $adOwner->code,
+                'message' => $openNote,
+            ]);
+        }
+
+        if($comment != null){
+            ExchangeChat::create([
+                'exchange_trnx_id' => $exchangeTransaction->id,
+                'sender_code' => $request->user()->code,
+                'message' => $comment,
+            ]);
+        }
 
         return [
             'success'           => true,
@@ -282,6 +302,22 @@ class ExchangeController extends Controller
         ]);
 
         event(new ExchangeChatEvent($chatId,$request->get('message'),$user->name(),$user->business->business_name,now()->toDateTimeString('minute'),$user->id));
+
+        return [
+            'status' => 200,
+            'message' => "successful"
+        ];
+    }
+
+    public function ordersAction(Request $request)
+    {
+        $request->validate([
+            'ex_trans_id' => 'required|exists:exchange_transactions,id',
+        ]);
+
+
+
+
 
         return [
             'status' => 200,

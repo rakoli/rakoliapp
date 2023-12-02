@@ -37,6 +37,7 @@ class ExchangeAdsFactory extends Factory
             'description' => fake()->sentence(20,false),
             'availability_desc' => fake()->sentence(5,false),
             'terms' => fake()->sentence(50,false),
+            'open_note' => fake()->sentence(100,false),
         ];
     }
 }

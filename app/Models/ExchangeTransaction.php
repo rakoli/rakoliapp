@@ -69,4 +69,20 @@ class ExchangeTransaction extends Model
 
         return $isRelated;
     }
+
+    public function isTrader(User $user)
+    {
+        if($user->business_code == $this->trader_business_code){
+            return true;
+        }
+        return false;
+    }
+
+    public function isOwner(User $user)
+    {
+        if($user->business_code == $this->owner_business_code){
+            return true;
+        }
+        return false;
+    }
 }
