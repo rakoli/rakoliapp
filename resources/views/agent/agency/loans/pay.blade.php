@@ -25,7 +25,7 @@
 
                     <x-modal_with_button
                         targetId="receive-loan-payment"
-                        label="receive Payment"
+                        label="Receive Payment"
                         modalTitle="Fill the form below record Loan payment"
                         isStacked="true"
                     >

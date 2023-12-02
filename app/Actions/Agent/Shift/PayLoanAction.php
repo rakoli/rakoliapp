@@ -30,7 +30,7 @@ class PayLoanAction
 
 
            throw_if(condition:  $loan->payments()->sum('amount') + $data['amount'] > $loan->amount,
-               exception: new \Exception("You cannot receive more than balance {$loan->balance}")
+               exception: new \Exception(__("You cannot receive more than loan balance"))
             );
 
 

@@ -22,11 +22,14 @@ class AgencyController extends Controller
 
 
 
-        return view('agent.agency.shift')->with([
-
-        ]);
+        return view('agent.agency.shift');
     }
 
+
+    public function tills()
+    {
+        return view('agent.agency.shift_tills');
+    }
 
 
 

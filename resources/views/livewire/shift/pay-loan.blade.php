@@ -79,5 +79,10 @@
             </div>
         </form>
 
+    @push('js')
+        <script>
+            $("input#date").datepicker()
+        </script>
+    @endpush
 
 </div>

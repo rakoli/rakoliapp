@@ -39,7 +39,9 @@ class PayLoan extends Component
 
 
             $this->modal(
-                icon: "success",title: "Loan Paid",text: "Loan Paid Successfully"
+                icon: "success",
+                title: __( "Loan Paid"),
+                text: __( "Loan Paid Successfully")
             );
 
             $this->refreshDataDatable('loans-payment-table');
@@ -50,14 +52,16 @@ class PayLoan extends Component
         {
 
             $this->modal(
-                icon: "danger",title: "Something Went Wrong",text: "Try Again later {$e->getMessage()}"
+                icon: "warning",
+                title: __("Something Went Wrong!"),
+                text: " {$e->getMessage()}"
             );
 
         }
     }
     public function render()
     {
-      
+
         return view('livewire.shift.pay-loan');
     }
 
