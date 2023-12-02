@@ -20,8 +20,6 @@ class AgencyController extends Controller
             return  (new ShiftDatatable())->index();
         }
 
-
-
         return view('agent.agency.shift');
     }
 
