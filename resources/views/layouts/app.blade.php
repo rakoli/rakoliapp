@@ -766,9 +766,9 @@
 
                 @if ($errors->any())
                     <!--begin::Container-->
-                    <div class="container-xxl">
-                        <div class="card card-flush">
-                            <div class="alert alert-danger">
+                    <div class="container-xxl mb-5">
+                        <div class="card card-flush mb-0">
+                            <div class="alert alert-danger mb-0">
                                 <ul>
                                     @foreach ($errors->all() as $error)
                                         <li>{{ $error }}</li>
@@ -779,6 +779,15 @@
                     </div>
                 @endif
 
+                @if(session('message'))
+                    <div class="container-xxl mb-5">
+                        <div class="card card-flush mb-0">
+                            <div class="alert alert-success mb-0">
+                                {{ session('message') }}
+                            </div>
+                        </div>
+                    </div>
+                @endif
 
 
                 <!--begin::Content-->
