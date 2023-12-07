@@ -28,11 +28,19 @@ Route::middleware(['auth','should_complete_registration','onlyagent'])->group(fu
         Route::get('ads/view/{id}', [App\Http\Controllers\Agent\ExchangeController::class, 'adsView'])->name('ads.view');
         Route::post('ads/open/order', [App\Http\Controllers\Agent\ExchangeController::class, 'adsOpenOrder'])->name('ads.openorder');
         Route::get('orders', [App\Http\Controllers\Agent\ExchangeController::class, 'orders'])->name('orders');
-        Route::get('orders/view/{id}', [App\Http\Controllers\Agent\ExchangeController::class, 'ordersView'])->name('orders.view');
-        Route::get('orders/receive/message', [App\Http\Controllers\Agent\ExchangeController::class, 'ordersReceiveMessage'])->name('orders.receive.message');
-        Route::post('orders/action', [App\Http\Controllers\Agent\ExchangeController::class, 'ordersAction'])->name('orders.action');
-        Route::post('orders/feedback/action', [App\Http\Controllers\Agent\ExchangeController::class, 'ordersFeedbackAction'])->name('orders.feedback.action');
+//        Route::get('orders/view/{id}', [App\Http\Controllers\Agent\ExchangeController::class, 'ordersView'])->name('orders.view');
+//        Route::get('orders/receive/message', [App\Http\Controllers\Agent\ExchangeController::class, 'ordersReceiveMessage'])->name('orders.receive.message');
+//        Route::post('orders/action', [App\Http\Controllers\Agent\ExchangeController::class, 'ordersAction'])->name('orders.action');
+//        Route::post('orders/feedback/action', [App\Http\Controllers\Agent\ExchangeController::class, 'ordersFeedbackAction'])->name('orders.feedback.action');
+//
         Route::get('transactions', [App\Http\Controllers\Agent\ExchangeController::class, 'transactions'])->name('transactions');
+        Route::get('transactions/view/{id}', [App\Http\Controllers\Agent\ExchangeController::class, 'transactionsView'])->name('transactions.view');
+        Route::get('transactions/receive/message', [App\Http\Controllers\Agent\ExchangeController::class, 'transactionsReceiveMessage'])->name('transactions.receive.message');
+        Route::post('transactions/action', [App\Http\Controllers\Agent\ExchangeController::class, 'transactionsAction'])->name('transactions.action');
+        Route::post('transactions/feedback/action', [App\Http\Controllers\Agent\ExchangeController::class, 'transactionsFeedbackAction'])->name('transactions.feedback.action');
+
+
+
         Route::get('posts', [App\Http\Controllers\Agent\ExchangeController::class, 'posts'])->name('posts');
         Route::get('security', [App\Http\Controllers\Agent\ExchangeController::class, 'security'])->name('security');
 

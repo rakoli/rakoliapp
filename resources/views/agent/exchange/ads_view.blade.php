@@ -113,7 +113,7 @@
                         <div class="fs-6 fw-normal mb-10">{{$exchangeAd->description}}</div>
 
                         <!--begin::Form-->
-                        <form class="form" data-kt-redirect-url="{{route('exchange.orders.view','')}}" action="{{route('exchange.ads.openorder')}}" method="post" id="kt_form">
+                        <form class="form" data-kt-redirect-url="{{route('exchange.transactions.view','')}}" action="{{route('exchange.ads.openorder')}}" method="post" id="kt_form">
 
                             <input type="hidden" name="exchange_id" value="{{$exchangeAd->id}}">
                             <!--begin::Input group-->

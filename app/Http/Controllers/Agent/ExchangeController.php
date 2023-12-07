@@ -221,28 +221,35 @@ class ExchangeController extends Controller
         ];
     }
 
-    public function orders()
+    public function transactions()
     {
         $user = \auth()->user();
         $dataTable = new DataTables();
         $builder = $dataTable->getHtmlBuilder();
 
-
         if (request()->ajax()) {
 
             $exchangeTransactions = ExchangeTransaction::where([
-                'trader_business_code' => $user->business_code,
-                'status' => ExchangeTransactionStatusEnum::OPEN
+                'trader_business_code' => $user->business_code
             ])->orWhere(function (\Illuminate\Database\Eloquent\Builder $query) {
-                $query->where('owner_business_code', auth()->user()->business_code)
-                    ->where('status', ExchangeTransactionStatusEnum::OPEN);
+                $query->where('owner_business_code', auth()->user()->business_code);
             })->with('owner_business')
                 ->with('trader_business')
                 ->orderBy('id','desc');
 
+//            $exchangeTransactions = ExchangeTransaction::where([
+//                'trader_business_code' => $user->business_code,
+//                'status' => ExchangeTransactionStatusEnum::OPEN
+//            ])->orWhere(function (\Illuminate\Database\Eloquent\Builder $query) {
+//                $query->where('owner_business_code', auth()->user()->business_code)
+//                    ->where('status', ExchangeTransactionStatusEnum::OPEN);
+//            })->with('owner_business')
+//                ->with('trader_business')
+//                ->orderBy('id','desc');
+
             return \Yajra\DataTables\Facades\DataTables::eloquent($exchangeTransactions)
                 ->addColumn('trade', function(ExchangeTransaction $trn) {
-                    return '<a href="'.route('exchange.orders.view',$trn->id).'" class="btn btn-light btn-sm">'.__("Open").'</a>';
+                    return '<a href="'.route('exchange.transactions.view',$trn->id).'" class="btn btn-light btn-sm">'.__("View").'</a>';
                 })
                 ->editColumn('trader_action_type', function($trn) {
                     return __($trn->trader_action_type);
@@ -267,6 +274,7 @@ class ExchangeController extends Controller
         //Datatable
         $dataTableHtml = $builder->columns([
             ['data' => 'id', 'title' => __('id')],
+            ['data' => 'status', 'title' => __("Status")],
             ['data' => 'owner_business.business_name', 'title' => __("Advertiser")],
             ['data' => 'trader_business.business_name', 'title' => __("Applicant")],
             ['data' => 'trader_action_type' , 'title' => __("Action")],
@@ -276,16 +284,16 @@ class ExchangeController extends Controller
             ['data' => 'trade', 'title' => __("Trade")],
         ])->responsive(true)
             ->ordering(false)
-            ->ajax(route('exchange.orders'))
+            ->ajax(route('exchange.transactions'))
             ->paging(true)
             ->dom('frtilp')
             ->lengthMenu([[25, 50, 100, -1], [25, 50, 100, "All"]])
             ->setTableHeadClass('fw-semibold fs-6 text-gray-800 border-bottom border-gray-200');
 
-        return view('agent.exchange.orders', compact('dataTableHtml'));
+        return view('agent.exchange.transactions',compact('dataTableHtml'));
     }
 
-    public function ordersView(Request $request, $id)
+    public function transactionsView(Request $request, $id)
     {
         $exchangeTransaction = ExchangeTransaction::with('exchange_chats')->where('id',$id)->first();
         if(empty($exchangeTransaction)){
@@ -294,17 +302,17 @@ class ExchangeController extends Controller
 
         $isAllowed = $exchangeTransaction->isUserAllowed($request->user());
         if($isAllowed == false){
-            return redirect()->route('exchange.orders')->withErrors(['Not authorized to access transaction']);
+            return redirect()->route('exchange.transactions')->withErrors(['Not authorized to access transaction']);
         }
 
         $exchangeAd = ExchangeAds::where('code',$exchangeTransaction->exchange_ads_code)->first();
 
         $chatMessages = $exchangeTransaction->exchange_chats->sortBy('id');
 
-        return view('agent.exchange.orders_view',compact('exchangeAd','exchangeTransaction','chatMessages'));
+        return view('agent.exchange.transactions_view',compact('exchangeAd','exchangeTransaction','chatMessages'));
     }
 
-    public function ordersReceiveMessage(Request $request)
+    public function transactionsReceiveMessage(Request $request)
     {
         $request->validate([
             'ex_trans_id' => 'required|exists:exchange_transactions,id',
@@ -326,7 +334,7 @@ class ExchangeController extends Controller
         ];
     }
 
-    public function ordersAction(Request $request)
+    public function transactionsAction(Request $request)
     {
         $request->validate([
             'ex_trans_id' => 'required|exists:exchange_transactions,id',
@@ -387,7 +395,7 @@ class ExchangeController extends Controller
         return redirect()->back()->withErrors(['Error! Action Error']);
     }
 
-    public function ordersFeedbackAction(Request $request)
+    public function transactionsFeedbackAction(Request $request)
     {
         $request->validate([
             'ex_trans_id' => 'required|exists:exchange_transactions,id',
@@ -436,11 +444,6 @@ class ExchangeController extends Controller
         return redirect()->back()->with(['message'=>'Exchange Feedback Submitted']);
     }
 
-    public function transactions()
-    {
-
-        return view('agent.exchange.transactions');
-    }
 
 
     public function posts()

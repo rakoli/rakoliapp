@@ -122,13 +122,6 @@
                     <span class="menu-title">{{ __('Ads') }}</span>
                 </a>
 
-                <a class="menu-link" href="{{route('exchange.orders')}}">
-                    <span class="menu-bullet">
-                        <span class="bullet bullet-dot"></span>
-                    </span>
-                    <span class="menu-title">{{ __('Orders') }}</span>
-                </a>
-
                 <a class="menu-link" href="{{route('exchange.transactions')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>

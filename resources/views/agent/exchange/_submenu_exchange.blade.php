@@ -14,12 +14,6 @@
                 <!--end::Nav item-->
                 <!--begin::Nav item-->
                 <li class="nav-item my-1">
-                    <a class="btn btn-color-gray-600 btn-active-secondary btn-active-color-primary fw-bolder fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 {{returnActiveSubMenuStyle('orders')}}"
-                       href="{{route('exchange.orders')}}">{{__('Orders')}}</a>
-                </li>
-                <!--end::Nav item-->
-                <!--begin::Nav item-->
-                <li class="nav-item my-1">
                     <a class="btn btn-color-gray-600 btn-active-secondary btn-active-color-primary fw-bolder fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 {{returnActiveSubMenuStyle('transactions')}}"
                        href="{{route('exchange.transactions')}}">{{__('Transactions')}}</a>
                 </li>

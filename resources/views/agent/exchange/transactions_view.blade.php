@@ -1,6 +1,6 @@
 @extends('layouts.users.agent')
 
-@section('title', __("Order"))
+@section('title', __("Transaction View"))
 
 @section('header_js')
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
@@ -104,8 +104,8 @@
                                 </div>
                                 <!--end:Label-->
 
-
                             @endif
+
                         @endif
 
 
@@ -260,6 +260,62 @@
 
                             @endforeach
 
+
+                            <!-- TEMPLATE MESSAGES -->
+                                <!--begin::Message(in)-->
+                                <div class="d-flex justify-content-start mb-10 d-none" data-kt-element="template-in">
+                                    <!--begin::Wrapper-->
+                                    <div class="d-flex flex-column align-items-start">
+                                        <!--begin::User-->
+                                        <div class="d-flex align-items-center mb-2">
+                                            <!--begin::Avatar-->
+                                            <div class="symbol symbol-35px symbol-circle">
+                                                <span class="symbol-label bg-light-info text-info fw-semibold" data-kt-element="message-sender-initial"></span>
+                                            </div>
+                                            <!--end::Avatar-->
+                                            <!--begin::Details-->
+                                            <div class="ms-3">
+                                                <a href="#" class="fs-5 fw-bold text-gray-900 text-hover-primary me-1" data-kt-element="message-sender"></a>
+                                                <span class="text-muted fs-7 mb-1" data-kt-element="message-created-at"></span>
+                                            </div>
+                                            <!--end::Details-->
+                                        </div>
+                                        <!--end::User-->
+                                        <!--begin::Text-->
+                                        <div class="p-5 rounded bg-light-info text-dark fw-semibold mw-lg-400px text-start" data-kt-element="message-text"></div>
+                                        <!--end::Text-->
+                                    </div>
+                                    <!--end::Wrapper-->
+                                </div>
+                                <!--end::Message(in)-->
+                                <!--begin::Message(out)-->
+                                <div class="d-flex justify-content-end mb-10 d-none" data-kt-element="template-out">
+                                    <!--begin::Wrapper-->
+                                    <div class="d-flex flex-column align-items-end">
+                                        <!--begin::User-->
+                                        <div class="d-flex align-items-center mb-2">
+                                            <!--begin::Details-->
+                                            <div class="me-3">
+                                                <span class="text-muted fs-7 mb-1">{{now()->toDateTimeString('minute')}}</span>
+                                                <a href="#" class="fs-5 fw-bold text-gray-900 text-hover-primary ms-1">You ({{\Illuminate\Support\Facades\Auth::user()->business->business_name}})</a>
+                                            </div>
+                                            <!--end::Details-->
+                                            <!--begin::Avatar-->
+                                            <div class="symbol symbol-35px symbol-circle">
+                                                <img alt="Pic" src="{{asset('assets/media/avatars/blank.png')}}" />
+                                            </div>
+                                            <!--end::Avatar-->
+                                        </div>
+                                        <!--end::User-->
+                                        <!--begin::Text-->
+                                        <div class="p-5 rounded bg-light-primary text-dark fw-semibold mw-lg-400px text-end" data-kt-element="message-text"></div>
+                                        <!--end::Text-->
+                                    </div>
+                                    <!--end::Wrapper-->
+                                </div>
+                                <!--end::Message(out)-->
+                            <!-- END::TEMPLATE MESSAGES -->
+
                         </div>
                         <!--end::Messages-->
                     </div>
@@ -282,7 +338,7 @@
                             </div>
                             <!--end::Actions-->
                             <!--begin::Send-->
-                            <a class="btn btn-secondary" href="{{route('exchange.orders')}}">{{__('Go Back')}}</a>
+                            <a class="btn btn-secondary" href="{{route('exchange.transactions')}}">{{__('Go Back')}}</a>
                             <button id="sentTextButton" class="btn btn-primary" type="button" data-kt-element="send">{{__('Send')}}</button>
                             <!--end::Send-->
                         </div>
@@ -329,7 +385,7 @@
                             <!--end::Close-->
                         </div>
 
-                        <form class="my-auto pb-5" action="{{route('exchange.orders.action')}}" method="POST">
+                        <form class="my-auto pb-5" action="{{route('exchange.transactions.action')}}" method="POST">
                             @csrf
 
                             <input type="hidden" name="ex_trans_id" value="{{$exchangeTransaction->id}}">
@@ -384,7 +440,7 @@
                             </div>
                             <!--end::Close-->
                         </div>
-                        <form class="my-auto pb-5" action="{{route('exchange.orders.action')}}" method="POST">
+                        <form class="my-auto pb-5" action="{{route('exchange.transactions.action')}}" method="POST">
                             @csrf
 
                             <input type="hidden" name="ex_trans_id" value="{{$exchangeTransaction->id}}">
@@ -416,7 +472,7 @@
                             </div>
                             <!--end::Close-->
                         </div>
-                        <form class="my-auto pb-5" action="{{route('exchange.orders.feedback.action')}}" method="POST">
+                        <form class="my-auto pb-5" action="{{route('exchange.transactions.feedback.action')}}" method="POST">
                             @csrf
 
                             <input type="hidden" name="ex_trans_id" value="{{$exchangeTransaction->id}}">
@@ -595,7 +651,7 @@
             var xhr = new XMLHttpRequest();
 
             // Configure the GET request
-            var url = "{{route('exchange.orders.receive.message')}}";
+            var url = "{{route('exchange.transactions.receive.message')}}";
             url = url + "?ex_trans_id="+{{$exchangeTransaction->id}}+"&message="+message;
             xhr.open("GET", url, true);
 
