@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Business;
 use App\Models\ExchangeAds;
 use App\Models\ExchangeChat;
+use App\Models\ExchangeFeedback;
 use App\Models\ExchangePaymentMethod;
 use App\Models\ExchangeStat;
 use App\Models\ExchangeTransaction;
@@ -93,11 +94,11 @@ class ExchangeController extends Controller
                     return view('agent.exchange.ads_datatable_components._limit', compact( 'ad'));
                 })
                 ->addColumn('payment', function(ExchangeAds $ad) {
-                    $buyMethods = $ad->exchange_payment_methods->where('type',\App\Utils\Enums\ExchangePaymentMethodTypeEnum::OWNER_BUY->value)->where('status',1);
-                    $lastBuy = $buyMethods->last();
-                    $sellMethods = $ad->exchange_payment_methods->where('type',\App\Utils\Enums\ExchangePaymentMethodTypeEnum::OWNER_SELL->value)->where('status',1);
-                    $lastSell = $sellMethods->last();
-                    return view('agent.exchange.ads_datatable_components._payment', compact( 'ad','buyMethods','sellMethods','lastBuy', 'lastSell'));
+                    $traderSellMethods = $ad->exchange_payment_methods->where('type',\App\Utils\Enums\ExchangePaymentMethodTypeEnum::OWNER_BUY->value)->where('status',1);
+                    $lastBuy = $traderSellMethods->last();
+                    $traderBuyMethods = $ad->exchange_payment_methods->where('type',\App\Utils\Enums\ExchangePaymentMethodTypeEnum::OWNER_SELL->value)->where('status',1);
+                    $lastSell = $traderBuyMethods->last();
+                    return view('agent.exchange.ads_datatable_components._payment', compact( 'ad','traderSellMethods','traderBuyMethods','lastBuy', 'lastSell'));
                 })
                 ->addColumn('trade', function(ExchangeAds $ad) {
                     return '<a href="'.route('exchange.ads.view',$ad->id).'" class="btn btn-light btn-sm">'.__("View Ad").'</a>';
@@ -134,16 +135,16 @@ class ExchangeController extends Controller
         if(empty($exchangeAd)){
             return redirect()->back()->withErrors(['Invalid Exchange Ad']);
         }
-        $buyMethods = $exchangeAd->exchange_payment_methods()
+        $traderSellMethods = $exchangeAd->exchange_payment_methods()
             ->where('type',\App\Utils\Enums\ExchangePaymentMethodTypeEnum::OWNER_BUY->value)
             ->where('status', 1)
             ->get(['id','method_name','type']);
-        $sellMethods = $exchangeAd->exchange_payment_methods()
+        $traderBuyMethods = $exchangeAd->exchange_payment_methods()
             ->where('type',\App\Utils\Enums\ExchangePaymentMethodTypeEnum::OWNER_SELL->value)
             ->where('status', 1)
             ->get(['id','method_name','type']);
 
-        return view('agent.exchange.ads_view',compact('exchangeAd','buyMethods','sellMethods'));
+        return view('agent.exchange.ads_view',compact('exchangeAd','traderSellMethods','traderBuyMethods'));
     }
 
     public function adsOpenOrder(Request $request)
@@ -152,29 +153,42 @@ class ExchangeController extends Controller
         $request->validate([
             'exchange_id' => 'required|exists:exchange_ads,id',
             'action_select' => 'required|in:'.implode(',',ExchangeTransactionTypeEnum::toArray()),
-            'action_method_select' => 'required|exists:exchange_payment_methods,id',
-            'action_for_select' => 'required|exists:exchange_payment_methods,id',
+            'action_target_select' => 'required|exists:exchange_payment_methods,id',
+            'action_via_select' => 'required|exists:exchange_payment_methods,id',
             'amount' => 'required|numeric|min:'.$exchangeAd->min_amount.'|max:'.$exchangeAd->max_amount,
             'comment' => 'sometimes|string',
         ]);
         $exchangeAdCode = $exchangeAd->code;
 
-        $ams = ExchangePaymentMethod::where('id',$request->get('action_method_select'))->first();
-        $trader = ExchangePaymentMethod::where('id',$request->get('action_for_select'))->first();
+        $targetMethod = ExchangePaymentMethod::where('id',$request->get('action_target_select'))->first();
+        $viaMethod = ExchangePaymentMethod::where('id',$request->get('action_via_select'))->first();
         $comment = $request->get('comment');
 
         if($exchangeAd->business->code == $request->user()->business->code){
-            return redirect()->back()->withErrors(['Not authorized to trade with you own business']);
+            return [
+                'success'           => false,
+                'result'            => "failed",
+                'resultExplanation' => "Not authorized to trade with you own business",
+            ];
         }
+
+//        $exTranChecker = ExchangeTransaction::where(['trader_business_code'=>$request->user()->business->code, 'is_complete'=>0])->first();
+//        if($exTranChecker != null){
+//            return [
+//                'success'           => false,
+//                'result'            => "failed",
+//                'resultExplanation' => "There is already a pending transaction",
+//            ];
+//        }
 
         $exchangeTransaction = ExchangeTransaction::create([
             'exchange_ads_code' => $exchangeAdCode,
             'owner_business_code' => $exchangeAd->business->code,
             'trader_business_code' => $request->user()->business->code,
             'trader_action_type' => $request->get('action_select'),
-            'trader_action_method_id' => $ams->id,
-            'trader_action_method' => $ams->method_name,
-            'for_method' => $trader->method_name,
+            'trader_target_method' => $targetMethod->method_name,
+            'trader_action_via_method_id' => $viaMethod->id,
+            'trader_action_via_method' => $viaMethod->method_name,
             'amount' => $request->get('amount'),
             'amount_currency' => session('currency'),
             'status' => ExchangeTransactionStatusEnum::OPEN,
@@ -230,11 +244,14 @@ class ExchangeController extends Controller
                 ->addColumn('trade', function(ExchangeTransaction $trn) {
                     return '<a href="'.route('exchange.orders.view',$trn->id).'" class="btn btn-light btn-sm">'.__("Open").'</a>';
                 })
-                ->editColumn('trader_action_method', function($trn) {
-                    return str_camelcase($trn->trader_action_method);
+                ->editColumn('trader_action_type', function($trn) {
+                    return __($trn->trader_action_type);
                 })
-                ->editColumn('for_method', function($trn) {
-                    return str_camelcase($trn->for_method);
+                ->editColumn('trader_target_method', function($trn) {
+                    return str_camelcase($trn->trader_target_method);
+                })
+                ->editColumn('trader_action_via_method', function($trn) {
+                    return str_camelcase($trn->trader_action_via_method);
                 })
                 ->editColumn('amount', function($trn) {
                     return number_format($trn->amount,2);
@@ -250,13 +267,13 @@ class ExchangeController extends Controller
         //Datatable
         $dataTableHtml = $builder->columns([
             ['data' => 'id', 'title' => __('id')],
-            ['data' => 'owner_business.business_name', 'title' => "Business"],
-            ['data' => 'trader_business.business_name', 'title' => "Trader"],
-            ['data' => 'trader_action_type' , 'title' => "Action"],
-            ['data' => 'trader_action_method', 'title' => "Action Method"],
-            ['data' => 'for_method', 'title' => "For"],
-            ['data' => 'amount', 'title' => "Amount"],
-            ['data' => 'trade', 'title' => "Trade"],
+            ['data' => 'owner_business.business_name', 'title' => __("Advertiser")],
+            ['data' => 'trader_business.business_name', 'title' => __("Applicant")],
+            ['data' => 'trader_action_type' , 'title' => __("Action")],
+            ['data' => 'trader_target_method', 'title' => __("Target")],
+            ['data' => 'trader_action_via_method', 'title' => __("Via")],
+            ['data' => 'amount', 'title' => __("Amount")],
+            ['data' => 'trade', 'title' => __("Trade")],
         ])->responsive(true)
             ->ordering(false)
             ->ajax(route('exchange.orders'))
@@ -313,16 +330,110 @@ class ExchangeController extends Controller
     {
         $request->validate([
             'ex_trans_id' => 'required|exists:exchange_transactions,id',
+            'action' => 'required|in:complete,report,cancel',
+            'message' => 'sometimes|string|min:10|max:255',
+        ]);
+        $exchangeTransactionId = $request->get('ex_trans_id');
+        $exchangeTransaction = ExchangeTransaction::where('id',$exchangeTransactionId)->first();
+        $action = $request->get('action');
+        $user = $request->user();
+
+        if($exchangeTransaction->is_complete){
+            return redirect()->back()->withErrors('Trade Already Completed');
+        }
+
+        if($action == 'cancel'){
+
+            if($exchangeTransaction->status != ExchangeTransactionStatusEnum::OPEN->value){
+                return redirect()->back()->withErrors(['Error! Trade already in progress']);
+            }
+
+            $exchangeTransaction->is_complete = true;
+            $exchangeTransaction->cancelled_at = now();
+            $exchangeTransaction->cancelled_by_user_code = $user->code;
+            $exchangeTransaction->status = ExchangeTransactionStatusEnum::CANCELLED->value;
+            $exchangeTransaction->save();
+
+            return redirect()->back()->with(['message'=>'Trade Successfully Cancelled']);
+        }
+
+        if($action == 'complete'){
+
+            if($exchangeTransaction->isTrader($user)){
+                $exchangeTransaction->status = ExchangeTransactionStatusEnum::PENDING_RELEASE->value;
+                $exchangeTransaction->trader_confirm_at = now();
+                $exchangeTransaction->trader_confirm_by_user_code = $user->code;
+                $exchangeTransaction->save();
+            }
+
+            if($exchangeTransaction->isOwner($user)){
+                $exchangeTransaction->status = ExchangeTransactionStatusEnum::PENDING_RELEASE->value;
+                $exchangeTransaction->owner_confirm_at = now();
+                $exchangeTransaction->owner_confirm_by_user_code = $user->code;
+                $exchangeTransaction->save();
+            }
+
+            if($exchangeTransaction->trader_confirm_at != null && $exchangeTransaction->owner_confirm_at != null){
+                $exchangeTransaction->is_complete = true;
+                $exchangeTransaction->status = ExchangeTransactionStatusEnum::COMPLETED->value;
+                $exchangeTransaction->save();
+            }
+
+            return redirect()->back()->with('Trade Successfully Cancelled');
+        }
+
+        //Todo: Add Trade Update Notification
+
+        return redirect()->back()->withErrors(['Error! Action Error']);
+    }
+
+    public function ordersFeedbackAction(Request $request)
+    {
+        $request->validate([
+            'ex_trans_id' => 'required|exists:exchange_transactions,id',
+            'feedback' => 'required|in:1,0',
+            'comments' => 'sometimes|nullable|string|min:2|max:255',
+        ]);
+        $user = \auth()->user();
+        $exchangeId = $request->get('ex_trans_id');
+        $exchangeTransaction = ExchangeTransaction::where('id',$exchangeId)->first();
+        $isOwner = $exchangeTransaction->isOwner($user);
+        $isTrader = $exchangeTransaction->isTrader($user);
+
+        if($isOwner && $exchangeTransaction->owner_submitted_feedback == true){
+            return redirect()->back()->withErrors(['Error! Feedback already submitted']);
+        }
+
+        if($isTrader && $exchangeTransaction->trader_submitted_feedback == true){
+            return redirect()->back()->withErrors(['Error! Feedback already submitted']);
+        }
+
+        $reviewerBusinessCode = $user->business_code;
+        $reviewedBusinessCode = null;
+        if($exchangeTransaction->owner_business_code == $reviewerBusinessCode){
+            $reviewedBusinessCode = $exchangeTransaction->trader_business_code;
+        }
+        if($exchangeTransaction->trader_business_code == $reviewerBusinessCode){
+            $reviewedBusinessCode = $exchangeTransaction->owner_business_code;
+        }
+
+        ExchangeFeedback::create([
+            'exchange_trnx_id' => $exchangeId,
+            'reviewed_business_code' => $reviewedBusinessCode,
+            'review' => $request->get('feedback'),
+            'review_comment' => $request->get('comments'),
+            'reviewer_user_code' => $user->code,
         ]);
 
+        if($isOwner){
+            $exchangeTransaction->owner_submitted_feedback = true;
+        }
+        if($isTrader){
+            $exchangeTransaction->trader_submitted_feedback = true;
+        }
+        $exchangeTransaction->save();
 
-
-
-
-        return [
-            'status' => 200,
-            'message' => "successful"
-        ];
+        return redirect()->back()->with(['message'=>'Exchange Feedback Submitted']);
     }
 
     public function transactions()

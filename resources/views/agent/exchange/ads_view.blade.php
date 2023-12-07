@@ -129,7 +129,7 @@
                                     <!--begin::Select2-->
                                     <select class="form-select form-select-solid" name="action_select" id="action_select" onchange="actionChanged(this.value)">
                                         <option selected disabled>{{__("Selected desired action")}}</option>
-                                        <option value="buy">{{__("Buy (Get)")}}</option>
+                                        <option value="buy">{{__("Buy (Receive)")}}</option>
                                         <option value="sell">{{__("Sell (Give)")}}</option>
                                     </select>
                                     <!--end::Select2-->
@@ -141,15 +141,15 @@
                             <div class="row fv-row mb-7">
                                 <div class="col-md-3 text-md-end">
                                     <!--begin::Label-->
-                                    <label class="fs-6 fw-semibold form-label mt-3">
-                                        {{__("Action Payment")}}
+                                    <label class="fs-6 fw-semibold form-label mt-3" id="action_target_select_label">
+
                                     </label>
                                     <!--end::Label-->
                                 </div>
                                 <div class="col-md-9">
                                     <!--begin::Select2-->
-                                    <select class="form-select form-select-solid" name="action_method_select" id="action_method_select">
-                                        <option disabled>{{__("Select the action payment method")}}</option>
+                                    <select class="form-select form-select-solid" name="action_target_select" id="action_target_select">
+                                        <option disabled>{{__("Select payment method")}}</option>
                                     </select>
                                     <!--end::Select2-->
                                 </div>
@@ -160,15 +160,15 @@
                             <div class="row fv-row mb-7">
                                 <div class="col-md-3 text-md-end">
                                     <!--begin::Label-->
-                                    <label class="fs-6 fw-semibold form-label mt-3">
-                                        {{__("For")}}
+                                    <label class="fs-6 fw-semibold form-label mt-3" id="action_via_select_label">
+
                                     </label>
                                     <!--end::Label-->
                                 </div>
                                 <div class="col-md-9">
                                     <!--begin::Select2-->
-                                    <select class="form-select form-select-solid" name="action_for_select" id="action_for_select">
-                                        <option disabled>{{__("Select the for payment method")}}</option>
+                                    <select class="form-select form-select-solid" name="action_via_select" id="action_via_select">
+                                        <option disabled>{{__("Select payment method")}}</option>
                                     </select>
                                     <!--end::Select2-->
                                 </div>
@@ -246,30 +246,37 @@
 
 @section('footer_js')
     <script>
-        var buyMethods = JSON.parse('{!! $buyMethods->toJson() !!}');
-        var sellMethods = JSON.parse('{!! $sellMethods->toJson() !!}');
+        var traderSellMethods = JSON.parse('{!! $traderSellMethods->toJson() !!}');
+        var traderBuyMethods = JSON.parse('{!! $traderBuyMethods->toJson() !!}');
+
+        var targetLabel = document.getElementById('action_target_select_label');
+        var actionLabel = document.getElementById('action_via_select_label');
 
         function actionChanged(selectedAction) {
 
-            removeAllOptions('action_method_select');
-            removeAllOptions('action_for_select');
+            removeAllOptions('action_target_select');
+            removeAllOptions('action_via_select');
 
             if(selectedAction == 'sell'){
-                sellMethods.forEach(item => {
-                    addOption('action_method_select',item.method_name,item.id);
+                traderSellMethods.forEach(item => {
+                    addOption('action_target_select',item.method_name,item.id);
                 });
-                buyMethods.forEach(item => {
-                    addOption('action_for_select',item.method_name,item.id);
+                traderBuyMethods.forEach(item => {
+                    addOption('action_via_select',item.method_name,item.id);
                 });
+                targetLabel.innerHTML = "{{__("Sell")}}";
+                actionLabel.innerHTML = "{{__("Receive")}}";
             }
 
             if(selectedAction == 'buy'){
-                buyMethods.forEach(item => {
-                    addOption('action_method_select',item.method_name,item.id);
+                traderBuyMethods.forEach(item => {
+                    addOption('action_target_select',item.method_name,item.id);
                 });
-                sellMethods.forEach(item => {
-                    addOption('action_for_select',item.method_name,item.id);
+                traderSellMethods.forEach(item => {
+                    addOption('action_via_select',item.method_name,item.id);
                 });
+                targetLabel.innerHTML = "{{__("Buy")}}";
+                actionLabel.innerHTML = "{{__("Pay with")}}";
             }
         }
 

@@ -34,18 +34,44 @@ return new class extends Migration
                 ->onUpdate('cascade');
 
             $table->string('trader_action_type');//\App\Utils\Enums\ExchangeTransactionTypeEnum::class
-            $table->string('trader_action_method');
-            $table->bigInteger('trader_action_method_id')->unsigned();
-            $table->foreign('trader_action_method_id', 'method_id_fk')->references('id')
+            $table->string('trader_target_method');
+            $table->string('trader_action_via_method');
+            $table->bigInteger('trader_action_via_method_id')->unsigned();
+            $table->foreign('trader_action_via_method_id', 'method_id_fk')->references('id')
                 ->on('exchange_payment_methods')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->string('for_method');
 
             $table->decimal('amount',12,2);
             $table->string('amount_currency');
             $table->string('status')->default(ExchangeTransactionStatusEnum::OPEN);
+            $table->boolean('is_complete')->default(false);
+            $table->boolean('owner_submitted_feedback')->default(false);
+            $table->boolean('trader_submitted_feedback')->default(false);
+
+            $table->timestamp('owner_confirm_at')->nullable();
+            $table->string('owner_confirm_by_user_code')->nullable();
+            $table->foreign('owner_confirm_by_user_code')->references('code')
+                ->on('users')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+
+            $table->timestamp('trader_confirm_at')->nullable();
+            $table->string('trader_confirm_by_user_code')->nullable();
+            $table->foreign('trader_confirm_by_user_code')->references('code')
+                ->on('users')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+
+            $table->timestamp('cancelled_at')->nullable();
+            $table->string('cancelled_by_user_code')->nullable();
+            $table->foreign('cancelled_by_user_code')->references('code')
+                ->on('users')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+
             $table->text('trader_comments')->nullable();
+            $table->string('note')->nullable();
             $table->timestamps();
         });
     }

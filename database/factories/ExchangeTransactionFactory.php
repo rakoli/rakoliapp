@@ -28,7 +28,7 @@ class ExchangeTransactionFactory extends Factory
         $fsps = FinancialServiceProvider::get(['code','name'])->toArray();
         $exchangeAds = fake()->randomElement(ExchangeAds::get(['business_code','code'])->toArray());
         $exchange = ExchangeAds::where('code', $exchangeAds['code'])->first();
-        $paymentMethod = fake()->randomElement($exchange->exchange_payment_methods->toArray());
+        $viaMethod = fake()->randomElement($exchange->exchange_payment_methods->toArray());
         $traderBusiness = fake()->randomElement(Business::where('code','!=',$exchangeAds['business_code'])->get(['code'])->toArray());
 
         return [
@@ -36,9 +36,9 @@ class ExchangeTransactionFactory extends Factory
             'owner_business_code' => $exchangeAds['business_code'],
             'trader_business_code' => $traderBusiness['code'],
             'trader_action_type' => fake()->randomElement(ExchangeTransactionTypeEnum::class),
-            'trader_action_method' => $paymentMethod['method_name'],
-            'trader_action_method_id' => $paymentMethod['id'],
-            'for_method' => fake()->randomElement($fsps)['name'],
+            'trader_target_method' => fake()->randomElement($fsps)['name'],
+            'trader_action_via_method' => $viaMethod['method_name'],
+            'trader_action_via_method_id' => $viaMethod['id'],
             'amount' => fake()->numberBetween(5000, 250000),
             'amount_currency' => fake()->randomElement(['kes','tzs']),
             'status' => fake()->randomElement(ExchangeTransactionStatusEnum::class),

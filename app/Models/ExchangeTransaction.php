@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Utils\Enums\ExchangeTransactionStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,14 +18,72 @@ class ExchangeTransaction extends Model
         'owner_business_code',
         'trader_business_code',
         'trader_action_type',
-        'trader_action_method_id',
-        'trader_action_method',
-        'for_method',
+        'trader_target_method',
+        'trader_action_via_method_id',
+        'trader_action_via_method',
         'amount',
         'amount_currency',
         'status',
         'trader_comments',
     ];
+
+    protected static function booted(): void
+    {
+        parent::boot();
+
+        static::updating(function(ExchangeTransaction $exchangeTransaction) {
+            if ($exchangeTransaction->isDirty('status'))
+            {
+                if($exchangeTransaction->status == ExchangeTransactionStatusEnum::COMPLETED->value){
+                    $traderStat = ExchangeStat::where('business_code', $exchangeTransaction->trader_business_code)->first();
+                    $ownerStat = ExchangeStat::where('business_code', $exchangeTransaction->owner_business_code)->first();
+
+                    $traderStat->no_of_trades_completed = $traderStat->no_of_trades_completed + 1;
+                    $traderStat->volume_traded = $traderStat->volume_traded + $exchangeTransaction->amount;
+                    $traderStat->save();
+
+                    $ownerStat->no_of_trades_completed = $ownerStat->no_of_trades_completed + 1;
+                    $ownerStat->volume_traded = $ownerStat->volume_traded + $exchangeTransaction->amount;
+                    $ownerStat->save();
+                }
+
+                if($exchangeTransaction->status == ExchangeTransactionStatusEnum::CANCELLED->value){
+                    $user = User::where('code', $exchangeTransaction->cancelled_by_user_code)->first();
+
+                    $cancellingBusinessStat = ExchangeStat::where('business_code', $user->business_code)->first();
+                    $cancellingBusinessStat->no_of_trades_cancelled = $cancellingBusinessStat->no_of_trades_cancelled + 1;
+                    $cancellingBusinessStat->save();
+
+                }
+            }
+
+            if ($exchangeTransaction->isDirty('owner_submitted_feedback') && $exchangeTransaction->owner_submitted_feedback == true)
+            {
+                $feedback = ExchangeFeedback::where(['exchange_trnx_id'=>$exchangeTransaction->id,'reviewed_business_code'=>$exchangeTransaction->trader_business_code])->first();
+                $traderStat = ExchangeStat::where('business_code', $exchangeTransaction->trader_business_code)->first();
+                if($feedback->review == 1){
+                    $traderStat->no_of_positive_feedback = $traderStat->no_of_positive_feedback + 1;
+                }
+                if($feedback->review == 0){
+                    $traderStat->no_of_negative_feedback = $traderStat->no_of_negative_feedback + 1;
+                }
+                $traderStat->save();
+            }
+
+            if ($exchangeTransaction->isDirty('trader_submitted_feedback') && $exchangeTransaction->trader_submitted_feedback == true)
+            {
+                $feedback = ExchangeFeedback::where(['exchange_trnx_id'=>$exchangeTransaction->id,'reviewed_business_code'=>$exchangeTransaction->owner_business_code])->first();
+                $ownerStat = ExchangeStat::where('business_code', $exchangeTransaction->owner_business_code)->first();
+                if($feedback->review == 1){
+                    $ownerStat->no_of_positive_feedback = $ownerStat->no_of_positive_feedback + 1;
+                }
+                if($feedback->review == 0){
+                    $ownerStat->no_of_negative_feedback = $ownerStat->no_of_negative_feedback + 1;
+                }
+                $ownerStat->save();
+            }
+        });
+    }
 
     public function owner_business() : BelongsTo
     {
@@ -48,12 +107,17 @@ class ExchangeTransaction extends Model
 
     public function paymentMethod() : HasOne
     {
-        return $this->HasOne(ExchangePaymentMethod::class,'id','trader_action_method_id');
+        return $this->HasOne(ExchangePaymentMethod::class,'id','trader_action_via_method_id');
     }
 
     public function exchange_chats() : HasMany
     {
         return $this->hasMany(ExchangeChat::class,'exchange_trnx_id','id');
+    }
+
+    public function exchange_feedback() : HasMany
+    {
+        return $this->hasMany(ExchangeFeedback::class,'exchange_trnx_id','id');
     }
 
     public function isUserAllowed(User $user)

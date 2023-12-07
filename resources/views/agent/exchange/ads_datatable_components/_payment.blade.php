@@ -1,8 +1,8 @@
 <div class="d-flex flex-column justify-content-center w-250px">
     <div class="fs-6 text-gray-600">
         {{__('Buy (Receive)')}} <div class="fw-semibold text-muted">
-            @if(!empty($sellMethods))
-                @foreach($sellMethods as $method)
+            @if(!empty($traderBuyMethods))
+                @foreach($traderBuyMethods as $method)
                     {{str_camelcase($method->method_name)}}
                     @if($lastSell->id != $method->id)
                         |
@@ -19,8 +19,8 @@
 <div class="d-flex flex-column justify-content-center w-250px">
     <div class="fs-6 text-gray-600">
         {{__('Sell (Give)')}} <div class="fw-semibold text-muted">
-            @if(!empty($buyMethods))
-                @foreach($buyMethods as $method)
+            @if(!empty($traderSellMethods))
+                @foreach($traderSellMethods as $method)
                     {{str_camelcase($method->method_name)}}
                     @if($lastBuy->id != $method->id)
                         |

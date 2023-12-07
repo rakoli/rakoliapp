@@ -18,8 +18,106 @@
             <div class="flex-column flex-lg-row-auto w-100 w-xl-350px mb-10">
                 <!--begin::Card-->
                 <div class="card mb-5 mb-xl-8">
-                    <!--begin::Card body-->
+
+                    <!--Begin::Card Footer (Actions)-->
                     <div class="card-body pt-5">
+
+                        <!--Begin::Status Details-->
+                        <div class="text-center fw-bold">{{__("Status")}}</div>
+                        <div class="mb-5 text-gray-600 text-center">
+                            {{__(\App\Utils\Enums\ExchangeTransactionStatusEnum::tryFrom($exchangeTransaction->status)->description())}}
+                        </div>
+                        <!--End::Status Details-->
+
+                        <!--Begin::Action Buttons-->
+
+                        @if($exchangeTransaction->status === \App\Utils\Enums\ExchangeTransactionStatusEnum::OPEN->value )
+                            <button type="button" class="btn btn-primary btn-text-danger" data-bs-toggle="modal" data-bs-target="#cancel_modal">
+                                {{__('Cancel')}}
+                            </button>
+                        @endif
+
+                        <!-- Todo: Add Exchange Trade Report-->
+{{--                        <button type="button" class="btn btn-primary btn-text-warning" data-bs-toggle="modal" data-bs-target="#report_modal">--}}
+{{--                            {{__('Report')}}--}}
+{{--                        </button>--}}
+
+                        @if($exchangeTransaction->isTrader(auth()->user())&& $exchangeTransaction->trader_confirm_at == null && $exchangeTransaction->is_complete == false)
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#complete_modal">
+                                {{__('Complete')}}
+                            </button>
+                        @endif
+
+                        @if($exchangeTransaction->isOwner(auth()->user()) && $exchangeTransaction->owner_confirm_at == null && $exchangeTransaction->is_complete == false)
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#complete_modal">
+                                {{__('Complete')}}
+                            </button>
+                        @endif
+                        <!--End::Action Buttons-->
+
+                        @if($exchangeTransaction->is_complete == true && $exchangeTransaction->status == \App\Utils\Enums\ExchangeTransactionStatusEnum::COMPLETED->value )
+
+                            @if(($exchangeTransaction->isOwner(auth()->user()) && $exchangeTransaction->owner_submitted_feedback == false) || ($exchangeTransaction->isTrader(auth()->user()) && $exchangeTransaction->trader_submitted_feedback == false))
+
+                                <!--Begin::Status Details-->
+                                <div class="mb-2 mt-2 text-gray-600 text-center">
+                                    {{__('Submit Transaction Feedback')}}
+                                </div>
+                                <!--End::Status Details-->
+
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#feedback_modal">
+                                    {{__('Give Feedback')}}
+                                </button>
+
+                            @else
+
+                                <!--begin:Label-->
+                                <span class="d-flex align-items-center mb-0 mt-2 align-center">
+                                    <!--begin:Info-->
+                                    <span class="d-flex flex-column mb-0" >
+                                        <span class="fs-6 mb-0">{{__("Feedback Submitted")}}</span>
+                                    </span>
+                                    <!--end:Info-->
+
+                                    @if($exchangeTransaction->exchange_feedback->where('reviewer_user_code',\auth()->user()->code)->first()->review == true)
+                                        <!--begin:Icon-->
+                                        <span class="symbol symbol-35px mb-0 m-lg-2">
+                                            <span class="symbol-label bg-light-success mb-0">
+                                                <i class="ki-duotone ki-shield-tick fs-1 text-success"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
+                                            </span>
+                                        </span>
+                                        <!--end:Icon-->
+                                    @else
+                                        <!--begin:Icon-->
+                                        <span class="symbol symbol-35px mb-0 m-lg-2">
+                                            <span class="symbol-label bg-light-danger mb-0">
+                                                <i class="ki-duotone ki-cross-circle fs-1 text-danger"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
+                                            </span>
+                                        </span>
+                                        <!--end:Icon-->
+                                    @endif
+
+                                </span>
+
+                                <div class="text-gray-600">
+                                    {{$exchangeTransaction->exchange_feedback->where('reviewer_user_code',\auth()->user()->code)->first()->review_comment}}
+                                </div>
+                                <!--end:Label-->
+
+
+                            @endif
+                        @endif
+
+
+                    </div>
+                    <!--end::Card Footer (Actions)-->
+
+                    <!--end::Details toggle-->
+                    <div class="separator separator-dashed"></div>
+                    <!--begin::Details content-->
+
+                    <!--begin::Card body-->
+                    <div class="card-body pt-1">
                         <!--begin::Details content-->
                         <div class="collapse show">
                             <div class="py-5 fs-6">
@@ -52,23 +150,7 @@
                         </div>
                         <!--end::Details content-->
                     </div>
-                    <!--end::Card Footer (Actions)-->
-                    <div class="card-body pt-5">
 
-                        @if($exchangeTransaction->isTrader(auth()->user()))
-                            <button type="button" class="btn btn-primary btn-text-danger" data-bs-toggle="modal" data-bs-target="#cancel_modal">
-                                {{__('Cancel')}}
-                            </button>
-                            <button type="button" class="btn btn-primary btn-text-warning" data-bs-toggle="modal" data-bs-target="#report_modal">
-                                {{__('Report')}}
-                            </button>
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#complete_modal">
-                                {{__('Complete')}}
-                            </button>
-                        @endif
-
-                    </div>
-                    <!--end::Card Footer (Actions)-->
                 </div>
                 <!--end::Card-->
             </div>
@@ -91,12 +173,12 @@
                                     <span class="fs-7 fw-semibold text-muted">
                                         @if($exchangeTransaction->owner_business->code == auth()->user()->business_code)
                                             {{__(tradeOrderInvence($exchangeTransaction->trader_action_type))}} {{number_format($exchangeTransaction->amount)}}
-                                            {{$exchangeTransaction->amount_currency}} {{__('of')}} {{strtolower($exchangeTransaction->trader_action_method)}} {{__('for')}} {{strtolower($exchangeTransaction->for_method)}}
+                                            {{strtolower($exchangeTransaction->amount_currency)}} {{__('of')}} {{strtolower($exchangeTransaction->trader_target_method)}} {{__('using')}} {{strtolower($exchangeTransaction->trader_action_via_method)}}
                                         @endif
 
                                         @if($exchangeTransaction->trader_business->code == auth()->user()->business_code)
                                             {{__($exchangeTransaction->trader_action_type)}} {{number_format($exchangeTransaction->amount)}}
-                                            {{$exchangeTransaction->amount_currency}} {{__('of')}} {{strtolower($exchangeTransaction->trader_action_method)}} {{__('for')}} {{strtolower($exchangeTransaction->for_method)}}
+                                            {{strtolower($exchangeTransaction->amount_currency)}} {{__('of')}} {{strtolower($exchangeTransaction->trader_target_method)}} {{__('using')}} {{strtolower($exchangeTransaction->trader_action_via_method)}}
                                         @endif
                                     </span>
                                 </div>
@@ -200,6 +282,7 @@
                             </div>
                             <!--end::Actions-->
                             <!--begin::Send-->
+                            <a class="btn btn-secondary" href="{{route('exchange.orders')}}">{{__('Go Back')}}</a>
                             <button id="sentTextButton" class="btn btn-primary" type="button" data-kt-element="send">{{__('Send')}}</button>
                             <!--end::Send-->
                         </div>
@@ -246,15 +329,21 @@
                             <!--end::Close-->
                         </div>
 
-                        <div class="modal-body">
-                            <p>{{__("general.exchange.trades.complete.confirmation")}}</p>
-                        </div>
+                        <form class="my-auto pb-5" action="{{route('exchange.orders.action')}}" method="POST">
+                            @csrf
 
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{__("Close")}}</button>
-                            <button type="submit" class="btn btn-primary">{{__('Complete Exchange')}}</button>
-                        </div>
+                            <input type="hidden" name="ex_trans_id" value="{{$exchangeTransaction->id}}">
+                            <input type="hidden" name="action" value="complete">
 
+                            <div class="modal-body">
+                                <p>{{__("general.exchange.trades.complete.confirmation")}}</p>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{__("Close")}}</button>
+                                <button type="submit" class="btn btn-primary">{{__('Complete Exchange')}}</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -295,15 +384,121 @@
                             </div>
                             <!--end::Close-->
                         </div>
+                        <form class="my-auto pb-5" action="{{route('exchange.orders.action')}}" method="POST">
+                            @csrf
 
-                        <div class="modal-body">
-                            <p>{{__("general.exchange.trades.cancel.confirmation")}}</p>
-                        </div>
+                            <input type="hidden" name="ex_trans_id" value="{{$exchangeTransaction->id}}">
+                            <input type="hidden" name="action" value="cancel">
 
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{__("Close")}}</button>
-                            <button type="submit" class="btn btn-primary">{{__('Cancel Exchange')}}</button>
+                            <div class="modal-body">
+                                <p>{{__("general.exchange.trades.cancel.confirmation")}}</p>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{__("Close")}}</button>
+                                <button type="submit" class="btn btn-primary">{{__('Cancel Exchange')}}</button>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" tabindex="-1" id="feedback_modal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title">{{__("Submit Exchange Feedback")}}</h3>
+                            <!--begin::Close-->
+                            <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                                <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
+                            </div>
+                            <!--end::Close-->
                         </div>
+                        <form class="my-auto pb-5" action="{{route('exchange.orders.feedback.action')}}" method="POST">
+                            @csrf
+
+                            <input type="hidden" name="ex_trans_id" value="{{$exchangeTransaction->id}}">
+
+                            <div class="modal-body">
+
+
+                                <!--begin:Option-->
+                                <label class="d-flex flex-stack cursor-pointer">
+                                    <!--begin:Label-->
+                                    <span class="d-flex align-items-center me-2">
+                                        <!--begin:Icon-->
+                                        <span class="symbol symbol-50px me-6">
+                                            <span class="symbol-label bg-light-success">
+                                                <i class="ki-duotone ki-shield-tick fs-1 text-success"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
+                                            </span>
+                                        </span>
+                                        <!--end:Icon-->
+
+                                        <!--begin:Info-->
+                                        <span class="d-flex flex-column">
+                                            <span class="fw-bold fs-6">{{__("Positive")}}</span>
+                                        </span>
+                                        <!--end:Info-->
+                                    </span>
+                                    <!--end:Label-->
+
+                                    <!--begin:Input-->
+                                    <span class="form-check form-check-custom form-check-solid">
+                                        <input class="form-check-input" type="radio" name="feedback" value="1"/>
+                                    </span>
+                                    <!--end:Input-->
+                                </label>
+                                <!--end::Option-->
+
+                                <!--begin:Option-->
+                                <label class="d-flex flex-stack mb-5 cursor-pointer">
+                                    <!--begin:Label-->
+                                    <span class="d-flex align-items-center me-2">
+                                        <!--begin:Icon-->
+                                        <span class="symbol symbol-50px me-6">
+                                            <span class="symbol-label bg-light-danger">
+                                                <i class="ki-duotone ki-cross-circle fs-1 text-danger"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span></i>
+                                            </span>
+                                        </span>
+                                        <!--end:Icon-->
+
+                                        <!--begin:Info-->
+                                        <span class="d-flex flex-column">
+                                            <span class="fw-bold fs-6">{{__("Negative")}}</span>
+                                        </span>
+                                        <!--end:Info-->
+                                    </span>
+                                    <!--end:Label-->
+
+                                    <!--begin:Input-->
+                                    <span class="form-check form-check-custom form-check-solid">
+                                        <input class="form-check-input" type="radio" name="feedback" value="0"/>
+                                    </span>
+                                    <!--end:Input-->
+                                </label>
+                                <!--end::Option-->
+
+
+                                <!--begin::Input group-->
+                                <div class="input-group">
+                                    <span class="input-group-text">{{__("Comments")}}</span>
+                                    <textarea class="form-control" name="comments" placeholder="{{__("Optional feedback comments")}}"></textarea>
+                                </div>
+                                <!--end::Input group-->
+
+
+
+
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{__("Close")}}</button>
+                                <button type="submit" class="btn btn-primary">{{__('Submit Feedback')}}</button>
+                            </div>
+
+                        </form>
 
                     </div>
                 </div>
