@@ -576,7 +576,7 @@ class ExchangeController extends Controller
             ]);
         }
 
-        return redirect()->route('exchange.posts')->with(['message'=>'Exchange Feedback Submitted']);
+        return redirect()->route('exchange.posts')->with(['message'=>'Exchange Ad Post Submitted']);
     }
 
     public function postsEditSubmit(Request $request)
