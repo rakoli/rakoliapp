@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Utils\Enums\ExchangeStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,12 +10,31 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 
 class ExchangeAds extends Model
 {
     use HasFactory;
 
     protected $appends = ['completion','feedback','trades'];
+
+    protected $fillable = [
+        'country_code',
+        'business_code',
+        'location_code',
+        'code',
+        'min_amount',
+        'max_amount',
+        'currency',
+        'status',
+        'description',
+        'availability_desc',
+        'terms',
+        'open_note',
+        'region_code',
+        'town_code',
+        'area_code',
+    ];
 
     public function area() : BelongsTo
     {

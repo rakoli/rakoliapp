@@ -11,20 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('exchange_payment_methods', function (Blueprint $table) {
+        Schema::create('exchange_business_methods', function (Blueprint $table) {
             $table->id();
-            $table->string('exchange_ads_code');
-            $table->foreign('exchange_ads_code')->references('code')
-                ->on('exchange_ads')
+            $table->string('business_code');
+            $table->foreign('business_code')->references('code')
+                ->on('businesses')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->string('type');//ExchangePaymentMethodTypeEnum::class
-            $table->string('method_name');
+            $table->string('nickname');
+            $table->string('method_name')->index();
             $table->string('account_number');
             $table->string('account_name');
-            $table->string('other_ref')->nullable();//For future use
             $table->boolean('status')->default(1);
-
             $table->timestamps();
         });
     }
@@ -34,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('exchange_payment_methods');
+        Schema::dropIfExists('exchange_business_methods');
     }
 };

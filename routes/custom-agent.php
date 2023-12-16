@@ -34,7 +34,16 @@ Route::middleware(['auth','should_complete_registration','onlyagent'])->group(fu
         Route::post('transactions/feedback/action', [App\Http\Controllers\Agent\ExchangeController::class, 'transactionsFeedbackAction'])->name('transactions.feedback.action');
 
         Route::get('posts', [App\Http\Controllers\Agent\ExchangeController::class, 'posts'])->name('posts');
+        Route::get('posts/create', [App\Http\Controllers\Agent\ExchangeController::class, 'postsCreate'])->name('posts.create');
+        Route::post('posts/create/submit', [App\Http\Controllers\Agent\ExchangeController::class, 'postsCreateSubmit'])->name('posts.create.submit');
+        Route::post('posts/edit/submit', [App\Http\Controllers\Agent\ExchangeController::class, 'postsEditSubmit'])->name('posts.edit.submit');
+        Route::get('posts/create/townlist', [App\Http\Controllers\Agent\ExchangeController::class, 'postsCreateTownlistAjax'])->name('post.townlistAjax');
+        Route::get('posts/create/arealist', [App\Http\Controllers\Agent\ExchangeController::class, 'postsCreateArealistAjax'])->name('post.arealistAjax');
         Route::get('security', [App\Http\Controllers\Agent\ExchangeController::class, 'security'])->name('security');
+        Route::get('methods', [App\Http\Controllers\Agent\ExchangeController::class, 'methods'])->name('methods');
+        Route::post('methods.add', [App\Http\Controllers\Agent\ExchangeController::class, 'methodsAdd'])->name('methods.add');
+        Route::post('methods.edit', [App\Http\Controllers\Agent\ExchangeController::class, 'methodsEdit'])->name('methods.edit');
+        Route::post('methods.delete', [App\Http\Controllers\Agent\ExchangeController::class, 'methodsDelete'])->name('methods.delete');
 
     });
     //END: EXCHANGE MODULE

@@ -144,6 +144,13 @@
                     <span class="menu-title">{{ __('Security') }}</span>
                 </a>
 
+                <a class="menu-link" href="{{route('exchange.methods')}}">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ __('Payment Methods') }}</span>
+                </a>
+
                 <a class="menu-link" href="{{route('exchange.posts.create')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>

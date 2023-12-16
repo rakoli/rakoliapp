@@ -148,6 +148,11 @@ class Business extends Model
         return $this->hasMany(Transaction::class, 'business_code', 'code');
     }
 
+    public function exchange_business_methods(): HasMany
+    {
+        return $this->hasMany(ExchangeBusinessMethod::class, 'business_code', 'code');
+    }
+
     public function exchange_ads(): HasMany
     {
         return $this->hasMany(ExchangeAds::class, 'business_code', 'code');

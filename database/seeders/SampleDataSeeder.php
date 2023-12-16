@@ -15,7 +15,7 @@ class SampleDataSeeder extends Seeder
         $this->call([
             SampleBusinessSeeder::class,
             SampleSystemIncomeSeeder::class,
-//            SampleExchangeAdsSeeder::class, //In Business Seeder
+            SampleExchangeAdsSeeder::class, //In Business Seeder
             SampleVasTaskSeeder::class,
             SampleVasContractSeeder::class,
             SampleVasPaymentSeeder::class,

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Business;
 use App\Models\ExchangeAds;
+use App\Models\ExchangeBusinessMethod;
 use App\Models\ExchangeChat;
 use App\Models\ExchangePaymentMethod;
 use App\Models\ExchangeStat;
@@ -39,7 +40,9 @@ class SampleBusinessSeeder extends Seeder
                     ->has(ExchangeTransaction::factory()
                             ->has(ExchangeChat::factory()->count(2),'exchange_chats')
                             ->count(2),'exchange_transactions')
-                    ->count(2),'exchange_ads')->create(['country_code'=>'TZ']);
+                    ->count(2),'exchange_ads')
+            ->has(ExchangeBusinessMethod::factory()->count(2),'exchange_business_methods')
+            ->create(['country_code'=>'TZ']);
 
         $num = 1;
         foreach ($sampleBusinesses as $business) {

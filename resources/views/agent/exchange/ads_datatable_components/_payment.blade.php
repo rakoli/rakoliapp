@@ -4,7 +4,7 @@
             @if(!empty($traderBuyMethods))
                 @foreach($traderBuyMethods as $method)
                     {{str_camelcase($method->method_name)}}
-                    @if($lastSell->id != $method->id)
+                    @if($lastTraderBuy->id != $method->id)
                         |
                     @endif
                 @endforeach
@@ -22,7 +22,7 @@
             @if(!empty($traderSellMethods))
                 @foreach($traderSellMethods as $method)
                     {{str_camelcase($method->method_name)}}
-                    @if($lastBuy->id != $method->id)
+                    @if($lastTraderSell->id != $method->id)
                         |
                     @endif
                 @endforeach
