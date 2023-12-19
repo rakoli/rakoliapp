@@ -3,50 +3,65 @@
 
     @csrf
 
+    @if($isEdit)
+        <input type="hidden" name="exchange_id" value="{{$exchangeAd->id}}">
+    @endif
+
     <!--begin::Aside column-->
     <div class="d-flex flex-column gap-7 gap-lg-10 w-100 w-lg-300px mb-7 me-lg-10">
 
-
-        <!--begin::Status-->
-        <div class="card card-flush py-4 d-none">
-            <!--begin::Card header-->
-            <div class="card-header">
-                <!--begin::Card title-->
-                <div class="card-title">
-                    <h2>Status</h2>
+        @if($isEdit)
+            <!--begin::Status-->
+            <div class="card card-flush py-4">
+                <!--begin::Card header-->
+                <div class="card-header">
+                    <!--begin::Card title-->
+                    <div class="card-title">
+                        <h2>{{__('Status')}}</h2>
+                    </div>
+                    <!--end::Card title-->
+                    <!--begin::Card toolbar-->
+                    <div class="card-toolbar">
+                        <div class="rounded-circle
+                        @if($exchangeAd->status == 'active')
+                            bg-success
+                        @elseif($exchangeAd->status == 'disabled')
+                            bg-danger
+                        @elseif($exchangeAd->status == 'deleted')
+                            bg-gray-600
+                        @elseif($exchangeAd->status == 'pending')
+                            bg-warning
+                        @endif
+                        w-15px h-15px" id="#"></div>
+                    </div>
+                    <!--begin::Card toolbar-->
                 </div>
-                <!--end::Card title-->
-                <!--begin::Card toolbar-->
-                <div class="card-toolbar">
-                    <div class="rounded-circle bg-success w-15px h-15px" id="kt_ecommerce_add_product_status"></div>
+                <!--end::Card header-->
+                <!--begin::Card body-->
+                <div class="card-body pt-0">
+                    <!--begin::Select2-->
+                    <select class="form-select mb-2" data-control="select2" data-hide-search="true" data-placeholder="{{__('Change Ad Status')}}" id="ad_status" name="ad_status">
+                        @if(in_array($exchangeAd->status, \App\Utils\Enums\ExchangeStatusEnum::userCantSeeArray()))
+                            <option value="{{$exchangeAd->status}}" selected>{{strtoupper($exchangeAd->status)}}</option>
+                        @else
+                            @foreach(\App\Utils\Enums\ExchangeStatusEnum::userViewable() as $availableStatus)
+                                <option value="{{$availableStatus}}"
+                                    @if($exchangeAd->status == $availableStatus)
+                                        selected
+                                    @endif
+                                >{{strtoupper($availableStatus)}}</option>
+                            @endforeach
+                        @endif
+                    </select>
+                    <!--end::Select2-->
+                    <!--begin::Description-->
+                    <div class="text-muted fs-7">{{__('Change Ad Status')}}</div>
+                    <!--end::Description-->
                 </div>
-                <!--begin::Card toolbar-->
+                <!--end::Card body-->
             </div>
-            <!--end::Card header-->
-            <!--begin::Card body-->
-            <div class="card-body pt-0">
-                <!--begin::Select2-->
-                <select class="form-select mb-2" data-control="select2" data-hide-search="true" data-placeholder="Select an option" id="kt_ecommerce_add_product_status_select">
-                    <option></option>
-                    <option value="published" selected="selected">Published</option>
-                    <option value="draft">Draft</option>
-                    <option value="scheduled">Scheduled</option>
-                    <option value="inactive">Inactive</option>
-                </select>
-                <!--end::Select2-->
-                <!--begin::Description-->
-                <div class="text-muted fs-7">Set the advertisement status.</div>
-                <!--end::Description-->
-                <!--begin::Datepicker-->
-                <div class="d-none mt-10">
-                    <label for="kt_ecommerce_add_product_status_datepicker" class="form-label">Select publishing date and time</label>
-                    <input class="form-control" id="kt_ecommerce_add_product_status_datepicker" placeholder="Pick date & time" />
-                </div>
-                <!--end::Datepicker-->
-            </div>
-            <!--end::Card body-->
-        </div>
-        <!--end::Status-->
+            <!--end::Status-->
+        @endif
 
         <!--begin::Category & tags-->
         <div class="card card-flush py-4">
@@ -68,7 +83,13 @@
                 <select class="form-select mb-2" data-control="select2" data-placeholder="{{__("Select a branch")}}" id="ad_branch" name="ad_branch">
                     <option></option>
                     @foreach($branches as $branch)
-                        <option value="{{$branch->code}}">{{$branch->name}}</option>
+                        <option value="{{$branch->code}}"
+                                @if($isEdit)
+                                    @if($exchangeAd->location_code == $branch->code)
+                                        selected
+                                    @endif
+                                @endif
+                        >{{$branch->name}}</option>
                     @endforeach
                 </select>
                 <!--End::Input group-->
@@ -87,7 +108,7 @@
                     <label class="form-label">{{__("Availability Description")}}</label>
                     <!--end::Label-->
                     <!--begin::Input-->
-                    <textarea class="form-control form-control-solid" id="availability_desc" name="availability_desc"></textarea>
+                    <textarea class="form-control form-control-solid" id="availability_desc" name="availability_desc">@if($isEdit){{$exchangeAd->availability_desc}}@endif</textarea>
                     <!--end::Input-->
                 </div>
                 <!--end::Input group-->
@@ -97,10 +118,22 @@
                 <label class="form-label">{{__('Region')}}</label>
                 <!--end::Label-->
                 <select class="form-select mb-2" data-control="select2" data-placeholder="{{__("Select a Region")}}" id="ad_region" name="ad_region" onchange="regionChanged(this)">
-                    <option value="all">{{__('ALL')}}</option>
-                    @foreach($regions as $region)
-                        <option value="{{$region->code}}">{{$region->name}}</option>
-                    @endforeach
+                    @if($isEdit)
+                        <option value="all">{{__('ALL')}}</option>
+                        @foreach($regions as $region)
+                            <option value="{{$region->code}}"
+                                    @if($exchangeAd->region_code == $region->code)
+                                        selected
+                                    @endif
+                            >{{$region->name}}</option>
+                        @endforeach
+                    @else
+                        <option value="all">{{__('ALL')}}</option>
+                        @foreach($regions as $region)
+                            <option value="{{$region->code}}">{{$region->name}}</option>
+                        @endforeach
+                    @endif
+
                 </select>
                 <!--End::Input group-->
                 <!--begin::Input group-->
@@ -108,7 +141,20 @@
                 <label class="form-label">{{__('Town')}}</label>
                 <!--end::Label-->
                 <select class="form-select mb-2" data-control="select2" data-placeholder="{{__("Select a Town")}}" id="ad_town" name="ad_town" onchange="townChanged(this)">
-                    <option value="all">{{__('ALL')}}</option>
+                    @if($isEdit)
+                        <option value="all">{{__('ALL')}}</option>
+                        @if($exchangeAd->region_code != null)
+                            @foreach($towns as $town)
+                                <option value="{{$town->code}}"
+                                    @if($exchangeAd->town_code == $town->code)
+                                            selected
+                                    @endif
+                                >{{$town->name}}</option>
+                            @endforeach
+                        @endif
+                    @else
+                        <option value="all">{{__('ALL')}}</option>
+                    @endif
                 </select>
                 <!--End::Input group-->
                 <!--begin::Input group-->
@@ -116,7 +162,20 @@
                 <label class="form-label">{{__('Area')}}</label>
                 <!--end::Label-->
                 <select class="form-select mb-2" data-control="select2" data-placeholder="{{__("Select an Area")}}" id="ad_area" name="ad_area">
-                    <option value="all">{{__('ALL')}}</option>
+                    @if($isEdit)
+                        <option value="all">{{__('ALL')}}</option>
+                        @if($exchangeAd->town_code != null)
+                            @foreach($areas as $area)
+                                <option value="{{$area->code}}"
+                                        @if($exchangeAd->area_code == $area->code)
+                                            selected
+                                    @endif
+                                >{{$area->name}}</option>
+                            @endforeach
+                        @endif
+                    @else
+                        <option value="all">{{__('ALL')}}</option>
+                    @endif
                 </select>
                 <!--End::Input group-->
 
@@ -150,7 +209,11 @@
                     <select class="form-select mb-2" data-control="select2" data-placeholder="{{__("Select Buy Methods")}}" id="ad_buy" name="ad_buy[]" data-allow-clear="true" multiple="multiple" data-close-on-select="false">
                         <option></option>
                         @foreach($businessExchangeMethods as $businessExchangeMethod)
-                            <option value="{{$businessExchangeMethod->id}}">{{$businessExchangeMethod->nickname}}</option>
+                            <option value="{{$businessExchangeMethod->id}}"
+                                    @if($isEdit && $buyMethods->contains('method_name', $businessExchangeMethod->method_name))
+                                        selected
+                                    @endif
+                            >{{$businessExchangeMethod->nickname}}</option>
                         @endforeach
                     </select>
                     <!--end::Input-->
@@ -166,7 +229,11 @@
                     <select class="form-select mb-2" data-control="select2" data-placeholder="{{__("Select Sell Methods")}}" id="ad_sell" name="ad_sell[]" data-allow-clear="true" multiple="multiple" data-close-on-select="false">
                         <option></option>
                         @foreach($businessExchangeMethods as $businessExchangeMethod)
-                            <option value="{{$businessExchangeMethod->id}}">{{$businessExchangeMethod->nickname}}</option>
+                            <option value="{{$businessExchangeMethod->id}}"
+                                @if($isEdit && $sellMethods->contains('method_name', $businessExchangeMethod->method_name))
+                                    selected
+                                @endif
+                            >{{$businessExchangeMethod->nickname}}</option>
                         @endforeach
                     </select>
                     <!--end::Input-->
@@ -181,7 +248,7 @@
                         <label class="form-label">{{__("Min Amount")}}</label>
                         <!--end::Label-->
                         <!--begin::Input-->
-                        <input type="number" name="amount_min" class="form-control" placeholder="{{__('Minimum trade amount')}}" value="" />
+                        <input type="number" name="amount_min" class="form-control" placeholder="{{__('Minimum trade amount')}}" value="@if($isEdit){{$exchangeAd->min_amount}}@endif" />
                         <!--end::Input-->
                     </div>
                     <!--end::Input group-->
@@ -191,7 +258,7 @@
                         <label class="form-label">{{__("Max Amount")}}</label>
                         <!--end::Label-->
                         <!--begin::Input-->
-                        <input type="number" name="amount_max" class="form-control" placeholder="{{__('Maximum trade amount')}}" value="" />
+                        <input type="number" name="amount_max" class="form-control" placeholder="{{__('Maximum trade amount')}}" value="@if($isEdit){{$exchangeAd->max_amount}}@endif" />
                         <!--end::Input-->
                     </div>
                     <!--end::Input group-->
@@ -204,7 +271,7 @@
                     <label class="form-label">{{__("Description")}}</label>
                     <!--end::Label-->
                     <!--begin::Input-->
-                    <textarea class="form-control form-control-solid" id="description" name="description"></textarea>
+                    <textarea class="form-control form-control-solid" id="description" name="description">@if($isEdit){{$exchangeAd->description}}@endif</textarea>
                     <!--end::Input-->
                     <div class="text-muted fs-7">{{__('Maximum of 200 characters')}}</div>
                 </div>
@@ -216,7 +283,7 @@
                     <label class="form-label">{{__("Terms")}}</label>
                     <!--end::Label-->
                     <!--begin::Input-->
-                    <textarea class="form-control form-control-solid" id="terms" name="terms"></textarea>
+                    <textarea class="form-control form-control-solid" id="terms" name="terms">@if($isEdit){{$exchangeAd->terms}}@endif</textarea>
                     <!--end::Input-->
                 </div>
                 <!--End::Input group-->
@@ -227,7 +294,7 @@
                     <label class="form-label">{{__("Opening Note")}}</label>
                     <!--end::Label-->
                     <!--begin::Input-->
-                    <textarea class="form-control form-control-solid" id="open_note" name="open_note"></textarea>
+                    <textarea class="form-control form-control-solid" id="open_note" name="open_note">@if($isEdit){{$exchangeAd->open_note}}@endif</textarea>
                     <!--end::Input-->
                 </div>
                 <!--End::Input group-->

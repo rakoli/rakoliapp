@@ -460,7 +460,7 @@ class ExchangeController extends Controller
             $exchangePosts = ExchangeAds::where('business_code',$user->business_code)->orderBy('id','desc')->with('exchange_payment_methods');
             return \Yajra\DataTables\Facades\DataTables::eloquent($exchangePosts)
                 ->addColumn('action', function(ExchangeAds $trn) {
-                    $content = '<a class="btn btn-secondary btn-sm me-2" href="'.route('exchange.posts.create').'">'.__("Edit").'</a>';
+                    $content = '<a class="btn btn-secondary btn-sm me-2" href="'.route('exchange.posts.edit',$trn->id).'">'.__("Edit").'</a>';
                     $content .= '<button class="btn btn-secondary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#delete_method_modal" onclick="deleteClicked('.$trn->id.')">'.__("Disable").'</button>';
                     return $content;
                 })
@@ -519,6 +519,39 @@ class ExchangeController extends Controller
         return view('agent.exchange.posts_create', compact('branches','regions','businessExchangeMethods'));
     }
 
+    public function postsEdit(Request $request, $id)
+    {
+        $exchangeAd = ExchangeAds::with('exchange_payment_methods')->where('id',$id)->first();
+        if(empty($exchangeAd)){
+            return redirect()->back()->withErrors(['Invalid Exchange Ad']);
+        }
+
+        $isAllowed = $exchangeAd->isUserAllowed($request->user());
+        if($isAllowed == false){
+            return redirect()->route('exchange.posts')->withErrors(['Not authorized to access transaction']);
+        }
+
+        $businessCode = \auth()->user()->business_code;
+        $branches = Location::where('business_code',$businessCode)->get();
+        $regions = Region::where('country_code',session('country_code'))->get();
+        $businessExchangeMethods = ExchangeBusinessMethod::where('business_code',$businessCode)->get();
+        $towns = null;
+        $areas = null;
+
+        if($exchangeAd->region_code != null){
+            $towns = Towns::where('region_code',$exchangeAd->region_code)->get();
+        }
+
+        if($exchangeAd->town_code != null){
+            $areas = Area::where('town_code',$exchangeAd->town_code)->get();
+        }
+
+        $buyMethods = $exchangeAd->exchange_payment_methods()->where('type', ExchangePaymentMethodTypeEnum::OWNER_BUY->value)->get(['method_name']);
+        $sellMethods = $exchangeAd->exchange_payment_methods()->where('type', ExchangePaymentMethodTypeEnum::OWNER_SELL->value)->get(['method_name']);
+
+        return view('agent.exchange.posts_edit', compact('branches','regions','businessExchangeMethods','exchangeAd','towns', 'areas','buyMethods','sellMethods'));
+    }
+
     public function postsCreateSubmit(Request $request)
     {
         $request->validate([
@@ -539,7 +572,7 @@ class ExchangeController extends Controller
         $buyMethodIds = $request->get('ad_buy');
         $sellMethodIds = $request->get('ad_sell');
 
-        $exchangeAd = ExchangeAds::create([
+        $exchangeAdData = [
             'country_code' => $user->country_code,
             'business_code' => $user->business_code,
             'location_code' => $request->ad_branch,
@@ -552,7 +585,33 @@ class ExchangeController extends Controller
             'availability_desc' => $request->availability_desc,
             'terms' => $request->terms,
             'open_note' => $request->open_note,
-        ]);
+        ];
+
+        $region = $request->get('ad_region');
+        if($region != 'all'){
+            $regionModel = Region::where('code',$region)->get();
+            if($regionModel->isNotEmpty()){
+                $exchangeAdData['region_code'] = $regionModel->first()->code;
+            }
+        }
+
+        $town = $request->get('ad_town');
+        if($town != 'all'){
+            $townModel = Towns::where('code',$town)->get();
+            if($townModel->isNotEmpty()){
+                $exchangeAdData['town_code'] = $townModel->first()->code;
+            }
+        }
+
+        $area = $request->get('ad_area');
+        if($area != 'all'){
+            $areaModel = Area::where('code',$area)->get();
+            if($areaModel->isNotEmpty()){
+                $exchangeAdData['area_code'] = $areaModel->first()->code;
+            }
+        }
+
+        $exchangeAd = ExchangeAds::create($exchangeAdData);
 
         foreach ($buyMethodIds as $buyMethodId) {
             $businessMethod = ExchangeBusinessMethod::where('id',$buyMethodId)->first();
@@ -582,11 +641,13 @@ class ExchangeController extends Controller
     public function postsEditSubmit(Request $request)
     {
         $request->validate([
+            'exchange_id' => 'required|exists:exchange_ads,id',
+            'ad_status' => 'required|in:'.implode(',',ExchangeStatusEnum::toArray()),
             'ad_branch' => 'required|exists:locations,code',
             'availability_desc' => 'required|string',
-            'ad_region' => 'sometimes',
-            'ad_town' => 'sometimes',
-            'ad_area' => 'sometimes',
+            'ad_region' => 'sometimes|string',
+            'ad_town' => 'sometimes|string',
+            'ad_area' => 'sometimes|string',
             'ad_buy' => 'required|array',
             'ad_sell' => 'required|array',
             'amount_min' => 'required|numeric|min:1000|max:1000000000',
@@ -595,24 +656,54 @@ class ExchangeController extends Controller
             'terms' => 'required|string|max:500',
             'open_note' => 'required|string|max:500',
         ]);
-        $user = $request->user();
+
+        $exchangeAd = ExchangeAds::where('id',$request->get('exchange_id'))->first();
+
+        $exchangeAd->location_code = $request->get('ad_branch');
+        $exchangeAd->min_amount = $request->get('amount_min');
+        $exchangeAd->max_amount = $request->get('amount_max');
+        $exchangeAd->description = $request->get('description');
+        $exchangeAd->availability_desc = $request->get('availability_desc');
+        $exchangeAd->terms = $request->get('terms');
+        $exchangeAd->open_note = $request->get('open_note');
+
+        if(in_array($request->get('ad_status'),ExchangeStatusEnum::userViewable())){
+            $exchangeAd->status = $request->get('open_note');
+        }
+
+        $region = $request->get('ad_region');
+        if($region != 'all'){
+            $regionModel = Region::where('code',$region)->get();
+            if($regionModel->isNotEmpty()){
+                $exchangeAd->region_code = $regionModel->first()->code;
+            }
+        }
+
+        $town = $request->get('ad_town');
+        if($town != 'all'){
+            $townModel = Towns::where('code',$town)->get();
+            if($townModel->isNotEmpty()){
+                $exchangeAd->town_code = $townModel->first()->code;
+            }
+        }
+
+        $area = $request->get('ad_area');
+        if($area != 'all'){
+            $areaModel = Area::where('code',$area)->get();
+            if($areaModel->isNotEmpty()){
+                $exchangeAd->area_code = $areaModel->first()->code;
+            }
+        }
+        $exchangeAd->save();
+
+
+        $methodsToDelete = ExchangePaymentMethod::where('exchange_ads_code',$exchangeAd->code)->get();
+        foreach ($methodsToDelete as $method) {
+            $method->delete();
+        }
+
         $buyMethodIds = $request->get('ad_buy');
         $sellMethodIds = $request->get('ad_sell');
-
-        $exchangeAd = ExchangeAds::create([
-            'country_code' => $user->country_code,
-            'business_code' => $user->business_code,
-            'location_code' => $request->ad_branch,
-            'code' => generateCode(Str::random(10),'TZ'),
-            'min_amount' => $request->amount_min,
-            'max_amount' => $request->amount_max,
-            'currency' => session('currency'),
-            'status' => ExchangeStatusEnum::PENDING->value,
-            'description' => $request->description,
-            'availability_desc' => $request->availability_desc,
-            'terms' => $request->terms,
-            'open_note' => $request->open_note,
-        ]);
 
         foreach ($buyMethodIds as $buyMethodId) {
             $businessMethod = ExchangeBusinessMethod::where('id',$buyMethodId)->first();
@@ -636,7 +727,7 @@ class ExchangeController extends Controller
             ]);
         }
 
-        return redirect()->route('exchange.posts')->with(['message'=>'Exchange Feedback Submitted']);
+        return redirect()->route('exchange.posts')->with(['message'=>'Exchange Ad Edited Successfully']);
     }
 
     public function postsCreateTownlistAjax(Request $request)

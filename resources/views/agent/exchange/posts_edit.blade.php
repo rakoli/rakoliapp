@@ -13,7 +13,7 @@
 
         @include('agent.exchange._submenu_exchange')
 
-        @include('agent.exchange._ad_post_form',['submitUrl'=>route('exchange.posts.edit.submit')])
+        @include('agent.exchange._ad_post_form',['submitUrl'=>route('exchange.posts.edit.submit'), 'isEdit'=>true])
 
     </div>
     <!--end::Container-->
@@ -21,6 +21,8 @@
 @endsection
 
 @section('footer_js')
+
+    @include('agent.exchange._ad_post_form_js')
 
     <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}" type="text/javascript"></script>
 {{--    {!! $dataTableHtml->scripts() !!}--}}

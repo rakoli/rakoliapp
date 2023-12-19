@@ -118,4 +118,14 @@ class ExchangeAds extends Model
         }
         return $this->business->exchange_stats->no_of_trades_completed;
     }
+
+    public function isUserAllowed(User $user)
+    {
+        if($user->business_code == $this->business_code){
+            return true;
+        }
+        return false;
+
+    }
+
 }

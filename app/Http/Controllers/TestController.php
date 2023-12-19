@@ -14,6 +14,7 @@ use App\Models\User;
 use App\Utils\DPOPayment;
 use App\Utils\DPORequestTokenFormat;
 use App\Utils\Enums\AgentRegistrationStepsEnums;
+use App\Utils\Enums\ExchangeStatusEnum;
 use App\Utils\Enums\ExchangeTransactionTypeEnum;
 use App\Utils\PesaPalPayment;
 use App\Utils\TelegramCommunication;
