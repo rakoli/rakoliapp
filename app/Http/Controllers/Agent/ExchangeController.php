@@ -133,7 +133,9 @@ class ExchangeController extends Controller
             ->dom('frtilp')
             ->lengthMenu([[25, 50, 100, -1], [25, 50, 100, "All"]]);
 
-        return view('agent.exchange.ads', compact('dataTableHtml','stats','orderByFilter'));
+        $regions = Region::where('country_code',session('country_code'))->get();
+
+        return view('agent.exchange.ads', compact('dataTableHtml','stats','orderByFilter','regions'));
     }
 
     public function adsView(Request $request, $id)
@@ -460,8 +462,10 @@ class ExchangeController extends Controller
             $exchangePosts = ExchangeAds::where('business_code',$user->business_code)->orderBy('id','desc')->with('exchange_payment_methods');
             return \Yajra\DataTables\Facades\DataTables::eloquent($exchangePosts)
                 ->addColumn('action', function(ExchangeAds $trn) {
-                    $content = '<a class="btn btn-secondary btn-sm me-2" href="'.route('exchange.posts.edit',$trn->id).'">'.__("Edit").'</a>';
-                    $content .= '<button class="btn btn-secondary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#delete_method_modal" onclick="deleteClicked('.$trn->id.')">'.__("Disable").'</button>';
+                    $content = '<a class="btn btn-secondary btn-sm me-2" href="'.route('exchange.posts.edit', $trn->id).'">'.__("Edit").'</a>';
+                    if($trn->status != ExchangeStatusEnum::DELETED->value){
+                        $content .= '<button class="btn btn-secondary btn-sm me-2" onclick="deleteClicked('.$trn->id.')">'.__("Delete").'</button>';
+                    }
                     return $content;
                 })
                 ->addColumn('range', function(ExchangeAds $trn) {
@@ -550,6 +554,24 @@ class ExchangeController extends Controller
         $sellMethods = $exchangeAd->exchange_payment_methods()->where('type', ExchangePaymentMethodTypeEnum::OWNER_SELL->value)->get(['method_name']);
 
         return view('agent.exchange.posts_edit', compact('branches','regions','businessExchangeMethods','exchangeAd','towns', 'areas','buyMethods','sellMethods'));
+    }
+
+    public function postsDelete(Request $request, $id)
+    {
+        $exchangeAd = ExchangeAds::with('exchange_payment_methods')->where('id',$id)->first();
+        if(empty($exchangeAd)){
+            return redirect()->back()->withErrors(['Invalid Exchange Ad']);
+        }
+
+        $isAllowed = $exchangeAd->isUserAllowed($request->user());
+        if($isAllowed == false){
+            return redirect()->route('exchange.posts')->withErrors(['Not authorized to access transaction']);
+        }
+
+        $exchangeAd->status = ExchangeStatusEnum::DELETED->value;
+        $exchangeAd->save();
+
+        return redirect()->route('exchange.posts')->with(['message'=>'Exchange Ad Deleted Successfully']);
     }
 
     public function postsCreateSubmit(Request $request)
@@ -653,8 +675,8 @@ class ExchangeController extends Controller
             'amount_min' => 'required|numeric|min:1000|max:1000000000',
             'amount_max' => 'required|numeric|min:1000|max:1000000000',
             'description' => 'required|string|max:200',
-            'terms' => 'required|string|max:500',
-            'open_note' => 'required|string|max:500',
+            'terms' => 'required|string|max:1000',
+            'open_note' => 'required|string|max:1000',
         ]);
 
         $exchangeAd = ExchangeAds::where('id',$request->get('exchange_id'))->first();
@@ -668,7 +690,7 @@ class ExchangeController extends Controller
         $exchangeAd->open_note = $request->get('open_note');
 
         if(in_array($request->get('ad_status'),ExchangeStatusEnum::userViewable())){
-            $exchangeAd->status = $request->get('open_note');
+            $exchangeAd->status = $request->get('ad_status');
         }
 
         $region = $request->get('ad_region');
@@ -707,24 +729,28 @@ class ExchangeController extends Controller
 
         foreach ($buyMethodIds as $buyMethodId) {
             $businessMethod = ExchangeBusinessMethod::where('id',$buyMethodId)->first();
-            ExchangePaymentMethod::create([
-                'exchange_ads_code' => $exchangeAd->code,
-                'type' => ExchangePaymentMethodTypeEnum::OWNER_BUY->value,
-                'method_name' => $businessMethod->method_name,
-                'account_number' => $businessMethod->account_number,
-                'account_name' => $businessMethod->account_name,
-            ]);
+            if($businessMethod != null){
+                ExchangePaymentMethod::create([
+                    'exchange_ads_code' => $exchangeAd->code,
+                    'type' => ExchangePaymentMethodTypeEnum::OWNER_BUY->value,
+                    'method_name' => $businessMethod->method_name,
+                    'account_number' => $businessMethod->account_number,
+                    'account_name' => $businessMethod->account_name,
+                ]);
+            }
         }
 
         foreach ($sellMethodIds as $sellMethodId) {
             $businessMethod = ExchangeBusinessMethod::where('id',$sellMethodId)->first();
-            ExchangePaymentMethod::create([
-                'exchange_ads_code' => $exchangeAd->code,
-                'type' => ExchangePaymentMethodTypeEnum::OWNER_SELL->value,
-                'method_name' => $businessMethod->method_name,
-                'account_number' => $businessMethod->account_number,
-                'account_name' => $businessMethod->account_name,
-            ]);
+            if($businessMethod != null){
+                ExchangePaymentMethod::create([
+                    'exchange_ads_code' => $exchangeAd->code,
+                    'type' => ExchangePaymentMethodTypeEnum::OWNER_SELL->value,
+                    'method_name' => $businessMethod->method_name,
+                    'account_number' => $businessMethod->account_number,
+                    'account_name' => $businessMethod->account_name,
+                ]);
+            }
         }
 
         return redirect()->route('exchange.posts')->with(['message'=>'Exchange Ad Edited Successfully']);

@@ -308,13 +308,15 @@
             <!--begin::Button-->
             <a href="{{route('exchange.posts')}}" class="btn btn-secondary me-5">{{__('Cancel')}}</a>
             <!--end::Button-->
-            <!--begin::Button-->
-            <button type="submit" id="adsubmit_button" class="btn btn-primary">
-                <span class="indicator-label">{{__('Submit')}}</span>
-                <span class="indicator-progress">{{__('Please wait...')}}
+            @if($isEdit && $exchangeAd->status != \App\Utils\Enums\ExchangeStatusEnum::DELETED->value)
+                <!--begin::Button-->
+                <button type="submit" id="adsubmit_button" class="btn btn-primary">
+                    <span class="indicator-label">{{__('Submit')}}</span>
+                    <span class="indicator-progress">{{__('Please wait...')}}
                                     <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-            </button>
-            <!--end::Button-->
+                </button>
+                <!--end::Button-->
+            @endif
         </div>
     </div>
     <!--end::Main column-->

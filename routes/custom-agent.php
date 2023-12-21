@@ -36,6 +36,7 @@ Route::middleware(['auth','should_complete_registration','onlyagent'])->group(fu
         Route::get('posts', [App\Http\Controllers\Agent\ExchangeController::class, 'posts'])->name('posts');
         Route::get('posts/create', [App\Http\Controllers\Agent\ExchangeController::class, 'postsCreate'])->name('posts.create');
         Route::get('posts/edit/{id}', [App\Http\Controllers\Agent\ExchangeController::class, 'postsEdit'])->name('posts.edit');
+        Route::get('posts/delete/{id}', [App\Http\Controllers\Agent\ExchangeController::class, 'postsDelete'])->name('posts.delete');
         Route::post('posts/create/submit', [App\Http\Controllers\Agent\ExchangeController::class, 'postsCreateSubmit'])->name('posts.create.submit');
         Route::post('posts/edit/submit', [App\Http\Controllers\Agent\ExchangeController::class, 'postsEditSubmit'])->name('posts.edit.submit');
         Route::get('posts/create/townlist', [App\Http\Controllers\Agent\ExchangeController::class, 'postsCreateTownlistAjax'])->name('post.townlistAjax');

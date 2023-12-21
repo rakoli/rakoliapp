@@ -47,6 +47,13 @@ class Business extends Model
             ExchangeStat::create([
                 "business_code"=>"$businessInstance->code"
             ]);
+            ExchangeBusinessMethod::create([
+                'business_code' => $businessInstance->code,
+                'nickname' => 'cash',
+                'method_name' => 'cash',
+                'account_number' => 'cash',
+                'account_name' => 'cash',
+            ]);
             DB::commit();
         }catch (\Exception $exception) {
             DB::rollback();

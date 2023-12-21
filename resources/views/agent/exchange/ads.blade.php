@@ -34,7 +34,7 @@
                         <option value="max_amount_asc" @if($orderByFilter == 'max_amount_asc') selected @endif>{{__("Max Amount - Ascending")}}</option>
                         <option value="max_amount_desc" @if($orderByFilter == 'max_amount_desc') selected @endif>{{__("Max Amount - Descending")}}</option>
                     </select>
-                    <a href="#" class="btn btn-primary m-5" onclick="filterAction()">{{__('Filter')}}</a>
+                    <a href="#" class="btn btn-primary m-5" onclick="filterAction()"><i class="ki-duotone ki-filter fs-2"><span class="path1"></span><span class="path2"></span></i>{{__('Filter')}}</a>
                 </div>
                 <!--begin::Card toolbar-->
             </div>
