@@ -51,16 +51,6 @@ class UsersTableSeeder extends Seeder
             'balance' => fake()->numberBetween(500000, 5000000),
             'balance_currency' => fake()->randomElement(['kes','tzs']),
         ]);
-        $fsps = FinancialServiceProvider::get('name')->toArray();
-        array_push($fsps, ["name"=>"cash"]);
-        $name = fake()->randomElement($fsps)['name'];
-        ExchangeBusinessMethod::create([
-            'business_code' => $agentBusiness->code,
-            'nickname' => $name,
-            'method_name' => $name,
-            'account_number' => fake()->randomNumber(8),
-            'account_name' => fake()->company,
-        ]);
 
         //VAS BUSINESS
         $name = "Pulsans Advertisement Ltd";

@@ -329,6 +329,14 @@
                                     <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                 </button>
                 <!--end::Button-->
+            @else
+                <!--begin::Button-->
+                <button type="submit" id="adsubmit_button" class="btn btn-primary">
+                    <span class="indicator-label">{{__('Submit')}}</span>
+                    <span class="indicator-progress">{{__('Please wait...')}}
+                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                </button>
+                <!--end::Button-->
             @endif
         </div>
     </div>
