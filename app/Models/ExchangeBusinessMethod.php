@@ -22,4 +22,13 @@ class ExchangeBusinessMethod extends Model
     {
         return $this->belongsTo(Business::class, 'business_code', 'code');
     }
+
+    public function isUserAllowed(User $user)
+    {
+        if($user->business_code == $this->business_code){
+            return true;
+        }
+        return false;
+
+    }
 }
