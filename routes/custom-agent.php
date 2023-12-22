@@ -27,6 +27,7 @@ Route::middleware(['auth','should_complete_registration','onlyagent'])->group(fu
         Route::get('ads', [App\Http\Controllers\Agent\ExchangeController::class, 'ads'])->name('ads');
         Route::get('ads/view/{id}', [App\Http\Controllers\Agent\ExchangeController::class, 'adsView'])->name('ads.view');
         Route::post('ads/open/order', [App\Http\Controllers\Agent\ExchangeController::class, 'adsOpenOrder'])->name('ads.openorder');
+
         Route::get('transactions', [App\Http\Controllers\Agent\ExchangeController::class, 'transactions'])->name('transactions');
         Route::get('transactions/view/{id}', [App\Http\Controllers\Agent\ExchangeController::class, 'transactionsView'])->name('transactions.view');
         Route::get('transactions/receive/message', [App\Http\Controllers\Agent\ExchangeController::class, 'transactionsReceiveMessage'])->name('transactions.receive.message');
@@ -41,7 +42,7 @@ Route::middleware(['auth','should_complete_registration','onlyagent'])->group(fu
         Route::post('posts/edit/submit', [App\Http\Controllers\Agent\ExchangeController::class, 'postsEditSubmit'])->name('posts.edit.submit');
         Route::get('posts/create/townlist', [App\Http\Controllers\Agent\ExchangeController::class, 'postsCreateTownlistAjax'])->name('post.townlistAjax');
         Route::get('posts/create/arealist', [App\Http\Controllers\Agent\ExchangeController::class, 'postsCreateArealistAjax'])->name('post.arealistAjax');
-        Route::get('security', [App\Http\Controllers\Agent\ExchangeController::class, 'security'])->name('security');
+
         Route::get('methods', [App\Http\Controllers\Agent\ExchangeController::class, 'methods'])->name('methods');
         Route::post('methods.add', [App\Http\Controllers\Agent\ExchangeController::class, 'methodsAdd'])->name('methods.add');
         Route::post('methods.edit', [App\Http\Controllers\Agent\ExchangeController::class, 'methodsEdit'])->name('methods.edit');

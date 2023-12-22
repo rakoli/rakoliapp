@@ -19,7 +19,11 @@
         var xhr = new XMLHttpRequest();
 
         // Configure the GET request
-        var url = "{{route('exchange.post.townlistAjax')}}";
+        @if(auth()->user()->type == \App\Utils\Enums\UserTypeEnum::ADMIN->value)
+            var url = "{{route('admin.exchange.post.townlistAjax')}}";
+        @else
+            var url = "{{route('exchange.post.townlistAjax')}}";
+        @endif
         url = url + "?region_code="+regionCode;
         xhr.open("GET", url, true);
 
@@ -60,7 +64,11 @@
         var xhr = new XMLHttpRequest();
 
         // Configure the GET request
-        var url = "{{route('exchange.post.arealistAjax')}}";
+        @if(auth()->user()->type == \App\Utils\Enums\UserTypeEnum::ADMIN->value)
+            var url = "{{route('admin.exchange.post.arealistAjax')}}";
+        @else
+            var url = "{{route('exchange.post.arealistAjax')}}";
+        @endif
         url = url + "?town_code="+townCode;
         xhr.open("GET", url, true);
 

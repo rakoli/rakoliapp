@@ -41,7 +41,15 @@
                 <div class="card-body pt-0">
                     <!--begin::Select2-->
                     <select class="form-select mb-2" data-control="select2" data-hide-search="true" data-placeholder="{{__('Change Ad Status')}}" id="ad_status" name="ad_status">
-                        @if(in_array($exchangeAd->status, \App\Utils\Enums\ExchangeStatusEnum::userCantSeeArray()))
+                        @if(auth()->user()->type == \App\Utils\Enums\UserTypeEnum::ADMIN->value)
+                            @foreach(\App\Utils\Enums\ExchangeStatusEnum::toArray() as $availableStatus)
+                                <option value="{{$availableStatus}}"
+                                        @if($exchangeAd->status == $availableStatus)
+                                            selected
+                                    @endif
+                                >{{strtoupper($availableStatus)}}</option>
+                            @endforeach
+                        @elseif(in_array($exchangeAd->status, \App\Utils\Enums\ExchangeStatusEnum::userCantSeeArray()))
                             <option value="{{$exchangeAd->status}}" selected>{{strtoupper($exchangeAd->status)}}</option>
                         @else
                             @foreach(\App\Utils\Enums\ExchangeStatusEnum::userViewable() as $availableStatus)
@@ -84,11 +92,11 @@
                     <option></option>
                     @foreach($branches as $branch)
                         <option value="{{$branch->code}}"
-                                @if($isEdit)
-                                    @if($exchangeAd->location_code == $branch->code)
-                                        selected
-                                    @endif
+                            @if($isEdit)
+                                @if($exchangeAd->location_code == $branch->code)
+                                    selected
                                 @endif
+                            @endif
                         >{{$branch->name}}</option>
                     @endforeach
                 </select>
@@ -305,9 +313,14 @@
         <!--end::Pricing-->
 
         <div class="d-flex justify-content-end">
+
             <!--begin::Button-->
-            <a href="{{route('exchange.posts')}}" class="btn btn-secondary me-5">{{__('Cancel')}}</a>
-            <!--end::Button-->
+            @if(auth()->user()->type == \App\Utils\Enums\UserTypeEnum::ADMIN->value)
+                <a href="{{route('admin.exchange.ads')}}" class="btn btn-secondary me-5">{{__('Cancel')}}</a>
+            @else
+                <a href="{{route('exchange.posts')}}" class="btn btn-secondary me-5">{{__('Cancel')}}</a>
+            @endif
+
             @if($isEdit && $exchangeAd->status != \App\Utils\Enums\ExchangeStatusEnum::DELETED->value)
                 <!--begin::Button-->
                 <button type="submit" id="adsubmit_button" class="btn btn-primary">

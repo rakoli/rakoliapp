@@ -4,15 +4,266 @@ namespace App\Http\Controllers\Admin;
 
 use App\Events\ExchangeChatEvent;
 use App\Http\Controllers\Controller;
+use App\Models\Area;
 use App\Models\ExchangeAds;
+use App\Models\ExchangeBusinessMethod;
 use App\Models\ExchangeChat;
+use App\Models\ExchangePaymentMethod;
 use App\Models\ExchangeTransaction;
+use App\Models\Location;
+use App\Models\Region;
+use App\Models\Towns;
+use App\Utils\Enums\ExchangePaymentMethodTypeEnum;
+use App\Utils\Enums\ExchangeStatusEnum;
 use App\Utils\Enums\ExchangeTransactionStatusEnum;
+use App\Utils\Enums\UserTypeEnum;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
 class ExchangeController
 {
+    public function ads(Request $request)
+    {
+        $stats = null;
+        $dataTable = new DataTables();
+        $builder = $dataTable->getHtmlBuilder();
+        $orderBy = null;
+        $orderByFilter = null;
+        if($request->get('order_by')){
+            $orderBy = ['order_by'=>$request->get('order_by')];
+            $orderByFilter = $request->get('order_by');
+        }
+
+        if (request()->ajax()) {
+
+            $ads = ExchangeAds::with('exchange_payment_methods')
+                ->with('business')
+                ->with('business_stats');
+
+            if($request->get('order_by') == 'last_seen'){
+                $ads->withAggregate('business','last_seen')
+                    ->orderByDesc('business_last_seen');
+            }
+
+            if($request->get('order_by') == 'trades'){
+                $ads->withAggregate('business_stats','no_of_trades_completed')
+                    ->orderByDesc('business_stats_no_of_trades_completed');
+            }
+
+            if($request->get('order_by') == 'completion'){
+                $ads->withAggregate('business_stats','completion')
+                    ->orderByDesc('business_stats_completion');
+            }
+
+            if($request->get('order_by') == 'feedback' || $request->get('order_by') == null){
+                $ads->withAggregate('business_stats','feedback')
+                    ->orderByDesc('business_stats_feedback');
+            }
+
+            if($request->get('order_by') == 'recent'){
+                $ads->latest();
+            }
+
+            if($request->get('order_by') == 'min_amount_asc'){
+                $ads->orderBy('min_amount','asc');
+            }
+
+            if($request->get('order_by') == 'min_amount_desc'){
+                $ads->orderBy('min_amount','desc');
+            }
+
+            if($request->get('order_by') == 'max_amount_asc'){
+                $ads->orderBy('max_amount','asc');
+            }
+
+            if($request->get('order_by') == 'max_amount_desc'){
+                $ads->orderBy('max_amount','desc');
+            }
+
+            return \Yajra\DataTables\Facades\DataTables::eloquent($ads)
+                ->addColumn('business_details', function(ExchangeAds $ad) {
+                    return view('agent.exchange.ads_datatable_components._business_details', compact( 'ad'));
+                })
+                ->addColumn('limit', function(ExchangeAds $ad) {
+                    return view('agent.exchange.ads_datatable_components._limit', compact( 'ad'));
+                })
+                ->addColumn('payment', function(ExchangeAds $ad) {
+                    $traderSellMethods = $ad->exchange_payment_methods->where('type',\App\Utils\Enums\ExchangePaymentMethodTypeEnum::OWNER_BUY->value)->where('status',1);
+                    $lastTraderSell = $traderSellMethods->last();
+                    $traderBuyMethods = $ad->exchange_payment_methods->where('type',\App\Utils\Enums\ExchangePaymentMethodTypeEnum::OWNER_SELL->value)->where('status',1);
+                    $lastTraderBuy = $traderBuyMethods->last();
+                    return view('agent.exchange.ads_datatable_components._payment', compact( 'ad','traderSellMethods','traderBuyMethods','lastTraderSell', 'lastTraderBuy'));
+                })
+                ->addColumn('trade', function(ExchangeAds $ad) {
+                    return '<a href="'.route('admin.exchange.posts.edit', $ad->id).'" class="btn btn-secondary btn-sm">'.__("View Ad").'</a>';
+                })
+                ->rawColumns(['business_details','terms','limit','payment','trade'])
+                ->addIndexColumn()
+                ->editColumn('id',function($exchange) {
+                    return idNumberDisplay($exchange->id);
+                })
+                ->toJson();
+        }
+
+        //Datatable
+        $dataTableHtml = $builder->columns([
+            ['data' => 'id', 'title' => __('id')],
+            ['data' => 'business_details', 'title' => __('Business')],
+            ['data' => 'limit' , 'title' => __('Limit in').' '.strtoupper(session('currency'))],
+            ['data' => 'payment', 'title' => __('Payment')],
+            ['data' => 'status', 'title' => __('Status')],
+            ['data' => 'trade', 'title' => __('general.exchange.trade')],
+        ])->responsive(true)
+            ->ordering(false)
+            ->ajax(route('admin.exchange.ads',$orderBy))
+            ->paging(true)
+            ->dom('frtilp')
+            ->lengthMenu([[25, 50, 100, -1], [25, 50, 100, "All"]]);
+
+        $regions = Region::where('country_code',session('country_code'))->get();
+
+        return view('admin.exchange.ads', compact('dataTableHtml','stats','orderByFilter','regions'));
+    }
+
+    public function postsEdit(Request $request, $id)
+    {
+        $exchangeAd = ExchangeAds::with('exchange_payment_methods')->where('id',$id)->first();
+        if(empty($exchangeAd)){
+            return redirect()->back()->withErrors(['Invalid Exchange Ad']);
+        }
+
+        $businessCode = $exchangeAd->business_code;
+        $branches = Location::where('business_code',$businessCode)->get();
+        $regions = Region::where('country_code',session('country_code'))->get();
+        $businessExchangeMethods = ExchangeBusinessMethod::where('business_code',$businessCode)->get();
+        $towns = null;
+        $areas = null;
+
+        if($exchangeAd->region_code != null){
+            $towns = Towns::where('region_code',$exchangeAd->region_code)->get();
+        }
+
+        if($exchangeAd->town_code != null){
+            $areas = Area::where('town_code',$exchangeAd->town_code)->get();
+        }
+
+        $buyMethods = $exchangeAd->exchange_payment_methods()->where('type', ExchangePaymentMethodTypeEnum::OWNER_BUY->value)->get(['method_name']);
+        $sellMethods = $exchangeAd->exchange_payment_methods()->where('type', ExchangePaymentMethodTypeEnum::OWNER_SELL->value)->get(['method_name']);
+
+        return view('admin.exchange.posts_edit', compact('branches','regions','businessExchangeMethods','exchangeAd','towns', 'areas','buyMethods','sellMethods'));
+    }
+
+    public function postsEditSubmit(Request $request)
+    {
+        $request->validate([
+            'exchange_id' => 'required|exists:exchange_ads,id',
+            'ad_status' => 'required|in:'.implode(',',ExchangeStatusEnum::toArray()),
+            'ad_branch' => 'required|exists:locations,code',
+            'availability_desc' => 'required|string',
+            'ad_region' => 'sometimes|string',
+            'ad_town' => 'sometimes|string',
+            'ad_area' => 'sometimes|string',
+            'ad_buy' => 'required|array',
+            'ad_sell' => 'required|array',
+            'amount_min' => 'required|numeric|min:1000|max:1000000000',
+            'amount_max' => 'required|numeric|min:1000|max:1000000000',
+            'description' => 'required|string|max:200',
+            'terms' => 'required|string|max:1000',
+            'open_note' => 'required|string|max:1000',
+        ]);
+
+        $exchangeAd = ExchangeAds::where('id',$request->get('exchange_id'))->first();
+
+        $exchangeAd->location_code = $request->get('ad_branch');
+        $exchangeAd->min_amount = $request->get('amount_min');
+        $exchangeAd->max_amount = $request->get('amount_max');
+        $exchangeAd->description = $request->get('description');
+        $exchangeAd->availability_desc = $request->get('availability_desc');
+        $exchangeAd->terms = $request->get('terms');
+        $exchangeAd->open_note = $request->get('open_note');
+        $exchangeAd->status = $request->get('ad_status');
+
+        $region = $request->get('ad_region');
+        if($region != 'all'){
+            $regionModel = Region::where('code',$region)->get();
+            if($regionModel->isNotEmpty()){
+                $exchangeAd->region_code = $regionModel->first()->code;
+            }
+        }
+
+        $town = $request->get('ad_town');
+        if($town != 'all'){
+            $townModel = Towns::where('code',$town)->get();
+            if($townModel->isNotEmpty()){
+                $exchangeAd->town_code = $townModel->first()->code;
+            }
+        }
+
+        $area = $request->get('ad_area');
+        if($area != 'all'){
+            $areaModel = Area::where('code',$area)->get();
+            if($areaModel->isNotEmpty()){
+                $exchangeAd->area_code = $areaModel->first()->code;
+            }
+        }
+        $exchangeAd->save();
+
+
+        $methodsToDelete = ExchangePaymentMethod::where('exchange_ads_code',$exchangeAd->code)->get();
+        foreach ($methodsToDelete as $method) {
+            $method->delete();
+        }
+
+        $buyMethodIds = $request->get('ad_buy');
+        $sellMethodIds = $request->get('ad_sell');
+
+        foreach ($buyMethodIds as $buyMethodId) {
+            $businessMethod = ExchangeBusinessMethod::where('id',$buyMethodId)->first();
+            if($businessMethod != null){
+                ExchangePaymentMethod::create([
+                    'exchange_ads_code' => $exchangeAd->code,
+                    'type' => ExchangePaymentMethodTypeEnum::OWNER_BUY->value,
+                    'method_name' => $businessMethod->method_name,
+                    'account_number' => $businessMethod->account_number,
+                    'account_name' => $businessMethod->account_name,
+                ]);
+            }
+        }
+
+        foreach ($sellMethodIds as $sellMethodId) {
+            $businessMethod = ExchangeBusinessMethod::where('id',$sellMethodId)->first();
+            if($businessMethod != null){
+                ExchangePaymentMethod::create([
+                    'exchange_ads_code' => $exchangeAd->code,
+                    'type' => ExchangePaymentMethodTypeEnum::OWNER_SELL->value,
+                    'method_name' => $businessMethod->method_name,
+                    'account_number' => $businessMethod->account_number,
+                    'account_name' => $businessMethod->account_name,
+                ]);
+            }
+        }
+
+        return redirect()->back()->with(['message'=>'Exchange Ad Edited Successfully']);
+    }
+
+
+    public function adsView(Request $request, $id)
+    {
+        $exchangeAd = ExchangeAds::where('id',$id)->with('exchange_payment_methods')->first();
+        if(empty($exchangeAd)){
+            return redirect()->back()->withErrors(['Invalid Exchange Ad']);
+        }
+        $traderSellMethods = $exchangeAd->exchange_payment_methods()
+            ->where('type',\App\Utils\Enums\ExchangePaymentMethodTypeEnum::OWNER_BUY->value)
+            ->where('status', 1)
+            ->get(['id','method_name','type']);
+        $traderBuyMethods = $exchangeAd->exchange_payment_methods()
+            ->where('type',\App\Utils\Enums\ExchangePaymentMethodTypeEnum::OWNER_SELL->value)
+            ->where('status', 1)
+            ->get(['id','method_name','type']);
+
+        return view('admin.exchange.ads_view',compact('exchangeAd','traderSellMethods','traderBuyMethods'));
+    }
 
     public function transactions()
     {

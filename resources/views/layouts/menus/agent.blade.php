@@ -137,13 +137,6 @@
                     <span class="menu-title">{{ __('Posts') }}</span>
                 </a>
 
-                <a class="menu-link" href="{{route('exchange.security')}}">
-                    <span class="menu-bullet">
-                        <span class="bullet bullet-dot"></span>
-                    </span>
-                    <span class="menu-title">{{ __('Security') }}</span>
-                </a>
-
                 <a class="menu-link" href="{{route('exchange.methods')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>

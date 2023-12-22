@@ -63,7 +63,7 @@
 </div>
 
 <!-- Exchange -->
-<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('exchange')}}">
+<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('adminexchange')}}">
     <!--begin:Menu link-->
     <span class="menu-link menu-center">
         <span class="menu-icon me-0">
@@ -102,12 +102,6 @@
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Transactions') }}</span>
-                </a>
-                <a class="menu-link" href="/dashboard/admin/security">
-                    <span class="menu-bullet">
-                        <span class="bullet bullet-dot"></span>
-                    </span>
-                    <span class="menu-title">{{ __('Security') }}</span>
                 </a>
             </div>
             <!--end:Menu sub-->
