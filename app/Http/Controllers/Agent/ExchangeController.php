@@ -22,6 +22,7 @@ use App\Utils\Enums\ExchangePaymentMethodTypeEnum;
 use App\Utils\Enums\ExchangeStatusEnum;
 use App\Utils\Enums\ExchangeTransactionStatusEnum;
 use App\Utils\Enums\ExchangeTransactionTypeEnum;
+use App\Utils\Enums\UserTypeEnum;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -681,6 +682,11 @@ class ExchangeController extends Controller
 
         $exchangeAd = ExchangeAds::where('id',$request->get('exchange_id'))->first();
 
+        $isAllowed = $exchangeAd->isUserAllowed($request->user());
+        if($isAllowed == false){
+            return redirect()->route('exchange.posts')->withErrors(['Not authorized to access transaction']);
+        }
+
         $exchangeAd->location_code = $request->get('ad_branch');
         $exchangeAd->min_amount = $request->get('amount_min');
         $exchangeAd->max_amount = $request->get('amount_max');
@@ -868,6 +874,12 @@ class ExchangeController extends Controller
         ]);
 
         $exchangeBusinessMethod = ExchangeBusinessMethod::where('id', $request->edit_id)->first();
+
+        $isAllowed = $exchangeBusinessMethod->isUserAllowed($request->user());
+        if($isAllowed == false){
+            return redirect()->route('exchange.methods')->withErrors(['Not authorized to access method']);
+        }
+
         $exchangeBusinessMethod->nickname = $request->edit_nickname;
         $exchangeBusinessMethod->method_name = $request->edit_method_name;
         $exchangeBusinessMethod->account_number = $request->edit_account_number;
@@ -884,6 +896,12 @@ class ExchangeController extends Controller
         ]);
 
         $exchangeBusinessMethod = ExchangeBusinessMethod::where('id', $request->delete_id)->first();
+
+        $isAllowed = $exchangeBusinessMethod->isUserAllowed($request->user());
+        if($isAllowed == false){
+            return redirect()->route('exchange.methods')->withErrors(['Not authorized to access method']);
+        }
+
         $exchangeBusinessMethod->delete();
 
         return redirect()->back()->with(['message'=>__('Payment Method').' '.__('Deleted Successfully')]);
