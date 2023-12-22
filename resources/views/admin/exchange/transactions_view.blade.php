@@ -1,9 +1,19 @@
-@extends('layouts.users.agent')
+@extends('layouts.users.admin')
 
-@section('title', __("Transaction View"))
+@section('title', __('Transaction View'))
 
 @section('header_js')
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css" />
+@endsection
+
+@section('breadcrumb')
+    <!--begin::Separator-->
+    <span class="h-20px border-gray-200 border-start ms-3 mx-2"></span>
+    <!--end::Separator-->
+    <!--begin::Description-->
+    <small class="text-muted fs-7 fw-semibold my-1 ms-1">{{__('Transaction View')}}</small>
+    <!--end::Description-->
 @endsection
 
 
@@ -31,86 +41,54 @@
 
                         <!--Begin::Action Buttons-->
 
-                        @if($exchangeTransaction->status === \App\Utils\Enums\ExchangeTransactionStatusEnum::OPEN->value )
-                            <button type="button" class="btn btn-primary btn-text-danger" data-bs-toggle="modal" data-bs-target="#cancel_modal">
-                                {{__('Cancel')}}
-                            </button>
-                        @endif
+                        <button type="button" class="btn btn-primary btn-text-danger" data-bs-toggle="modal" data-bs-target="#cancel_modal">
+                            {{__('Cancel')}}
+                        </button>
 
                         <!-- Todo: Add Exchange Trade Report-->
 {{--                        <button type="button" class="btn btn-primary btn-text-warning" data-bs-toggle="modal" data-bs-target="#report_modal">--}}
 {{--                            {{__('Report')}}--}}
 {{--                        </button>--}}
 
-                        @if($exchangeTransaction->isTrader(auth()->user())&& $exchangeTransaction->trader_confirm_at == null && $exchangeTransaction->is_complete == false)
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#complete_modal">
-                                {{__('Complete')}}
-                            </button>
-                        @endif
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#complete_modal">
+                            {{__('Complete')}}
+                        </button>
 
-                        @if($exchangeTransaction->isOwner(auth()->user()) && $exchangeTransaction->owner_confirm_at == null && $exchangeTransaction->is_complete == false)
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#complete_modal">
-                                {{__('Complete')}}
-                            </button>
-                        @endif
-                        <!--End::Action Buttons-->
+                        @foreach($exchangeTransaction->exchange_feedback as $feedback)
 
-                        @if($exchangeTransaction->is_complete == true && $exchangeTransaction->status == \App\Utils\Enums\ExchangeTransactionStatusEnum::COMPLETED->value )
-
-                            @if(($exchangeTransaction->isOwner(auth()->user()) && $exchangeTransaction->owner_submitted_feedback == false) || ($exchangeTransaction->isTrader(auth()->user()) && $exchangeTransaction->trader_submitted_feedback == false))
-
-                                <!--Begin::Status Details-->
-                                <div class="mb-2 mt-2 text-gray-600 text-center">
-                                    {{__('Submit Transaction Feedback')}}
-                                </div>
-                                <!--End::Status Details-->
-
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#feedback_modal">
-                                    {{__('Give Feedback')}}
-                                </button>
-
-                            @else
-
-                                @foreach($exchangeTransaction->exchange_feedback as $feedback)
-
-                                    <!--begin:Label-->
-                                    <span class="d-flex align-items-center mb-0 mt-2 align-center">
+                            <!--begin:Label-->
+                            <span class="d-flex align-items-center mb-0 mt-2 align-center">
                                     <!--begin:Info-->
                                     <span class="d-flex flex-column mb-0" >
                                         <span class="fs-6 mb-0">{{$feedback->reviewed_business->business_name}} ({{__("Feedback")}})</span>
                                     </span>
-                                        <!--end:Info-->
+                                <!--end:Info-->
 
-                                    @if($feedback->review == true)
-                                        <!--begin:Icon-->
-                                        <span class="symbol symbol-35px mb-0 m-lg-2">
-                                        <span class="symbol-label bg-light-success mb-0">
-                                            <i class="ki-duotone ki-shield-tick fs-1 text-success"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
+                                @if($feedback->review == true)
+                                    <!--begin:Icon-->
+                                    <span class="symbol symbol-35px mb-0 m-lg-2">
+                                            <span class="symbol-label bg-light-success mb-0">
+                                                <i class="ki-duotone ki-shield-tick fs-1 text-success"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
+                                            </span>
                                         </span>
-                                    </span>
-                                        <!--end:Icon-->
-                                    @else
-                                        <!--begin:Icon-->
-                                        <span class="symbol symbol-35px mb-0 m-lg-2">
-                                        <span class="symbol-label bg-light-danger mb-0">
-                                            <i class="ki-duotone ki-cross-circle fs-1 text-danger"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
+                                    <!--end:Icon-->
+                                @else
+                                    <!--begin:Icon-->
+                                    <span class="symbol symbol-35px mb-0 m-lg-2">
+                                            <span class="symbol-label bg-light-danger mb-0">
+                                                <i class="ki-duotone ki-cross-circle fs-1 text-danger"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
+                                            </span>
                                         </span>
-                                    </span>
-                                        <!--end:Icon-->
-                                    @endif
-                                </span>
+                                    <!--end:Icon-->
+                                @endif
+                            </span>
 
-                                    <div class="text-gray-600">
-                                        {{$feedback->review_comment}}
-                                    </div>
-                                    <!--end:Label-->
+                            <div class="text-gray-600">
+                                {{$feedback->review_comment}}
+                            </div>
+                            <!--end:Label-->
 
-                                @endforeach
-
-                            @endif
-
-                        @endif
-
+                        @endforeach
 
                     </div>
                     <!--end::Card Footer (Actions)-->
@@ -174,15 +152,8 @@
                                 <!--begin::Info-->
                                 <div class="mb-5 lh-1">
                                     <span class="fs-7 fw-semibold text-muted">
-                                        @if($exchangeTransaction->owner_business->code == auth()->user()->business_code)
-                                            {{__(tradeOrderInvence($exchangeTransaction->trader_action_type))}} {{number_format($exchangeTransaction->amount)}}
-                                            {{strtolower($exchangeTransaction->amount_currency)}} {{__('of')}} {{strtolower($exchangeTransaction->trader_target_method)}} {{__('using')}} {{strtolower($exchangeTransaction->trader_action_via_method)}}
-                                        @endif
-
-                                        @if($exchangeTransaction->trader_business->code == auth()->user()->business_code)
-                                            {{__($exchangeTransaction->trader_action_type)}} {{number_format($exchangeTransaction->amount)}}
-                                            {{strtolower($exchangeTransaction->amount_currency)}} {{__('of')}} {{strtolower($exchangeTransaction->trader_target_method)}} {{__('using')}} {{strtolower($exchangeTransaction->trader_action_via_method)}}
-                                        @endif
+                                        {{$exchangeTransaction->owner_business->business_name}} (OWNER): {{__(tradeOrderInvence($exchangeTransaction->trader_action_type))}} {{number_format($exchangeTransaction->amount)}}
+                                        {{strtolower($exchangeTransaction->amount_currency)}} {{__('of')}} {{strtolower($exchangeTransaction->trader_target_method)}} {{__('using')}} {{strtolower($exchangeTransaction->trader_action_via_method)}}
                                     </span>
                                 </div>
                                 <!--end::Info-->
@@ -341,7 +312,7 @@
                             </div>
                             <!--end::Actions-->
                             <!--begin::Send-->
-                            <a class="btn btn-secondary" href="{{route('exchange.transactions')}}">{{__('Go Back')}}</a>
+                            <a class="btn btn-secondary" href="{{route('admin.exchange.transactions')}}">{{__('Go Back')}}</a>
                             <button id="sentTextButton" class="btn btn-primary" type="button" data-kt-element="send">{{__('Send')}}</button>
                             <!--end::Send-->
                         </div>
@@ -388,7 +359,7 @@
                             <!--end::Close-->
                         </div>
 
-                        <form class="my-auto pb-5" action="{{route('exchange.transactions.action')}}" method="POST">
+                        <form class="my-auto pb-5" action="{{route('admin.exchange.transactions.action')}}" method="POST">
                             @csrf
 
                             <input type="hidden" name="ex_trans_id" value="{{$exchangeTransaction->id}}">
@@ -443,7 +414,7 @@
                             </div>
                             <!--end::Close-->
                         </div>
-                        <form class="my-auto pb-5" action="{{route('exchange.transactions.action')}}" method="POST">
+                        <form class="my-auto pb-5" action="{{route('admin.exchange.transactions.action')}}" method="POST">
                             @csrf
 
                             <input type="hidden" name="ex_trans_id" value="{{$exchangeTransaction->id}}">
@@ -464,104 +435,6 @@
                 </div>
             </div>
 
-            <div class="modal fade" tabindex="-1" id="feedback_modal">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h3 class="modal-title">{{__("Submit Exchange Feedback")}}</h3>
-                            <!--begin::Close-->
-                            <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
-                                <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
-                            </div>
-                            <!--end::Close-->
-                        </div>
-                        <form class="my-auto pb-5" action="{{route('exchange.transactions.feedback.action')}}" method="POST">
-                            @csrf
-
-                            <input type="hidden" name="ex_trans_id" value="{{$exchangeTransaction->id}}">
-
-                            <div class="modal-body">
-
-
-                                <!--begin:Option-->
-                                <label class="d-flex flex-stack cursor-pointer">
-                                    <!--begin:Label-->
-                                    <span class="d-flex align-items-center me-2">
-                                        <!--begin:Icon-->
-                                        <span class="symbol symbol-50px me-6">
-                                            <span class="symbol-label bg-light-success">
-                                                <i class="ki-duotone ki-shield-tick fs-1 text-success"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
-                                            </span>
-                                        </span>
-                                        <!--end:Icon-->
-
-                                        <!--begin:Info-->
-                                        <span class="d-flex flex-column">
-                                            <span class="fw-bold fs-6">{{__("Positive")}}</span>
-                                        </span>
-                                        <!--end:Info-->
-                                    </span>
-                                    <!--end:Label-->
-
-                                    <!--begin:Input-->
-                                    <span class="form-check form-check-custom form-check-solid">
-                                        <input class="form-check-input" type="radio" name="feedback" value="1"/>
-                                    </span>
-                                    <!--end:Input-->
-                                </label>
-                                <!--end::Option-->
-
-                                <!--begin:Option-->
-                                <label class="d-flex flex-stack mb-5 cursor-pointer">
-                                    <!--begin:Label-->
-                                    <span class="d-flex align-items-center me-2">
-                                        <!--begin:Icon-->
-                                        <span class="symbol symbol-50px me-6">
-                                            <span class="symbol-label bg-light-danger">
-                                                <i class="ki-duotone ki-cross-circle fs-1 text-danger"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span></i>
-                                            </span>
-                                        </span>
-                                        <!--end:Icon-->
-
-                                        <!--begin:Info-->
-                                        <span class="d-flex flex-column">
-                                            <span class="fw-bold fs-6">{{__("Negative")}}</span>
-                                        </span>
-                                        <!--end:Info-->
-                                    </span>
-                                    <!--end:Label-->
-
-                                    <!--begin:Input-->
-                                    <span class="form-check form-check-custom form-check-solid">
-                                        <input class="form-check-input" type="radio" name="feedback" value="0"/>
-                                    </span>
-                                    <!--end:Input-->
-                                </label>
-                                <!--end::Option-->
-
-
-                                <!--begin::Input group-->
-                                <div class="input-group">
-                                    <span class="input-group-text">{{__("Comments")}}</span>
-                                    <textarea class="form-control" name="comments" placeholder="{{__("Optional feedback comments")}}"></textarea>
-                                </div>
-                                <!--end::Input group-->
-
-
-
-
-                            </div>
-
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{__("Close")}}</button>
-                                <button type="submit" class="btn btn-primary">{{__('Submit Feedback')}}</button>
-                            </div>
-
-                        </form>
-
-                    </div>
-                </div>
-            </div>
             <!--end::ACTION MODULES-->
 
         </div>
@@ -654,7 +527,7 @@
             var xhr = new XMLHttpRequest();
 
             // Configure the GET request
-            var url = "{{route('exchange.transactions.receive.message')}}";
+            var url = "{{route('admin.exchange.transactions.receive.message')}}";
             url = url + "?ex_trans_id="+{{$exchangeTransaction->id}}+"&message="+message;
             xhr.open("GET", url, true);
 

@@ -63,6 +63,13 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
+            $table->timestamp('admin_confirm_at')->nullable();
+            $table->string('admin_confirm_by_user_code')->nullable();
+            $table->foreign('admin_confirm_by_user_code')->references('code')
+                ->on('users')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+
             $table->timestamp('cancelled_at')->nullable();
             $table->string('cancelled_by_user_code')->nullable();
             $table->foreign('cancelled_by_user_code')->references('code')

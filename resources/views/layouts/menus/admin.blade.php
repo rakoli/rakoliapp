@@ -40,14 +40,14 @@
             <!--begin:Menu sub-->
             <div class="menu-sub menu-sub-accordion">
 
-                <a class="menu-link" href="{{route('business.listbusiness')}}">
+                <a class="menu-link" href="{{route('admin.business.listbusiness')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{__('List Business')}}</span>
                 </a>
 
-                <a class="menu-link" href="{{route('business.listusers')}}">
+                <a class="menu-link" href="{{route('admin.business.listusers')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
@@ -91,19 +91,13 @@
 
             <!--begin:Menu sub-->
             <div class="menu-sub menu-sub-accordion">
-                <a class="menu-link" href="/dashboard/admin/ads">
-                    <span class="menu-bullet">
-                        <span class="bullet bullet-dot"></span>
-                    </span>
-                    <span class="menu-title">{{ __('Listing') }}</span>
-                </a>
-                <a class="menu-link" href="/dashboard/admin/ads">
+                <a class="menu-link" href="{{route('admin.exchange.ads')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Ads') }}</span>
                 </a>
-                <a class="menu-link" href="/dashboard/admin/transactions">
+                <a class="menu-link" href="{{route('admin.exchange.transactions')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
