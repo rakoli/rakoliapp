@@ -19,11 +19,6 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles, AuthenticationLoggable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'type',
         'business_code',
@@ -36,21 +31,11 @@ class User extends Authenticatable
         'code', // Add the 'code' attribute for user registration
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
@@ -143,11 +128,15 @@ class User extends Authenticatable
         return $this->hasMany(ExchangeChat::class, 'sender_code', 'code');
     }
 
-    public function getBusinessPendingPayments()
+    public function getBusinessPendingPayments($limitArray = null)
     {
-        return InitiatedPayment::where('business_code',$this->business_code)
+        $query = InitiatedPayment::where('business_code',$this->business_code)
             ->where('expiry_time','>',now())
-            ->where('status',InitiatedPaymentStatusEnum::INITIATED->value)->get();
+            ->where('status',InitiatedPaymentStatusEnum::INITIATED->value);
+        if($limitArray != null){
+            return $query->get($limitArray);
+        }
+        return $query->get();
     }
 
     public function hasPendingPayment() : bool

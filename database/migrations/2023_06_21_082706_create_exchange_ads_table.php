@@ -57,9 +57,9 @@ return new class extends Migration
             $table->decimal('max_amount', 12,2);
             $table->string('currency');
             $table->string('status')->default(ExchangeStatusEnum::ACTIVE->value);
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->text('terms')->nullable();
-            $table->string('availability_desc');
+            $table->string('availability_desc')->nullable();
             $table->text('open_note')->nullable();
             $table->timestamps();
         });
