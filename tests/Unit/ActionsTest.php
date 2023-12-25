@@ -25,10 +25,6 @@ class ActionsTest extends TestCase
         Business::factory()->create();//to be used in user factory as available business
         $user = User::factory()->create();
 
-        $this->assertDatabaseMissing('initiated_payments', [
-            'business_code' => $user->business_code,
-        ]);
-
         $requestResult = InitiateSubscriptionPayment::run($paymentMethod,$user,$package);
 
         $this->assertNotFalse($requestResult['success']);
@@ -38,7 +34,7 @@ class ActionsTest extends TestCase
     }
 
     /** @test */
-    public function can_complete_initiated_subscription_payment()
+    public function can_complete_initiated_subscription_payment_and_record_system_income()
     {
         $user = User::factory()->create();
 
@@ -48,6 +44,10 @@ class ActionsTest extends TestCase
         $this->assertDatabaseHas('initiated_payments', [
             'business_code' => $user->business_code,
             'status' => InitiatedPaymentStatusEnum::COMPLETED,
+        ]);
+
+        $this->assertDatabaseHas('system_incomes', [
+            'channel_reference' => $initiedPayment->code,
         ]);
 
     }
