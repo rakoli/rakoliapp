@@ -13,12 +13,6 @@ class Loan extends Model
 {
     use HasFactory;
 
-    protected static function booted()
-    {
-        static::addGlobalScope(new BusinessScoped);
-        static::addGlobalScope(new LocationScoped);
-    }
-
     public function business() : BelongsTo
     {
         return  $this->belongsTo(Business::class,'business_code','code');

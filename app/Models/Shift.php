@@ -15,17 +15,9 @@ class Shift extends Model
 {
     use HasFactory;
 
-
-
     protected $casts = [
         'status' => ShiftStatusEnum::class
     ];
-
-    protected static function booted()
-    {
-        static::addGlobalScope(new LocationScoped());
-        static::addGlobalScope(new BusinessScoped());
-    }
 
     public function user() : BelongsTo
     {

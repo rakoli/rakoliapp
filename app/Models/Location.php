@@ -28,11 +28,6 @@ class Location extends Model
         'description',
     ];
 
-    protected static function booted(): void
-    {
-        static::addGlobalScope(new BusinessScoped);
-    }
-
     public function business(): BelongsTo
     {
         return $this->belongsTo(Business::class, 'Business_Code', 'Business_Code');
