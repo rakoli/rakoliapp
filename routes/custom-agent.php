@@ -8,6 +8,8 @@ use App\Http\Controllers\CustomAgentDashboardController;
 // All get methods will be loaded with this route
 Route::middleware(['auth','should_complete_registration','onlyagent'])->group(function () {
 
+    Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard'); //For Middleware testing and having a special user type dashboard route
+
     //AGENCY MODULE
     Route::name('agency.')->prefix('agency')->group(function () {
 

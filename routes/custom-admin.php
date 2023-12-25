@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Route;
 // All get methods will be loaded with this route
 Route::name('admin.')->prefix('admin')->middleware(['auth','onlyadmin'])->group(function () {
 
+    Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard'); //For Middleware testing and having a special user type dashboard route
+
     //BUSINESS MODDULE
     Route::group(['prefix' => 'business', 'route' => 'business.'], function () {
 

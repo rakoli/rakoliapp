@@ -8,6 +8,8 @@ use App\Http\Controllers\CustomVasDashboardController;
 // All get methods will be loaded with this route
 Route::middleware(['auth','should_complete_registration','onlyvas'])->group(function () {
 
+    Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard'); //For Middleware testing and having a special user type dashboard route
+
     //Services
     Route::group(['prefix' => 'services', 'route' => 'services.'], function () {
 
