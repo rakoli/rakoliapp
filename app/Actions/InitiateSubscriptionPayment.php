@@ -11,6 +11,7 @@ use App\Utils\PesaPalPayment;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Illuminate\Support\Facades\Log;
 use Lorisleiva\Actions\Concerns\AsAction;
+use Psy\Util\Str;
 
 class InitiateSubscriptionPayment
 {
@@ -19,17 +20,23 @@ class InitiateSubscriptionPayment
     public function handle($paymentmethod, User $user, $package)
     {
         if(!in_array($paymentmethod, config('payments.accepted_payment_methods'))){
-            return [
-                'success'           => false,
-                'result'            => 'payment method',
-                'resultExplanation' => 'Unknown payment method',
-            ];
+
+            if(!($paymentmethod == 'test' && env('APP_ENV') != 'production')){
+                return [
+                    'success'           => false,
+                    'result'            => 'payment method',
+                    'resultExplanation' => 'Unknown payment method',
+                ];
+            }
         }
 
         $tnxCode = generateCode($user->id,$package->name);
         $business = $user->business;
         $description = "$package->code for $business->business_name for $package->package_interval_days days";
         $requestResult = [];
+        $redirectUrl = null;
+        $reference = null;
+        $referenceName = null;
 
         if($paymentmethod == 'dpopay'){
 
@@ -60,17 +67,11 @@ class InitiateSubscriptionPayment
                 ];
             }
 
-            $saveRecordResult = self::recordPayment($user,$package,$tnxCode,$paymentmethod,$requestResult['result'],$requestResult['transToken'],'token');
-
-            if($saveRecordResult['success'] == false){
-                return [
-                    'success'           => false,
-                    'result'            => 'Recording Request Error',
-                    'resultExplanation' => 'Unable to record the payment request',
-                ];
-            }
-
             $requestResult['url'] = $requestResult['result'];
+
+            $redirectUrl = $requestResult['result'];
+            $reference = $requestResult['transToken'];
+            $referenceName = 'token';
         }
 
 
@@ -111,8 +112,23 @@ class InitiateSubscriptionPayment
             }
 
             $apiResponse = $requestResult['result'];
+            $requestResult['url'] = $apiResponse->redirect_url;
 
-            $recordResult = self::recordPayment($user,$package,$tnxCode,$paymentmethod,$apiResponse->redirect_url,$apiResponse->order_tracking_id,'tracking_id');
+            $redirectUrl = $apiResponse->redirect_url;
+            $reference = $apiResponse->order_tracking_id;
+            $referenceName = 'tracking_id';
+        }
+
+        if($paymentmethod == 'test' && env('APP_ENV') != 'production') {
+            $redirectUrl = 'redirect_url';
+            $reference = \Illuminate\Support\Str::random(10);
+            $referenceName = 'test_reference';
+            $requestResult['success'] = true;
+        }
+
+        if($reference != null){
+
+            $recordResult = self::recordPayment($user,$package,$tnxCode,$paymentmethod,$redirectUrl,$reference,$referenceName);
 
             if($recordResult['success'] == false){
                 return [
@@ -122,7 +138,6 @@ class InitiateSubscriptionPayment
                 ];
             }
 
-            $requestResult['url'] = $apiResponse->redirect_url;
         }
 
 
