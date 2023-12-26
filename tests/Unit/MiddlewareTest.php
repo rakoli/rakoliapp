@@ -19,26 +19,27 @@ class MiddlewareTest extends TestCase
 {
 
     /** @test */
-    public function non_admins_users_are_redirected()
+    public function non_admins_users_are_redirected_using_onlyadminmiddleware()
     {
         $nonAdminUser = User::factory()->create(['type'=>UserTypeEnum::AGENT->value]);
 
-        $requestNonAdmin = Request::create('admin/dashboard', 'GET');
+        $requestNonAdmin = Request::create(route('admin.dashboard'), 'GET');
         $requestNonAdmin->setUserResolver(function () use ($nonAdminUser) {
             return $nonAdminUser;
         });
         $middleware = new OnlyAdminMiddleware();
         $response = $middleware->handle($requestNonAdmin, function () {return new Response();});
+        $this->assertTrue($response->isRedirect(route('home')));
         $this->assertEquals($response->getStatusCode(), 302);
 
     }
 
     /** @test */
-    public function admins_are_not_redirected()
+    public function admins_are_not_redirected_on_onlyadminmiddleware()
     {
         $adminUser = User::factory()->create(['type'=>UserTypeEnum::ADMIN->value]);
 
-        $requestAdmin = Request::create('admin/dashboard', 'GET');
+        $requestAdmin = Request::create(route('admin.dashboard'), 'GET');
         $requestAdmin->setUserResolver(function () use ($adminUser) {
             return $adminUser;
         });
@@ -49,26 +50,26 @@ class MiddlewareTest extends TestCase
     }
 
     /** @test */
-    public function non_vas_users_are_redirected()
+    public function non_vas_users_are_redirected_using_onlyvasmiddleware()
     {
         $nonVasUser = User::factory()->create(['type'=>UserTypeEnum::AGENT->value]);
 
-        $requestNonVas = Request::create('vas/dashboard', 'GET');
+        $requestNonVas = Request::create(route('vas.dashboard'), 'GET');
         $requestNonVas->setUserResolver(function () use ($nonVasUser) {
             return $nonVasUser;
         });
         $middleware = new OnlyVASMiddleware();
         $response = $middleware->handle($requestNonVas, function () {return new Response();});
+        $this->assertTrue($response->isRedirect(route('home')));
         $this->assertEquals($response->getStatusCode(), 302);
-
     }
 
     /** @test */
-    public function vas_are_not_redirected()
+    public function vas_users_are_not_redirected_on_onlyvasmiddleware()
     {
         $vasUser = User::factory()->create(['type'=>UserTypeEnum::VAS->value]);
 
-        $requestVas = Request::create('vas/dashboard', 'GET');
+        $requestVas = Request::create(route('vas.dashboard'), 'GET');
         $requestVas->setUserResolver(function () use ($vasUser) {
             return $vasUser;
         });
@@ -79,26 +80,26 @@ class MiddlewareTest extends TestCase
     }
 
     /** @test */
-    public function non_agent_users_are_redirected()
+    public function non_agent_users_are_redirected_using_onlyagentmiddleware()
     {
         $nonAgentUser = User::factory()->create(['type'=>UserTypeEnum::VAS->value]);
 
-        $agentRequest = Request::create('agent/dashboard', 'GET');
+        $agentRequest = Request::create(route('agent.dashboard'), 'GET');
         $agentRequest->setUserResolver(function () use ($nonAgentUser) {
             return $nonAgentUser;
         });
         $middleware = new OnlyAgentMiddleware();
         $response = $middleware->handle($agentRequest, function () {return new Response();});
+        $this->assertTrue($response->isRedirect(route('home')));
         $this->assertEquals($response->getStatusCode(), 302);
-
     }
 
     /** @test */
-    public function agent_are_not_redirected()
+    public function agent_users_not_redirected_on_onlyagentmiddleware()
     {
         $agentUser = User::factory()->create(['type'=>UserTypeEnum::AGENT->value]);
 
-        $agentRequest = Request::create('agent/dashboard', 'GET');
+        $agentRequest = Request::create(route('agent.dashboard'), 'GET');
         $agentRequest->setUserResolver(function () use ($agentUser) {
             return $agentUser;
         });
