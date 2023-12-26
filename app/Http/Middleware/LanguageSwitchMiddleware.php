@@ -19,6 +19,7 @@ class LanguageSwitchMiddleware
     {
         if (session()->has('locale')) {
             App::setLocale(session()->get('locale'));
+            $request->setLocale(session()->get('locale'));
         }else{
             $locale = Cookie::get('locale');
             if(!in_array($locale, config('app.accepted_locales'))){
@@ -26,6 +27,7 @@ class LanguageSwitchMiddleware
             }
             session()->put('locale', $locale);
             App::setLocale($locale);
+            $request->setLocale($locale);
         }
         return $next($request);
     }
