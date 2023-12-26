@@ -17,6 +17,12 @@ class UserFactory extends Factory
     public function definition(): array
     {
         $businesses = Business::get('code')->toArray();
+        $businessCode = null;
+        if($businesses == null){
+            $businessCode = Business::factory()->create()->code;
+        }else{
+            $businessCode = fake()->randomElement($businesses)['code'];
+        }
         $fname = fake()->firstName;
         $lname = fake()->lastName;
         $name = "$fname $lname";
@@ -30,7 +36,7 @@ class UserFactory extends Factory
             'code' => generateCode($name),
             'password' => Hash::make('12345678'),
             'type' => UserTypeEnum::AGENT->value,
-            'business_code' => fake()->randomElement($businesses)['code'],
+            'business_code' => $businessCode,
         ];
     }
 
