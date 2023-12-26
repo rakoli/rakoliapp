@@ -43,27 +43,27 @@
 
             <!--begin:Menu sub-->
             <div class="menu-sub menu-sub-accordion">
-                <a class="menu-link" href="{{route('services.advertisement')}}"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('vas.services.advertisement')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{__('Advertisement')}}</span>
                 </a>
-                <a class="menu-link" href="{{route('services.data')}}"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('vas.services.data')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{__('Data')}}</span>
                 </a>
-                <a class="menu-link" href="{{route('services.sales')}}"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('vas.services.sales')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{__('Sales')}}</span>
                 </a>
-                <a class="menu-link" href="{{route('services.verification')}}"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('vas.services.verification')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{__('Review and Verification')}}</span>
                 </a>
-                <a class="menu-link" href="{{route('services.manage')}}"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('vas.services.manage')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Manage Services') }}</span>
