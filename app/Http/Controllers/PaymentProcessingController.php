@@ -70,4 +70,21 @@ class PaymentProcessingController extends Controller
             'resultExplanation' => 'data received successfully',
         ];
     }
+
+    public function completePendingTestPayment(Request $request, $reference)
+    {
+        $initiatedPayment = InitiatedPayment::where('channel','test')
+            ->where('channel_ref',$reference)
+            ->where('status',InitiatedPaymentStatusEnum::INITIATED->value)->first();
+
+        if($initiatedPayment != null){
+
+            CompleteInitiatedPayment::dispatch($initiatedPayment);
+
+            return redirect()->route('registration.agent')->with(['message'=>"Test Payment Completion Done"]);
+        }else{
+            return redirect()->route('registration.agent')->withErrors(['Unable to retrieve Initiated Payment with given reference.'.$reference]);
+        }
+
+    }
 }

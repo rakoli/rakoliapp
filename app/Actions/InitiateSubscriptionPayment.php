@@ -120,9 +120,10 @@ class InitiateSubscriptionPayment
         }
 
         if($paymentmethod == 'test' && env('APP_ENV') != 'production') {
-            $redirectUrl = 'redirect_url';
-            $reference = \Illuminate\Support\Str::random(10);
+            $reference = 'test_'.\Illuminate\Support\Str::random(4);
+            $redirectUrl = route('pay.test',$reference);
             $referenceName = 'test_reference';
+            $requestResult['url'] = $redirectUrl;
             $requestResult['success'] = true;
         }
 

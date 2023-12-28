@@ -153,8 +153,23 @@
         </label>
         <!--end::Option-->
 
+        @if(env('APP_ENV') != 'production')
+                <!--begin::Option-->
+                <input type="radio" class="btn-check" name="selected_payment_method" value="test" id="test_method" onchange="selectPaymentMethod(this)"/>
+                <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center mb-5" for="test_method">
+                    <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/test_pay.jpg')}}" class="mw-200px mh-70px"></i>
+                    <span class="d-block fw-semibold text-start">
+                <span class="text-gray-900 fw-bold d-block fs-3">TEST Pay</span>
+                <span class="text-muted fw-semibold fs-6">
+                    Demo payment for testing. (An auto complete button will be provided).
+                </span>
+            </span>
+                </label>
+                <!--end::Option-->
+        @endif
+
         <div class="m-5 fv-row">
-            <button id="verify_phone_button" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirm_subscription_details">
+            <button id="verify_phone_button" type="button" class="btn btn-primary" onclick="validateSubscriptionAndOpenModal()">
                 {{__('Make Payment')}}
             </button>
         </div>

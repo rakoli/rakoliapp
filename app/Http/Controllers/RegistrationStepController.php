@@ -342,10 +342,14 @@ class RegistrationStepController extends Controller
     public function paySubscription(Request $request)
     {
         $user = $request->user();
+        $testingMethod = "";
+        if(env("APP_ENV") != "production"){
+            $testingMethod = ',test';
+        }
 
         $request->validate([
             'selected_plan_code' => 'required|exists:packages,code',
-            'payment_method' => 'required|in:'.implode(',', config('payments.accepted_payment_methods')),
+            'payment_method' => 'required|in:'.implode(',', config('payments.accepted_payment_methods')).$testingMethod,
         ]);
 
         $package = Package::where('code',$request->get('selected_plan_code'))->first();
