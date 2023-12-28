@@ -238,16 +238,36 @@ class RegistrationStepController extends Controller
 
         $nextStep = $request->get('next_step');
         $currentRegistrationStep = $request->user()->registration_step;
+        $user = $request->user();
 
-        if($currentRegistrationStep == 4 && $nextStep == 5){
-            $user = $request->user();
+        if($currentRegistrationStep == 1){
+            if($user->email_verified_at != null && $user->phone_verified_at != null){
+                $user->registration_step = $user->registration_step + 1;
+                $user->save();
+                $currentRegistrationStep = $currentRegistrationStep + 1;
+            }
+        }elseif($currentRegistrationStep == 2){
+            if($user->business_code != null){
+                $user->registration_step = $user->registration_step + 1;
+                $user->save();
+                $currentRegistrationStep = $currentRegistrationStep + 1;
+            }
+        }elseif($currentRegistrationStep == 3){
+            if($user->business->package_code != null){
+                $user->registration_step = $user->registration_step + 1;
+                $user->save();
+                $currentRegistrationStep = $currentRegistrationStep + 1;
+            }
+        }elseif($currentRegistrationStep == 4 && $nextStep == 5){
             $user->registration_step = 0;
             $user->save();
 
             setupSession($user);//Updating User session
 
-            $message = "Registration Complete: $user->fname $user->lname ({$user->business->business_name}) has completed registration with {$user->business->package->name}.";
-            SendTelegramNotification::dispatch($message);
+            if(env('APP_ENV') == 'production'){
+                $message = "Registration Complete: $user->fname $user->lname ({$user->business->business_name}) has completed registration with {$user->business->package->name}.";
+                SendTelegramNotification::dispatch($message);
+            }
 
             return [
                 'status' => 200,
@@ -314,7 +334,8 @@ class RegistrationStepController extends Controller
 
         return [
             'status' => 200,
-            'message' => 'updated'
+            'message' => 'updated',
+            'business' => $response
         ];
     }
 

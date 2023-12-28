@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\Business;
+use App\Models\Package;
 use App\Models\User;
 use App\Utils\Enums\UserTypeEnum;
 use App\Utils\VerifyOTP;
@@ -84,7 +86,7 @@ class RegistrationStepsTest extends TestCase
             'type'=>UserTypeEnum::AGENT->value,
             'registration_step'=>1,
             'email_otp_count'=>(VerifyOTP::$shouldLockCount+1),
-        ]);//Not dependent on user type
+        ]);
         $this->actingAs($user);
 
         //Locked when user has already sent request above limit
@@ -156,7 +158,7 @@ class RegistrationStepsTest extends TestCase
             'type'=>UserTypeEnum::AGENT->value,
             'registration_step'=>1,
             'phone_otp_count'=>(VerifyOTP::$shouldLockCount+1),
-        ]);//Not dependent on user type
+        ]);
         $this->actingAs($user);
 
         //Locked when user has already sent request above limit
@@ -209,7 +211,7 @@ class RegistrationStepsTest extends TestCase
             'registration_step'=>1,
             'email_verified_at'=>now(),
             'phone_verified_at'=>now(),
-        ]);//Not dependent on user type
+        ]);
         $this->actingAs($user);
 
         $newEmail = fake()->email;
@@ -222,6 +224,155 @@ class RegistrationStepsTest extends TestCase
             'email' => $user->email,
             'phone' => $user->phone,
         ]);
+    }
+
+    /** @test */
+    public function user_can_move_from_step_01_to_02_after_verifying_contact_info()
+    {
+        $user = User::factory()->create([
+            'type'=>UserTypeEnum::AGENT->value,
+            'registration_step'=>1,
+            'email_verified_at'=>now(),
+            'phone_verified_at'=>now(),
+        ]);
+        $this->actingAs($user);
+        $currentStep = $user->registration_step;
+
+        $response = $this->get(route('registration.step.confirmation',['next_step'=> 2]));
+
+        $response->assertJson([
+            'status' => 200,
+            'message' => 'continue',
+        ]);
+        $this->assertEquals(($currentStep+1),$user->registration_step);
+    }
+
+    /** @test */
+    public function user_registration_can_submit_business_details()
+    {
+        $user = User::factory()->create([
+            'type'=>UserTypeEnum::AGENT->value,
+            'registration_step'=>1,
+            'business_code'=>null
+        ]);
+        $this->actingAs($user);
+        $currentStep = $user->registration_step;
+
+        $business = Business::factory()->make();
+
+        $response = $this->get(route('update.business.details', [
+            'business_name'=> $business->business_name,
+            'reg_id'=>$business->reg_id,
+            'tax_id'=>$business->tax_id,
+            'reg_date'=>$business->reg_date
+        ]));
+
+        $this->assertDatabaseHas('users',[
+            'code' => $user->code,
+            'business_code' => $response['business']['code'],
+        ]);
+    }
+
+    /** @test */
+    public function user_registration_can_successfully_submit_business_details_using_business_name_only()
+    {
+        $user = User::factory()->create([
+            'type'=>UserTypeEnum::AGENT->value,
+            'registration_step'=>1,
+            'business_code'=>null
+        ]);
+        $this->actingAs($user);
+        $currentStep = $user->registration_step;
+
+        $business = Business::factory()->make();
+
+        $response = $this->get(route('update.business.details', [
+            'business_name'=> $business->business_name,
+        ]));
+
+        $this->assertDatabaseHas('users',[
+            'code' => $user->code,
+            'business_code' => $response['business']['code'],
+        ]);
+    }
+
+    /** @test */
+    public function user_can_move_from_step_02_to_03_after_entering_business_details()
+    {
+        $user = User::factory()->create([
+            'type'=>UserTypeEnum::AGENT->value,
+            'registration_step'=>2,
+            'business_code'=> Business::factory()->create()->code
+        ]);//Not dependent on user type
+        $this->actingAs($user);
+        $currentStep = $user->registration_step;
+
+        $response = $this->get(route('registration.step.confirmation',['next_step'=> 3]));
+
+        $response->assertJson([
+            'status' => 200,
+            'message' => 'continue',
+        ]);
+        $this->assertEquals(($currentStep+1),$user->registration_step);
+    }
+
+    /** @test */
+    public function user_can_see_all_available_packages_on_registration_step()
+    {
+        $business = Business::factory()->create();//Business with active package (package is required to move to next step)
+        $user = User::factory()->create([
+            'type'=>UserTypeEnum::AGENT->value,
+            'registration_step'=>3,
+            'business_code'=> $business->code
+        ]);
+        $this->actingAs($user);
+        $packages = Package::factory()->count(3)->create();
+
+        $response = $this->get(route('registration.agent'));
+        $response->assertStatus(200);
+        foreach ($packages as $package) {
+            $response->assertSee(strtoupper($package->name));
+        }
+    }
+
+    /** @test */
+    public function user_can_move_from_step_03_to_04_after_subscribing_to_a_package()
+    {
+        $business = Business::factory()->create();//Business with active package (package is required to move to next step)
+        $user = User::factory()->create([
+            'type'=>UserTypeEnum::AGENT->value,
+            'registration_step'=>3,
+            'business_code'=> $business->code
+        ]);
+        $this->actingAs($user);
+        $currentStep = $user->registration_step;
+
+        $response = $this->get(route('registration.step.confirmation',['next_step'=> 4]));
+
+        $response->assertJson([
+            'status' => 200,
+            'message' => 'continue',
+        ]);
+        $this->assertEquals(($currentStep+1),$user->registration_step);
+    }
+
+    /** @test */
+    public function user_can_auto_move_from_step_04_to_05_to_complete_registration_process()
+    {
+        $user = User::factory()->create([
+            'type'=>UserTypeEnum::AGENT->value,
+            'registration_step'=>4
+        ]);
+        $this->actingAs($user);
+        $currentStep = $user->registration_step;
+
+        $response = $this->get(route('registration.step.confirmation',['next_step'=> 5]));
+
+        $response->assertJson([
+            'status' => 200,
+            'message' => 'Complete',
+        ]);
+        $this->assertEquals(0,$user->registration_step);
     }
 
 }
