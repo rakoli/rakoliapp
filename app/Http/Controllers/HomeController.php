@@ -163,7 +163,7 @@ class HomeController extends Controller
 
             //Dashboard Statistics
             $stats['networks'] = Network::where('business_code',$user->business_code)->get()->count();
-            $stats['open_shifts'] = Shift::where('status',ShiftStatusEnum::OPEN)->get()->count();
+            $stats['open_shifts'] = Shift::where(['status'=>ShiftStatusEnum::OPEN,'business_code'=>$user->business_code])->get()->count();
 
             $cashBalance = Location::where('business_code',$user->business_code)->get()->sum('balance');
             $tillBalance = Network::where('business_code',$user->business_code)->get()->sum('balance');
