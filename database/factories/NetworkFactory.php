@@ -23,9 +23,20 @@ class NetworkFactory extends Factory
     public function definition(): array
     {
         $business = Business::where('type',BusinessTypeEnum::AGENCY->value)->first();
+        if($business == null){
+            $business = Business::factory()->create();
+        }
         $businessCode = $business->code;
-        $locations = Location::where('business_code',$businessCode)->get('code')->toArray();
-        $fsps = FinancialServiceProvider::where('country_code',$business->country_code)->get('code')->toArray();
+        $locationsModels = Location::where('business_code',$businessCode)->get('code');
+        if($locationsModels == null){
+            $locationsModels = Location::factory()->count(1)->create();
+        }
+        $locations = $locationsModels->toArray();
+        $fspModels = FinancialServiceProvider::where('country_code',$business->country_code)->get('code');
+        if($fspModels == null){
+            $fspModels = FinancialServiceProvider::factory()->count(1)->create();
+        }
+        $fsps = $fspModels->toArray();
         $selectedFsp = fake()->randomElement($fsps)['code'];
 
         return [

@@ -18,8 +18,11 @@ class LocationFactory extends Factory
      */
     public function definition(): array
     {
-        $businesses = Business::get(['code','business_name'])->toArray();
-        $selectedBusiness = fake()->randomElement($businesses);
+        $businesses = Business::get(['code','business_name']);
+        if($businesses == null){
+            $businesses = Business::factory()->count(1)->create();
+        }
+        $selectedBusiness = fake()->randomElement($businesses)->toArray();
 
         return [
             'business_code' => $selectedBusiness['code'],
