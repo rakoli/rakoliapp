@@ -11,6 +11,7 @@ use App\Models\ExchangeStat;
 use App\Models\ExchangeTransaction;
 use App\Models\InitiatedPayment;
 use App\Models\Location;
+use App\Models\Network;
 use App\Models\User;
 use App\Utils\Enums\BusinessStatusEnum;
 use App\Utils\Enums\ExchangePaymentMethodTypeEnum;
@@ -378,6 +379,38 @@ class ModelTest extends TestCase
             'business_code'=>$business->code,
             'status'=>InitiatedPaymentStatusEnum::INITIATED->value,
         ],$pendingPayment);
+
+    }
+
+    /** @test */
+    public function softs_deletes_business()
+    {
+        $business = Business::factory()->create();
+        $code = $business->code;
+
+        $business->delete();
+
+        $this->assertDatabaseHas('businesses',[
+            'code' => $code
+        ]);
+        $this->assertNotNull($business->deleted_at);
+        $this->assertEmpty(Business::get()->toArray());
+
+    }
+
+    /** @test */
+    public function softs_deletes_business_networks()
+    {
+        $networkTill = Network::factory()->create();
+        $code = $networkTill->code;
+
+        $networkTill->delete();
+
+        $this->assertDatabaseHas('networks',[
+            'code' => $code
+        ]);
+        $this->assertNotNull($networkTill->deleted_at);
+        $this->assertEmpty(Network::get()->toArray());
 
     }
 

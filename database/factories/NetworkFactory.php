@@ -28,13 +28,13 @@ class NetworkFactory extends Factory
         }
         $businessCode = $business->code;
         $locationsModels = Location::where('business_code',$businessCode)->get('code');
-        if($locationsModels == null){
+        if($locationsModels->isEmpty()){
             $locationsModels = Location::factory()->count(1)->create();
         }
         $locations = $locationsModels->toArray();
         $fspModels = FinancialServiceProvider::where('country_code',$business->country_code)->get('code');
-        if($fspModels == null){
-            $fspModels = FinancialServiceProvider::factory()->count(1)->create();
+        if($fspModels->isEmpty()){
+            $fspModels = FinancialServiceProvider::factory()->count(2)->create();
         }
         $fsps = $fspModels->toArray();
         $selectedFsp = fake()->randomElement($fsps)['code'];

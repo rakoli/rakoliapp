@@ -38,6 +38,7 @@ return new class extends Migration
             $table->string('balance_currency');
             $table->string('description')->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->unique(['location_code','fsp_code','agent_no'],'uniq_agent');
         });

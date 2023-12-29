@@ -40,6 +40,7 @@ return new class extends Migration
             $table->decimal('balance',12,2)->default(0); //Earning from referral and VAS
             $table->timestamp('last_seen')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::table('businesses', function (Blueprint $table){
