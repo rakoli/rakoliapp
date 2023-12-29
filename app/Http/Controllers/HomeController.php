@@ -19,6 +19,7 @@ use App\Utils\Enums\ExchangeTransactionStatusEnum;
 use App\Utils\Enums\ShiftStatusEnum;
 use App\Utils\Enums\TransactionCategoryEnum;
 use App\Utils\Enums\UserTypeEnum;
+use App\Utils\StatisticsService;
 use Carbon\Carbon;
 use DebugBar\DebugBar;
 use Illuminate\Http\Request;
@@ -161,36 +162,25 @@ class HomeController extends Controller
                 ->responsive(true)
                 ->setTableHeadClass('fw-semibold fs-6 text-gray-800 border-bottom border-gray-200');
 
+            $statisticsService = new StatisticsService(auth()->user());
             //Dashboard Statistics
-            $stats['networks'] = Network::where('business_code',$user->business_code)->get()->count();
-            $stats['open_shifts'] = Shift::where(['status'=>ShiftStatusEnum::OPEN,'business_code'=>$user->business_code])->get()->count();
+            $stats['networks'] = $statisticsService->noOfBusinessNetworks();
+            $stats['open_shifts'] = $statisticsService->noOfBusinessOpenShifts();
 
-            $cashBalance = Location::where('business_code',$user->business_code)->get()->sum('balance');
-            $tillBalance = Network::where('business_code',$user->business_code)->get()->sum('balance');
+            $cashBalance = $statisticsService->businessTotalCashBalance();
+            $tillBalance = $statisticsService->businessTotalTillBalance();
             $stats['cash_balance'] = number_format($cashBalance);
             $stats['till_balance'] = number_format($tillBalance);
             $stats['total_location_balance'] = number_format($cashBalance + $tillBalance);
 
-            $stats['awarded_vas'] = VasContract::where('agent_business_code', $user->business_code)->get()->count();
-            $stats['pending_exchange'] = ExchangeTransaction::where([
-                'trader_business_code' => $user->business_code,
-                'status' => ExchangeTransactionStatusEnum::OPEN
-            ])->orWhere(function (\Illuminate\Database\Eloquent\Builder $query) {
-                    $query->where('owner_business_code', auth()->user()->business_code)
-                        ->where('status', ExchangeTransactionStatusEnum::OPEN);
-                })->get()->count(); // where (trader_business_code AND status) OR (owner_business_code AND status)
+            $stats['awarded_vas'] = $statisticsService->agentNoOfAwardedVasContract();
+            $stats['pending_exchange'] =  $statisticsService->agentNoOfPendingExchange();// where (trader_business_code AND status) OR (owner_business_code AND status)
 
-            $stats['highlights']['income'] = number_format(Transaction::where([
-                'business_code' => $user->business_code,
-                'category' => TransactionCategoryEnum::INCOME,
-            ])->where('created_at','>=',now()->subDays(30))->get()->sum('amount'));
+            $stats['highlights']['income'] = number_format($statisticsService->businessIncomeTotalof30days());
 
-            $stats['highlights']['expense'] = number_format(Transaction::where([
-                'business_code' => $user->business_code,
-                'category' => TransactionCategoryEnum::EXPENSE,
-            ])->where('created_at','>=',now()->subDays(30))->get()->sum('amount'));
+            $stats['highlights']['expense'] = number_format($statisticsService->businessExpenseTotalof30days());
 
-            $stats['highlights']['referrals'] = number_format(Business::where('referral_business_code', $user->business_code)->get()->count());
+            $stats['highlights']['referrals'] = number_format($statisticsService->businessNoOfReferrals());
 
             return view('dashboard.agent',compact('dataTableHtml','stats'));
         }
