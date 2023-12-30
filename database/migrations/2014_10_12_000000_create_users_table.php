@@ -30,7 +30,7 @@ return new class extends Migration
             $table->string('phone')->index();
             $table->string('email')->nullable()->unique();
             $table->boolean('is_super_agent')->default(false);
-            $table->integer('status')->default(\App\Utils\Enums\UserStatusEnum::active);
+            $table->integer('status')->default(\App\Utils\Enums\UserStatusEnum::ACTIVE);
             $table->integer('registration_step')->default(1);
             $table->timestamp('last_login')->nullable();
             $table->timestamp('phone_verified_at')->nullable();
