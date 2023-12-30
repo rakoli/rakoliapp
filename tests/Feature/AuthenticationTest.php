@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Country;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use App\Utils\Enums\UserTypeEnum;
@@ -13,7 +14,7 @@ use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use WithFaker;
 
     protected $seeder = CountrySeeder::class;
 
@@ -97,10 +98,19 @@ class AuthenticationTest extends TestCase
     /** @test */
     public function guest_user_can_submit_agent_registration_form_without_errors()
     {
+        //Added Country to get dialing code
+        $countries = Country::get('dialing_code')->toArray();
+        $countryDialCode = null;
+        if(empty($countries)){
+            $countryDialCode = Country::factory()->create()->dialing_code;
+        }else{
+            $countryDialCode = fake()->randomElement($countries)['dialing_code'];
+        }
+
         $user = User::factory()->make(); // Create a fake user for form submission
 
         $response = $this->post(route('register'), [
-            'country_dial_code' => '+255',
+            'country_dial_code' => $countryDialCode,
             'fname' => $user->fname,
             'lname' => $user->lname,
             'phone' => $user->phone,
@@ -130,10 +140,19 @@ class AuthenticationTest extends TestCase
     /** @test */
     public function guest_user_can_submit_vas_registration_form_without_errors()
     {
+        //Added Country to get dialing code
+        $countries = Country::get('dialing_code')->toArray();
+        $countryDialCode = null;
+        if(empty($countries)){
+            $countryDialCode = Country::factory()->create()->dialing_code;
+        }else{
+            $countryDialCode = fake()->randomElement($countries)['dialing_code'];
+        }
+
         $user = User::factory()->make(); // Create a fake user for form submission
 
         $response = $this->post(route('register.vas.submit'), [
-            'country_dial_code' => '+255',
+            'country_dial_code' => $countryDialCode,
             'fname' => $user->fname,
             'lname' => $user->lname,
             'phone' => $user->phone,

@@ -35,7 +35,7 @@ class DashboardTest extends TestCase
         ]);
 
         $noOfTills = 5;
-        Network::factory()->count(2)->create();//To validate it is true
+        Network::factory()->count(2)->create(['business_code'=>Business::factory()->create()->code]);//To validate it is true
         Network::factory()->count($noOfTills)->create(['business_code'=>$user->business_code]);
 
         $stats = new StatisticsService($user);

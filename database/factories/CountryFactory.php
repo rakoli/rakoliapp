@@ -38,13 +38,11 @@ class CountryFactory extends Factory
             ],
         ]);
 
-        $randomifier = '_'.Str::random(4);
-        $randomifierNo = '_'.random_int(10,99).random_int(1,9).rand();
         return [
-            'code' => $country['code'].$randomifier,
-            'name' => $country['name'].$randomifier,
-            'currency' => $country['currency'].$randomifierNo,
-            'dialing_code' => $country['dialing_code'].$randomifierNo,
+            'code' => $country['code'],
+            'name' => $country['name'],
+            'currency' => $country['currency'],
+            'dialing_code' => $country['dialing_code'],
         ];
     }
 }

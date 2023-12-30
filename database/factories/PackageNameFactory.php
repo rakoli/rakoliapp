@@ -18,7 +18,7 @@ class PackageNameFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->randomElement(['growth', 'prosperity', 'elite']).'_'.Str::random(4)
+            'name' => fake()->randomElement(['growth', 'prosperity', 'elite'])
         ];
     }
 }

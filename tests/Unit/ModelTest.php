@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Models\Business;
+use App\Models\Country;
 use App\Models\ExchangeAds;
 use App\Models\ExchangeBusinessMethod;
 use App\Models\ExchangeFeedback;
@@ -33,15 +34,22 @@ class ModelTest extends TestCase
 {
     use WithFaker;
 
-    protected $seeder = CountrySeeder::class;
-
     /** @test */
     public function can_add_business_with_defaults()
     {
+        //Added Country because we are not using Factory to Add Business
+        $countries = Country::get('code')->toArray();
+        $countryCode = null;
+        if(empty($countries)){
+            $countryCode = Country::factory()->create()->code;
+        }else{
+            $countryCode = fake()->randomElement($countries)['code'];
+        }
+
         // Arrange
         $name = fake()->company;
         $data = [
-            'country_code' => "TZ",
+            'country_code' => $countryCode,
             'type' => UserTypeEnum::AGENT->value,
             'code'=> generateCode($name),
             'business_name' => $name,
@@ -69,10 +77,18 @@ class ModelTest extends TestCase
     /** @test */
     public function exchangead_can_check_allowed_user()
     {
+        //Added Country because we are not using Factory to Add Business
+        $countries = Country::get('code')->toArray();
+        $countryCode = null;
+        if(empty($countries)){
+            $countryCode = Country::factory()->create()->code;
+        }else{
+            $countryCode = fake()->randomElement($countries)['code'];
+        }
 
         $name = fake()->company;
         $data = [
-            'country_code' => "TZ",
+            'country_code' => $countryCode,
             'type' => UserTypeEnum::AGENT->value,
             'code'=> generateCode($name),
             'business_name' => $name,
@@ -93,10 +109,18 @@ class ModelTest extends TestCase
     /** @test */
     public function exchange_business_methods_can_check_allowed_user()
     {
+        //Added Country because we are not using Factory to Add Business
+        $countries = Country::get('code')->toArray();
+        $countryCode = null;
+        if(empty($countries)){
+            $countryCode = Country::factory()->create()->code;
+        }else{
+            $countryCode = fake()->randomElement($countries)['code'];
+        }
 
         $name = fake()->company;
         $data = [
-            'country_code' => "TZ",
+            'country_code' => $countryCode,
             'type' => UserTypeEnum::AGENT->value,
             'code'=> generateCode($name),
             'business_name' => $name,
@@ -125,9 +149,18 @@ class ModelTest extends TestCase
     /** @test */
     public function exchange_feedback_and_completion_are_autoupdated_and_returns_correct_values()
     {
+        //Added Country because we are not using Factory to Add Business
+        $countries = Country::get('code')->toArray();
+        $countryCode = null;
+        if(empty($countries)){
+            $countryCode = Country::factory()->create()->code;
+        }else{
+            $countryCode = fake()->randomElement($countries)['code'];
+        }
+
         $name = fake()->company;
         $data = [
-            'country_code' => "TZ",
+            'country_code' => $countryCode,
             'type' => UserTypeEnum::AGENT->value,
             'code'=> generateCode($name),
             'business_name' => $name,
@@ -171,10 +204,18 @@ class ModelTest extends TestCase
     /** @test */
     public function exchange_transaction_completion_and_cancel_statistics_updates_correctly()
     {
+        //Added Country because we are not using Factory to Add Business
+        $countries = Country::get('code')->toArray();
+        $countryCode = null;
+        if(empty($countries)){
+            $countryCode = Country::factory()->create()->code;
+        }else{
+            $countryCode = fake()->randomElement($countries)['code'];
+        }
 
         $name = fake()->company;
         $data = [
-            'country_code' => "TZ",
+            'country_code' => $countryCode,
             'type' => UserTypeEnum::AGENT->value,
             'code'=> generateCode($name),
             'business_name' => $name,
@@ -183,7 +224,7 @@ class ModelTest extends TestCase
 
         $tradeName = fake()->company;
         $traderData = [
-            'country_code' => "TZ",
+            'country_code' => $countryCode,
             'type' => UserTypeEnum::AGENT->value,
             'code'=> generateCode($tradeName),
             'business_name' => $tradeName,
@@ -228,10 +269,18 @@ class ModelTest extends TestCase
     /** @test */
     public function exchange_transaction_feedback_statistics_updates_correctly()
     {
+        //Added Country because we are not using Factory to Add Business
+        $countries = Country::get('code')->toArray();
+        $countryCode = null;
+        if(empty($countries)){
+            $countryCode = Country::factory()->create()->code;
+        }else{
+            $countryCode = fake()->randomElement($countries)['code'];
+        }
 
         $name = fake()->company;
         $data = [
-            'country_code' => "TZ",
+            'country_code' => $countryCode,
             'type' => UserTypeEnum::AGENT->value,
             'code'=> generateCode($name),
             'business_name' => $name,
@@ -241,7 +290,7 @@ class ModelTest extends TestCase
 
         $tradeName = fake()->company;
         $traderData = [
-            'country_code' => "TZ",
+            'country_code' => $countryCode,
             'type' => UserTypeEnum::AGENT->value,
             'code'=> generateCode($tradeName),
             'business_name' => $tradeName,
@@ -316,10 +365,18 @@ class ModelTest extends TestCase
     /** @test */
     public function exchange_transaction_can_check_allowed_user()
     {
+        //Added Country because we are not using Factory to Add Business
+        $countries = Country::get('code')->toArray();
+        $countryCode = null;
+        if(empty($countries)){
+            $countryCode = Country::factory()->create()->code;
+        }else{
+            $countryCode = fake()->randomElement($countries)['code'];
+        }
 
         $name = fake()->company;
         $data = [
-            'country_code' => "TZ",
+            'country_code' => $countryCode,
             'type' => UserTypeEnum::AGENT->value,
             'code'=> generateCode($name),
             'business_name' => $name,
@@ -329,7 +386,7 @@ class ModelTest extends TestCase
 
         $name = fake()->company;
         $data = [
-            'country_code' => "TZ",
+            'country_code' => $countryCode,
             'type' => UserTypeEnum::AGENT->value,
             'code'=> generateCode($name),
             'business_name' => $name,
@@ -356,9 +413,18 @@ class ModelTest extends TestCase
     /** @test */
     public function can_check_and_retrieve_business_pending_system_payments()
     {
+        //Added Country because we are not using Factory to Add Business
+        $countries = Country::get('code')->toArray();
+        $countryCode = null;
+        if(empty($countries)){
+            $countryCode = Country::factory()->create()->code;
+        }else{
+            $countryCode = fake()->randomElement($countries)['code'];
+        }
+
         $name = fake()->company;
         $data = [
-            'country_code' => "TZ",
+            'country_code' => $countryCode,
             'type' => UserTypeEnum::AGENT->value,
             'code'=> generateCode($name),
             'business_name' => $name,
