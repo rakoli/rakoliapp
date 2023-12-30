@@ -33,7 +33,6 @@ class DashboardTest extends TestCase
             'type'=>UserTypeEnum::AGENT->value,
             'business_code'=>Business::factory()->create()->code,
         ]);
-        $this->actingAs($user);
 
         $noOfTills = 5;
         Network::factory()->count(2)->create();//To validate it is true
@@ -51,7 +50,6 @@ class DashboardTest extends TestCase
             'type'=>UserTypeEnum::AGENT->value,
             'business_code'=>Business::factory()->create()->code,
         ]);
-        $this->actingAs($user);
 
         $noOfOpenShifts = 5;
         Shift::factory()->count(2)->create(['business_code'=>$user->business_code,'status'=>ShiftStatusEnum::CLOSED]);//To validate it is true
@@ -68,7 +66,6 @@ class DashboardTest extends TestCase
             'type'=>UserTypeEnum::AGENT->value,
             'business_code'=>Business::factory()->create()->code,
         ]);
-        $this->actingAs($user);
 
         $totalCashBalance = 30000;//10000*3
         Location::factory()->count(3)->create(['business_code'=>$user->business_code,'balance'=>10000]);
@@ -84,7 +81,6 @@ class DashboardTest extends TestCase
             'type'=>UserTypeEnum::AGENT->value,
             'business_code'=>Business::factory()->create()->code,
         ]);
-        $this->actingAs($user);
 
         $totalTillBalance = 40000;//10000*4
 
@@ -101,7 +97,6 @@ class DashboardTest extends TestCase
             'type'=>UserTypeEnum::AGENT->value,
             'business_code'=>Business::factory()->create()->code,
         ]);
-        $this->actingAs($user);
 
         $awardedVASContract = 3;
 
@@ -119,7 +114,7 @@ class DashboardTest extends TestCase
             'type'=>UserTypeEnum::AGENT->value,
             'business_code'=>Business::factory()->create()->code,
         ]);
-        $this->actingAs($user);
+        $this->actingAs($user);//Auth->User is needed on StatisticsService
 
         $traderOpenedExchanges = 3;
         $ownerOpenedExchanges = 4;
@@ -139,7 +134,6 @@ class DashboardTest extends TestCase
             'type'=>UserTypeEnum::AGENT->value,
             'business_code'=>Business::factory()->create()->code,
         ]);
-        $this->actingAs($user);
 
         $total30DaysIncome = 100000;//25000*4
         Transaction::factory()->count(4)->create([
@@ -166,7 +160,6 @@ class DashboardTest extends TestCase
             'type'=>UserTypeEnum::AGENT->value,
             'business_code'=>Business::factory()->create()->code,
         ]);
-        $this->actingAs($user);
 
         $total30DaysExpense = 125000;//25000*5
         Transaction::factory()->count(5)->create([
@@ -192,7 +185,6 @@ class DashboardTest extends TestCase
             'type'=>UserTypeEnum::AGENT->value,
             'business_code'=>Business::factory()->create()->code,
         ]);
-        $this->actingAs($user);
 
         $noOfReferrals = 3;
         Business::factory()->count($noOfReferrals)->create([
