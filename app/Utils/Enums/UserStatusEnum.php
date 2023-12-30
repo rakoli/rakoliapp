@@ -5,7 +5,7 @@ namespace App\Utils\Enums;
 
 enum UserStatusEnum : int
 {
-    case active = 1;
-    case inactive = 0;
-    case disabled = 2;
+    case ACTIVE = 1;
+    case BLOCKED = 0;
+    case DISABLED = 2;
 }
