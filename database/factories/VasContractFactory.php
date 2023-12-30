@@ -25,6 +25,9 @@ class VasContractFactory extends Factory
     public function definition(): array
     {
         $tasks = VasTask::get('code')->toarray();
+        if ($tasks == null){
+            $tasks = VasTask::factory()->count(2)->create()->toArray();
+        }
         return [
             'code' => Str::random(10),
             'country_code' => fake()->randomElement(['TZ', 'KE']),
