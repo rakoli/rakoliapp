@@ -10,6 +10,9 @@ use App\Models\Shift;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\VasContract;
+use App\Models\VasPayment;
+use App\Models\VasSubmission;
+use App\Models\VasTask;
 use App\Utils\Enums\BusinessTypeEnum;
 use App\Utils\Enums\ExchangeTransactionStatusEnum;
 use App\Utils\Enums\ShiftStatusEnum;
@@ -199,6 +202,74 @@ class DashboardTest extends TestCase
 
         $stats = new StatisticsService($user);
         $this->assertEquals($noOfReferrals,$stats->businessNoOfReferrals());
+    }
+
+    /** @test */
+    public function vas_total_no_of_services_tasks_posted()
+    {
+        $user = User::factory()->create([
+            'type'=>UserTypeEnum::VAS->value,
+            'business_code'=> Business::factory()->create()->code,
+        ]);
+
+        $noOfServices = 3;
+        VasTask::factory()->count($noOfServices)->create([
+            'vas_business_code'=>$user->business_code,
+        ]);
+
+        $stats = new StatisticsService($user);
+        $this->assertEquals($noOfServices,$stats->vas_total_services_posted());
+    }
+
+    /** @test */
+    public function vas_total_no_of_received_submission()
+    {
+        $user = User::factory()->create([
+            'type'=>UserTypeEnum::VAS->value,
+            'business_code'=> Business::factory()->create()->code,
+        ]);
+
+        $noOfSubmissions = 4;
+        $vasContract = VasContract::factory()->create(['vas_business_code'=>$user->business_code]);
+        VasSubmission::factory()->count($noOfSubmissions)->create([
+            'vas_contract_code'=>$vasContract->code,
+        ]);
+
+        $stats = new StatisticsService($user);
+        $this->assertEquals($noOfSubmissions,$stats->vas_total_received_submissions());
+    }
+
+
+    /** @test */
+    public function vas_total_no_of_users_in_business()
+    {
+        $noOfVasBusinessUsers = 3;
+        $business = Business::factory()->create(['type'=>BusinessTypeEnum::VAS]);
+        $user = User::factory()->count($noOfVasBusinessUsers)->create([
+            'type'=>UserTypeEnum::VAS->value,
+            'business_code'=> $business->code,
+        ]);
+
+        $stats = new StatisticsService($user->first());
+        $this->assertEquals($noOfVasBusinessUsers,$stats->vas_no_of_users_in_business(),'no of users in the business');
+    }
+
+    /** @test */
+    public function vas_total_payment_made_to_contractors()
+    {
+        $user = User::factory()->create([
+            'type'=>UserTypeEnum::VAS->value,
+            'business_code'=> Business::factory()->create()->code,
+        ]);
+
+        $totalVasPayments = 100000;//20000*5
+        VasPayment::factory()->count(5)->create([
+            'business_code'=>$user->business_code,
+            'amount'=>20000,
+        ]);
+
+        $stats = new StatisticsService($user);
+        $this->assertEquals($totalVasPayments,$stats->vas_total_payments_made());
     }
 
 }
