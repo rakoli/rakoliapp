@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Country;
 use App\Models\PackageName;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -19,7 +20,7 @@ class PackageFactory extends Factory
     public function definition(): array
     {
         return [
-            'country_code' => "TZ",
+            'country_code' => Country::factory()->create()->code,
             'name' => PackageName::factory()->create()->name,
             'code' => Str::random(7),
             'price' => fake()->numberBetween(50000, 100000),
