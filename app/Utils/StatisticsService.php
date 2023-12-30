@@ -8,7 +8,10 @@ use App\Models\Location;
 use App\Models\Network;
 use App\Models\Shift;
 use App\Models\Transaction;
+use App\Models\User;
 use App\Models\VasContract;
+use App\Models\VasPayment;
+use App\Models\VasTask;
 use App\Utils\Enums\ExchangeTransactionStatusEnum;
 use App\Utils\Enums\ShiftStatusEnum;
 use App\Utils\Enums\TransactionCategoryEnum;
@@ -77,6 +80,26 @@ class StatisticsService
     public function businessNoOfReferrals()
     {
         return Business::where('referral_business_code', $this->user->business_code)->get()->count();
+    }
+
+    public function vas_total_services_posted()
+    {
+        return VasTask::where('vas_business_code',$this->user->business_code)->count();
+    }
+
+    public function vas_total_received_submissions()
+    {
+        return Business::where('code',$this->user->business_code)->first()->agentsSubmissions()->count();
+    }
+
+    public function vas_no_of_users_in_business()
+    {
+        return User::where('business_code',$this->user->business_code)->count();
+    }
+
+    public function vas_total_payments_made()
+    {
+        return VasPayment::where('business_code',$this->user->business_code)->get()->sum('amount');
     }
 
 }

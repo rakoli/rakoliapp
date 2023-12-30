@@ -40,6 +40,7 @@ class HomeController extends Controller
         $dataTable = new DataTables();
         $builder = $dataTable->getHtmlBuilder();
         $user = auth()->user();
+        $statisticsService = new StatisticsService($user);
 
         //ADMIN DASHBOARD
         if ($user->type == UserTypeEnum::ADMIN->value){
@@ -114,10 +115,10 @@ class HomeController extends Controller
                 ->setTableHeadClass('fw-semibold fs-6 text-gray-800 border-bottom border-gray-200');
 
             //Dashboard Statistics
-            $stats['total_services'] = VasTask::where('vas_business_code',$user->business_code)->count();
-            $stats['total_submission'] = Business::where('code',$user->business_code)->first()->agentsSubmissions()->count();
-            $stats['users'] = User::where('business_code',$user->business_code)->count();
-            $stats['payments_made'] = VasPayment::where('business_code',$user->business_code)->get()->sum('amount');
+            $stats['total_services'] = $statisticsService->vas_total_services_posted();
+            $stats['total_submission'] = $statisticsService->vas_total_received_submissions();
+            $stats['users'] = $statisticsService->vas_no_of_users_in_business();
+            $stats['payments_made'] = $statisticsService->vas_total_payments_made();
 
             return view('dashboard.vas', compact('dataTableHtml','stats'));
         }
@@ -162,7 +163,6 @@ class HomeController extends Controller
                 ->responsive(true)
                 ->setTableHeadClass('fw-semibold fs-6 text-gray-800 border-bottom border-gray-200');
 
-            $statisticsService = new StatisticsService(auth()->user());
             //Dashboard Statistics
             $stats['networks'] = $statisticsService->noOfBusinessNetworks();
             $stats['open_shifts'] = $statisticsService->noOfBusinessOpenShifts();
