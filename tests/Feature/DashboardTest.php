@@ -3,10 +3,12 @@
 namespace Tests\Feature;
 
 use App\Models\Business;
+use App\Models\ExchangeAds;
 use App\Models\ExchangeTransaction;
 use App\Models\Location;
 use App\Models\Network;
 use App\Models\Shift;
+use App\Models\SystemIncome;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\VasContract;
@@ -14,10 +16,12 @@ use App\Models\VasPayment;
 use App\Models\VasSubmission;
 use App\Models\VasTask;
 use App\Utils\Enums\BusinessTypeEnum;
+use App\Utils\Enums\ExchangeStatusEnum;
 use App\Utils\Enums\ExchangeTransactionStatusEnum;
 use App\Utils\Enums\ShiftStatusEnum;
 use App\Utils\Enums\TransactionCategoryEnum;
 use App\Utils\Enums\UserTypeEnum;
+use App\Utils\Enums\VasTaskStatusEnum;
 use App\Utils\StatisticsService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -264,4 +268,75 @@ class DashboardTest extends TestCase
         $this->assertEquals($totalVasPayments,$stats->vas_total_payments_made());
     }
 
+    /** @test */
+    public function admin_total_no_of_business_in_system()
+    {
+        $user = User::factory()->create([
+            'type'=>UserTypeEnum::ADMIN->value,
+        ]);
+        $noOfBusiness = Business::get()->count();
+
+        $stats = new StatisticsService($user);
+        $this->assertEquals($noOfBusiness,$stats->admin_total_no_of_businesses());
+    }
+
+    /** @test */
+    public function admin_total_system_income()
+    {
+        $user = User::factory()->create([
+            'type'=>UserTypeEnum::ADMIN->value,
+        ]);
+        $totalSystemIncome = SystemIncome::where('status', \App\Utils\Enums\SystemIncomeStatusEnum::RECEIVED->value)->get()->sum('amount');
+
+        $stats = new StatisticsService($user);
+        $this->assertEquals($totalSystemIncome,$stats->admin_total_system_income());
+    }
+
+    /** @test */
+    public function admin_no_of_active_exchange_listing()
+    {
+        $user = User::factory()->create([
+            'type'=>UserTypeEnum::ADMIN->value,
+        ]);
+        $data = ExchangeAds::where('status',ExchangeStatusEnum::ACTIVE->value)->count();
+
+        $stats = new StatisticsService($user);
+        $this->assertEquals($data,$stats->admin_no_of_exchange_listing());
+    }
+
+    /** @test */
+    public function admin_no_of_active_vas_listing()
+    {
+        $user = User::factory()->create([
+            'type'=>UserTypeEnum::ADMIN->value,
+        ]);
+        $data = VasTask::where('status',VasTaskStatusEnum::ACTIVE->value)->count();
+
+        $stats = new StatisticsService($user);
+        $this->assertEquals($data,$stats->admin_no_of_vas_listing());
+    }
+
+    /** @test */
+    public function admin_no_business_with_active_subscription()
+    {
+        $user = User::factory()->create([
+            'type'=>UserTypeEnum::ADMIN->value,
+        ]);
+        $data = Business::whereNotNull('package_code')->count();
+
+        $stats = new StatisticsService($user);
+        $this->assertEquals($data,$stats->admin_no_business_with_active_subscription());
+    }
+
+    /** @test */
+    public function admin_no_users_in_system()
+    {
+        $user = User::factory()->create([
+            'type'=>UserTypeEnum::ADMIN->value,
+        ]);
+        $data = User::count();
+
+        $stats = new StatisticsService($user);
+        $this->assertEquals($data,$stats->admin_no_users_in_system());
+    }
 }
