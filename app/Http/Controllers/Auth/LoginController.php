@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
+use App\Utils\Enums\UserStatusEnum;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -60,8 +61,15 @@ class LoginController extends Controller
 
     public function authenticated(Request $request, $user)
     {
-        setupSession($user);
+        if ($user->status == UserStatusEnum::BLOCKED){
+            $locale = Session::get('locale');
+            Auth::logout();
+            Session::flush();
+            Session::put('locale', $locale);
+            return 0;
+        }
 
+        setupSession($user);
         return 1;
     }
 
