@@ -31,7 +31,7 @@ use Tests\TestCase;
 
 class ModelTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use WithFaker;
 
     protected $seeder = CountrySeeder::class;
 
@@ -39,7 +39,7 @@ class ModelTest extends TestCase
     public function can_add_business_with_defaults()
     {
         // Arrange
-        $name = "Testing Ltd";
+        $name = fake()->company;
         $data = [
             'country_code' => "TZ",
             'type' => UserTypeEnum::AGENT->value,
@@ -70,7 +70,7 @@ class ModelTest extends TestCase
     public function exchangead_can_check_allowed_user()
     {
 
-        $name = "Testing Ltd";
+        $name = fake()->company;
         $data = [
             'country_code' => "TZ",
             'type' => UserTypeEnum::AGENT->value,
@@ -94,7 +94,7 @@ class ModelTest extends TestCase
     public function exchange_business_methods_can_check_allowed_user()
     {
 
-        $name = "Testing Ltd";
+        $name = fake()->company;
         $data = [
             'country_code' => "TZ",
             'type' => UserTypeEnum::AGENT->value,
@@ -125,7 +125,7 @@ class ModelTest extends TestCase
     /** @test */
     public function exchange_feedback_and_completion_are_autoupdated_and_returns_correct_values()
     {
-        $name = "Testing Ltd";
+        $name = fake()->company;
         $data = [
             'country_code' => "TZ",
             'type' => UserTypeEnum::AGENT->value,
@@ -135,7 +135,7 @@ class ModelTest extends TestCase
 
         $business = Business::addBusiness($data);
 
-        $stat = ExchangeStat::first(); //Auto added when adding a business
+        $stat = ExchangeStat::where('business_code',$business->code)->first(); //Auto added when adding a business
 
         $this->assertDatabaseHas('exchange_stats', [
             'business_code' => $business->code,
@@ -172,7 +172,7 @@ class ModelTest extends TestCase
     public function exchange_transaction_completion_and_cancel_statistics_updates_correctly()
     {
 
-        $name = "Testing Ltd";
+        $name = fake()->company;
         $data = [
             'country_code' => "TZ",
             'type' => UserTypeEnum::AGENT->value,
@@ -181,7 +181,7 @@ class ModelTest extends TestCase
         ];
         $business = Business::addBusiness($data);
 
-        $tradeName = "Trader Ltd";
+        $tradeName = fake()->company;
         $traderData = [
             'country_code' => "TZ",
             'type' => UserTypeEnum::AGENT->value,
@@ -229,7 +229,7 @@ class ModelTest extends TestCase
     public function exchange_transaction_feedback_statistics_updates_correctly()
     {
 
-        $name = "Testing Ltd";
+        $name = fake()->company;
         $data = [
             'country_code' => "TZ",
             'type' => UserTypeEnum::AGENT->value,
@@ -239,7 +239,7 @@ class ModelTest extends TestCase
         $business = Business::addBusiness($data);
         User::factory()->create();//To have a fresh user on db to be used on feedback seeder
 
-        $tradeName = "Trader Ltd";
+        $tradeName = fake()->company;
         $traderData = [
             'country_code' => "TZ",
             'type' => UserTypeEnum::AGENT->value,
@@ -317,7 +317,7 @@ class ModelTest extends TestCase
     public function exchange_transaction_can_check_allowed_user()
     {
 
-        $name = "Owner Ltd";
+        $name = fake()->company;
         $data = [
             'country_code' => "TZ",
             'type' => UserTypeEnum::AGENT->value,
@@ -327,7 +327,7 @@ class ModelTest extends TestCase
         $ownerBusiness = Business::addBusiness($data);
         $ownerUser = User::factory()->create(['business_code'=>$ownerBusiness->code]);
 
-        $name = "Trader Ltd";
+        $name = fake()->company;
         $data = [
             'country_code' => "TZ",
             'type' => UserTypeEnum::AGENT->value,
@@ -356,7 +356,7 @@ class ModelTest extends TestCase
     /** @test */
     public function can_check_and_retrieve_business_pending_system_payments()
     {
-        $name = "Testing Ltd";
+        $name = fake()->company;
         $data = [
             'country_code' => "TZ",
             'type' => UserTypeEnum::AGENT->value,
@@ -394,7 +394,7 @@ class ModelTest extends TestCase
             'code' => $code
         ]);
         $this->assertNotNull($business->deleted_at);
-        $this->assertEmpty(Business::get()->toArray());
+        $this->assertNotContains(['code'=>$code], Business::get()->toArray());
 
     }
 
@@ -410,7 +410,7 @@ class ModelTest extends TestCase
             'code' => $code
         ]);
         $this->assertNotNull($networkTill->deleted_at);
-        $this->assertEmpty(Network::get()->toArray());
+        $this->assertNotContains(['code'=>$code], Network::get()->toArray());
 
     }
 

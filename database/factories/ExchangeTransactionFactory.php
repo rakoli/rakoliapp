@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Business;
 use App\Models\ExchangeAds;
+use App\Models\ExchangePaymentMethod;
 use App\Models\FinancialServiceProvider;
 use App\Models\Location;
 use App\Models\User;
@@ -29,7 +30,14 @@ class ExchangeTransactionFactory extends Factory
         $fsps = FinancialServiceProvider::get(['code','name'])->toArray();
         $exchangeAds = fake()->randomElement(ExchangeAds::get(['business_code','code'])->toArray());
         $exchange = ExchangeAds::where('code', $exchangeAds['code'])->first();
+        if($exchange == null){
+            $exchange = ExchangeAds::factory()->has(ExchangePaymentMethod::factory(),'exchange_payment_methods')->create();
+        }
         $viaMethod = fake()->randomElement($exchange->exchange_payment_methods->toArray());
+        if($viaMethod == null){
+            $viaMethod = fake()->randomElement(ExchangePaymentMethod::factory()->count(1)->create(['exchange_ads_code'=>$exchange->code])->toArray());
+        }
+
         $traderBusiness = fake()->randomElement(Business::where('code','!=',$exchangeAds['business_code'])->get(['code'])->toArray());
 
         $trader_target_method = 'cash';
