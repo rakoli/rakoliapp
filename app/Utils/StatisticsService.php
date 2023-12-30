@@ -3,10 +3,12 @@
 namespace App\Utils;
 
 use App\Models\Business;
+use App\Models\ExchangeAds;
 use App\Models\ExchangeTransaction;
 use App\Models\Location;
 use App\Models\Network;
 use App\Models\Shift;
+use App\Models\SystemIncome;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\VasContract;
@@ -100,6 +102,36 @@ class StatisticsService
     public function vas_total_payments_made()
     {
         return VasPayment::where('business_code',$this->user->business_code)->get()->sum('amount');
+    }
+
+    public function admin_total_no_of_businesses()
+    {
+        return Business::get()->count();
+    }
+
+    public function admin_total_system_income()
+    {
+        return SystemIncome::where('status', \App\Utils\Enums\SystemIncomeStatusEnum::RECEIVED->value)->get()->sum('amount');
+    }
+
+    public function admin_no_of_exchange_listing()
+    {
+        return ExchangeAds::count();
+    }
+
+    public function admin_no_of_vas_listing()
+    {
+        return VasTask::count();
+    }
+
+    public function admin_no_business_with_active_subscription()
+    {
+        return Business::whereNotNull('package_code')->count();
+    }
+
+    public function admin_no_users_in_system()
+    {
+        return User::count();
     }
 
 }

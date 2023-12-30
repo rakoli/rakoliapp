@@ -72,13 +72,12 @@ class HomeController extends Controller
                 ->setTableHeadClass('fw-semibold fs-6 text-gray-800 border-bottom border-gray-200');
 
             //Dashboard Statistics
-            $businesses = Business::get();
-            $stats['business'] = $businesses->count();
-            $stats['total_income'] = SystemIncome::where('status', \App\Utils\Enums\SystemIncomeStatusEnum::RECEIVED->value)->get()->sum('amount');
-            $stats['exchange_listings'] = ExchangeAds::count();
-            $stats['vas_listings'] = VasTask::count();
-            $stats['active_subscription'] = $businesses->whereNotNull('package_code')->count();
-            $stats['users'] = User::count();
+            $stats['business'] = $statisticsService->admin_total_no_of_businesses();
+            $stats['total_income'] = $statisticsService->admin_total_system_income();
+            $stats['exchange_listings'] = $statisticsService->admin_no_of_exchange_listing();
+            $stats['vas_listings'] = $statisticsService->admin_no_of_vas_listing();
+            $stats['active_subscription'] = $statisticsService->admin_no_business_with_active_subscription();
+            $stats['users'] = $statisticsService->admin_no_users_in_system();
 
             return view('dashboard.admin', compact('dataTableHtml','stats'));
         }
