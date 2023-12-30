@@ -3,12 +3,14 @@
 namespace Database\Factories;
 
 use App\Models\Business;
+use App\Models\Country;
 use App\Models\ExchangeAds;
 use App\Models\Location;
 use App\Models\Package;
 use App\Utils\Enums\ExchangeStatusEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use function PHPUnit\Framework\isEmpty;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ExchangeAds>
@@ -23,12 +25,33 @@ class ExchangeAdsFactory extends Factory
      */
     public function definition(): array
     {
+        $countries = Country::get('code')->toArray();
+        $countryCode = null;
+        if(isEmpty($countries)){
+            $countryCode = Country::factory()->create()->code;
+        }else{
+            $countryCode = fake()->randomElement($countries)['code'];
+        }
+
         $businesses = Business::get('code')->toArray();
+        $businessCode = null;
+        if(isEmpty($businesses)){
+            $businessCode = Business::factory()->create()->code;
+        }else{
+            $businessCode = fake()->randomElement($businesses)['code'];
+        }
+
+        $locationCode = Location::where('business_code',$businessCode)->first();
+        if($locationCode == null){
+            $locationCode = Location::factory()->create(['business_code'=>$businessCode])->code;
+        }else{
+            $locationCode = $locationCode->code;
+        }
 
         return [
-            'country_code' => fake()->randomElement(['TZ', 'KE']),
-            'business_code' => fake()->randomElement($businesses)['code'],
-            'location_code' => Location::first()->code,
+            'country_code' => $countryCode,
+            'business_code' => $businessCode,
+            'location_code' => $locationCode,
             'code' => Str::random(10),
             'min_amount' => fake()->numberBetween(50000, 100000),
             'max_amount' => fake()->numberBetween(1000000, 5000000),

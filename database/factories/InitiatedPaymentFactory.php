@@ -3,11 +3,13 @@
 namespace Database\Factories;
 
 use App\Models\Business;
+use App\Models\Country;
 use App\Utils\Enums\InitiatedPaymentStatusEnum;
 use App\Utils\Enums\SystemIncomeCategoryEnum;
 use App\Utils\Enums\SystemIncomeStatusEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use function PHPUnit\Framework\isEmpty;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\InitiatedPayment>
@@ -21,11 +23,25 @@ class InitiatedPaymentFactory extends Factory
      */
     public function definition(): array
     {
-        $business = Business::get('code')->toArray();
+        $countries = Country::get('code')->toArray();
+        $countryCode = null;
+        if(isEmpty($countries)){
+            $countryCode = Country::factory()->create()->code;
+        }else{
+            $countryCode = fake()->randomElement($countries)['code'];
+        }
+
+        $businesses = Business::get('code')->toArray();
+        $businessCode = null;
+        if(isEmpty($businesses)){
+            $businessCode = Business::factory()->create()->code;
+        }else{
+            $businessCode = fake()->randomElement($businesses)['code'];
+        }
 
         return [
-            'country_code' => fake()->randomElement(['TZ', 'KE']),
-            'business_code' => fake()->randomElement($business),
+            'country_code' => $countryCode,
+            'business_code' => $businessCode,
             'code' => Str::random(4),
             'channel' => fake()->randomElement(['dpo', 'pesapal','selcom']),
             'income_category' => fake()->randomElement(SystemIncomeCategoryEnum::class),

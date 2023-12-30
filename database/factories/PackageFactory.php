@@ -6,6 +6,7 @@ use App\Models\Country;
 use App\Models\PackageName;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use function PHPUnit\Framework\isEmpty;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Package>
@@ -19,8 +20,16 @@ class PackageFactory extends Factory
      */
     public function definition(): array
     {
+        $countries = Country::get('code')->toArray();
+        $countryCode = null;
+        if(isEmpty($countries)){
+            $countryCode = Country::factory()->create()->code;
+        }else{
+            $countryCode = fake()->randomElement($countries)['code'];
+        }
+
         return [
-            'country_code' => Country::factory()->create()->code,
+            'country_code' => $countryCode,
             'name' => PackageName::factory()->create()->name,
             'code' => Str::random(7),
             'price' => fake()->numberBetween(50000, 100000),

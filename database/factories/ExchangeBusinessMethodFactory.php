@@ -6,6 +6,7 @@ use App\Models\Business;
 use App\Models\FinancialServiceProvider;
 use App\Utils\Enums\ExchangePaymentMethodTypeEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use function PHPUnit\Framework\isEmpty;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ExchangeBusinessMethod>
@@ -19,13 +20,20 @@ class ExchangeBusinessMethodFactory extends Factory
      */
     public function definition(): array
     {
-        $business = Business::get('code')->toArray();
+        $businesses = Business::get('code')->toArray();
+        $businessCode = null;
+        if(isEmpty($businesses)){
+            $businessCode = Business::factory()->create()->code;
+        }else{
+            $businessCode = fake()->randomElement($businesses)['code'];
+        }
+
         $fsps = FinancialServiceProvider::get('name')->toArray();
         array_push($fsps, ["name"=>"cash"]);
         $name = fake()->randomElement($fsps)['name'];
 
         return [
-            'business_code' => fake()->randomElement($business),
+            'business_code' => $businessCode,
             'nickname' => $name,
             'method_name' => $name,
             'account_number' => fake()->randomNumber(8),

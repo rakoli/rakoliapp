@@ -28,17 +28,29 @@ class ExchangeTransactionFactory extends Factory
     public function definition(): array
     {
         $fsps = FinancialServiceProvider::get(['code','name'])->toArray();
+        array_push($fsps, ["name"=>"cash","code"=>"cash"]);
+
         $exchangeAds = fake()->randomElement(ExchangeAds::get(['business_code','code'])->toArray());
-        $exchange = ExchangeAds::where('code', $exchangeAds['code'])->first();
-        if($exchange == null){
+        $exchange = null;
+        if(isEmpty($exchangeAds)){
             $exchange = ExchangeAds::factory()->has(ExchangePaymentMethod::factory(),'exchange_payment_methods')->create();
+            $exchangeAds = $exchange->toArray();
+        }else{
+            $exchange = ExchangeAds::where('code', $exchangeAds['code'])->with('exchange_payment_methods')->first();
         }
+
         $viaMethod = fake()->randomElement($exchange->exchange_payment_methods->toArray());
-        if($viaMethod == null){
+        if(isEmpty($viaMethod)){
             $viaMethod = fake()->randomElement(ExchangePaymentMethod::factory()->count(1)->create(['exchange_ads_code'=>$exchange->code])->toArray());
         }
 
-        $traderBusiness = fake()->randomElement(Business::where('code','!=',$exchangeAds['business_code'])->get(['code'])->toArray());
+        $traderBusinessArray = Business::where('code','!=',$exchangeAds['business_code'])->get(['code']);
+        $traderBusinessCode = null;
+        if(isEmpty($traderBusinessArray)){
+            $traderBusinessCode = Business::factory()->create()->code;
+        }else{
+            $traderBusinessCode = fake()->randomElement($traderBusinessArray->toArray())['code'];
+        }
 
         $trader_target_method = 'cash';
         if(!isEmpty($fsps)){
@@ -48,7 +60,7 @@ class ExchangeTransactionFactory extends Factory
         return [
             'exchange_ads_code' => $exchangeAds['code'],
             'owner_business_code' => $exchangeAds['business_code'],
-            'trader_business_code' => $traderBusiness['code'],
+            'trader_business_code' => $traderBusinessCode,
             'trader_action_type' => fake()->randomElement(ExchangeTransactionTypeEnum::class),
             'trader_target_method' => $trader_target_method,
             'trader_action_via_method' => $viaMethod['method_name'],

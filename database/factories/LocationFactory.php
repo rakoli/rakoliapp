@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Business;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use function PHPUnit\Framework\isEmpty;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Location>
@@ -18,11 +19,13 @@ class LocationFactory extends Factory
      */
     public function definition(): array
     {
-        $businesses = Business::get(['code','business_name']);
-        if($businesses == null){
-            $businesses = Business::factory()->count(1)->create();
+        $businesses = Business::get('code')->toArray();
+        $selectedBusiness = null;
+        if(isEmpty($businesses)){
+            $selectedBusiness = Business::factory()->create()->toArray();
+        }else{
+            $selectedBusiness = fake()->randomElement($businesses);
         }
-        $selectedBusiness = fake()->randomElement($businesses)->toArray();
 
         return [
             'business_code' => $selectedBusiness['code'],

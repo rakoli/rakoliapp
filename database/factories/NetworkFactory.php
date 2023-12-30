@@ -9,6 +9,7 @@ use App\Utils\Enums\BusinessTypeEnum;
 use App\Utils\Enums\TransactionTypeEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use function PHPUnit\Framework\isEmpty;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Network>
@@ -22,16 +23,23 @@ class NetworkFactory extends Factory
      */
     public function definition(): array
     {
-        $business = Business::where('type',BusinessTypeEnum::AGENCY->value)->first();
-        if($business == null){
-            $business = Business::factory()->create();
+        $businesses = Business::get('code')->toArray();
+        $businessCode = null;
+        if(isEmpty($businesses)){
+            $businessCode = Business::factory()->create()->code;
+        }else{
+            $businessCode = fake()->randomElement($businesses)['code'];
         }
-        $businessCode = $business->code;
+        $business = Business::where('code',$businessCode)->first();
+
+
         $locationsModels = Location::where('business_code',$businessCode)->get('code');
         if($locationsModels->isEmpty()){
             $locationsModels = Location::factory()->count(1)->create();
         }
         $locations = $locationsModels->toArray();
+
+
         $fspModels = FinancialServiceProvider::where('country_code',$business->country_code)->get('code');
         if($fspModels->isEmpty()){
             $fspModels = FinancialServiceProvider::factory()->count(2)->create();

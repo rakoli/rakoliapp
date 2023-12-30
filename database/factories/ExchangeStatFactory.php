@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Business;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use function PHPUnit\Framework\isEmpty;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ExchangeStat>
@@ -18,9 +19,15 @@ class ExchangeStatFactory extends Factory
     public function definition(): array
     {
         $businesses = Business::get('code')->toArray();
+        $businessCode = null;
+        if(isEmpty($businesses)){
+            $businessCode = Business::factory()->create()->code;
+        }else{
+            $businessCode = fake()->randomElement($businesses)['code'];
+        }
 
         return [
-            'business_code' => fake()->randomElement($businesses)['code'],
+            'business_code' => $businessCode,
             'no_of_trades_completed' => fake()->numberBetween(50, 100),
             'no_of_trades_cancelled' => fake()->numberBetween(1, 5),
             'no_of_positive_feedback' => fake()->numberBetween(85, 100),

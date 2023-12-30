@@ -22,14 +22,12 @@ class VasSubmissionFactory extends Factory
      */
     public function definition(): array
     {
-        $businessCode = Business::where('type',BusinessTypeEnum::VAS->value)->first()->code;
-        $contracts = VasContract::where('vas_business_code',$businessCode)->get('code')->toArray();
-        $selectedContractCode = fake()->randomElement($contracts)['code'];
-        $selectedContract = VasContract::where('code',$selectedContractCode)->first();
-        $submitter = User::where('business_code',$selectedContract->agent_business_code)->first();
-        $reviewer = User::where('business_code',$selectedContract->vas_business_code)->first();
+        $selectedContract = VasContract::factory()->create();
+        $submitter = User::factory()->create(['business_code' => $selectedContract->agent_business_code]);
+        $reviewer = User::factory()->create(['business_code' => $selectedContract->vas_business_code]);
+
         return [
-            'vas_contract_code' => $selectedContractCode,
+            'vas_contract_code' => $selectedContract->code,
             'submitter_user_code' => $submitter->code,
             'reviewer_user_code' => fake()->randomElement([$reviewer->code,null]),
             'reviewed_at' => fake()->randomElement([now()->subHours(random_int(1,18)), null]),

@@ -3,10 +3,12 @@
 namespace Database\Factories;
 
 use App\Models\Business;
+use App\Models\Country;
 use App\Utils\Enums\UserTypeEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use function PHPUnit\Framework\isEmpty;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -16,6 +18,14 @@ class UserFactory extends Factory
 
     public function definition(): array
     {
+        $countries = Country::get('code')->toArray();
+        $countryCode = null;
+        if(isEmpty($countries)){
+            $countryCode = Country::factory()->create()->code;
+        }else{
+            $countryCode = fake()->randomElement($countries)['code'];
+        }
+
         $businesses = Business::get('code')->toArray();
         $businessCode = null;
         if($businesses == null){
@@ -28,7 +38,7 @@ class UserFactory extends Factory
         $name = "$fname $lname";
 
         return [
-            'country_code' => 'TZ',
+            'country_code' => $countryCode,
             'fname' => $fname,
             'lname' => $lname,
             'phone' => '255766'.fake()->numerify("######"),
