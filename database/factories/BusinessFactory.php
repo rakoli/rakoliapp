@@ -9,7 +9,6 @@ use App\Utils\Enums\BusinessStatusEnum;
 use App\Utils\Enums\BusinessTypeEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use function PHPUnit\Framework\isEmpty;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Business>
@@ -33,7 +32,7 @@ class BusinessFactory extends Factory
 
         $packages = Package::get('code')->toArray();
         $packageCode = null;
-        if(isEmpty($packages)){
+        if(empty($packages)){
             $packageCode = Package::factory()->create()->code;
         }else{
             $packageCode = fake()->randomElement($packages)['code'];
@@ -41,7 +40,7 @@ class BusinessFactory extends Factory
 
         $countries = Country::get('code')->toArray();
         $countryCode = null;
-        if(isEmpty($countries)){
+        if(empty($countries)){
             $countryCode = Country::factory()->create()->code;
         }else{
             $countryCode = fake()->randomElement($countries)['code'];

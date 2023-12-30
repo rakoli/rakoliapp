@@ -10,7 +10,6 @@ use App\Utils\Enums\BusinessTypeEnum;
 use App\Utils\Enums\TaskTypeEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use function PHPUnit\Framework\isEmpty;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\VasContract>
@@ -23,7 +22,7 @@ class VasContractFactory extends Factory
     {
         $countries = Country::get('code')->toArray();
         $countryCode = null;
-        if(isEmpty($countries)){
+        if(empty($countries)){
             $countryCode = Country::factory()->create()->code;
         }else{
             $countryCode = fake()->randomElement($countries)['code'];
@@ -31,7 +30,7 @@ class VasContractFactory extends Factory
 
         $vasBusinesses = Business::where('type',\App\Utils\Enums\BusinessTypeEnum::VAS->value)->get('code')->toArray();
         $vasBusinessCode = null;
-        if(isEmpty($vasBusinesses)){
+        if(empty($vasBusinesses)){
             $vasBusinessCode = Business::factory(['type'=>\App\Utils\Enums\BusinessTypeEnum::VAS->value])->create()->code;
         }else{
             $vasBusinessCode = fake()->randomElement($vasBusinesses)['code'];
@@ -39,7 +38,7 @@ class VasContractFactory extends Factory
 
         $agentBusinessArray = Business::where('code','!=',$vasBusinessCode)->where('type',\App\Utils\Enums\BusinessTypeEnum::AGENCY->value)->get(['code']);
         $agentBusinessCode = null;
-        if(isEmpty($agentBusinessArray)){
+        if(empty($agentBusinessArray)){
             $agentBusinessCode = Business::factory(['type'=>\App\Utils\Enums\BusinessTypeEnum::AGENCY->value])->create()->code;
         }else{
             $agentBusinessCode = fake()->randomElement($agentBusinessArray->toArray())['code'];

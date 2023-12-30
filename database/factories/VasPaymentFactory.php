@@ -9,7 +9,6 @@ use App\Models\VasPayment;
 use App\Utils\Enums\BusinessTypeEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use function PHPUnit\Framework\isEmpty;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\VasPayment>
@@ -27,7 +26,7 @@ class VasPaymentFactory extends Factory
     {
         $businesses = Business::where('type',\App\Utils\Enums\BusinessTypeEnum::VAS->value)->get('code')->toArray();
         $businessCode = null;
-        if(isEmpty($businesses)){
+        if(empty($businesses)){
             $businessCode = Business::factory()->create(['type'=>\App\Utils\Enums\BusinessTypeEnum::VAS->value])->code;
         }else{
             $businessCode = fake()->randomElement($businesses)['code'];
@@ -35,7 +34,7 @@ class VasPaymentFactory extends Factory
 
         $contracts = VasContract::where('vas_business_code',$businessCode)->get('code')->toArray();
         $contractCode = null;
-        if(isEmpty($contracts)){
+        if(empty($contracts)){
             $contractCode = VasContract::factory()->create(['vas_business_code'=>$businessCode])->code;
         }else{
             $contractCode = fake()->randomElement($contracts)['code'];
@@ -43,7 +42,7 @@ class VasPaymentFactory extends Factory
 
         $initiatorUsers = User::where('business_code',$businessCode)->get()->toArray();
         $initiatorUserCode = null;
-        if(isEmpty($initiatorUsers)){
+        if(empty($initiatorUsers)){
             $initiatorUserCode = User::factory()->create(['business_code'=>$businessCode])->code;
         }else{
             $initiatorUserCode = fake()->randomElement($initiatorUsers)['code'];
@@ -52,7 +51,7 @@ class VasPaymentFactory extends Factory
 
         $payeeBusinessArray = Business::where('code','!=',$businessCode)->where('type',\App\Utils\Enums\BusinessTypeEnum::AGENCY->value)->get(['code']);
         $payeeBusinessCode = null;
-        if(isEmpty($payeeBusinessArray)){
+        if(empty($payeeBusinessArray)){
             $payeeBusinessCode = Business::factory(['type'=>\App\Utils\Enums\BusinessTypeEnum::AGENCY->value])->create()->code;
         }else{
             $payeeBusinessCode = fake()->randomElement($payeeBusinessArray->toArray())['code'];

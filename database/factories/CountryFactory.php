@@ -38,7 +38,7 @@ class CountryFactory extends Factory
             ],
         ]);
 
-        $randomifier = '_'.Str::random(3);
+        $randomifier = '_'.Str::random(4);
         $randomifierNo = '_'.random_int(10,99).random_int(1,9).rand();
         return [
             'code' => $country['code'].$randomifier,

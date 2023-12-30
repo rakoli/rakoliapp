@@ -10,7 +10,6 @@ use App\Models\Package;
 use App\Utils\Enums\ExchangeStatusEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use function PHPUnit\Framework\isEmpty;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ExchangeAds>
@@ -27,7 +26,7 @@ class ExchangeAdsFactory extends Factory
     {
         $countries = Country::get('code')->toArray();
         $countryCode = null;
-        if(isEmpty($countries)){
+        if(empty($countries)){
             $countryCode = Country::factory()->create()->code;
         }else{
             $countryCode = fake()->randomElement($countries)['code'];
@@ -35,7 +34,7 @@ class ExchangeAdsFactory extends Factory
 
         $businesses = Business::get('code')->toArray();
         $businessCode = null;
-        if(isEmpty($businesses)){
+        if(empty($businesses)){
             $businessCode = Business::factory()->create()->code;
         }else{
             $businessCode = fake()->randomElement($businesses)['code'];

@@ -10,7 +10,6 @@ use App\Utils\Enums\SystemIncomeStatusEnum;
 use App\Utils\Enums\TaskTypeEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use function PHPUnit\Framework\isEmpty;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\VasTask>
@@ -23,7 +22,7 @@ class VasTaskFactory extends Factory
     {
         $countries = Country::get('code')->toArray();
         $countryCode = null;
-        if(isEmpty($countries)){
+        if(empty($countries)){
             $countryCode = Country::factory()->create()->code;
         }else{
             $countryCode = fake()->randomElement($countries)['code'];
@@ -31,7 +30,7 @@ class VasTaskFactory extends Factory
 
         $businesses = Business::get('code')->toArray();
         $businessCode = null;
-        if(isEmpty($businesses)){
+        if(empty($businesses)){
             $businessCode = Business::factory()->create()->code;
         }else{
             $businessCode = fake()->randomElement($businesses)['code'];

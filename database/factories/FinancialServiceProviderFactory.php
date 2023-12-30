@@ -6,7 +6,6 @@ use App\Models\Country;
 use App\Models\PackageName;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use function PHPUnit\Framework\isEmpty;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\FinancialServiceProvider>
@@ -22,7 +21,7 @@ class FinancialServiceProviderFactory extends Factory
     {
         $countries = Country::get('code')->toArray();
         $countryCode = null;
-        if(isEmpty($countries)){
+        if(empty($countries)){
             $countryCode = Country::factory()->create()->code;
         }else{
             $countryCode = fake()->randomElement($countries)['code'];

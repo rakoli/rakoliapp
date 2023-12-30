@@ -6,7 +6,6 @@ use App\Models\Business;
 use App\Models\ExchangeTransaction;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use function PHPUnit\Framework\isEmpty;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ExchangeFeedback>
@@ -22,7 +21,7 @@ class ExchangeFeedbackFactory extends Factory
     {
         $transactions = ExchangeTransaction::get('id')->toArray();
         $transactionId = null;
-        if(isEmpty($transactions)){
+        if(empty($transactions)){
             $transactionId = ExchangeTransaction::factory()->create()->id;
         }else{
             $transactionId = fake()->randomElement($transactions)['id'];
@@ -32,7 +31,7 @@ class ExchangeFeedbackFactory extends Factory
         $reviewedBusinessCode = fake()->randomElement([$exchangeTransaction->owner_business_code,$exchangeTransaction->trader_business_code]);
 
         $users = User::where('business_code',$reviewedBusinessCode)->get(['code'])->toArray();
-        if(isEmpty($users)){
+        if(empty($users)){
             $userCode = User::factory()->create(['business_code'=>$reviewedBusinessCode])->code;
         }else{
             $userCode = fake()->randomElement($users)['code'];

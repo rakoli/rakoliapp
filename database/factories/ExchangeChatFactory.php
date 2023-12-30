@@ -12,7 +12,6 @@ use App\Models\User;
 use App\Utils\Enums\ExchangeTransactionStatusEnum;
 use App\Utils\Enums\ExchangeTransactionTypeEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use function PHPUnit\Framework\isEmpty;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ExchangeChat>
@@ -28,7 +27,7 @@ class ExchangeChatFactory extends Factory
     {
         $transactions = ExchangeTransaction::get('id')->toArray();
         $transactionId = null;
-        if(isEmpty($transactions)){
+        if(empty($transactions)){
             $transactionId = ExchangeTransaction::factory()->create()->id;
         }else{
             $transactionId = fake()->randomElement($transactions)['id'];
@@ -37,7 +36,7 @@ class ExchangeChatFactory extends Factory
         $exchangeTransaction = ExchangeTransaction::where('id',$transactionId)->first();
         $users = User::where('business_code',$exchangeTransaction->owner_business_code)->get('code')->toArray();
         $userCode = null;
-        if(isEmpty($users)){
+        if(empty($users)){
             $userCode = User::factory()->create(['business_code'=>$exchangeTransaction->owner_business_code])->code;
         }else{
             $userCode = fake()->randomElement($users)['code'];

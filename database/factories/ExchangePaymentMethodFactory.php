@@ -11,7 +11,6 @@ use App\Utils\Enums\ExchangePaymentMethodTypeEnum;
 use App\Utils\Enums\ExchangeTransactionStatusEnum;
 use App\Utils\Enums\ExchangeTransactionTypeEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use function PHPUnit\Framework\isEmpty;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ExchangePaymentMethod>
@@ -26,7 +25,7 @@ class ExchangePaymentMethodFactory extends Factory
     public function definition(): array
     {
         $exchangeAds = ExchangeAds::get('code')->toArray();
-        if(isEmpty($exchangeAds)){
+        if(empty($exchangeAds)){
             $exchangeAdCode = ExchangeAds::factory()->create()->code;
         }else{
             $exchangeAdCode = fake()->randomElement($exchangeAds)['code'];

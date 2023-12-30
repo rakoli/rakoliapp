@@ -11,7 +11,6 @@ use App\Utils\Enums\ShiftStatusEnum;
 use App\Utils\Enums\TransactionTypeEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use function PHPUnit\Framework\isEmpty;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Shift>
@@ -27,7 +26,7 @@ class ShiftFactory extends Factory
     {
         $businesses = Business::get('code')->toArray();
         $businessCode = null;
-        if(isEmpty($businesses)){
+        if(empty($businesses)){
             $businessCode = Business::factory()->create()->code;
         }else{
             $businessCode = fake()->randomElement($businesses)['code'];
@@ -44,7 +43,7 @@ class ShiftFactory extends Factory
 
         $users = User::where('business_code',$businessCode)->get()->toArray();
         $userCode = null;
-        if(isEmpty($users)){
+        if(empty($users)){
             $userCode = User::factory()->create(['business_code'=>$businessCode])->code;
         }else{
             $userCode = fake()->randomElement($users)['code'];

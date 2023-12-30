@@ -13,7 +13,6 @@ use App\Utils\Enums\ExchangeTransactionStatusEnum;
 use App\Utils\Enums\ExchangeTransactionTypeEnum;
 use App\Utils\Enums\TransactionTypeEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use function PHPUnit\Framework\isEmpty;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ExchangeTransaction>
@@ -32,7 +31,7 @@ class ExchangeTransactionFactory extends Factory
 
         $exchangeAds = fake()->randomElement(ExchangeAds::get(['business_code','code'])->toArray());
         $exchange = null;
-        if(isEmpty($exchangeAds)){
+        if(empty($exchangeAds)){
             $exchange = ExchangeAds::factory()->has(ExchangePaymentMethod::factory(),'exchange_payment_methods')->create();
             $exchangeAds = $exchange->toArray();
         }else{
@@ -40,20 +39,20 @@ class ExchangeTransactionFactory extends Factory
         }
 
         $viaMethod = fake()->randomElement($exchange->exchange_payment_methods->toArray());
-        if(isEmpty($viaMethod)){
+        if(empty($viaMethod)){
             $viaMethod = fake()->randomElement(ExchangePaymentMethod::factory()->count(1)->create(['exchange_ads_code'=>$exchange->code])->toArray());
         }
 
         $traderBusinessArray = Business::where('code','!=',$exchangeAds['business_code'])->get(['code']);
         $traderBusinessCode = null;
-        if(isEmpty($traderBusinessArray)){
+        if(empty($traderBusinessArray)){
             $traderBusinessCode = Business::factory()->create()->code;
         }else{
             $traderBusinessCode = fake()->randomElement($traderBusinessArray->toArray())['code'];
         }
 
         $trader_target_method = 'cash';
-        if(!isEmpty($fsps)){
+        if(!empty($fsps)){
             $trader_target_method = fake()->randomElement($fsps)['name'];//Fixes unit testing error
         }
 
