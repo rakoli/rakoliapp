@@ -14,9 +14,11 @@ use App\Models\User;
 use App\Models\VasContract;
 use App\Models\VasPayment;
 use App\Models\VasTask;
+use App\Utils\Enums\ExchangeStatusEnum;
 use App\Utils\Enums\ExchangeTransactionStatusEnum;
 use App\Utils\Enums\ShiftStatusEnum;
 use App\Utils\Enums\TransactionCategoryEnum;
+use App\Utils\Enums\VasTaskStatusEnum;
 
 class StatisticsService
 {
@@ -116,12 +118,12 @@ class StatisticsService
 
     public function admin_no_of_exchange_listing()
     {
-        return ExchangeAds::count();
+        return ExchangeAds::where('status',ExchangeStatusEnum::ACTIVE->value)->count();
     }
 
     public function admin_no_of_vas_listing()
     {
-        return VasTask::count();
+        return VasTask::where('status',VasTaskStatusEnum::ACTIVE->value)->count();
     }
 
     public function admin_no_business_with_active_subscription()

@@ -60,6 +60,8 @@ return new class extends Migration
             $table->integer('no_of_agents')->nullable();
             $table->json('attachments')->invisible()->nullable();
 
+            $table->string('status')->default(\App\Utils\Enums\VasTaskStatusEnum::ACTIVE->value);
+
             $table->timestamps();
         });
     }
