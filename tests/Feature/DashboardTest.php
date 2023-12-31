@@ -339,4 +339,110 @@ class DashboardTest extends TestCase
         $stats = new StatisticsService($user);
         $this->assertEquals($data,$stats->admin_no_users_in_system());
     }
+
+    /** @test */
+    public function agent_dashboard_loads_business_recent_transactions()
+    {
+        $user = User::factory()->create([
+            'type'=>UserTypeEnum::AGENT->value,
+            'registration_step'=>0,
+            'business_code'=>Business::factory()->create()->code,
+        ]);
+
+        $noOfTransactions = 5;
+        $transactions = Transaction::factory()->count($noOfTransactions)->create(['business_code'=>$user->business_code]);
+
+        $this->actingAs($user);
+        $response = $this->getJson(route('agent.dashboard'),['X-Requested-With'=>'XMLHttpRequest']);
+        $responseArray = json_decode($response->content(),'true');
+
+
+        $allValuesFound = true;
+        $firstArray = $transactions->toArray();
+        $secondArray = $responseArray['data'];
+        $secondArrayIds = [];
+        foreach ($secondArray as $item) {
+            array_push($secondArrayIds, $item['id']);
+        }
+        foreach ($firstArray as $firstArrayItem) {
+            if (!in_array($firstArrayItem['id'], $secondArrayIds)) {
+                $allValuesFound = false;
+                break; // No need to continue checking if one value is not found
+            }
+        }
+
+        $this->assertTrue($allValuesFound);
+        $this->assertEquals($noOfTransactions,$responseArray['recordsTotal']);
+    }
+
+    /** @test */
+    public function vas_dashboard_loads_business_vas_payments()
+    {
+        $user = User::factory()->create([
+            'type'=>UserTypeEnum::VAS->value,
+            'registration_step'=>0,
+            'business_code'=>Business::factory()->create()->code,
+        ]);
+
+        $noOfPayments = 5;
+        $vasContract = VasContract::factory()->create(['vas_business_code'=>$user->business_code]);
+        $vasPayments = VasPayment::factory()->count($noOfPayments)->create(['business_code'=>$user->business_code,'vas_contract_code'=>$vasContract->code]);
+
+        $this->actingAs($user);
+        $response = $this->getJson(route('vas.dashboard'),['X-Requested-With'=>'XMLHttpRequest']);
+        $responseArray = json_decode($response->content(),'true');
+
+
+        $allValuesFound = true;
+        $firstArray = $vasPayments->toArray();
+        $secondArray = $responseArray['data'];
+        $secondArrayIds = [];
+        foreach ($secondArray as $item) {
+            array_push($secondArrayIds, $item['id']);
+        }
+        foreach ($firstArray as $firstArrayItem) {
+            if (!in_array($firstArrayItem['id'], $secondArrayIds)) {
+                $allValuesFound = false;
+                break; // No need to continue checking if one value is not found
+            }
+        }
+
+        $this->assertTrue($allValuesFound);
+        $this->assertEquals($noOfPayments,$responseArray['recordsTotal']);
+    }
+
+    /** @test */
+    public function admin_dashboard_loads_recent_system_income()
+    {
+        $user = User::factory()->create([
+            'type'=>UserTypeEnum::ADMIN->value,
+            'registration_step'=>0,
+            'business_code'=>Business::factory()->create()->code,
+        ]);
+
+        $noOfPayments = 10;//MUST BE 10 cause view loads recent 10 only
+        $payments = SystemIncome::factory()->count($noOfPayments)->create();
+
+        $this->actingAs($user);
+        $response = $this->getJson(route('admin.dashboard'),['X-Requested-With'=>'XMLHttpRequest']);
+        $responseArray = json_decode($response->content(),'true');
+
+
+        $allValuesFound = true;
+        $firstArray = $payments->toArray();
+        $secondArray = $responseArray['data'];
+        $secondArrayIds = [];
+        foreach ($secondArray as $item) {
+            array_push($secondArrayIds, $item['id']);
+        }
+        foreach ($firstArray as $firstArrayItem) {
+            if (!in_array($firstArrayItem['id'], $secondArrayIds)) {
+                $allValuesFound = false;
+                break; // No need to continue checking if one value is not found
+            }
+        }
+
+        $this->assertTrue($allValuesFound);
+        $this->assertEquals($noOfPayments,$responseArray['recordsTotal']);
+    }
 }
