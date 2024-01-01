@@ -1,6 +1,6 @@
 @extends('layouts.users.agent')
 
-@section('title', __("Transactions"))
+@section('title', __("Exchange Transactions"))
 
 @section('header_js')
     <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css" />
