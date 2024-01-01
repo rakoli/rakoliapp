@@ -2,8 +2,15 @@
 
 namespace Tests\Feature;
 
+use App\Models\Area;
+use App\Models\Business;
 use App\Models\ExchangeAds;
+use App\Models\ExchangeBusinessMethod;
+use App\Models\ExchangeStat;
 use App\Models\ExchangeTransaction;
+use App\Models\Location;
+use App\Models\Region;
+use App\Models\Towns;
 use App\Models\User;
 use App\Utils\Enums\UserTypeEnum;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -27,9 +34,12 @@ class ExchangeModuleTest extends TestCase
     /** @test */
     public function agent_can_access_an_exchange_ad_view_page()
     {
-        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
+        $business = Business::factory()->has(ExchangeStat::factory(),'exchange_stats')->create();
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0,
+                'business_code' => $business->code
+            ]);
 
-        $exchangeAd = ExchangeAds::factory()->create();
+        $exchangeAd = ExchangeAds::factory()->create(['business_code'=>$business->code]);
 
         $this->actingAs($user);
 
@@ -86,6 +96,66 @@ class ExchangeModuleTest extends TestCase
         $response = $this->get(route('exchange.posts.create'));
         $response->assertOk();
         $response->assertSee('Create Post');
+    }
+
+    /** @test */
+    public function agent_can_post_a_new_exchange_ad_post_without_location_data()
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0, 'business_code'=>Business::factory()->create()->code]);
+
+        $this->actingAs($user);
+
+        $businessMethodIds = ExchangeBusinessMethod::factory()->count(3)->create(['business_code'=>$user->business_code])->pluck('id')->toArray();
+        $response = $this->post(route('exchange.posts.create.submit'), [
+            'ad_branch' => Location::factory()->create(['business_code'=>$user->business_code])->code,
+            'availability_desc' => fake()->sentence,
+            'ad_buy' => $businessMethodIds,
+            'ad_sell' => $businessMethodIds,
+            'amount_min' =>  random_int(1000,10000),
+            'amount_max' => random_int(10000,100000),
+            'description' => fake()->sentence,
+            'terms' => fake()->sentence,
+            'open_note' => fake()->sentence,
+        ]);
+
+        $response->assertRedirect(route('exchange.posts'));
+        $this->assertDatabaseHas('exchange_ads', [
+            'business_code' => $user->business_code,
+        ]);
+
+    }
+
+    /** @test */
+    public function agent_can_post_a_new_exchange_ad_post_with_location_data()
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0, 'business_code'=>Business::factory()->create()->code]);
+
+        $this->actingAs($user);
+
+        $businessMethodIds = ExchangeBusinessMethod::factory()->count(3)->create(['business_code'=>$user->business_code])->pluck('id')->toArray();
+        $region = Region::factory()->create();
+        $town = Towns::factory()->create(['region_code'=>$region->code]);
+        $area = Area::factory()->create(['region_code'=>$region->code,'town_code'=>$town->code]);
+        $response = $this->post(route('exchange.posts.create.submit'), [
+            'ad_branch' => Location::factory()->create(['business_code'=>$user->business_code])->code,
+            'availability_desc' => fake()->sentence,
+            'ad_buy' => $businessMethodIds,
+            'ad_sell' => $businessMethodIds,
+            'ad_region' => $region->code,
+            'ad_town' => $town->code,
+            'ad_area' => $area->code,
+            'amount_min' =>  random_int(1000,10000),
+            'amount_max' => random_int(10000,100000),
+            'description' => fake()->sentence,
+            'terms' => fake()->sentence,
+            'open_note' => fake()->sentence,
+        ]);
+
+        $response->assertRedirect(route('exchange.posts'));
+        $this->assertDatabaseHas('exchange_ads', [
+            'business_code' => $user->business_code,
+        ]);
+
     }
 
     /** @test */

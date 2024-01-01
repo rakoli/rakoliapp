@@ -6,6 +6,7 @@ use App\Events\ExchangeChatEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Area;
 use App\Models\Business;
+use App\Models\Country;
 use App\Models\ExchangeAds;
 use App\Models\ExchangeBusinessMethod;
 use App\Models\ExchangeChat;
@@ -595,6 +596,11 @@ class ExchangeController extends Controller
         $buyMethodIds = $request->get('ad_buy');
         $sellMethodIds = $request->get('ad_sell');
 
+        $currency = session('currency');
+        if($currency == null){
+            $currency = $user->business->country->code;
+        }
+
         $exchangeAdData = [
             'country_code' => $user->country_code,
             'business_code' => $user->business_code,
@@ -602,7 +608,7 @@ class ExchangeController extends Controller
             'code' => generateCode(Str::random(10),'TZ'),
             'min_amount' => $request->amount_min,
             'max_amount' => $request->amount_max,
-            'currency' => session('currency'),
+            'currency' => $currency,
             'status' => ExchangeStatusEnum::PENDING->value,
             'description' => $request->description,
             'availability_desc' => $request->availability_desc,
