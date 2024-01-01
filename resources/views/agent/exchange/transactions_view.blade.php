@@ -1,6 +1,6 @@
 @extends('layouts.users.agent')
 
-@section('title', __("Transaction View"))
+@section('title', __("Exchange Transaction Detail"))
 
 @section('header_js')
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
