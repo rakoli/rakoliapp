@@ -1,6 +1,6 @@
 @extends('layouts.users.agent')
 
-@section('title', __("Ads"))
+@section('title', __("Exchange Ad Detail"))
 
 @section('content')
     <!--begin::Container-->
