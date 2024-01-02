@@ -32,7 +32,7 @@ class ExchangeModuleTest extends TestCase
     }
 
     /** @test */
-    public function agent_can_access_an_exchange_ad_view_page()
+    public function agent_can_access_an_exchange_ads_market_page()
     {
         $business = Business::factory()->has(ExchangeStat::factory(),'exchange_stats')->create();
         $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0,
@@ -58,6 +58,66 @@ class ExchangeModuleTest extends TestCase
         $response = $this->get(route('exchange.transactions'));
         $response->assertOk();
         $response->assertSee('Exchange Transactions');
+    }
+
+    /** @test */
+    public function agent_can_see_all_exchange_transactions_list_as_trader_and_owner()
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0, 'business_code'=> Business::factory()->create()->code]);
+
+        //AS TRADER
+        $noOfTransactions = 5;
+        $transactions = ExchangeTransaction::factory()->count($noOfTransactions)->create(['trader_business_code'=>$user->business_code]);
+
+        $this->actingAs($user);
+
+        $response = $this->getJson(route('exchange.transactions'),['X-Requested-With'=>'XMLHttpRequest']);
+        $responseArray = json_decode($response->content(),'true');
+
+        $allValuesFound = true;
+        $firstArray = $transactions->toArray();
+        $secondArray = $responseArray['data'];
+        $secondArrayIds = [];
+        foreach ($secondArray as $item) {
+            array_push($secondArrayIds, $item['id']);
+        }
+        foreach ($firstArray as $firstArrayItem) {
+            if (!in_array($firstArrayItem['id'], $secondArrayIds)) {
+                $allValuesFound = false;
+                break; // No need to continue checking if one value is not found
+            }
+        }
+
+        $this->assertTrue($allValuesFound);
+        $this->assertEquals($noOfTransactions,$responseArray['recordsTotal']);
+
+        //AS OWNER
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0, 'business_code'=> Business::factory()->create()->code]);
+        $noOfTransactions = 6;
+
+        $transactions = ExchangeTransaction::factory()->count($noOfTransactions)->create(['owner_business_code'=>$user->business_code]);
+
+        $this->actingAs($user);
+
+        $response = $this->getJson(route('exchange.transactions'),['X-Requested-With'=>'XMLHttpRequest']);
+        $responseArray = json_decode($response->content(),'true');
+
+        $allValuesFound = true;
+        $firstArray = $transactions->toArray();
+        $secondArray = $responseArray['data'];
+        $secondArrayIds = [];
+        foreach ($secondArray as $item) {
+            array_push($secondArrayIds, $item['id']);
+        }
+        foreach ($firstArray as $firstArrayItem) {
+            if (!in_array($firstArrayItem['id'], $secondArrayIds)) {
+                $allValuesFound = false;
+                break; // No need to continue checking if one value is not found
+            }
+        }
+
+        $this->assertTrue($allValuesFound);
+        $this->assertEquals($noOfTransactions,$responseArray['recordsTotal']);
     }
 
     /** @test */
