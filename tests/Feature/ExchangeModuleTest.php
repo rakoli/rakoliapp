@@ -183,4 +183,67 @@ class ExchangeModuleTest extends TestCase
         $response->assertOk();
         $response->assertSee('Payment Methods');
     }
+
+    /** @test */
+    public function agent_can_add_a_business_exchange_payments_method()
+    {
+        $business = Business::factory()->create();
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0, 'business_code'=>$business->code]);
+
+        $this->actingAs($user);
+
+        $data = [
+            'nickname' => 'cash',
+            'method_name' => 'cash',
+            'account_name' => fake()->name,
+            'account_number' => fake()->numerify('###########'),
+        ];
+        $response = $this->post(route('exchange.methods.add',$data));
+
+        $data['business_code'] = $business->code;
+        $this->assertDatabaseHas('exchange_business_methods', $data);
+    }
+
+    /** @test */
+    public function agent_can_edit_a_business_exchange_payments_method()
+    {
+        $business = Business::factory()->create();
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0, 'business_code'=>$business->code]);
+
+        $this->actingAs($user);
+
+        $availableMethod = ExchangeBusinessMethod::factory()->create(['business_code'=> $business->code]);
+        $data = [
+            'id' => $availableMethod->id,
+            'business_code' => $business->code,
+            'nickname' => 'cash_edited',
+            'method_name' => 'cash_edited',
+            'account_name' => fake()->name.'_edited',
+            'account_number' => fake()->numerify('###########'),
+        ];
+        $editPostData = [
+            'edit_id' => $data['id'],
+            'edit_nickname' => $data['nickname'],
+            'edit_method_name' => $data['method_name'],
+            'edit_account_name' => $data['account_name'],
+            'edit_account_number' => $data['account_number'],
+        ];
+        $response = $this->post(route('exchange.methods.edit',$editPostData));
+
+        $this->assertDatabaseHas('exchange_business_methods', $data);
+    }
+
+    /** @test */
+    public function agent_can_delete_a_business_exchange_payments_method()
+    {
+        $business = Business::factory()->create();
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0, 'business_code'=>$business->code]);
+
+        $this->actingAs($user);
+
+        $availableMethod = ExchangeBusinessMethod::factory()->create(['business_code'=> $business->code]);
+        $response = $this->post(route('exchange.methods.delete',['delete_id'=>$availableMethod->id]));
+
+        $this->assertDatabaseMissing('exchange_business_methods', ['id'=>$availableMethod->id]);
+    }
 }
