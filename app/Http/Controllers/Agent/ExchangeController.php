@@ -794,11 +794,6 @@ class ExchangeController extends Controller
         ];
     }
 
-    public function security()
-    {
-        return view('agent.exchange.security');
-    }
-
     public function methods()
     {
         $user = \auth()->user();
