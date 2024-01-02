@@ -12,9 +12,8 @@ use App\Models\Location;
 use App\Models\Region;
 use App\Models\Towns;
 use App\Models\User;
+use App\Utils\Enums\ExchangeStatusEnum;
 use App\Utils\Enums\UserTypeEnum;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class ExchangeModuleTest extends TestCase
@@ -170,6 +169,75 @@ class ExchangeModuleTest extends TestCase
         $response = $this->get(route('exchange.posts.edit',$exchangeAd->id));
         $response->assertOk();
         $response->assertSee('Edit Post');
+    }
+
+    /** @test */
+    public function agent_can_edit_exchange_ad_post()
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
+
+        $this->actingAs($user);
+
+        $businessMethodIds = ExchangeBusinessMethod::factory()->count(3)->create(['business_code'=>$user->business_code])->pluck('id')->toArray();
+        $region = Region::factory()->create();
+        $town = Towns::factory()->create(['region_code'=>$region->code]);
+        $area = Area::factory()->create(['region_code'=>$region->code,'town_code'=>$town->code]);
+
+        $exchangeAd = ExchangeAds::factory()->create(['business_code'=>$user->business_code]);//must have
+        $editPostData = [
+            'exchange_id' => $exchangeAd->id,
+            'ad_status' => ExchangeStatusEnum::DISABLED,
+            'ad_branch' => Location::factory()->create(['business_code'=>$user->business_code])->code,
+            'availability_desc' => fake()->sentence.'_edited',
+            'ad_region' => $region->code,
+            'ad_town' => $town->code,
+            'ad_area' => $area->code,
+            'ad_buy' => $businessMethodIds,
+            'ad_sell' => $businessMethodIds,
+            'amount_min' => 5000,
+            'amount_max' => 10000,
+            'description' => fake()->sentence.'_edited',
+            'terms' => fake()->sentence.'_edited',
+            'open_note' => fake()->sentence.'_edited',
+        ];
+
+        $response = $this->post(route('exchange.posts.edit.submit',$editPostData));
+
+        $response->assertRedirect(route('exchange.posts'));
+        $data = [
+            'id' => $exchangeAd->id,
+            'business_code' => $user->business_code,
+            'status' => $editPostData['ad_status'],
+            'location_code' => $editPostData['ad_branch'],
+            'availability_desc' => $editPostData['availability_desc'],
+            'region_code' => $editPostData['ad_region'],
+            'town_code' => $editPostData['ad_town'],
+            'area_code' => $editPostData['ad_area'],
+            'min_amount' => $editPostData['amount_min'],
+            'max_amount' => $editPostData['amount_max'],
+            'description' => $editPostData['description'],
+            'terms' => $editPostData['terms'],
+            'open_note' => $editPostData['open_note'],
+        ];
+        $this->assertDatabaseHas('exchange_ads', $data);
+    }
+
+    /** @test */
+    public function agent_can_delete_exchange_ad_post()
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
+
+        $this->actingAs($user);
+
+        $exchangeAd = ExchangeAds::factory()->create(['business_code'=>$user->business_code]);//must have
+
+        $response = $this->get(route('exchange.posts.delete',$exchangeAd->id));
+
+        $response->assertRedirect(route('exchange.posts'));
+        $this->assertDatabaseHas('exchange_ads', [
+            'id'=> $exchangeAd->id,
+            'status'=>ExchangeStatusEnum::DELETED
+        ]);
     }
 
     /** @test */
