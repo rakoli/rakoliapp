@@ -12,6 +12,7 @@ use App\Models\Location;
 use App\Models\Region;
 use App\Models\Towns;
 use App\Models\User;
+use App\Models\VasPayment;
 use App\Utils\Enums\ExchangeStatusEnum;
 use App\Utils\Enums\UserTypeEnum;
 use Tests\TestCase;
@@ -83,6 +84,37 @@ class ExchangeModuleTest extends TestCase
         $response = $this->get(route('exchange.posts'));
         $response->assertOk();
         $response->assertSee('Posts');
+    }
+
+    /** @test */
+    public function agent_business_exchange_ads_can_all_be_displayed()
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0, 'business_code'=>Business::factory()->create()->code]);
+
+        $noOfAds = 5;
+        $ads = ExchangeAds::factory()->count($noOfAds)->create(['business_code'=>$user->business_code]);
+
+        $this->actingAs($user);
+
+        $response = $this->getJson(route('exchange.posts'),['X-Requested-With'=>'XMLHttpRequest']);
+        $responseArray = json_decode($response->content(),'true');
+
+        $allValuesFound = true;
+        $firstArray = $ads->toArray();
+        $secondArray = $responseArray['data'];
+        $secondArrayIds = [];
+        foreach ($secondArray as $item) {
+            array_push($secondArrayIds, $item['id']);
+        }
+        foreach ($firstArray as $firstArrayItem) {
+            if (!in_array($firstArrayItem['id'], $secondArrayIds)) {
+                $allValuesFound = false;
+                break; // No need to continue checking if one value is not found
+            }
+        }
+
+        $this->assertTrue($allValuesFound);
+        $this->assertEquals($noOfAds,$responseArray['recordsTotal']);
     }
 
     /** @test */
@@ -250,6 +282,37 @@ class ExchangeModuleTest extends TestCase
         $response = $this->get(route('exchange.methods'));
         $response->assertOk();
         $response->assertSee('Payment Methods');
+    }
+
+    /** @test */
+    public function agent_business_exchange_payments_methods_can_all_be_displayed()
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0, 'business_code'=>Business::factory()->create()->code]);
+
+        $noOfMethods = 5;
+        $ebm = ExchangeBusinessMethod::factory()->count($noOfMethods)->create(['business_code'=>$user->business_code]);
+
+        $this->actingAs($user);
+
+        $response = $this->getJson(route('exchange.methods'),['X-Requested-With'=>'XMLHttpRequest']);
+        $responseArray = json_decode($response->content(),'true');
+
+        $allValuesFound = true;
+        $firstArray = $ebm->toArray();
+        $secondArray = $responseArray['data'];
+        $secondArrayIds = [];
+        foreach ($secondArray as $item) {
+            array_push($secondArrayIds, $item['id']);
+        }
+        foreach ($firstArray as $firstArrayItem) {
+            if (!in_array($firstArrayItem['id'], $secondArrayIds)) {
+                $allValuesFound = false;
+                break; // No need to continue checking if one value is not found
+            }
+        }
+
+        $this->assertTrue($allValuesFound);
+        $this->assertEquals($noOfMethods,$responseArray['recordsTotal']);
     }
 
     /** @test */
