@@ -250,6 +250,72 @@ class ExchangeModuleTest extends TestCase
     }
 
     /** @test */
+    public function agent_exchange_ad_view_can_load_town_list()
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
+
+        $this->actingAs($user);
+
+        $noOfTowns = 4;
+        $region = Region::factory()->create();
+        $towns = Towns::factory()->count($noOfTowns)->create(['region_code'=>$region->code]);
+
+        $response = $this->get(route('exchange.post.townlistAjax',['region_code' => $region->code]));
+
+        $responseArray = json_decode($response->content(),'true');
+
+        $allValuesFound = true;
+        $firstArray = $towns->toArray();
+        $secondArray = $responseArray['data'];
+        $secondArrayIds = [];
+        foreach ($secondArray as $item) {
+            array_push($secondArrayIds, $item['id']);
+        }
+        foreach ($firstArray as $firstArrayItem) {
+            if (!in_array($firstArrayItem['id'], $secondArrayIds)) {
+                $allValuesFound = false;
+                break; // No need to continue checking if one value is not found
+            }
+        }
+
+        $this->assertTrue($allValuesFound);
+        $this->assertEquals($noOfTowns,count($responseArray['data']));
+    }
+
+    /** @test */
+    public function agent_exchange_ad_view_can_load_area_list()
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
+
+        $this->actingAs($user);
+
+        $noOfAreas = 4;
+        $town = Towns::factory()->create();
+        $areas = Area::factory()->count($noOfAreas)->create(['town_code'=>$town->code]);
+
+        $response = $this->get(route('exchange.post.arealistAjax',['town_code' => $town->code]));
+
+        $responseArray = json_decode($response->content(),'true');
+
+        $allValuesFound = true;
+        $firstArray = $areas->toArray();
+        $secondArray = $responseArray['data'];
+        $secondArrayIds = [];
+        foreach ($secondArray as $item) {
+            array_push($secondArrayIds, $item['id']);
+        }
+        foreach ($firstArray as $firstArrayItem) {
+            if (!in_array($firstArrayItem['id'], $secondArrayIds)) {
+                $allValuesFound = false;
+                break; // No need to continue checking if one value is not found
+            }
+        }
+
+        $this->assertTrue($allValuesFound);
+        $this->assertEquals($noOfAreas,count($responseArray['data']));
+    }
+
+    /** @test */
     public function agent_can_access_an_exchange_ad_post_edit_page()
     {
         $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
