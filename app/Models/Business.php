@@ -71,14 +71,14 @@ class Business extends Model
         return $this->belongsTo(Country::class,'country_code','code');
     }
 
-    public function user(): BelongsTo
+    public function user(): HasMany
     {
-        return $this->belongsTo(User::class, 'code', 'code');
+        return $this->HasMany(User::class, 'business_code', 'code');
     }
 
-    public function users(): BelongsTo //to cover all usage scope
+    public function users(): HasMany //to cover all usage scope
     {
-        return $this->belongsTo(User::class, 'code', 'code');
+        return $this->HasMany(User::class, 'business_code', 'code');
     }
 
     public function package(): BelongsTo
