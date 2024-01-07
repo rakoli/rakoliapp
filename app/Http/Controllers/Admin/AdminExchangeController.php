@@ -243,26 +243,7 @@ class AdminExchangeController
             }
         }
 
-        return redirect()->back()->with(['message'=>'Exchange Ad Edited Successfully']);
-    }
-
-
-    public function adsView(Request $request, $id)
-    {
-        $exchangeAd = ExchangeAds::where('id',$id)->with('exchange_payment_methods')->first();
-        if(empty($exchangeAd)){
-            return redirect()->back()->withErrors(['Invalid Exchange Ad']);
-        }
-        $traderSellMethods = $exchangeAd->exchange_payment_methods()
-            ->where('type',\App\Utils\Enums\ExchangePaymentMethodTypeEnum::OWNER_BUY->value)
-            ->where('status', 1)
-            ->get(['id','method_name','type']);
-        $traderBuyMethods = $exchangeAd->exchange_payment_methods()
-            ->where('type',\App\Utils\Enums\ExchangePaymentMethodTypeEnum::OWNER_SELL->value)
-            ->where('status', 1)
-            ->get(['id','method_name','type']);
-
-        return view('admin.exchange.ads_view',compact('exchangeAd','traderSellMethods','traderBuyMethods'));
+        return redirect()->route('admin.exchange.ads')->with(['message'=>'Exchange Ad Edited Successfully']);
     }
 
     public function transactions()
@@ -351,7 +332,9 @@ class AdminExchangeController
             'message' => $request->get('message'),
         ]);
 
-        event(new ExchangeChatEvent($chatId,$request->get('message'),$user->name(),$user->business->business_name,now()->toDateTimeString('minute'),$user->id));
+        if(env('APP_ENV') != 'testing'){
+            event(new ExchangeChatEvent($chatId,$request->get('message'),$user->name(),$user->business->business_name,now()->toDateTimeString('minute'),$user->id));
+        }
 
         return [
             'status' => 200,

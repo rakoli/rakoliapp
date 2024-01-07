@@ -124,7 +124,7 @@ class ExchangeModuleTest extends TestCase
     }
 
     /** @test */
-    public function agent_can_access_exchange_transactions_page()
+    public function agent_can_access_exchange_transactions_list_page()
     {
         $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
 
@@ -875,5 +875,218 @@ class ExchangeModuleTest extends TestCase
         $availableMethod = ExchangeBusinessMethod::factory()->create(['business_code'=> $business->code]);
         $response = $this->post(route('exchange.methods.delete',['delete_id'=>$availableMethod->id]));
         $this->assertTrue(session('errors')->first() == 'Not authorized to access method');
+    }
+
+    //ADMIN TEST
+    /** @test */
+    public function admin_can_access_the_exchange_ads_list_page()
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::ADMIN->value, 'registration_step'=>0]);
+
+        $this->actingAs($user);
+
+        $response = $this->get(route('admin.exchange.ads'));
+        $response->assertOk();
+        $response->assertSee('Exchange Advertisements');
+    }
+
+    /** @test */
+    public function admin_exchange_ads_market_displays_all_ads()
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::ADMIN->value, 'registration_step'=>0]);
+
+        $noOfNewAds = 5;
+        ExchangeAds::factory()->count($noOfNewAds)->create();
+        $totalAds = ExchangeAds::get();
+        $totalAdsCount = $totalAds->count();
+
+        $this->actingAs($user);
+
+        $response = $this->getJson(route('admin.exchange.ads'),['X-Requested-With'=>'XMLHttpRequest']);
+        $responseArray = json_decode($response->content(),'true');
+
+        $allValuesFound = true;
+        $firstArray = $totalAds->toArray();
+        $secondArray = $responseArray['data'];
+        $secondArrayIds = [];
+        foreach ($secondArray as $item) {
+            array_push($secondArrayIds, $item['id']);
+        }
+        foreach ($firstArray as $firstArrayItem) {
+            if (!in_array($firstArrayItem['id'], $secondArrayIds)) {
+                $allValuesFound = false;
+                break; // No need to continue checking if one value is not found
+            }
+        }
+
+        $this->assertTrue($allValuesFound);
+        $this->assertEquals($totalAdsCount,$responseArray['recordsTotal']);
+    }
+
+    /** @test */
+    public function admin_can_access_an_exchange_ad_post_edit_page()
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::ADMIN->value, 'registration_step'=>0]);
+
+        $exchangeAd = ExchangeAds::factory()->create(['business_code'=>$user->business_code]);//must have
+
+        $this->actingAs($user);
+
+        $response = $this->get(route('admin.exchange.posts.edit',$exchangeAd->id));
+        $response->assertOk();
+        $response->assertSee('Edit Post');
+    }
+
+    /** @test */
+    public function admin_can_edit_exchange_ad_post()
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::ADMIN->value, 'registration_step'=>0]);
+
+        $this->actingAs($user);
+
+        $businessMethodIds = ExchangeBusinessMethod::factory()->count(3)->create(['business_code'=>$user->business_code])->pluck('id')->toArray();
+        $region = Region::factory()->create();
+        $town = Towns::factory()->create(['region_code'=>$region->code]);
+        $area = Area::factory()->create(['region_code'=>$region->code,'town_code'=>$town->code]);
+
+        $exchangeAd = ExchangeAds::factory()->create(['business_code'=>$user->business_code]);//must have
+        $editPostData = [
+            'exchange_id' => $exchangeAd->id,
+            'ad_status' => ExchangeStatusEnum::DISABLED,
+            'ad_branch' => Location::factory()->create(['business_code'=>$user->business_code])->code,
+            'availability_desc' => fake()->sentence.'_edited',
+            'ad_region' => $region->code,
+            'ad_town' => $town->code,
+            'ad_area' => $area->code,
+            'ad_buy' => $businessMethodIds,
+            'ad_sell' => $businessMethodIds,
+            'amount_min' => 5000,
+            'amount_max' => 10000,
+            'description' => fake()->sentence.'_edited',
+            'terms' => fake()->sentence.'_edited',
+            'open_note' => fake()->sentence.'_edited',
+        ];
+
+        $response = $this->post(route('admin.exchange.posts.edit.submit',$editPostData));
+
+        $response->assertRedirect(route('admin.exchange.ads'));
+        $data = [
+            'id' => $exchangeAd->id,
+            'business_code' => $user->business_code,
+            'status' => $editPostData['ad_status'],
+            'location_code' => $editPostData['ad_branch'],
+            'availability_desc' => $editPostData['availability_desc'],
+            'region_code' => $editPostData['ad_region'],
+            'town_code' => $editPostData['ad_town'],
+            'area_code' => $editPostData['ad_area'],
+            'min_amount' => $editPostData['amount_min'],
+            'max_amount' => $editPostData['amount_max'],
+            'description' => $editPostData['description'],
+            'terms' => $editPostData['terms'],
+            'open_note' => $editPostData['open_note'],
+        ];
+        $this->assertDatabaseHas('exchange_ads', $data);
+    }
+
+    /** @test */
+    public function admin_can_access_exchange_transactions_list_page()
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::ADMIN->value, 'registration_step'=>0]);
+
+        $this->actingAs($user);
+
+        $response = $this->get(route('admin.exchange.transactions'));
+        $response->assertOk();
+        $response->assertSee('Transactions');
+    }
+
+    /** @test */
+    public function admin_can_access_an_exchange_transaction_view_page()
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::ADMIN->value, 'registration_step'=>0]);
+
+        $exchangeTransaction = ExchangeTransaction::factory()->create(['trader_business_code'=>$user->business_code]);//must have
+
+        $this->actingAs($user);
+
+        $response = $this->get(route('admin.exchange.transactions.view',$exchangeTransaction->id));
+        $response->assertOk();
+        $response->assertSee('Transaction View');
+    }
+
+    /** @test */
+    public function admin_can_cancel_trade_on_exchange_transaction_view_page()
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::ADMIN->value, 'registration_step'=>0 ]);
+
+        $exchangeTransaction = ExchangeTransaction::factory()->create(
+            [
+                'is_complete'=>0,
+                'status'=>ExchangeTransactionStatusEnum::OPEN->value
+            ]);//must have
+
+        $this->actingAs($user);
+
+        $response = $this->post(route('admin.exchange.transactions.action',[
+            'ex_trans_id'=>$exchangeTransaction->id,
+            'action'=> 'cancel',
+        ]));
+
+        $this->assertDatabaseHas('exchange_transactions', [
+            'id' => $exchangeTransaction->id,
+            'status' => ExchangeTransactionStatusEnum::CANCELLED->value,
+            'is_complete' => 1,
+        ]);
+
+    }
+
+    /** @test */
+    public function admin_can_complete_trade_on_exchange_transaction_view_page()
+    {
+        $traderBusiness = Business::factory()->has(ExchangeStat::factory(),'exchange_stats')->create();
+        $ownerBusiness = Business::factory()->has(ExchangeStat::factory(),'exchange_stats')->create();
+        $user = User::factory()->create(['type'=>UserTypeEnum::ADMIN->value, 'registration_step'=>0]);
+
+        $exchangeTransaction = ExchangeTransaction::factory()->create(
+            [
+                'is_complete'=>0,
+                'status'=>ExchangeTransactionStatusEnum::OPEN->value,
+                'trader_business_code'=>$traderBusiness->code,
+                'owner_business_code'=>$ownerBusiness->code,
+            ]);//must have
+
+        $this->actingAs($user);
+        $response = $this->post(route('admin.exchange.transactions.action',[
+            'ex_trans_id'=>$exchangeTransaction->id,
+            'action'=> 'complete',
+        ]));
+
+        $this->assertDatabaseHas('exchange_transactions', [
+            'id' => $exchangeTransaction->id,
+            'status' => ExchangeTransactionStatusEnum::COMPLETED->value,
+            'is_complete' => 1,
+        ]);
+    }
+
+    /** @test */
+    public function admin_can_access_and_send_message_on_exchange_transaction_view_page()
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::ADMIN->value, 'registration_step'=>0]);
+
+        $exchangeTransaction = ExchangeTransaction::factory()->create(['trader_business_code'=>$user->business_code]);//must have
+
+        $this->actingAs($user);
+
+        $chatMessage = fake()->sentence;
+        $response = $this->get(route('admin.exchange.transactions.receive.message',[
+            'ex_trans_id'=>$exchangeTransaction->id,
+            'message'=> $chatMessage,
+        ]));
+
+        $this->assertDatabaseHas('exchange_chats', [
+            'exchange_trnx_id' => $exchangeTransaction->id,
+            'sender_code' => $user->code,
+            'message' => $chatMessage,
+        ]);
     }
 }
