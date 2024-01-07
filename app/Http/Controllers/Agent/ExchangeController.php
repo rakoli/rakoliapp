@@ -35,6 +35,7 @@ class ExchangeController extends Controller
 {
     public function ads(Request $request)
     {
+        //Todo: Write unit test for ExchangeAds market Order By Filters
         $stats = null;
         $dataTable = new DataTables();
         $builder = $dataTable->getHtmlBuilder();
@@ -170,6 +171,7 @@ class ExchangeController extends Controller
             'comment' => 'sometimes|string',
         ]);
         $exchangeAdCode = $exchangeAd->code;
+        $user = $request->user();
 
         $targetMethod = ExchangePaymentMethod::where('id',$request->get('action_target_select'))->first();
         $viaMethod = ExchangePaymentMethod::where('id',$request->get('action_via_select'))->first();
@@ -192,6 +194,11 @@ class ExchangeController extends Controller
 //            ];
 //        }
 
+        $currency = session('currency');
+        if($currency == null){
+            $currency = $user->business->country->currency;
+        }
+
         $exchangeTransaction = ExchangeTransaction::create([
             'exchange_ads_code' => $exchangeAdCode,
             'owner_business_code' => $exchangeAd->business->code,
@@ -201,7 +208,7 @@ class ExchangeController extends Controller
             'trader_action_via_method_id' => $viaMethod->id,
             'trader_action_via_method' => $viaMethod->method_name,
             'amount' => $request->get('amount'),
-            'amount_currency' => session('currency'),
+            'amount_currency' => $currency,
             'status' => ExchangeTransactionStatusEnum::OPEN,
             'trader_comments' => $comment,
         ]);
@@ -619,7 +626,7 @@ class ExchangeController extends Controller
 
         $currency = session('currency');
         if($currency == null){
-            $currency = $user->business->country->code;
+            $currency = $user->business->country->currency;
         }
 
         $exchangeAdData = [

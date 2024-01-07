@@ -7,6 +7,7 @@ use App\Models\Business;
 use App\Models\ExchangeAds;
 use App\Models\ExchangeBusinessMethod;
 use App\Models\ExchangeChat;
+use App\Models\ExchangePaymentMethod;
 use App\Models\ExchangeStat;
 use App\Models\ExchangeTransaction;
 use App\Models\Location;
@@ -14,8 +15,10 @@ use App\Models\Region;
 use App\Models\Towns;
 use App\Models\User;
 use App\Models\VasPayment;
+use App\Utils\Enums\ExchangePaymentMethodTypeEnum;
 use App\Utils\Enums\ExchangeStatusEnum;
 use App\Utils\Enums\ExchangeTransactionStatusEnum;
+use App\Utils\Enums\ExchangeTransactionTypeEnum;
 use App\Utils\Enums\UserTypeEnum;
 use Tests\TestCase;
 
@@ -34,6 +37,39 @@ class ExchangeModuleTest extends TestCase
     }
 
     /** @test */
+    public function agent_exchange_ads_market_displays_all_active_ads()
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
+
+        $noOfNewAds = 5;
+        ExchangeAds::factory()->count($noOfNewAds)->create();
+        $totalAds = ExchangeAds::where('status', ExchangeStatusEnum::ACTIVE->value)->get();
+        $totalAdsCount = $totalAds->count();
+
+        $this->actingAs($user);
+
+        $response = $this->getJson(route('exchange.ads'),['X-Requested-With'=>'XMLHttpRequest']);
+        $responseArray = json_decode($response->content(),'true');
+
+        $allValuesFound = true;
+        $firstArray = $totalAds->toArray();
+        $secondArray = $responseArray['data'];
+        $secondArrayIds = [];
+        foreach ($secondArray as $item) {
+            array_push($secondArrayIds, $item['id']);
+        }
+        foreach ($firstArray as $firstArrayItem) {
+            if (!in_array($firstArrayItem['id'], $secondArrayIds)) {
+                $allValuesFound = false;
+                break; // No need to continue checking if one value is not found
+            }
+        }
+
+        $this->assertTrue($allValuesFound);
+        $this->assertEquals($totalAdsCount,$responseArray['recordsTotal']);
+    }
+
+    /** @test */
     public function agent_can_access_an_exchange_ads_detail_page()
     {
         $business = Business::factory()->has(ExchangeStat::factory(),'exchange_stats')->create();
@@ -48,6 +84,43 @@ class ExchangeModuleTest extends TestCase
         $response = $this->get(route('exchange.ads.view',$exchangeAd->id));
         $response->assertOk();
         $response->assertSee('Exchange Ad Detail');
+    }
+
+    /** @test */
+    public function agent_can_open_a_new_trade_on_exchange_ads_detail_page()
+    {
+        $business = Business::factory()->has(ExchangeStat::factory(),'exchange_stats')->create();
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0,
+            'business_code' => $business->code
+        ]);
+
+        $adBusiness = Business::factory()->has(User::factory(),'user')->create();
+        $exchangeAd = ExchangeAds::factory()->has(ExchangePaymentMethod::factory()->count(4),'exchange_payment_methods')->create(['business_code'=>$adBusiness->code,'min_amount'=>1000,'max_amount'=>100000]);
+        $this->actingAs($user);
+        $paymentMethodArray = $exchangeAd->exchange_payment_methods->toArray();
+        $targetSelectId = fake()->randomElement($paymentMethodArray)['id'];
+        $viaSelectId = fake()->randomElement($paymentMethodArray)['id'];
+        $response = $this->post(route('exchange.ads.openorder',[
+            'exchange_id' => $exchangeAd->id,
+            'action_select' => ExchangeTransactionTypeEnum::BUY->value,
+            'action_target_select' => $targetSelectId,
+            'action_via_select' => $viaSelectId,
+            'amount' => random_int(10000,50000),
+            'comment' => fake()->sentence,
+        ]));
+
+        $response->assertOk();
+        $response->assertJson([
+            'success'           => true,
+            'result'            => "successful",
+            'resultExplanation' => "Order created successfully",
+        ]);
+
+        $this->assertDatabaseHas('exchange_transactions', [
+            'exchange_ads_code' => $exchangeAd->code,
+            'trader_business_code' => $user->business_code,
+            'status' => ExchangeTransactionStatusEnum::OPEN,
+        ]);
     }
 
     /** @test */
