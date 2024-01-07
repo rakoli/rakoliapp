@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Utils\Enums\ExchangeTransactionStatusEnum;
+use App\Utils\Enums\UserTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -50,9 +51,21 @@ class ExchangeTransaction extends Model
                 if($exchangeTransaction->status == ExchangeTransactionStatusEnum::CANCELLED->value){
                     $user = User::where('code', $exchangeTransaction->cancelled_by_user_code)->first();
 
-                    $cancellingBusinessStat = ExchangeStat::where('business_code', $user->business_code)->first();
-                    $cancellingBusinessStat->no_of_trades_cancelled = $cancellingBusinessStat->no_of_trades_cancelled + 1;
-                    $cancellingBusinessStat->save();
+                    if($user->type == UserTypeEnum::ADMIN->value){
+
+                        $cancellingBusinessStat = ExchangeStat::where('business_code', $exchangeTransaction->trader_business_code)->first();
+                        $cancellingBusinessStat->no_of_trades_cancelled = $cancellingBusinessStat->no_of_trades_cancelled + 1;
+                        $cancellingBusinessStat->save();
+
+                        $cancellingBusinessStat = ExchangeStat::where('business_code', $exchangeTransaction->owner_business_code)->first();
+                        $cancellingBusinessStat->no_of_trades_cancelled = $cancellingBusinessStat->no_of_trades_cancelled + 1;
+                        $cancellingBusinessStat->save();
+
+                    }else{
+                        $cancellingBusinessStat = ExchangeStat::where('business_code', $user->business_code)->first();
+                        $cancellingBusinessStat->no_of_trades_cancelled = $cancellingBusinessStat->no_of_trades_cancelled + 1;
+                        $cancellingBusinessStat->save();
+                    }
 
                 }
             }

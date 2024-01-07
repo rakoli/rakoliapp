@@ -1017,12 +1017,16 @@ class ExchangeModuleTest extends TestCase
     /** @test */
     public function admin_can_cancel_trade_on_exchange_transaction_view_page()
     {
+        $traderBusiness = Business::factory()->has(ExchangeStat::factory(),'exchange_stats')->create();
+        $ownerBusiness = Business::factory()->has(ExchangeStat::factory(),'exchange_stats')->create();
         $user = User::factory()->create(['type'=>UserTypeEnum::ADMIN->value, 'registration_step'=>0 ]);
 
         $exchangeTransaction = ExchangeTransaction::factory()->create(
             [
                 'is_complete'=>0,
-                'status'=>ExchangeTransactionStatusEnum::OPEN->value
+                'status'=>ExchangeTransactionStatusEnum::OPEN->value,
+                'trader_business_code'=>$traderBusiness->code,
+                'owner_business_code'=>$ownerBusiness->code,
             ]);//must have
 
         $this->actingAs($user);
