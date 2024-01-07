@@ -21,16 +21,16 @@ Route::name('admin.')->prefix('admin')->middleware(['auth','onlyadmin'])->group(
     //EXCHANGE MODULE
     Route::name('exchange.')->prefix('exchange')->group(function () {
 
-        Route::get('ads', [App\Http\Controllers\Admin\ExchangeController::class, 'ads'])->name('ads');
-        Route::get('posts/edit/{id}', [App\Http\Controllers\Admin\ExchangeController::class, 'postsEdit'])->name('posts.edit');
-        Route::post('posts/edit/submit', [App\Http\Controllers\Admin\ExchangeController::class, 'postsEditSubmit'])->name('posts.edit.submit');
+        Route::get('ads', [App\Http\Controllers\Admin\AdminExchangeController::class, 'ads'])->name('ads');
+        Route::get('posts/edit/{id}', [App\Http\Controllers\Admin\AdminExchangeController::class, 'postsEdit'])->name('posts.edit');
+        Route::post('posts/edit/submit', [App\Http\Controllers\Admin\AdminExchangeController::class, 'postsEditSubmit'])->name('posts.edit.submit');
         Route::get('posts/create/townlist', [App\Http\Controllers\Agent\ExchangeController::class, 'postsCreateTownlistAjax'])->name('post.townlistAjax');
         Route::get('posts/create/arealist', [App\Http\Controllers\Agent\ExchangeController::class, 'postsCreateArealistAjax'])->name('post.arealistAjax');
 
-        Route::get('transactions', [App\Http\Controllers\Admin\ExchangeController::class, 'transactions'])->name('transactions');
-        Route::get('transactions/view/{id}', [App\Http\Controllers\Admin\ExchangeController::class, 'transactionsView'])->name('transactions.view');
-        Route::get('transactions/receive/message', [App\Http\Controllers\Admin\ExchangeController::class, 'transactionsReceiveMessage'])->name('transactions.receive.message');
-        Route::post('transactions/action', [App\Http\Controllers\Admin\ExchangeController::class, 'transactionsAction'])->name('transactions.action');
+        Route::get('transactions', [App\Http\Controllers\Admin\AdminExchangeController::class, 'transactions'])->name('transactions');
+        Route::get('transactions/view/{id}', [App\Http\Controllers\Admin\AdminExchangeController::class, 'transactionsView'])->name('transactions.view');
+        Route::get('transactions/receive/message', [App\Http\Controllers\Admin\AdminExchangeController::class, 'transactionsReceiveMessage'])->name('transactions.receive.message');
+        Route::post('transactions/action', [App\Http\Controllers\Admin\AdminExchangeController::class, 'transactionsAction'])->name('transactions.action');
     });
     //END: EXCHANGE MODULE
 

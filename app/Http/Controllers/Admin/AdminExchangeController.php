@@ -20,7 +20,7 @@ use App\Utils\Enums\UserTypeEnum;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
-class ExchangeController
+class AdminExchangeController
 {
     public function ads(Request $request)
     {
