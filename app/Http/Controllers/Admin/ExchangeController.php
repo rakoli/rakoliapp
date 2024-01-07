@@ -364,7 +364,6 @@ class ExchangeController
         $request->validate([
             'ex_trans_id' => 'required|exists:exchange_transactions,id',
             'action' => 'required|in:complete,report,cancel',
-            'message' => 'sometimes|string|min:10|max:255',
         ]);
         $exchangeTransactionId = $request->get('ex_trans_id');
         $exchangeTransaction = ExchangeTransaction::where('id',$exchangeTransactionId)->first();

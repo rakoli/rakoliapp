@@ -6,6 +6,7 @@ use App\Models\Area;
 use App\Models\Business;
 use App\Models\ExchangeAds;
 use App\Models\ExchangeBusinessMethod;
+use App\Models\ExchangeChat;
 use App\Models\ExchangeStat;
 use App\Models\ExchangeTransaction;
 use App\Models\Location;
@@ -14,6 +15,7 @@ use App\Models\Towns;
 use App\Models\User;
 use App\Models\VasPayment;
 use App\Utils\Enums\ExchangeStatusEnum;
+use App\Utils\Enums\ExchangeTransactionStatusEnum;
 use App\Utils\Enums\UserTypeEnum;
 use Tests\TestCase;
 
@@ -132,7 +134,292 @@ class ExchangeModuleTest extends TestCase
         $response = $this->get(route('exchange.transactions.view',$exchangeTransaction->id));
         $response->assertOk();
         $response->assertSee('Exchange Transaction Detail');
+
+        //can only see authorized transaction
+        $unathorizedUser = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0,'business_code'=>Business::factory()->create()->code]);
+        $this->actingAs($unathorizedUser);
+        $response = $this->get(route('exchange.transactions.view',$exchangeTransaction->id));
+        $this->assertTrue(session('errors')->first() == 'Not authorized to access transaction');
+
     }
+
+    /** @test */
+    public function agent_can_view_chat_messages_on_transaction_view_page()
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
+
+        $exchangeTransaction = ExchangeTransaction::factory()->create(['trader_business_code'=>$user->business_code]);//must have
+
+        $this->actingAs($user);
+
+        $noOfChatMessages = 3;
+        $chats = ExchangeChat::factory()->count($noOfChatMessages)->create(['exchange_trnx_id'=>$exchangeTransaction->id]);
+        $response = $this->get(route('exchange.transactions.view',$exchangeTransaction->id));
+
+        foreach($chats as $chat) {
+            $response->assertSee($chat->message);
+        }
+    }
+
+    /** @test */
+    public function agent_can_access_and_send_message_on_exchange_transaction_view_page()
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
+
+        $exchangeTransaction = ExchangeTransaction::factory()->create(['trader_business_code'=>$user->business_code]);//must have
+
+        $this->actingAs($user);
+
+        $chatMessage = fake()->sentence;
+        $response = $this->get(route('exchange.transactions.receive.message',[
+            'ex_trans_id'=>$exchangeTransaction->id,
+            'message'=> $chatMessage,
+        ]));
+
+        $this->assertDatabaseHas('exchange_chats', [
+            'exchange_trnx_id' => $exchangeTransaction->id,
+            'sender_code' => $user->code,
+            'message' => $chatMessage,
+        ]);
+    }
+
+    /** @test */
+    public function agent_can_not_send_message_on_authorized_exchange_transaction_()
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
+
+        $exchangeTransaction = ExchangeTransaction::factory()->create(
+            [
+                'trader_business_code'=> Business::factory()->create()->code,
+                'owner_business_code'=> Business::factory()->create()->code,
+            ]);//must have
+
+        $this->actingAs($user);
+
+        $chatMessage = fake()->sentence;
+        $response = $this->get(route('exchange.transactions.receive.message',[
+            'ex_trans_id'=>$exchangeTransaction->id,
+            'message'=> $chatMessage,
+        ]));
+
+        $this->assertTrue(session('errors')->first() == 'Not authorized to access transaction');
+
+    }
+
+    /** @test */
+    public function agent_can_cancel_trade_on_exchange_transaction_view_page()
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
+
+        $exchangeTransaction = ExchangeTransaction::factory()->create(
+            [
+                'trader_business_code'=>$user->business_code,
+                'is_complete'=>0,
+                'status'=>ExchangeTransactionStatusEnum::OPEN->value
+            ]);//must have
+
+        $this->actingAs($user);
+
+        $response = $this->post(route('exchange.transactions.action',[
+            'ex_trans_id'=>$exchangeTransaction->id,
+            'action'=> 'cancel',
+        ]));
+
+        $this->assertDatabaseHas('exchange_transactions', [
+            'id' => $exchangeTransaction->id,
+            'status' => ExchangeTransactionStatusEnum::CANCELLED->value,
+            'is_complete' => 1,
+        ]);
+
+    }
+
+    /** @test */
+    public function agent_can_complete_trade_on_exchange_transaction_view_page()
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0, 'business_code'=>Business::factory()->has(ExchangeStat::factory(),'exchange_stats')->create()->code]);
+        $ownerUser = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0, 'business_code'=>Business::factory()->has(ExchangeStat::factory(),'exchange_stats')->create()->code]);
+
+        $exchangeTransaction = ExchangeTransaction::factory()->create(
+            [
+                'trader_business_code'=>$user->business_code,
+                'owner_business_code'=>$ownerUser->business_code,
+                'is_complete'=>0,
+                'status'=>ExchangeTransactionStatusEnum::OPEN->value
+            ]);//must have
+
+        $this->actingAs($user);
+        $response = $this->post(route('exchange.transactions.action',[
+            'ex_trans_id'=>$exchangeTransaction->id,
+            'action'=> 'complete',
+        ]));
+
+        //Should be pending if one side as completed
+        $this->assertDatabaseHas('exchange_transactions', [
+            'id' => $exchangeTransaction->id,
+            'status' => ExchangeTransactionStatusEnum::PENDING_RELEASE->value,
+            'is_complete' => 0,
+        ]);
+
+        $this->actingAs($ownerUser);
+        $response = $this->post(route('exchange.transactions.action',[
+            'ex_trans_id'=>$exchangeTransaction->id,
+            'action'=> 'complete',
+        ]));
+
+        //Should be complete
+        $this->assertDatabaseHas('exchange_transactions', [
+            'id' => $exchangeTransaction->id,
+            'status' => ExchangeTransactionStatusEnum::COMPLETED->value,
+            'is_complete' => 1,
+        ]);
+
+    }
+
+    /** @test */
+    public function agent_cannot_perform_action_on_completed_trade_on_exchange_transaction_view_page()
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
+
+        $exchangeTransaction = ExchangeTransaction::factory()->create(
+            [
+                'trader_business_code'=>$user->business_code,
+                'is_complete'=>1,
+                'status'=>ExchangeTransactionStatusEnum::COMPLETED->value
+            ]);//must have
+
+        $this->actingAs($user);
+        $response = $this->post(route('exchange.transactions.action',[
+            'ex_trans_id'=>$exchangeTransaction->id,
+            'action'=> 'cancel',
+        ]));
+
+        $this->assertTrue(session('errors')->first() == "Trade Already Completed");
+    }
+
+    /** @test */
+    public function agent_cannot_perform_action_on_another_unauthorized_business()
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
+
+        $exchangeTransaction = ExchangeTransaction::factory()->create(
+            [
+                'trader_business_code'=> Business::factory()->create()->code,
+                'owner_business_code'=> Business::factory()->create()->code,
+            ]);//must have
+
+        $this->actingAs($user);
+        $response = $this->post(route('exchange.transactions.action',[
+            'ex_trans_id'=>$exchangeTransaction->id,
+            'action'=> 'cancel',
+        ]));
+
+        $this->assertTrue(session('errors')->first() == 'Not authorized to access transaction');
+    }
+
+    /** @test */
+    public function agent_cannot_give_feedback_on_another_unauthorized_business()
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
+        $exchangeTransaction = ExchangeTransaction::factory()->create(
+            [
+                'trader_business_code'=> Business::factory()->create()->code,
+                'owner_business_code'=> Business::factory()->create()->code,
+            ]);//must have
+
+        $this->actingAs($user);
+        $commentSentence = fake()->sentence;
+        $response = $this->post(route('exchange.transactions.feedback.action',[
+            'ex_trans_id'=>$exchangeTransaction->id,
+            'feedback'=> 1,
+            'comments'=> $commentSentence,
+        ]));
+
+        $this->assertTrue(session('errors')->first() == 'Not authorized to access transaction');
+    }
+
+    /** @test */
+    public function agent_cannot_give_feedback_more_than_once()
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0, 'business_code'=>Business::factory()->create()->code]);
+        $owner = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0, 'business_code'=>Business::factory()->create()->code]);
+        $exchangeTransaction = ExchangeTransaction::factory()->create(
+            [
+                'trader_business_code'=> $user->business_code,
+                'owner_business_code'=> $owner->business_code,
+                'owner_submitted_feedback'=> true,
+                'trader_submitted_feedback'=> true,
+            ]);//must have
+
+        $commentSentence = fake()->sentence;
+        $this->actingAs($user);
+        $response = $this->post(route('exchange.transactions.feedback.action',[
+            'ex_trans_id'=>$exchangeTransaction->id,
+            'feedback'=> 1,
+            'comments'=> $commentSentence,
+        ]));
+        $this->assertTrue(session('errors')->first() == 'Error! Feedback already submitted');
+
+        $this->actingAs($owner);
+        $response = $this->post(route('exchange.transactions.feedback.action',[
+            'ex_trans_id'=>$exchangeTransaction->id,
+            'feedback'=> 1,
+            'comments'=> $commentSentence,
+        ]));
+        $this->assertTrue(session('errors')->first() == 'Error! Feedback already submitted');
+    }
+
+    /** @test */
+    public function agent_can_give_exchange_transaction_feedback_sucessfully()
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0, 'business_code'=>Business::factory()->has(ExchangeStat::factory(),'exchange_stats')->create()->code]);
+        $owner = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0, 'business_code'=>Business::factory()->has(ExchangeStat::factory(),'exchange_stats')->create()->code]);
+        $exchangeTransaction = ExchangeTransaction::factory()->create(
+            [
+                'trader_business_code'=> $user->business_code,
+                'owner_business_code'=> $owner->business_code,
+            ]);//must have
+
+        //TRADER Feedback
+        $commentSentence = fake()->sentence;
+        $this->actingAs($user);
+        $response = $this->post(route('exchange.transactions.feedback.action',[
+            'ex_trans_id'=>$exchangeTransaction->id,
+            'feedback'=> 1,
+            'comments'=> $commentSentence,
+        ]));
+        $this->assertDatabaseHas('exchange_feedback', [
+            'exchange_trnx_id' => $exchangeTransaction->id,
+            'reviewed_business_code' => $owner->business_code,
+            'review' => 1,
+            'review_comment' => $commentSentence,
+            'reviewer_user_code' => $user->code,
+        ]);
+        $this->assertDatabaseHas('exchange_transactions', [
+            'id' => $exchangeTransaction->id,
+            'trader_submitted_feedback' => 1,
+        ]);
+
+        //OWNER Feedback
+        $this->actingAs($owner);
+        $response = $this->post(route('exchange.transactions.feedback.action',[
+            'ex_trans_id'=>$exchangeTransaction->id,
+            'feedback'=> 0,
+            'comments'=> $commentSentence,
+        ]));
+        $this->assertDatabaseHas('exchange_feedback', [
+            'exchange_trnx_id' => $exchangeTransaction->id,
+            'reviewed_business_code' => $user->business_code,
+            'review' => 0,
+            'review_comment' => $commentSentence,
+            'reviewer_user_code' => $owner->code,
+        ]);
+        $this->assertDatabaseHas('exchange_transactions', [
+            'id' => $exchangeTransaction->id,
+            'owner_submitted_feedback' => 1,
+        ]);
+
+    }
+
 
     /** @test */
     public function agent_can_access_exchange_ad_posts_page()

@@ -330,13 +330,23 @@ class ExchangeController extends Controller
         ]);
         $chatId = $request->get('ex_trans_id');
         $user = $request->user();
+
+        $exchangeTransactionId = $request->get('ex_trans_id');
+        $exchangeTransaction = ExchangeTransaction::where('id',$exchangeTransactionId)->first();
+        $isAllowed = $exchangeTransaction->isUserAllowed($user);
+        if($isAllowed == false){
+            return redirect()->route('exchange.transactions')->withErrors(['Not authorized to access transaction']);
+        }
+
         ExchangeChat::create([
             'exchange_trnx_id' => $chatId,
             'sender_code' => $user->code,
             'message' => $request->get('message'),
         ]);
 
-        event(new ExchangeChatEvent($chatId,$request->get('message'),$user->name(),$user->business->business_name,now()->toDateTimeString('minute'),$user->id));
+        if(env('APP_ENV') != 'testing'){
+            event(new ExchangeChatEvent($chatId,$request->get('message'),$user->name(),$user->business->business_name,now()->toDateTimeString('minute'),$user->id));
+        }
 
         return [
             'status' => 200,
@@ -355,6 +365,11 @@ class ExchangeController extends Controller
         $exchangeTransaction = ExchangeTransaction::where('id',$exchangeTransactionId)->first();
         $action = $request->get('action');
         $user = $request->user();
+
+        $isAllowed = $exchangeTransaction->isUserAllowed($user);
+        if($isAllowed == false){
+            return redirect()->route('exchange.transactions')->withErrors(['Not authorized to access transaction']);
+        }
 
         if($exchangeTransaction->is_complete){
             return redirect()->back()->withErrors('Trade Already Completed');
@@ -413,10 +428,16 @@ class ExchangeController extends Controller
             'comments' => 'sometimes|nullable|string|min:2|max:255',
         ]);
         $user = \auth()->user();
+
         $exchangeId = $request->get('ex_trans_id');
         $exchangeTransaction = ExchangeTransaction::where('id',$exchangeId)->first();
         $isOwner = $exchangeTransaction->isOwner($user);
         $isTrader = $exchangeTransaction->isTrader($user);
+
+        $isAllowed = $exchangeTransaction->isUserAllowed($user);
+        if($isAllowed == false){
+            return redirect()->route('exchange.transactions')->withErrors(['Not authorized to access transaction']);
+        }
 
         if($isOwner && $exchangeTransaction->owner_submitted_feedback == true){
             return redirect()->back()->withErrors(['Error! Feedback already submitted']);
