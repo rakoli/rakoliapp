@@ -775,6 +775,12 @@ class ExchangeModuleTest extends TestCase
         $response = $this->post(route('exchange.methods.edit',$editPostData));
 
         $this->assertDatabaseHas('exchange_business_methods', $data);
+
+        //Only authorized
+        $unauthorizedUser = User::factory()->create(['business_code'=>Business::factory()->create()->code]);
+        $this->actingAs($unauthorizedUser);
+        $response = $this->post(route('exchange.methods.edit',$editPostData));
+        $this->assertTrue(session('errors')->first() == 'Not authorized to access method');
     }
 
     /** @test */
@@ -789,5 +795,12 @@ class ExchangeModuleTest extends TestCase
         $response = $this->post(route('exchange.methods.delete',['delete_id'=>$availableMethod->id]));
 
         $this->assertDatabaseMissing('exchange_business_methods', ['id'=>$availableMethod->id]);
+
+        //Only authorized
+        $unauthorizedUser = User::factory()->create(['business_code'=>Business::factory()->create()->code]);
+        $this->actingAs($unauthorizedUser);
+        $availableMethod = ExchangeBusinessMethod::factory()->create(['business_code'=> $business->code]);
+        $response = $this->post(route('exchange.methods.delete',['delete_id'=>$availableMethod->id]));
+        $this->assertTrue(session('errors')->first() == 'Not authorized to access method');
     }
 }
