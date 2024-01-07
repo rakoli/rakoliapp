@@ -22,7 +22,7 @@ use Tests\TestCase;
 class ExchangeModuleTest extends TestCase
 {
     /** @test */
-    public function agent_can_access_the_exchange_ads_page()
+    public function agent_can_access_the_exchange_ads_market_page()
     {
         $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
 
@@ -34,7 +34,7 @@ class ExchangeModuleTest extends TestCase
     }
 
     /** @test */
-    public function agent_can_access_an_exchange_ads_market_page()
+    public function agent_can_access_an_exchange_ads_detail_page()
     {
         $business = Business::factory()->has(ExchangeStat::factory(),'exchange_stats')->create();
         $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0,
@@ -209,7 +209,7 @@ class ExchangeModuleTest extends TestCase
     /** @test */
     public function agent_can_cancel_trade_on_exchange_transaction_view_page()
     {
-        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0, 'business_code'=>Business::factory()->has(ExchangeStat::factory(),'exchange_stats')->create()->code]);
 
         $exchangeTransaction = ExchangeTransaction::factory()->create(
             [
