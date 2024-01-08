@@ -12,9 +12,9 @@
     <!--begin::Container-->
     <div id="kt_content_container" class="container-xxl">
 
-        @include('agent.exchange._submenu_exchange')
+        @include('agent.business._submenu_business')
 
-        @include('agent.exchange._ad_post_form', ['submitUrl'=>route('exchange.posts.create.submit'),'isEdit'=>false])
+        @include('agent.business._ad_profile_form', ['submitUrl'=>route('exchange.posts.create.submit'),'isEdit'=>false])
 
     </div>
     <!--end::Container-->
@@ -23,7 +23,7 @@
 
 @section('footer_js')
 
-    @include('agent.exchange._ad_post_form_js')
+    {{-- @include('agent.exchange._ad_post_form_js') --}}
 
     <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}" type="text/javascript"></script>
 {{--    {!! $dataTableHtml->scripts() !!}--}}

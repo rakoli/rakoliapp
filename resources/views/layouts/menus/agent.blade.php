@@ -258,7 +258,7 @@
                     </span>
                     <span class="menu-title">{{ __('Referrals',) }}</span>
                 </a>
-                <a class="menu-link" href="/dashboard/vas/permission"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('business.role')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Roles') }}</span>
@@ -273,7 +273,7 @@
                     </span>
                     <span class="menu-title">{{ __('Payments') }}</span>
                 </a>
-                <a class="menu-link" href="/dashboard/vas/profile"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('business.profile.create')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Business Profile') }}</span>

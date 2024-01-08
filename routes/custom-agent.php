@@ -53,4 +53,18 @@ Route::middleware(['auth','should_complete_registration','onlyagent'])->group(fu
     });
     //END: EXCHANGE MODULE
 
+
+
+
+    Route::name('business.')->prefix('business')->middleware('lastseen_update')->group(function () {
+        Route::get('role', [App\Http\Controllers\Agent\BusinessController::class, 'roles'])->name('role');
+        Route::get('role/create', [App\Http\Controllers\Agent\BusinessController::class, 'rolesCreate'])->name('roles.create');
+        Route::post('role/create/submit', [App\Http\Controllers\Agent\BusinessController::class, 'rolesCreateSubmit'])->name('role.create.submit');
+
+        Route::get('profile', [App\Http\Controllers\Agent\BusinessController::class, 'profile'])->name('profile');
+        Route::get('profile/create', [App\Http\Controllers\Agent\BusinessController::class, 'profileCreate'])->name('profile.create');
+
+    });
+
+
 });
