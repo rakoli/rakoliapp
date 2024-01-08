@@ -17,109 +17,43 @@ class BusinessController extends Controller
 {
     public function roles(Request $request)
     {
-        $stats = null;
         $dataTable = new DataTables();
         $builder = $dataTable->getHtmlBuilder();
         $orderBy = null;
         $orderByFilter = null;
+    
         if ($request->get('order_by')) {
             $orderBy = ['order_by' => $request->get('order_by')];
             $orderByFilter = $request->get('order_by');
         }
-
+    
         if (request()->ajax()) {
-
-            $ads = ExchangeAds::where('status', ExchangeStatusEnum::ACTIVE->value)
-                ->with('exchange_payment_methods')
-                ->with('business')
-                ->with('business_stats');
-
-            if ($request->get('order_by') == 'last_seen') {
-                $ads->withAggregate('business', 'last_seen')
-                    ->orderByDesc('business_last_seen');
-            }
-
-            if ($request->get('order_by') == 'trades') {
-                $ads->withAggregate('business_stats', 'no_of_trades_completed')
-                    ->orderByDesc('business_stats_no_of_trades_completed');
-            }
-
-            if ($request->get('order_by') == 'completion') {
-                $ads->withAggregate('business_stats', 'completion')
-                    ->orderByDesc('business_stats_completion');
-            }
-
-            if ($request->get('order_by') == 'feedback' || $request->get('order_by') == null) {
-                $ads->withAggregate('business_stats', 'feedback')
-                    ->orderByDesc('business_stats_feedback');
-            }
-
-            if ($request->get('order_by') == 'recent') {
-                $ads->latest();
-            }
-
-            if ($request->get('order_by') == 'min_amount_asc') {
-                $ads->orderBy('min_amount', 'asc');
-            }
-
-            if ($request->get('order_by') == 'min_amount_desc') {
-                $ads->orderBy('min_amount', 'desc');
-            }
-
-            if ($request->get('order_by') == 'max_amount_asc') {
-                $ads->orderBy('max_amount', 'asc');
-            }
-
-            if ($request->get('order_by') == 'max_amount_desc') {
-                $ads->orderBy('max_amount', 'desc');
-            }
-
-            return \Yajra\DataTables\Facades\DataTables::eloquent($ads)
-                ->addColumn('business_details', function (ExchangeAds $ad) {
-                    return view('agent.exchange.ads_datatable_components._business_details', compact('ad'));
+            $roles = Role::query(); // Assuming you have a Role model associated with the roles table
+    
+            return \Yajra\DataTables\Facades\DataTables::eloquent($roles)
+                ->addColumn('actions', function (Role $role) {
+                    // Add any additional actions you want for each role
+                    return '<a href="#" class="btn btn-secondary btn-sm">Edit</a>';
                 })
-                ->addColumn('terms', function (ExchangeAds $ad) {
-                    return view('agent.exchange.ads_datatable_components._terms', compact('ad'));
-                })
-                ->addColumn('limit', function (ExchangeAds $ad) {
-                    return view('agent.exchange.ads_datatable_components._limit', compact('ad'));
-                })
-                ->addColumn('payment', function (ExchangeAds $ad) {
-                    $traderSellMethods = $ad->exchange_payment_methods->where('type', \App\Utils\Enums\ExchangePaymentMethodTypeEnum::OWNER_BUY->value)->where('status', 1);
-                    $lastTraderSell = $traderSellMethods->last();
-                    $traderBuyMethods = $ad->exchange_payment_methods->where('type', \App\Utils\Enums\ExchangePaymentMethodTypeEnum::OWNER_SELL->value)->where('status', 1);
-                    $lastTraderBuy = $traderBuyMethods->last();
-                    return view('agent.exchange.ads_datatable_components._payment', compact('ad', 'traderSellMethods', 'traderBuyMethods', 'lastTraderSell', 'lastTraderBuy'));
-                })
-                ->addColumn('trade', function (ExchangeAds $ad) {
-                    return '<a href="' . route('exchange.ads.view', $ad->id) . '" class="btn btn-secondary btn-sm">' . __("View Ad") . '</a>';
-                })
-                ->rawColumns(['business_details', 'terms', 'limit', 'payment', 'trade'])
+                ->rawColumns(['actions'])
                 ->addIndexColumn()
-                ->editColumn('id', function ($exchange) {
-                    return idNumberDisplay($exchange->id);
-                })
                 ->toJson();
         }
-
-        //Datatable
+    
+        // DataTable
         $dataTableHtml = $builder->columns([
-            ['data' => 'id', 'title' => __('id')],
-            ['data' => 'business_details', 'title' => __('Business')],
-            ['data' => 'terms', 'title' => __('Terms')],
-            ['data' => 'limit', 'title' => __('Limit in') . ' ' . strtoupper(session('currency'))],
-            ['data' => 'payment', 'title' => __('Payment')],
-            ['data' => 'trade', 'title' => __('general.exchange.trade')],
+            ['data' => 'id', 'title' => __('ID')],
+            ['data' => 'name', 'title' => __('Name')],
+            ['data' => 'guard_name', 'title' => __('Guard Name')],
+            ['data' => 'actions', 'title' => __('Actions')],
         ])->responsive(true)
             ->ordering(false)
-            ->ajax(route('exchange.ads', $orderBy))
+            ->ajax(route('business.role', $orderBy)) // Assuming you have a named route for the roles.index endpoint
             ->paging(true)
             ->dom('frtilp')
             ->lengthMenu([[25, 50, 100, -1], [25, 50, 100, "All"]]);
-
-        $regions = Region::where('country_code', session('country_code'))->get();
-
-        return view('agent.business.ads', compact('dataTableHtml', 'stats', 'orderByFilter', 'regions'));
+    
+        return view('agent.business.ads',compact('dataTableHtml', 'orderByFilter'));
     }
 
     public function rolesCreate()
@@ -140,7 +74,7 @@ class BusinessController extends Controller
         $roles->name = $request->name;
         $roles->guard_name = "web";
         $roles->save();
-        return redirect()->route('exchange.posts')->with(['message' => 'Role create successfully.']);
+        return redirect()->route('business.role')->with(['message' => 'Role create successfully.']);
     }
 
     public function profileCreate(Request $request)

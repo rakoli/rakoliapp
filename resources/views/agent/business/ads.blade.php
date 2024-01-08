@@ -19,6 +19,9 @@
                 <!--begin::Card title-->
                 <div class="card-title flex-column">
                     <h3 class="fw-bold mb-1">{{__("Business Management")}}</h3>
+                    <div class="card-toolbar my-1">
+                        <a href="{{route('business.roles.create')}}" class="btn btn-primary m-5 fw-bold fs-8 fs-lg-base">{{__('Create role')}}</a>
+                    </div>
                 </div>
                 <!--begin::Card title-->
                 <!--begin::Card toolbar-->
