@@ -62,8 +62,9 @@ Route::middleware(['auth','should_complete_registration','onlyagent'])->group(fu
         Route::post('role/create/submit', [App\Http\Controllers\Agent\BusinessController::class, 'rolesCreateSubmit'])->name('role.create.submit');
 
         Route::get('profile', [App\Http\Controllers\Agent\BusinessController::class, 'profile'])->name('profile');
-        Route::get('profile/create', [App\Http\Controllers\Agent\BusinessController::class, 'profileCreate'])->name('profile.create');
+        Route::get('profile/update', [App\Http\Controllers\Agent\BusinessController::class, 'profileCreate'])->name('profile.update');
 
+        Route::get('branches', [App\Http\Controllers\Agent\BusinessController::class, 'branches'])->name('branches');
     });
 
 

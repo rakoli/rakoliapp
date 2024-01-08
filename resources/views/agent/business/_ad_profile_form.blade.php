@@ -212,49 +212,49 @@
                     <!--end::Label-->
                     <label class="form-label">{{__('Business Name')}}</label>
                     <!--begin::Input-->
-                    <input type="text" class="form-control mb-2" id="business_name" name="business_name" value="" placeholder="{{__("Enter Business Name")}}">
+                    <input type="text" class="form-control mb-2" id="business_name" name="business_name" value="{{$business->business_name }}" placeholder="{{__("Enter Business Name")}}">
 
                 </div>
                 <div class="mb-5 fv-row">
                     <!--end::Label-->
                     <label class="form-label">{{__('Tax Identification')}}</label>
                     <!--begin::Input-->
-                    <input type="text" class="form-control mb-2" id="tax_id" name="tax_id" value="" placeholder="{{__("Enter Tax Identification")}}">
+                    <input type="text" class="form-control mb-2" id="tax_id" name="tax_id" value="{{$business->tax_id  }}" placeholder="{{__("Enter Tax Identification")}}">
 
                 </div>
                 <div class="mb-5 fv-row">
                     <!--end::Label-->
                     <label class="form-label">{{__('Business Registration number')}}</label>
                     <!--begin::Input-->
-                    <input type="text" class="form-control mb-2" id="business_regno" name="business_regno" value="" placeholder="{{__("Enter Registration number")}}">
+                    <input type="text" class="form-control mb-2" id="business_regno" name="business_regno" value="{{$business->business_regno  }}" placeholder="{{__("Enter Registration number")}}">
 
                 </div>
                 <div class="mb-5 fv-row">
                     <!--end::Label-->
                     <label class="form-label">{{__('Business Registration Date')}}</label>
                     <!--begin::Input-->
-                    <input type="text" class="form-control mb-2" id="business_reg_date" name="business_reg_date" value="" placeholder="{{__("Enter Registration Date")}}">
+                    <input type="text" class="form-control mb-2" id="business_reg_date" name="business_reg_date" value="{{$business->business_reg_date  }}" placeholder="{{__("Enter Registration Date")}}">
 
                 </div>
                 <div class="mb-5 fv-row">
                     <!--end::Label-->
                     <label class="form-label">{{__('Business Phone number')}}</label>
                     <!--begin::Input-->
-                    <input type="text" class="form-control mb-2" id="business_phone_number" name="business_phone_number" value="" placeholder="{{__("Enter Phone number")}}">
+                    <input type="text" class="form-control mb-2" id="business_phone_number" name="business_phone_number" value="{{$business->business_phone_number   }}" placeholder="{{__("Enter Phone number")}}">
 
                 </div>
                 <div class="mb-5 fv-row">
                     <!--end::Label-->
                     <label class="form-label">{{__('Business Email')}}</label>
                     <!--begin::Input-->
-                    <input type="text" class="form-control mb-2" id="business_email" name="business_email" value="" placeholder="{{__("Enter Email")}}">
+                    <input type="text" class="form-control mb-2" id="business_email" name="business_email" value="{{$business->business_email   }}" placeholder="{{__("Enter Email")}}">
 
                 </div>
                 <div class="mb-5 fv-row">
                     <!--end::Label-->
                     <label class="form-label">{{__('Business location')}}</label>
                     <!--begin::Input-->
-                    <input type="text" class="form-control mb-2" id="business_location " name="business_location " value="" placeholder="{{__("Enter location")}}">
+                    <input type="text" class="form-control mb-2" id="business_location " name="business_location " value="{{$business->business_location  }}" placeholder="{{__("Enter location")}}">
 
                 </div>
 
