@@ -1,5 +1,5 @@
 <!--begin::Form-->
-<form id="kt_form" class="form d-flex flex-column flex-lg-row" data-kt-redirect="{{route('exchange.role')}}" action="{{$submitUrl}}" method="post">
+<form id="kt_form" class="form d-flex flex-column flex-lg-row" data-kt-redirect="{{route('business.role')}}" action="{{$submitUrl}}" method="post">
 
     @csrf
 

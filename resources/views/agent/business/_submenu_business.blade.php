@@ -51,7 +51,6 @@
             </ul>
             <!--end::Nav-->
             <!--begin::Action-->
-            {{-- <a href="{{route('exchange.roles.create')}}" class="btn btn-primary fw-bold fs-8 fs-lg-base">{{__('Create role')}}</a> --}}
             <!--end::Action-->
         </div>
         <!--end::Hero nav-->
