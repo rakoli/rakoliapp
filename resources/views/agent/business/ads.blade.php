@@ -1,6 +1,6 @@
 @extends('layouts.users.agent')
 
-@section('title', __("Ads"))
+@section('title', __("Business Roles"))
 
 @section('header_js')
     <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css" />
@@ -11,43 +11,26 @@
     <div id="kt_content_container" class="container-xxl">
 
         @include('agent.business._submenu_business')
-
-        <!--begin::Table-->
+        
         <div class="card card-flush mt-6 mt-xl-9">
             <!--begin::Card header-->
             <div class="card-header mt-5">
-                <!--begin::Card title-->
-                <div class="card-title flex-column">
-                    <h3 class="fw-bold mb-1">{{__("Business Management")}}</h3>
-                    <div class="card-toolbar my-1">
-                        <a href="{{route('business.roles.create')}}" class="btn btn-primary m-5 fw-bold fs-8 fs-lg-base">{{__('Create role')}}</a>
-                    </div>
-                </div>
-                <!--begin::Card title-->
                 <!--begin::Card toolbar-->
                 <div class="card-toolbar my-1">
-                    <select id="exchange_filter" name="exchange_filter" class="w-125px form-select form-select-solid" onchange="filterChanged(this.value)">
-                        <option value="feedback" @if($orderByFilter == 'feedback') selected @endif>{{__("Feedback Rating")}}</option>
-                        <option value="last_seen" @if($orderByFilter == 'last_seen') selected @endif>{{__("Last Seen")}}</option>
-                        <option value="completion" @if($orderByFilter == 'completion') selected @endif>{{__("Completion")}}</option>
-                        <option value="trades" @if($orderByFilter == 'trades') selected @endif>{{__("No of Trades")}}</option>
-                        <option value="recent" @if($orderByFilter == 'recent') selected @endif>{{__("Recent")}}</option>
-                        <option value="min_amount_asc" @if($orderByFilter == 'min_amount_asc') selected @endif>{{__("Min Amount - Ascending")}}</option>
-                        <option value="min_amount_desc" @if($orderByFilter == 'min_amount_desc') selected @endif>{{__("Min Amount - Descending")}}</option>
-                        <option value="max_amount_asc" @if($orderByFilter == 'max_amount_asc') selected @endif>{{__("Max Amount - Ascending")}}</option>
-                        <option value="max_amount_desc" @if($orderByFilter == 'max_amount_desc') selected @endif>{{__("Max Amount - Descending")}}</option>
-                    </select>
-                    <a href="#" class="btn btn-primary m-5" onclick="filterAction()"><i class="ki-duotone ki-filter fs-2"><span class="path1"></span><span class="path2"></span></i>{{__('Filter')}}</a>
+                    <button type="button" class="btn btn-primary m-5" data-bs-toggle="modal" data-bs-target="#add_method_modal">
+                        {{__('Add')}}
+                    </button>
                 </div>
                 <!--begin::Card toolbar-->
             </div>
             <!--end::Card header-->
+
             <!--begin::Card body-->
             <div class="card-body pt-0">
                 <!--begin::Table container-->
                 <div class="table-responsive">
 
-                    {!! $dataTableHtml->table(['class' => 'table table-row-bordered table-row-dashed gy-4 align-middle fw-bold'],true) !!}
+                    {!! $dataTableHtml->table(['class' => 'table table-row-bordered table-row-dashed gy-4'],true) !!}
 
                 </div>
                 <!--end::Table container-->
@@ -55,62 +38,170 @@
             <!--end::Card body-->
         </div>
         <!--end::Card-->
-
-
     </div>
     <!--end::Container-->
+    
+    <!--begin::Modal group-->
+    <div class="modal fade" tabindex="-1" id="add_method_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">{{__("Add Business Roles")}}</h3>
+                    <!--begin::Close-->
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
+                    </div>
+                    <!--end::Close-->
+                </div>
+                <form class="my-auto pb-5" action="{{route('business.roles.add')}}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                            <!--begin::Input group-->
+                            <div class="row mb-5">
+                                <div class="input-group input-group-lg mb-5">
+                                    <span class="input-group-text">{{__("Name")}}</span>
+                                    <input name="name" type="text" class="form-control" value="" placeholder="{{__('enter name')}}"/>
+                                </div>
+                            </div>
+                            <!--end::Input group-->
+                            <!--begin::Input group-->
+                            <div class="row mb-5">
+                                <div class="input-group input-group-lg mb-5">
+                                    <span class="input-group-text">{{__("Description")}}</span>
+                                    <input name="description" type="text" class="form-control" value="" placeholder="{{__('enter description')}}"/>
+                                </div>
+                            </div>
+                            <!--end::Input group-->
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">{{__('Add')}}</button>
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{__("Close")}}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--end::Modal group-->
+
+    <!--begin::Modal group-->
+    <div class="modal fade" tabindex="-1" id="edit_method_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">{{__("Edit Business Role")}}</h3>
+                    <!--begin::Close-->
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
+                    </div>
+                    <!--end::Close-->
+                </div>
+                <form class="my-auto pb-5" action="{{route('business.roles.edit')}}" method="POST">
+                    @csrf
+                    <input name="edit_id" id="edit_id" type="hidden"/>
+
+                    <div class="modal-body">
+
+                         <!--begin::Input group-->
+                         <div class="row mb-5">
+                            <div class="input-group input-group-lg mb-5">
+                                <span class="input-group-text">{{__("Name")}}</span>
+                                <input name="edit_name" id="edit_name" type="text" class="form-control" value="" placeholder="{{__('enter name')}}"/>
+                            </div>
+                        </div>
+                        <!--end::Input group-->
+                        <!--begin::Input group-->
+                        <div class="row mb-5">
+                            <div class="input-group input-group-lg mb-5">
+                                <span class="input-group-text">{{__("Description")}}</span>
+                                <input name="edit_description" id="edit_description" type="text" class="form-control" value="" placeholder="{{__('enter description')}}"/>
+                            </div>
+                        </div>
+                        <!--end::Input group-->
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">{{__('Edit')}}</button>
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{__("Close")}}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--end::Modal group-->
+
+    <!--begin::Modal group-->
+    <div class="modal fade" tabindex="-1" id="delete_method_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">{{__("Delete Business Role")}}</h3>
+                    <!--begin::Close-->
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
+                    </div>
+                    <!--end::Close-->
+                </div>
+                <form class="my-auto pb-5" action="{{route('business.roles.delete')}}" method="POST">
+                    @csrf
+                    <input name="delete_id" id="delete_id" type="hidden"/>
+
+                    <div class="modal-body">
+
+                         <!--begin::Input group-->
+                         <div class="row mb-5">
+                            <div class="input-group input-group-lg mb-5">
+                                <span class="input-group-text">{{__("Name")}}</span>
+                                <input name="delete_name" id="delete_name" type="text" class="form-control" disabled/>
+                            </div>
+                        </div>
+                        <!--end::Input group-->
+                        <!--begin::Input group-->
+                        <div class="row mb-5">
+                            <div class="input-group input-group-lg mb-5">
+                                <span class="input-group-text">{{__("Description")}}</span>
+                                <input name="delete_description" id="delete_description" type="text" class="form-control" disabled/>
+                            </div>
+                        </div>
+                        <!--end::Input group-->
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">{{__('Delete')}}</button>
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{__("Close")}}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--end::Modal group-->
 @endsection
 
 @section('footer_js')
-
     <script>
-        // var filterValue = getSelectValue('exchange_filter');
+        const methods = JSON.parse('{!! $methodsJson !!}');
 
-        // function filterChanged(selectedFilter){
-        //     filterValue = selectedFilter;
-        // }
+        function editClicked(methodIdNo){
 
-        // function filterAction(){
-        //     console.log(filterValue);
-        //     location.href = "{{route('exchange.ads')}}"+"?order_by="+filterValue;
+            const theMethod = methods.find(item => item.id === methodIdNo);
 
-        // }
+            document.getElementById('edit_id').value = theMethod.id;
+            document.getElementById('edit_name').value = theMethod.name;
+            document.getElementById('edit_description').value = theMethod.description;
 
-        // function getSelectValue(selectorId) {
-        //     var selectedIndex = document.getElementById(selectorId).selectedIndex;
-        //     var selectedValue = document.getElementById(selectorId).options[selectedIndex].value;
-        //     return selectedValue;
-        // }
+            const event = new Event('change');
 
-    </script>
-    <script>
-        function deleteClicked(trnId){
-            Swal.fire({
-                // title: 'Your Title',
-                text: '{{__('You cannot reverse this action')}}',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: '{{__('Ok')}}',
-                cancelButtonText: '{{__('Cancel')}}',
-                allowOutsideClick: false,
-                showCloseButton: true,
-                customClass: {
-                    cancelButton: 'btn btn-danger',
-                    confirmButton: 'btn btn-success',
-                },
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = '{{route('business.roles.delete','')}}'+'/'+ trnId;
-                } else if (result.dismiss === Swal.DismissReason.cancel) {
-                    // Handle cancel button click
-                    console.log('Cancelled');
-                }
-            });
+        }
+
+        function deleteClicked(methodIdNo){
+
+            const theMethod = methods.find(item => item.id === methodIdNo);
+
+            document.getElementById('delete_id').value = theMethod.id;
+            document.getElementById('delete_name').value = theMethod.name;
+            document.getElementById('delete_description').value = theMethod.description;
         }
     </script>
-
-    {!! $dataTableHtml->scripts(attributes: ['type' => 'module']) !!}
-
     <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}" type="text/javascript"></script>
-
+    {!! $dataTableHtml->scripts() !!}
 @endsection
