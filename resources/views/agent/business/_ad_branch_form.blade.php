@@ -159,7 +159,7 @@
         <div class="d-flex justify-content-end">
 
             <!--begin::Button-->
-                <a href="{{route('exchange.posts')}}" class="btn btn-secondary me-5">{{__('Cancel')}}</a>
+                <a href="{{route('business.branches')}}" class="btn btn-secondary me-5">{{__('Cancel')}}</a>
                 <!--begin::Button-->
                 <button type="submit" id="adsubmit_button" class="btn btn-primary">
                     <span class="indicator-label">{{__('Submit')}}</span>
