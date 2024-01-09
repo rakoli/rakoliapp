@@ -1,6 +1,6 @@
 @extends('layouts.users.agent')
 
-@section('title', __("Create Role"))
+@section('title', __("Edit Role"))
 
 @section('header_js')
     <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css" />
@@ -13,7 +13,7 @@
 
         @include('agent.business._submenu_business')
 
-        @include('agent.business._ad_role_form', ['submitUrl'=>route('business.role.create.submit'),'isEdit'=>false])
+        @include('agent.business._ad_role_form', ['submitUrl'=>route('business.roles.edit.submit'),'isEdit'=>true])
 
     </div>
     <!--end::Container-->

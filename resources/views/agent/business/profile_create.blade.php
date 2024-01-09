@@ -1,7 +1,7 @@
 
 @extends('layouts.users.agent')
 
-@section('title', __("Create Post"))
+@section('title', __("Update Business Profile"))
 
 @section('header_js')
     <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css" />
@@ -14,7 +14,7 @@
 
         @include('agent.business._submenu_business')
 
-        @include('agent.business._ad_profile_form', ['submitUrl'=>route('exchange.posts.create.submit'),'isEdit'=>false])
+        @include('agent.business._ad_profile_form', ['submitUrl'=>route('business.profile.update.submit'),'isEdit'=>true])
 
     </div>
     <!--end::Container-->
