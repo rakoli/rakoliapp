@@ -1,7 +1,7 @@
 
 @extends('layouts.users.agent')
 
-@section('title', __("Create Post"))
+@section('title', __("Create Branches"))
 
 @section('header_js')
     <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css" />
