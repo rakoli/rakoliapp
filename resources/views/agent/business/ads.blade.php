@@ -68,7 +68,8 @@
                             <div class="row mb-5">
                                 <div class="input-group input-group-lg mb-5">
                                     <span class="input-group-text">{{__("Description")}}</span>
-                                    <input name="description" type="text" class="form-control" value="" placeholder="{{__('enter description')}}"/>
+                                    {{-- <input name="description" type="text" class="form-control" value="" placeholder="{{__('enter description')}}"/> --}}
+                                    <textarea name="description" type="text" class="form-control" value="" placeholder="{{__('enter description')}}"></textarea>
                                 </div>
                             </div>
                             <!--end::Input group-->
@@ -114,7 +115,8 @@
                         <div class="row mb-5">
                             <div class="input-group input-group-lg mb-5">
                                 <span class="input-group-text">{{__("Description")}}</span>
-                                <input name="edit_description" id="edit_description" type="text" class="form-control" value="" placeholder="{{__('enter description')}}"/>
+                                {{-- <input name="edit_description" id="edit_description" type="text" class="form-control" value="" placeholder="{{__('enter description')}}"/> --}}
+                                <textarea name="edit_description" id="edit_description" type="text" class="form-control" value="" placeholder="{{__('enter description')}}"></textarea>
                             </div>
                         </div>
                         <!--end::Input group-->
@@ -160,7 +162,8 @@
                         <div class="row mb-5">
                             <div class="input-group input-group-lg mb-5">
                                 <span class="input-group-text">{{__("Description")}}</span>
-                                <input name="delete_description" id="delete_description" type="text" class="form-control" disabled/>
+                                {{-- <input name="delete_description" id="delete_description" type="text" class="form-control" disabled/> --}}
+                                <textarea name="delete_description" id="delete_description" type="text" class="form-control" disabled></textarea>
                             </div>
                         </div>
                         <!--end::Input group-->

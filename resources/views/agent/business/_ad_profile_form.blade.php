@@ -71,11 +71,8 @@
                     <!--end::Label-->
                     <label class="form-label">{{__('Business location')}}</label>
                     <!--begin::Input-->
-                    <input type="text" class="form-control mb-2" id="business_location " name="business_location " value="{{$business->business_location  }}" placeholder="{{__("Enter location")}}">
-
+                    <textarea type="text" class="form-control mb-2" id="business_location " name="business_location " placeholder="{{__("Enter location")}}">{{$business->business_location  }}</textarea>
                 </div>
-
-
             </div>
             <!--end::Card header-->
         </div>
