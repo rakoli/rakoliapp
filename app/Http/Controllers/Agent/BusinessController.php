@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Agent;
 use App\Http\Controllers\Controller;
 use App\Models\Area;
 use App\Models\Business;
-use App\Models\Business;
 use App\Models\BusinessRole;
 use App\Models\ExchangeAds;
 use App\Models\ExchangeBusinessMethod;
