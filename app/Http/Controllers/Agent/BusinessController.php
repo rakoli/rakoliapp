@@ -10,6 +10,7 @@ use Yajra\DataTables\DataTables;
 use App\Models\Region;
 use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class BusinessController extends Controller
 {
@@ -29,9 +30,11 @@ class BusinessController extends Controller
             $roles = Role::query(); // Assuming you have a Role model associated with the roles table
     
             return \Yajra\DataTables\Facades\DataTables::eloquent($roles)
-                ->addColumn('actions', function (Role $role) {
-                    // Add any additional actions you want for each role
-                    return '<a href="#" class="btn btn-secondary btn-sm">Edit</a>';
+                ->addColumn('actions', function(Role $role) {
+                    $content = '<a class="btn btn-secondary btn-sm me-2" href="'.route('business.roles.edit', $role->id).'">'.__("Edit").'</a>';
+                    $content .= '<button class="btn btn-secondary btn-sm me-2" onclick="deleteClicked('.$role->id.')">'.__("Delete").'</button>';
+                    
+                    return $content;
                 })
                 ->rawColumns(['actions'])
                 ->addIndexColumn()
@@ -83,5 +86,49 @@ class BusinessController extends Controller
         $businessExchangeMethods = ExchangeBusinessMethod::where('business_code',$businessCode)->get();
 
         return view('agent.business.profile_create', compact('branches','regions','businessExchangeMethods'));
+    }
+
+    public function rolesEdit(Request $request, $id)
+    {
+        $role = Role::where('id',$id)->first();
+        if(empty($role)){
+            return redirect()->back()->withErrors(['Invalid Role Id']);
+        }
+        return view('agent.business.roles_edit', compact('role'));
+    }
+
+    public function rolesEditSubmit(Request $request)
+    {
+        $request->validate([
+            'role_id' => 'required|exists:roles,id',
+            'name' => ['required', 'min:3', Rule::unique('roles', 'name')->ignore($request->get('role_id'))]
+        ]);
+
+        $role = Role::where('id',$request->get('role_id'))->first();
+
+        // $isAllowed = $role->isUserAllowed($request->user());
+        // if($isAllowed == false){
+        //     return redirect()->route('business.role')->withErrors(['Not authorized to access transaction']);
+        // }
+        $role->name = $request->get('name');
+        $role->save();
+
+        return redirect()->route('business.role')->with(['message'=>'Role Edited Successfully']);
+    }
+
+    public function rolesDelete(Request $request, $id)
+    {
+        $role = Role::where('id',$id)->first();
+        if(empty($role)){
+            return redirect()->back()->withErrors(['Invalid Exchange Ad']);
+        }
+
+        // $isAllowed = $exchangeAd->isUserAllowed($request->user());
+        // if($isAllowed == false){
+        //     return redirect()->route('exchange.posts')->withErrors(['Not authorized to access transaction']);
+        // }
+        Role::where('id',$id)->delete();
+
+        return redirect()->route('business.role')->with(['message'=>'Role Deleted Successfully']);
     }
 }
