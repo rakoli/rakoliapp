@@ -53,9 +53,6 @@ Route::middleware(['auth','should_complete_registration','onlyagent'])->group(fu
     });
     //END: EXCHANGE MODULE
 
-
-
-
     Route::name('business.')->prefix('business')->middleware('lastseen_update')->group(function () {
         Route::get('role', [App\Http\Controllers\Agent\BusinessController::class, 'roles'])->name('role');
         Route::get('role/create', [App\Http\Controllers\Agent\BusinessController::class, 'rolesCreate'])->name('roles.create');
@@ -65,6 +62,14 @@ Route::middleware(['auth','should_complete_registration','onlyagent'])->group(fu
         Route::get('profile/update', [App\Http\Controllers\Agent\BusinessController::class, 'profileCreate'])->name('profile.update');
 
         Route::get('branches', [App\Http\Controllers\Agent\BusinessController::class, 'branches'])->name('branches');
+        Route::get('branches/create', [App\Http\Controllers\Agent\BusinessController::class, 'branchesCreate'])->name('branches.create');
+        Route::get('branches/edit/{id}', [App\Http\Controllers\Agent\BusinessController::class, 'branchesEdit'])->name('branches.edit');
+        Route::get('branches/delete/{id}', [App\Http\Controllers\Agent\BusinessController::class, 'branchesDelete'])->name('branches.delete');
+        Route::post('branches/create/submit', [App\Http\Controllers\Agent\BusinessController::class, 'branchesCreateSubmit'])->name('branches.create.submit');
+        Route::post('branches/edit/submit', [App\Http\Controllers\Agent\BusinessController::class, 'branchesEditSubmit'])->name('branches.edit.submit');
+        Route::get('branches/create/townlist', [App\Http\Controllers\Agent\BusinessController::class, 'branchesCreateTownlistAjax'])->name('branches.townlistAjax');
+        Route::get('branches/create/arealist', [App\Http\Controllers\Agent\BusinessController::class, 'branchesCreateArealistAjax'])->name('branches.arealistAjax');
+
     });
 
 

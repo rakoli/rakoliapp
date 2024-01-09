@@ -44,8 +44,8 @@
                 <!--end::Nav item-->
                  <!--begin::Nav item-->
                  <li class="nav-item my-1">
-                    <a class="btn btn-color-gray-600 btn-active-secondary btn-active-color-primary fw-bolder fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 {{returnActiveSubMenuStyle('methods')}}"
-                       href="{{route('exchange.methods')}}">{{__('Branches')}}</a>
+                    <a class="btn btn-color-gray-600 btn-active-secondary btn-active-color-primary fw-bolder fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 {{returnActiveSubMenuStyle('branches')}}"
+                       href="{{route('business.branches')}}">{{__('Branches')}}</a>
                 </li>
                 <!--end::Nav item-->
             </ul>

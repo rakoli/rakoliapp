@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Agent;
 
 use App\Http\Controllers\Controller;
+use App\Models\Area;
+use App\Models\Business;
 use App\Models\ExchangeAds;
 use App\Models\ExchangeBusinessMethod;
 use App\Models\Location;
@@ -10,6 +12,7 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Models\Region;
 use App\Models\Role;
+use App\Models\Towns;
 use App\Utils\Enums\ExchangeStatusEnum;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,15 +24,15 @@ class BusinessController extends Controller
         $builder = $dataTable->getHtmlBuilder();
         $orderBy = null;
         $orderByFilter = null;
-    
+
         if ($request->get('order_by')) {
             $orderBy = ['order_by' => $request->get('order_by')];
             $orderByFilter = $request->get('order_by');
         }
-    
+
         if (request()->ajax()) {
             $roles = Role::query(); // Assuming you have a Role model associated with the roles table
-    
+
             return \Yajra\DataTables\Facades\DataTables::eloquent($roles)
                 ->addColumn('actions', function (Role $role) {
                     // Add any additional actions you want for each role
@@ -39,7 +42,7 @@ class BusinessController extends Controller
                 ->addIndexColumn()
                 ->toJson();
         }
-    
+
         // DataTable
         $dataTableHtml = $builder->columns([
             ['data' => 'id', 'title' => __('ID')],
@@ -52,8 +55,8 @@ class BusinessController extends Controller
             ->paging(true)
             ->dom('frtilp')
             ->lengthMenu([[25, 50, 100, -1], [25, 50, 100, "All"]]);
-    
-        return view('agent.business.ads',compact('dataTableHtml', 'orderByFilter'));
+
+        return view('agent.business.ads', compact('dataTableHtml', 'orderByFilter'));
     }
 
     public function rolesCreate()
@@ -88,65 +91,221 @@ class BusinessController extends Controller
 
         return view('agent.business.profile_create', compact('business'));
     }
-        public function branches(Request $request)
-        {
-            $user = \auth()->user();
-            $dataTable = new DataTables();
-            $builder = $dataTable->getHtmlBuilder();
+    public function branches(Request $request)
+    {
+        $user = \auth()->user();
+        $dataTable = new DataTables();
+        $builder = $dataTable->getHtmlBuilder();
 
-            if (request()->ajax()){
-                $exchangePosts = ExchangeAds::where('business_code',$user->business_code)->orderBy('id','desc')->with('exchange_payment_methods');
-                return \Yajra\DataTables\Facades\DataTables::eloquent($exchangePosts)
-                    ->addColumn('action', function(ExchangeAds $trn) {
-                        $content = '<a class="btn btn-secondary btn-sm me-2" href="'.route('exchange.posts.edit', $trn->id).'">'.__("Edit").'</a>';
-                        if($trn->status != ExchangeStatusEnum::DELETED->value){
-                            $content .= '<button class="btn btn-secondary btn-sm me-2" onclick="deleteClicked('.$trn->id.')">'.__("Delete").'</button>';
-                        }
-                        return $content;
-                    })
-                    ->addColumn('range', function(ExchangeAds $trn) {
-                        $min = number_format($trn->min_amount);
-                        $max = number_format($trn->max_amount);
-                        return "$min to $max";
-                    })
-                    ->addColumn('payment', function(ExchangeAds $ad) {
-                        $ownerSellMethods = $ad->exchange_payment_methods->where('type',\App\Utils\Enums\ExchangePaymentMethodTypeEnum::OWNER_SELL->value)->where('status',1);
-                        $ownerBuyMethods = $ad->exchange_payment_methods->where('type',\App\Utils\Enums\ExchangePaymentMethodTypeEnum::OWNER_BUY->value)->where('status',1);
+        if (request()->ajax()) {
+            $location = Location::query(); // Assuming you have a Location model associated with the locations table
 
-                        $traderSellMethods = $ownerSellMethods;//To match view display, should be opposite since is owner load
-                        $lastTraderSell = $traderSellMethods->last();
-
-                        $traderBuyMethods = $ownerBuyMethods;//To match view display, should be opposite since is owner load
-                        $lastTraderBuy = $traderBuyMethods->last();
-                        return view('agent.exchange.ads_datatable_components._payment', compact( 'ad','traderSellMethods','traderBuyMethods','lastTraderSell', 'lastTraderBuy'));
-                    })
-                    ->addIndexColumn()
-                    ->rawColumns(['action'])
-                    ->editColumn('id',function($method) {
-                        return idNumberDisplay($method->id);
-                    })
-                    ->editColumn('location',function($method) {
-                        return $method->location->name;
-                    })
-                    ->toJson();
-            }
-
-            //Datatable
-            $dataTableHtml = $builder->columns([
-                ['data' => 'id', 'title' => __('id')],
-                ['data' => 'name', 'title' => __("Name")],
-                ['data' => 'balance', 'title' => __("Balance").' ('.session('currency').')'],
-                ['data' => 'balance_currency ', 'title' => __("Balance Currency ")],
-                ['data' => 'description', 'title' => __("Description")],
-                ['data' => 'action', 'title' => __("Action")],
-            ])->responsive(true)
-                ->ordering(false)
-                ->ajax(route('business.branches'))
-                ->paging(true)
-                ->dom('frtilp')
-                ->lengthMenu([[25, 50, 100, -1], [25, 50, 100, "All"]]);
-
-            return view('agent.business.branches',compact('dataTableHtml'));
+            return \Yajra\DataTables\Facades\DataTables::eloquent($location)
+                ->addColumn('actions', function (Location $location) { // Corrected model class name
+                    $content = '<a class="btn btn-secondary btn-sm me-2" href="' . route('business.branches.edit', $location->id) . '">' . __("Edit") . '</a>';
+                    $content .= '<button class="btn btn-secondary btn-sm me-2" onclick="deleteClicked(' . $location->id . ')">' . __("Delete") . '</button>';
+                    return $content;
+                })
+                ->rawColumns(['actions'])
+                ->addIndexColumn()
+                ->toJson();
         }
+
+        // Datatable
+        $dataTableHtml = $builder->columns([
+            ['data' => 'id', 'title' => __('id')],
+            ['data' => 'name', 'title' => __("Name")],
+            ['data' => 'balance', 'title' => __("Balance") . ' (' . session('currency') . ')'],
+            ['data' => 'balance_currency', 'title' => __("Balance Currency")], // Removed extra space
+            ['data' => 'description', 'title' => __("Description")],
+            ['data' => 'actions', 'title' => __("Action")], // Corrected column name
+        ])->responsive(true)
+            ->ordering(false)
+            ->ajax(route('business.branches'))
+            ->paging(true)
+            ->dom('frtilp')
+            ->lengthMenu([[25, 50, 100, -1], [25, 50, 100, "All"]]);
+
+        return view('agent.business.branches', compact('dataTableHtml'));
+    }
+
+
+
+    public function branchesCreate()
+    {
+        $businessCode = \auth()->user()->business_code;
+        // $branches = Location::where('business_code',$businessCode)->get();
+        $regions = Region::where('country_code', session('country_code'))->get();
+        $businessExchangeMethods = ExchangeBusinessMethod::where('business_code', $businessCode)->get();
+
+        return view('agent.business.branch_create', compact('regions', 'businessExchangeMethods'));
+    }
+    public function branchesCreateSubmit(Request $request)
+    {
+
+        $request->validate([
+            'name' => 'required',
+            'balance' => 'required|numeric',
+        ]);
+        $user = $request->user();
+
+        $currency = session('currency');
+        if ($currency == null) {
+            $currency = $user->business->country->currency;
+        }
+
+        $branchesData = [
+            'business_code' => $request->user()->business_code,
+            'name' => $request->name,
+            'balance' => $request->balance,
+            'balance_currency' => $request->balance_currency,
+            'description' => $request->availability_desc,
+            'code' => generateCode($request->name, $request->user()->business_code),
+
+        ];
+
+        $region = $request->get('ad_region');
+        if ($region != 'all') {
+            $regionModel = Region::where('code', $region)->get();
+            if ($regionModel->isNotEmpty()) {
+                $branchesData['region_code'] = $regionModel->first()->code;
+            }
+        }
+
+        $town = $request->get('ad_town');
+        if ($town != 'all') {
+            $townModel = Towns::where('code', $town)->get();
+            if ($townModel->isNotEmpty()) {
+                $branchesData['town_code'] = $townModel->first()->code;
+            }
+        }
+
+        $area = $request->get('ad_area');
+        if ($area != 'all') {
+            $areaModel = Area::where('code', $area)->get();
+            if ($areaModel->isNotEmpty()) {
+                $branchesData['area_code'] = $areaModel->first()->code;
+            }
+        }
+        $branches = Location::create($branchesData);
+        return redirect()->route('business.branches')->with(['message' => 'branches Submitted']);
+    }
+    public function branchesEdit(Request $request, $id)
+    {
+        $branches = Location::where('id', $id)->first();
+        if (empty($branches)) {
+            return redirect()->back()->withErrors(['Invalid Branches']);
+        }
+        // $isAllowed = $branches->isUserAllowed($request->user());
+        // if($isAllowed == false){
+        //     return redirect()->route('business.branches')->withErrors(['Not authorized to access transaction']);
+        // }
+        // $businessCode = \auth()->user()->business_code;
+        // $branches = Location::where('business_code',$businessCode)->get();
+        $regions = Region::where('country_code', session('country_code'))->get();
+        $towns = null;
+        $areas = null;
+        if ($branches->region_code != null) {
+            $towns = Towns::where('region_code', $branches->region_code)->get();
+        }
+
+        if ($branches->town_code != null) {
+            $areas = Area::where('town_code', $branches->town_code)->get();
+        }
+        return view('agent.business.branches_edit', compact('branches', 'regions', 'towns', 'areas'));
+    }
+
+    public function branchesEditSubmit(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'balance' => 'required|numeric',
+        ]);
+        $user = $request->user();
+
+        $currency = session('currency');
+        if ($currency == null) {
+            $currency = $user->business->country->currency;
+        }
+
+        $branchesData = [
+            'business_code' => $request->user()->business_code,
+            'name' => $request->name,
+            'balance' => $request->balance,
+            'balance_currency' => $request->balance_currency,
+            'description' => $request->availability_desc,
+            'code' => generateCode($request->name, $request->user()->business_code),
+
+        ];
+
+        $region = $request->get('ad_region');
+        if ($region != 'all') {
+            $regionModel = Region::where('code', $region)->get();
+            if ($regionModel->isNotEmpty()) {
+                $branchesData['region_code'] = $regionModel->first()->code;
+            }
+        }
+
+        $town = $request->get('ad_town');
+        if ($town != 'all') {
+            $townModel = Towns::where('code', $town)->get();
+            if ($townModel->isNotEmpty()) {
+                $branchesData['town_code'] = $townModel->first()->code;
+            }
+        }
+
+        $area = $request->get('ad_area');
+        if ($area != 'all') {
+            $areaModel = Area::where('code', $area)->get();
+            if ($areaModel->isNotEmpty()) {
+                $branchesData['area_code'] = $areaModel->first()->code;
+            }
+        }
+
+        $branchesId = $request->input('branches_id');
+        Location::where('id', $branchesId)->update($branchesData);
+
+        return redirect()->route('business.branches')->with(['message' => 'branches Edited Successfully']);
+    }
+
+    public function branchesDelete(Request $request, $id)
+    {
+        $location = Location::where('id', $id)->first();
+        if (empty($location)) {
+            return redirect()->back()->withErrors(['Invalid Exchange Ad']);
+        }
+
+        $location->delete();
+
+        return redirect()->route('business.branches')->with(['message' => 'branches Deleted Successfully']);
+    }
+
+
+    public function branchesCreateTownlistAjax(Request $request)
+    {
+        $request->validate([
+            'region_code' => 'required|exists:regions,code',
+        ]);
+        $towns = Towns::where('region_code', $request->get('region_code'))->get()->toArray();
+        return [
+            'status' => 200,
+            'message' => 'successful',
+            'data'=> $towns
+        ];
+    }
+
+    public function branchesCreateArealistAjax(Request $request)
+    {
+        $request->validate([
+            'town_code' => 'required|exists:towns,code',
+        ]);
+        $towns = Area::where('town_code', $request->get('town_code'))->get()->toArray();
+        return [
+            'status' => 200,
+            'message' => 'successful',
+            'data'=> $towns
+        ];
+    }
+
 
 }

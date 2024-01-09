@@ -19,7 +19,7 @@
             <div class="card-header mt-5">
                 <!--begin::Card toolbar-->
                 <div class="card-toolbar my-1">
-                    <a type="button" class="btn btn-primary m-5" href="{{route('exchange.posts.create')}}">
+                    <a type="button" class="btn btn-primary m-5" href="{{route('business.branches.create')}}">
                         {{__('Add')}}
                     </a>
                 </div>
@@ -49,7 +49,6 @@
 @section('footer_js')
     <script>
         function deleteClicked(trnId){
-            console.log(trnId);
             Swal.fire({
                 // title: 'Your Title',
                 text: '{{__('You cannot reverse this action')}}',
@@ -65,7 +64,7 @@
                 },
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = '{{route('exchange.posts.delete','')}}'+'/'+ trnId;
+                    window.location.href = '{{route('business.branches.delete','')}}'+'/'+ trnId;
                 } else if (result.dismiss === Swal.DismissReason.cancel) {
                     // Handle cancel button click
                     console.log('Cancelled');
