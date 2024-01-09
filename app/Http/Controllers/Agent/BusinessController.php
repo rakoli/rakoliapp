@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Agent;
 
 use App\Http\Controllers\Controller;
+use App\Models\ExchangeAds;
 use App\Models\ExchangeBusinessMethod;
 use App\Models\Location;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Models\Region;
 use App\Models\Role;
+use App\Utils\Enums\ExchangeStatusEnum;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
@@ -78,57 +80,15 @@ class BusinessController extends Controller
         return redirect()->route('business.role')->with(['message' => 'Role create successfully.']);
     }
 
-    public function profileCreate (Request $request){
-        // dd('dd');
-        $businessCode = \auth()->user()->business_code;
-        $branches = Location::where('business_code',$businessCode)->get();
-        $regions = Region::where('country_code',session('country_code'))->get();
-        $businessExchangeMethods = ExchangeBusinessMethod::where('business_code',$businessCode)->get();
+    public function profileCreate(Request $request)
+    {
+        $businessCode = \auth()->user();
+        $user = auth()->user();
+        $business = $user->business;
+        // $branches = Location::where('business_code',$businessCode)->get();
+        // $regions = Region::where('country_code',session('country_code'))->get();
+        // $businessExchangeMethods = ExchangeBusinessMethod::where('business_code',$businessCode)->get();
 
         return view('agent.business.profile_create', compact('branches','regions','businessExchangeMethods'));
-    }
-
-    public function rolesEdit(Request $request, $id)
-    {
-        $role = Role::where('id',$id)->first();
-        if(empty($role)){
-            return redirect()->back()->withErrors(['Invalid Role Id']);
-        }
-        return view('agent.business.roles_edit', compact('role'));
-    }
-
-    public function rolesEditSubmit(Request $request)
-    {
-        $request->validate([
-            'role_id' => 'required|exists:roles,id',
-            'name' => ['required', 'min:3', Rule::unique('roles', 'name')->ignore($request->get('role_id'))]
-        ]);
-
-        $role = Role::where('id',$request->get('role_id'))->first();
-
-        // $isAllowed = $role->isUserAllowed($request->user());
-        // if($isAllowed == false){
-        //     return redirect()->route('business.role')->withErrors(['Not authorized to access transaction']);
-        // }
-        $role->name = $request->get('name');
-        $role->save();
-
-        return redirect()->route('business.role')->with(['message'=>'Role Edited Successfully']);
-    }
-
-    public function rolesDelete(Request $request, $id)
-    {
-        $role = Role::where('id',$id)->first();
-        if(empty($role)){
-            return redirect()->back()->withErrors(['Invalid Exchange Ad']);
-        }
-
-        // $isAllowed = $exchangeAd->isUserAllowed($request->user());
-        // if($isAllowed == false){
-        //     return redirect()->route('exchange.posts')->withErrors(['Not authorized to access transaction']);
-        // }
-        Role::where('id',$id)->delete();
-
-        return redirect()->route('business.role')->with(['message'=>'Role Deleted Successfully']);
     }
 }

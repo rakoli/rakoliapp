@@ -273,12 +273,12 @@
                     </span>
                     <span class="menu-title">{{ __('Payments') }}</span>
                 </a>
-                <a class="menu-link" href="{{route('business.profile.create')}}"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('business.profile.update')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Business Profile') }}</span>
                 </a>
-                <a class="menu-link" href="/dashboard/vas/profile"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('business.branches')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Branches') }}</span>

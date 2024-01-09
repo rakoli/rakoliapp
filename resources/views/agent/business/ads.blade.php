@@ -83,6 +83,31 @@
         // }
 
     </script>
+    <script>
+        function deleteClicked(trnId){
+            Swal.fire({
+                // title: 'Your Title',
+                text: '{{__('You cannot reverse this action')}}',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: '{{__('Ok')}}',
+                cancelButtonText: '{{__('Cancel')}}',
+                allowOutsideClick: false,
+                showCloseButton: true,
+                customClass: {
+                    cancelButton: 'btn btn-danger',
+                    confirmButton: 'btn btn-success',
+                },
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '{{route('business.roles.delete','')}}'+'/'+ trnId;
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    // Handle cancel button click
+                    console.log('Cancelled');
+                }
+            });
+        }
+    </script>
 
     {!! $dataTableHtml->scripts(attributes: ['type' => 'module']) !!}
 
