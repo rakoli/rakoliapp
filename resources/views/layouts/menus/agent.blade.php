@@ -263,7 +263,7 @@
                     </span>
                     <span class="menu-title">{{ __('Roles') }}</span>
                 </a>
-                <a class="menu-link" href="/dashboard/vas/users"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('business.users')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Users') }}</span>

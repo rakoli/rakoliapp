@@ -75,6 +75,15 @@ Route::middleware(['auth','should_complete_registration','onlyagent'])->group(fu
         Route::get('branches/create/townlist', [App\Http\Controllers\Agent\BusinessController::class, 'branchesCreateTownlistAjax'])->name('branches.townlistAjax');
         Route::get('branches/create/arealist', [App\Http\Controllers\Agent\BusinessController::class, 'branchesCreateArealistAjax'])->name('branches.arealistAjax');
 
+
+
+        Route::get('users', [App\Http\Controllers\Agent\BusinessController::class, 'users'])->name('users');
+        Route::get('users/create', [App\Http\Controllers\Agent\BusinessController::class, 'usersCreate'])->name('users.create');
+        Route::post('users/create/submit', [App\Http\Controllers\Agent\BusinessController::class, 'usersCreateSubmit'])->name('users.create.submit');
+        Route::get('users/edit/{id}', [App\Http\Controllers\Agent\BusinessController::class, 'usersEdit'])->name('users.edit');
+        Route::post('users/edit/submit', [App\Http\Controllers\Agent\BusinessController::class, 'usersEditSubmit'])->name('users.edit.submit');
+        Route::get('users/delete/{id}', [App\Http\Controllers\Agent\BusinessController::class, 'usersDelete'])->name('users.delete');
+
     });
 
 

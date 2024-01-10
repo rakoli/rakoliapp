@@ -8,14 +8,20 @@ use App\Models\Business;
 use App\Models\BusinessRole;
 use App\Models\ExchangeAds;
 use App\Models\ExchangeBusinessMethod;
+use App\Models\ExchangePaymentMethod;
 use App\Models\Location;
+use App\Models\LocationUser;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Models\Region;
 use App\Models\Role;
 use App\Models\Towns;
+use App\Models\User;
+use App\Models\UserRole;
 use App\Utils\Enums\ExchangeStatusEnum;
+use App\Utils\Enums\UserTypeEnum;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
 class BusinessController extends Controller
@@ -32,13 +38,13 @@ class BusinessController extends Controller
             $orderBy = ['order_by' => $request->get('order_by')];
             $orderByFilter = $request->get('order_by');
         }
-        $roles = BusinessRole::where('business_code',$user->business_code)->orderBy('id','desc');
+        $roles = BusinessRole::where('business_code', $user->business_code)->orderBy('id', 'desc');
 
         if (request()->ajax()) {
             return \Yajra\DataTables\Facades\DataTables::eloquent($roles)
-                ->addColumn('actions', function(BusinessRole $role) {
-                    $content = '<button class="btn btn-secondary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#edit_method_modal" onclick="editClicked('.$role->id.')">'.__("Edit").'</button>';
-                    $content .= '<button class="btn btn-secondary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#delete_method_modal" onclick="deleteClicked('.$role->id.')">'.__("Delete").'</button>';
+                ->addColumn('actions', function (BusinessRole $role) {
+                    $content = '<button class="btn btn-secondary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#edit_method_modal" onclick="editClicked(' . $role->id . ')">' . __("Edit") . '</button>';
+                    $content .= '<button class="btn btn-secondary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#delete_method_modal" onclick="deleteClicked(' . $role->id . ')">' . __("Delete") . '</button>';
                     return $content;
                 })
                 ->rawColumns(['actions'])
@@ -62,7 +68,7 @@ class BusinessController extends Controller
             ->lengthMenu([[25, 50, 100, -1], [25, 50, 100, "All"]]);
 
         $methodsJson = $roles->get()->toJson();
-        return view('agent.business.ads',compact('dataTableHtml', 'orderByFilter','methodsJson'));
+        return view('agent.business.ads', compact('dataTableHtml', 'orderByFilter', 'methodsJson'));
     }
 
     public function rolesCreate()
@@ -89,7 +95,7 @@ class BusinessController extends Controller
             'description' => $request->description,
         ]);
 
-        return redirect()->back()->with(['message'=>__('Business Role').' '.__('Added Successfully')]);
+        return redirect()->back()->with(['message' => __('Business Role') . ' ' . __('Added Successfully')]);
     }
 
     public function rolesCreateSubmit(Request $request)
@@ -122,7 +128,7 @@ class BusinessController extends Controller
         $BusinessRole->description = $request->edit_description;
         $BusinessRole->save();
 
-        return redirect()->back()->with(['message'=>__('Business Role').' '.__('Edited Successfully')]);
+        return redirect()->back()->with(['message' => __('Business Role') . ' ' . __('Edited Successfully')]);
     }
 
     public function rolesEditSubmit(Request $request)
@@ -132,7 +138,7 @@ class BusinessController extends Controller
             'name' => ['required', 'min:3', Rule::unique('roles', 'name')->ignore($request->get('role_id'))]
         ]);
 
-        $role = Role::where('id',$request->get('role_id'))->first();
+        $role = Role::where('id', $request->get('role_id'))->first();
 
         // $isAllowed = $role->isUserAllowed($request->user());
         // if($isAllowed == false){
@@ -141,7 +147,7 @@ class BusinessController extends Controller
         $role->name = $request->get('name');
         $role->save();
 
-        return redirect()->route('business.role')->with(['message'=>'Role Edited Successfully']);
+        return redirect()->route('business.role')->with(['message' => 'Role Edited Successfully']);
     }
 
     public function rolesDelete(Request $request)
@@ -159,7 +165,7 @@ class BusinessController extends Controller
 
         $BusinessRole->delete();
 
-        return redirect()->back()->with(['message'=>__('Business Role').' '.__('Deleted Successfully')]);
+        return redirect()->back()->with(['message' => __('Business Role') . ' ' . __('Deleted Successfully')]);
     }
 
     public function profileCreate(Request $request)
@@ -177,10 +183,9 @@ class BusinessController extends Controller
         $builder = $dataTable->getHtmlBuilder();
 
         if (request()->ajax()) {
-            $location = Location::query(); // Assuming you have a Location model associated with the locations table
-
+            $location = Location::where('business_code',$user->business_code);
             return \Yajra\DataTables\Facades\DataTables::eloquent($location)
-                ->addColumn('actions', function (Location $location) { // Corrected model class name
+                ->addColumn('actions', function (Location $location) {
                     $content = '<a class="btn btn-secondary btn-sm me-2" href="' . route('business.branches.edit', $location->id) . '">' . __("Edit") . '</a>';
                     $content .= '<button class="btn btn-secondary btn-sm me-2" onclick="deleteClicked(' . $location->id . ')">' . __("Delete") . '</button>';
                     return $content;
@@ -207,9 +212,6 @@ class BusinessController extends Controller
 
         return view('agent.business.branches', compact('dataTableHtml'));
     }
-
-
-
     public function branchesCreate()
     {
         $businessCode = \auth()->user()->business_code;
@@ -369,7 +371,7 @@ class BusinessController extends Controller
         return [
             'status' => 200,
             'message' => 'successful',
-            'data'=> $towns
+            'data' => $towns
         ];
     }
 
@@ -382,12 +384,9 @@ class BusinessController extends Controller
         return [
             'status' => 200,
             'message' => 'successful',
-            'data'=> $towns
+            'data' => $towns
         ];
     }
-
-
-
     public function profileUpdate(Request $request)
     {
         $request->validate([
@@ -396,7 +395,7 @@ class BusinessController extends Controller
             // 'business_phone_number' => ['required', Rule::unique('businesses', 'business_phone_number')->ignore($request->get('business_id'))]
         ]);
 
-        $business = Business::where('id',$request->get('business_id'))->first();
+        $business = Business::where('id', $request->get('business_id'))->first();
 
         // $isAllowed = $role->isUserAllowed($request->user());
         // if($isAllowed == false){
@@ -411,6 +410,167 @@ class BusinessController extends Controller
         $business->business_location = $request->get('business_location_');
         $business->save();
 
-        return redirect()->route('business.profile.update')->with(['message'=>'Profile Updated Successfully']);
+        return redirect()->route('business.profile.update')->with(['message' => 'Profile Updated Successfully']);
+    }
+
+
+    public function users()
+    {
+        $user = \auth()->user();
+        $dataTable = new DataTables();
+        $builder = $dataTable->getHtmlBuilder();
+        $users = User::where('business_code', $user->business_code)->orderBy('id', 'desc');
+
+        if (request()->ajax()) {
+
+            return \Yajra\DataTables\Facades\DataTables::eloquent($users)
+                ->addColumn('action', function (User $trn) {
+                    $content = '<a class="btn btn-secondary btn-sm me-2" href="' . route('business.users.edit', $trn->id) . '">' . __("Edit") . '</a>';
+                    $content .= '<button class="btn btn-secondary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#delete_method_modal" onclick="deleteClicked(' . $trn->id . ')">' . __("Delete") . '</button>';
+                    return $content;
+                })
+                ->addIndexColumn()
+                ->rawColumns(['action'])
+                ->editColumn('status', function ($method) {
+                    if ($method->status == 1) {
+                        return 'active';
+                    } else {
+                        return 'inactive';
+                    }
+                })
+                ->editColumn('id', function ($method) {
+                    return idNumberDisplay($method->id);
+                })
+                ->toJson();
+        }
+        //Datatable
+        $dataTableHtml = $builder->columns([
+            ['data' => 'id', 'title' => __('id')],
+            ['data' => 'fname', 'title' => __("Name")],
+            ['data' => 'lname', 'title' => __("Last Name")],
+            ['data' => 'phone', 'title' => __("Phone Number")],
+            ['data' => 'email', 'title' => __("Email")],
+            ['data' => 'business_code', 'title' => __("Business Code")],
+            ['data' => 'action', 'title' => __("Action")],
+        ])->responsive(true)
+            ->ordering(false)
+            ->ajax(route('business.users'))
+            ->paging(true)
+            ->dom('frtilp')
+            ->lengthMenu([[25, 50, 100, -1], [25, 50, 100, "All"]]);
+        $methodsJson = $users->get()->toJson();
+        return view('agent.business.users', compact('dataTableHtml', 'methodsJson'));
+    }
+    public function usersCreate()
+    {
+        $user = \auth()->user()->business_code;
+        $branches = Location::where('business_code', $user)->get();
+        $businessRole = BusinessRole::where('business_code', $user)->get();
+
+        return view('agent.business.users_create', compact('branches', 'businessRole', 'user'));
+    }
+
+    public function usersCreateSubmit(Request $request)
+    {
+        $request->validate([
+            'fname' => 'required|string',
+            'lname' => 'required|string',
+            'email' => 'required|email|unique:users,email',
+            'phone' => 'required',
+            'password' => 'required|string|min:8',
+            'branches' => 'required',
+            'roles' => 'required',
+        ]);
+        $user = $request->user();
+        $usersData = [
+            'country_code' => $user->country_code,
+            'fname' => $request->fname,
+            'lname' => $request->lname,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'type' => UserTypeEnum::AGENT->value,
+            'password' => Hash::make($request->password),
+            'business_code' => $request->user()->business_code,
+            'code' => generateCode($request->fname, $request->user()->business_code),
+        ];
+        $newUser = User::create($usersData);
+        // $newUser->locations()->attach($request->branches, ['business_code' => $newUser->business_code]);
+        $roles = $request->input('roles');
+        $locations = $request->input('branches');
+        foreach ($locations as $location) {
+            LocationUser::create([
+                'user_code' => $newUser->code,
+                'business_code' => $newUser->business_code,
+                'location_code' => $location,
+            ]);
+        }
+        UserRole::create([
+            'user_code' => $newUser->code,
+            'business_code' => $newUser->business_code,
+            'user_role' => $roles,
+        ]);
+        return redirect()->route('business.users')->with(['message' => 'users Submitted']);
+    }
+
+    public function usersEdit(Request $request, $id)
+    {
+        $users = User::where('id', $id)->first();
+        $user = \auth()->user()->business_code;
+         $locationdata =LocationUser::where('user_code',$users->code)->get();
+        if (empty($users)) {
+            return redirect()->back()->withErrors(['Invalid Branches']);
+        }
+        $branches = Location::where('business_code', $user)->get();
+        $businessRole = BusinessRole::where('business_code', $user)->get();
+
+        return view('agent.business.users_edit', compact('users','branches', 'businessRole','locationdata'));
+    }
+    public function usersEditSubmit(Request $request){
+        $request->validate([
+            'fname' => 'required|string',
+            'lname' => 'required|string',
+            'email' => 'required|email',
+            'phone' => 'required',
+            'password' => 'required|string|min:8',
+            'branches' => 'required',
+            'roles' => 'required',
+        ]);
+        $user = User::where('id', $request->users_id)->firstOrFail();
+        $user->fname = $request->fname;
+        $user->lname = $request->lname;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        $locationUser =LocationUser::where('user_code',$user->code)->get();
+        $userRole =UserRole::where('user_code',$user->code)->get();
+        $locationUser->each->delete();
+        $userRole->each->delete();
+        $locations = $request->input('branches');
+        $roles = $request->input('roles');
+
+        foreach ($locations as $location) {
+            LocationUser::create([
+                'user_code' => $user->code,
+                'business_code' => $user->business_code,
+                'location_code' => $location,
+            ]);
+        }
+        UserRole::create([
+            'user_code' => $user->code,
+            'business_code' => $user->business_code,
+            'user_role' => $roles,
+        ]);
+        return redirect()->route('business.users')->with(['message' => 'users Edited Successfully']);
+
+    }
+    public function usersDelete($id){
+        $users = User::where('id', $id)->first();
+        if (empty($users)) {
+            return redirect()->back()->withErrors(['Invalid Exchange Ad']);
+        }
+        $users->delete();
+        return redirect()->route('business.users')->with(['message' => 'Users Deleted Successfully']);
     }
 }

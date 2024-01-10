@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -157,6 +158,16 @@ class User extends Authenticatable
             $busines->last_seen = now();
             $busines->save();
         }
+    }
+
+    // public function userRoles(): HasMany
+    // {
+    //     return $this->hasMany(UserRole::class, 'user_code', 'code');
+    // }
+
+    public function businessRoles(): HasManyThrough
+    {
+        return $this->hasManyThrough( BusinessRole::class,UserRole::class,'user_code','code','code','user_role');
     }
 
 }
