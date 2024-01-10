@@ -3,10 +3,9 @@
 /// This is custom route only for agent routes. All agent routes will be registered in here
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CustomAgentDashboardController;
 
 // All get methods will be loaded with this route
-Route::middleware(['auth','should_complete_registration','onlyagent'])->group(function () {
+Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(function () {
 
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('agent.dashboard'); //For Middleware testing and having a special user type dashboard route
 
@@ -62,6 +61,8 @@ Route::middleware(['auth','should_complete_registration','onlyagent'])->group(fu
         Route::post('role/edit/submit', [App\Http\Controllers\Agent\BusinessController::class, 'rolesEditSubmit'])->name('roles.edit.submit');
         Route::post('roles.delete', [App\Http\Controllers\Agent\BusinessController::class, 'rolesDelete'])->name('roles.delete');
 
+        Route::get('payments', [App\Http\Controllers\Agent\PaymentController::class, 'payments'])->name('payments');
+
         Route::get('profile', [App\Http\Controllers\Agent\BusinessController::class, 'profile'])->name('profile');
         Route::get('profile/update', [App\Http\Controllers\Agent\BusinessController::class, 'profileCreate'])->name('profile.update');
         Route::post('profile/update', [App\Http\Controllers\Agent\BusinessController::class, 'profileUpdate'])->name('profile.update.submit');
@@ -76,6 +77,5 @@ Route::middleware(['auth','should_complete_registration','onlyagent'])->group(fu
         Route::get('branches/create/arealist', [App\Http\Controllers\Agent\BusinessController::class, 'branchesCreateArealistAjax'])->name('branches.arealistAjax');
 
     });
-
 
 });
