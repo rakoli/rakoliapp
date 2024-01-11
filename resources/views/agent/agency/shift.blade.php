@@ -54,7 +54,7 @@
                                 isStacked="true"
                             >
 
-                            <livewire:shift.open-shift lazy />
+                                @include('agent.agency._shift.open-shift')
 
 
                             </x-modal_with_button>

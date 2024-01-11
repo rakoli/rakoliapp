@@ -58,13 +58,19 @@
                     <div class="hover-scroll-y my-2 my-lg-5 scroll-ms" id="kt_aside_menu_wrapper" data-kt-scroll="true" data-kt-scroll-height="auto" data-kt-scroll-dependencies="#kt_aside_logo, #kt_aside_footer" data-kt-scroll-wrappers="#kt_aside, #kt_aside_menu" data-kt-scroll-offset="5px">
                         <!--begin::Menu-->
                         <div class="menu menu-column menu-title-gray-700 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500 fw-semibold" id="#kt_aside_menu" data-kt-menu="true">
-                            @if (session('type') == 'admin')
-                                @include('layouts.menus.admin')
-                            @elseif(session('type') == 'vas')
-                                @include('layouts.menus.vas')
-                            @elseif(session('type') == 'agent')
-                                @include('layouts.menus.agent')
-                            @endif
+
+
+                            @php
+                            $menuString = match (session('type'))
+                            {
+                                "admin" => view('layouts.menus.admin')->render(),
+                                "vas" => view('layouts.menus.vas')->render(),
+                                "agent" => view('layouts.menus.agent')->render(),
+                                default => view('layouts.menus.agent')->render(),
+                            };
+
+                            @endphp
+                            {{  str($menuString)->toHtmlString() }}
                         </div>
                         <!--end::Menu-->
                     </div>
