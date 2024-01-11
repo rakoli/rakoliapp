@@ -76,6 +76,58 @@
     <!--end:Menu sub-->
 </div>
 
+<!-- VAS -->
+<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('vas')}}">
+    <!--begin:Menu link-->
+    <span class="menu-link menu-center">
+        <span class="menu-icon me-0">
+            <i class="ki-outline ki-bill fs-2x"></i>
+        </span>
+        <span class="menu-title">
+            {{ __('Opportunity') }}
+        </span>
+    </span>
+    <!--end:Menu link-->
+    <!--begin:Menu sub-->
+    <div class="menu-sub menu-sub-dropdown px-2 py-4 w-250px mh-75 overflow-auto">
+        <!--begin:Menu item-->
+        <div class="menu-item">
+            <!--begin:Menu content-->
+            <div class="menu-content">
+                <span class="menu-section fs-5 fw-bolder ps-1 py-1">
+                    {{ __('VAS Opportunities') }}
+                </span>
+            </div>
+            <!--end:Menu content-->
+        </div>
+        <!--end:Menu item-->
+        <!--begin:Menu item-->
+        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
+
+            <!--begin:Menu sub-->
+            <div class="menu-sub menu-sub-accordion">
+                <a class="menu-link" href="{!! route('vas.tasks.index') !!}">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ __('Tasks') }} <!--Ongoing-->
+                    </span>
+                </a>
+                <a class="menu-link" href="/dashboard/agent/transaction">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ __('Contracts') }} <!--Completed-->
+                    </span>
+                </a>
+            </div>
+            <!--end:Menu sub-->
+        </div>
+        <!--end:Menu item-->
+    </div>
+    <!--end:Menu sub-->
+</div>
+
 <!-- Business Management -->
 <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('business')}}">
     <!--begin:Menu link-->
