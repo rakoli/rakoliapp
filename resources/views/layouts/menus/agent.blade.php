@@ -253,7 +253,7 @@
                     </span>
                     <span class="menu-title">{{ __('Account Subscription') }}</span>
                 </a>
-                <a class="menu-link" href="/dashboard/vas/permission"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('business.referrals')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Referrals',) }}</span>

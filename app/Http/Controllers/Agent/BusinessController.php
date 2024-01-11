@@ -239,7 +239,7 @@ class BusinessController extends Controller
             'business_code' => $request->user()->business_code,
             'name' => $request->name,
             'balance' => $request->balance,
-            'balance_currency' => $request->balance_currency,
+            'balance_currency' => $currency,
             'description' => $request->availability_desc,
             'code' => generateCode($request->name, $request->user()->business_code),
 
@@ -313,7 +313,7 @@ class BusinessController extends Controller
             'business_code' => $request->user()->business_code,
             'name' => $request->name,
             'balance' => $request->balance,
-            'balance_currency' => $request->balance_currency,
+            'balance_currency' => $currency,
             'description' => $request->availability_desc,
             'code' => generateCode($request->name, $request->user()->business_code),
 
@@ -450,7 +450,7 @@ class BusinessController extends Controller
             ['data' => 'lname', 'title' => __("Last Name")],
             ['data' => 'phone', 'title' => __("Phone Number")],
             ['data' => 'email', 'title' => __("Email")],
-            ['data' => 'business_code', 'title' => __("Business Code")],
+            // ['data' => 'business_code', 'title' => __("Business Code")],
             ['data' => 'action', 'title' => __("Action")],
         ])->responsive(true)
             ->ordering(false)
@@ -572,5 +572,49 @@ class BusinessController extends Controller
         }
         $users->delete();
         return redirect()->route('business.users')->with(['message' => 'Users Deleted Successfully']);
+    }
+
+    public function referrals(Request $request){
+        $user = \auth()->user();
+        $dataTable = new DataTables();
+        $builder = $dataTable->getHtmlBuilder();
+        $orderBy = null;
+        $orderByFilter = null;
+
+        if ($request->get('order_by')) {
+            $orderBy = ['order_by' => $request->get('order_by')];
+            $orderByFilter = $request->get('order_by');
+        }
+        $roles = Business::where('referral_business_code', $user->business_code)->orderBy('id', 'desc');
+
+        if (request()->ajax()) {
+            return \Yajra\DataTables\Facades\DataTables::eloquent($roles)
+                ->addColumn('actions', function (Business $role) {
+                    // $content = '<button class="btn btn-secondary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#edit_method_modal" onclick="editClicked(' . $role->id . ')">' . __("Edit") . '</button>';
+                    // $content .= '<button class="btn btn-secondary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#delete_method_modal" onclick="deleteClicked(' . $role->id . ')">' . __("Delete") . '</button>';
+                    // return $content;
+                })
+                ->rawColumns(['actions'])
+                ->addIndexColumn()
+                ->toJson();
+        }
+        // DataTable
+        $dataTableHtml = $builder->columns([
+            ['data' => 'id', 'title' => __('ID')],
+            ['data' => 'business_name', 'title' => __('Business name')],
+            ['data' => 'code', 'title' => __('Code')],
+            ['data' => 'business_phone_number', 'title' => __('Business phone number ')],
+            // ['data' => 'actions', 'title' => __('Actions')],
+        ])->responsive(true)
+            ->ordering(false)
+            ->ajax(route('business.referrals', $orderBy))
+            ->paging(true)
+            ->dom('frtilp')
+            ->lengthMenu([[25, 50, 100, -1], [25, 50, 100, "All"]]);
+        $methodsJson = $roles->get()->toJson();
+        return view('agent.business.referrals', compact('dataTableHtml', 'orderByFilter', 'methodsJson'));
+    }
+    public function referr(Request $request){
+        dd($request->all());
     }
 }

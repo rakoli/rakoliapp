@@ -139,13 +139,12 @@
                     <input type="text" class="form-control mb-2" id="balance" name="balance"value="@if($isEdit){{$branches->balance}}@endif" placeholder="{{__("Enter Balance")}}">
 
                 </div>
-                <div class="mb-5 fv-row">
+                {{-- <div class="mb-5 fv-row">
                     <!--end::Label-->
                     <label class="form-label">{{__('Balance Currency ')}}</label>
                     <!--begin::Input-->
                     <input type="text" class="form-control mb-2" id="balance_currency " name="balance_currency" value="@if($isEdit){{$branches->balance_currency}}@endif" placeholder="{{__("Enter Balance Currency")}}">
-
-                </div>
+                </div> --}}
                 <div class="mb-5 fv-row">
                     <label class="form-label">{{__("Availability Description")}}</label>
                     <textarea class="form-control form-control-solid" id="availability_desc" name="availability_desc">@if($isEdit){{$branches->description}}@endif</textarea>
