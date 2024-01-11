@@ -5,9 +5,12 @@ namespace App\Utils\Datatables\Agent\Shift;
 use App\Models\Shift;
 use App\Utils\Datatables\LakoriDatatable;
 use App\Utils\Enums\ShiftStatusEnum;
+use App\Utils\HasDatatable;
 use Yajra\DataTables\Facades\DataTables;
+use Yajra\DataTables\Html\Builder;
+use Yajra\DataTables\Html\Column;
 
-class ShiftDatatable
+class ShiftDatatable implements HasDatatable
 {
 
     use LakoriDatatable;
@@ -28,6 +31,8 @@ class ShiftDatatable
             ->addIndexColumn()
             ->addColumn('created_at', fn(Shift $shift) => $shift->created_at->format('Y-F-d'))
             ->addColumn('user_name', fn(Shift $shift) => $shift->user->full_name)
+            ->addColumn('cash_start', fn(Shift $shift) => money($shift->cash_start , currencyCode(), true))
+            ->addColumn('cash_end', fn(Shift $shift) => money($shift->cash_end ,  currencyCode(), true))
             ->addColumn('action', function(Shift  $shift){
 
                 return (new self())->buttons([
@@ -51,4 +56,16 @@ class ShiftDatatable
             ->toJson();
     }
 
+    public function columns(Builder $datatableBuilder): Builder
+    {
+        return $datatableBuilder->columns([
+            Column::make('created_at')->title(__('date'))->searchable()->orderable(),
+            Column::make('no')->title(__('No'))->searchable()->orderable(),
+            Column::make('user_name')->title(__('user'))->searchable()->orderable(),
+            Column::make('cash_start')->title(__('Start Cash') . ' ' . strtoupper(session('currency')))->searchable()->orderable(),
+            Column::make('cash_end')->title(__('End Cash') . ' ' . strtoupper(session('currency')))->searchable()->orderable(),
+            Column::make('status')->title(__('Status'))->searchable()->orderable(),
+            Column::make('action')->title(__('Actions'))->searchable()->orderable(),
+        ]);
+    }
 }

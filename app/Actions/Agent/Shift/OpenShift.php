@@ -7,6 +7,7 @@ use App\Models\Network;
 use App\Models\Shift;
 use App\Utils\Enums\ShiftStatusEnum;
 use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -82,5 +83,9 @@ class OpenShift
         }
 
     }
+
+
+
+
 
 }

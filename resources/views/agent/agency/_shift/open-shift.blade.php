@@ -11,14 +11,15 @@
         </x-empty>
     @else
 
-        <form wire:submit="openShift">
-
+        <form method="post" id="openShift" action="{{ route('agency.shift.store') }}">
+            @csrf
             <div class="row fv-row py-2">
                 <div class="col-6">
                     <x-label class="" label="{{ __('Cash at hand') }}" for="amount"/>
                     <x-input
                         class="form-control-solid   @error('cash_at_hand') form-control-feedback @enderror"
                         wire:model.blur="cash_at_hand"
+                        name="cash_at_hand"
                         placeholder="{{ __('cash at hand') }}" id="amount"/>
                     @error('cash_at_hand')
                     <div class="help-block text-danger">
@@ -31,6 +32,7 @@
                     <select
                         class="form-control-solid  form-control @error('location_code') form-control-error @enderror"
                         wire:model.blur="location_code"
+                        name="location_code"
                         placeholder="{{ __('Select a location') }}"
                         id="location">
                         <option value="">{{ __('Select location ') }}</option>
@@ -68,7 +70,10 @@
             <div class="row fv-row py-3">
                 <div class="col-12">
                     <x-label label="notes" class="" for="notes"/>
-                    <textarea wire:model="notes" class="form-control form-control form-control-solid" rows="3"  data-kt-autosize="false"></textarea>
+                    <textarea
+                        wire:model="notes"
+                        name="notes"
+                        class="form-control form-control form-control-solid" rows="3"  data-kt-autosize="false"></textarea>
                     @error('notes')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -80,13 +85,67 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Save changes</button>
+                <button type="button" onclick="submitForm()" class="btn btn-primary">Save changes</button>
             </div>
 
 
         </form>
 
     @endif
+
+    @push('js')
+
+        <script>
+            function submitForm() {
+
+                var formData = new FormData($("form#openShift")[0])
+
+
+                console.log(formData);
+
+
+                fetch("{{ route('agency.shift.store') }}", {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => {
+
+                        console.log(response)
+                        if(! response.ok)
+                        {
+                            SwalAlert(
+                                "warning",
+                                "Failed to Open Shift"
+                            );
+
+                        }
+                        return response.json();
+                    }) // Assuming server responds with JSON
+                    .then(data => {
+                        SwalAlert(
+                            "success",
+                            data.message
+                        );
+
+                        setTimeout(function() {
+                            window.location.reload();
+                        }, 500);
+
+
+
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                        console.error('Error:', error.data);
+                        SwalAlert(
+                            "warning",
+                            error.message
+                        );
+                    });
+            }
+        </script>
+
+    @endpush
 
 
 

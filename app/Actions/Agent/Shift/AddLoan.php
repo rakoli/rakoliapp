@@ -10,6 +10,7 @@ use App\Utils\Enums\LoanPaymentStatusEnum;
 use App\Utils\Enums\LoanTypeEnum;
 use App\Utils\Enums\ShiftStatusEnum;
 use App\Utils\Enums\TransactionTypeEnum;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -176,8 +177,6 @@ class AddLoan
 
 
     }
-
-
 
 
 }

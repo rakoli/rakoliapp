@@ -11,15 +11,16 @@ use App\Utils\Datatables\Agent\Shift\ShiftDatatable;
 use App\Utils\Enums\ShiftStatusEnum;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
+use Yajra\DataTables\Html\Builder;
 
 class AgencyController extends Controller
 {
 
-    public function shift()
+    public function shift( Builder $datatableBuilder, ShiftDatatable $shiftDatatable)
     {
         if (\request()->ajax())
         {
-            return  (new ShiftDatatable())->index();
+            return  $shiftDatatable->index();
         }
 
         $hasOpenShift = Shift::query()->where('status',ShiftStatusEnum::OPEN)->exists();
@@ -31,6 +32,7 @@ class AgencyController extends Controller
             'hasOpenShift' => $hasOpenShift,
             'tills' => $tills,
             'locations' => $locations,
+            'dataTableHtml' => $shiftDatatable->columns(datatableBuilder: $datatableBuilder),
         ]);
     }
 
