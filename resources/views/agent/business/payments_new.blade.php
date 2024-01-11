@@ -1,6 +1,6 @@
 @extends('layouts.users.agent')
 
-@section('title', __("Transactions"))
+@section('title', __("Finance"))
 
 @section('header_js')
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
@@ -42,8 +42,41 @@
                     <div class="card-body pt-1">
                         <!--begin::Details content-->
                         <div class="collapse show">
-                            <div class="py-5 fs-6">
+                            <div class="py-5 fs-6 text-center">
+                                <button type="button" class="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#update_method_modal">
+                                    {{__('Update')}}
+                                </button>
+                            </div>
+                            <div class=" fs-6">
+                                <div class="fw-bold mt-5">{{__("Method Name")}}
+                                    <div class="text-gray-600">
+                                        {{ old('method_name', $existingData[0]->method_name ?? '') }}
+                                    </div>
+                                </div>
 
+                                <div class="fw-bold mt-5">{{__("Method AC Name")}}
+                                    <div class="text-gray-600">
+                                        {{ old('method_name', $existingData[0]->method_ac_name ?? '') }}
+                                    </div>
+                                </div>
+
+                                <div class="fw-bold mt-5">{{__("Method AC Number")}}
+                                    <div class="text-gray-600">
+                                        {{ old('method_name', $existingData[0]->method_ac_number ?? '') }}
+                                    </div>
+                                </div>
+                     
+                                <div class="fw-bold mt-5">{{__("Amount Currency")}}
+                                    <div class="text-gray-600">
+                                        {{ old('method_name', $existingData[0]->amount_currency ?? '') }}
+                                    </div>
+                                </div>
+
+                                <div class="fw-bold mt-5">{{__("Status")}}
+                                    <div class="text-gray-600">
+                                        {{ old('method_name', $existingData[0]->status ?? '') }}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <!--end::Details content-->
@@ -66,9 +99,14 @@
                             <!--begin::User-->
                             <div class="d-flex justify-content-center flex-column me-3">
                                 {{-- <a href="#" class="fs-1 fw-bold text-gray-900 text-hover-primary me-1 mb-2 mt-5 lh-1">{{__("Transactions")}}</a> --}}
-                                <a href="#" class="fs-1 fw-bold text-gray-900 text-hover-primary me-1 mb-2 mt-5 lh-1 text-center">{{__("Transactions")}}</a>
+                                {{-- <a href="#" class="fs-1 fw-bold text-gray-900 text-hover-primary me-1 mb-2 mt-5 lh-1 text-center">{{__("Transactions")}}</a> --}}
+                                                               
                                 <!--begin::Info-->
                                 <div class="card-body pt-0">
+                                    <button type="button" class="btn btn-primary me-1 mb-2 mt-5 lh-1" data-bs-toggle="modal" data-bs-target="#withdraw_method_modal">
+                                        {{__('Withdraw Fund')}}
+                                    </button>
+    
                                     <!--begin::Table container-->
                                     <div class="table-responsive">
                     
@@ -114,6 +152,111 @@
 
     </div>
     <!--end::Container-->
+    <!--begin::Modal group-->
+    <div class="modal fade" tabindex="-1" id="update_method_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">{{__("Update Withdraw Details")}}</h3>
+                    <!--begin::Close-->
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
+                    </div>
+                    <!--end::Close-->
+                </div>
+                <form class="my-auto pb-5" action="{{route('business.finance.update')}}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                            <!--begin::Input group-->
+                            <div class="row mb-5">
+                                <div class="input-group input-group-lg mb-5">
+                                    <span class="input-group-text">{{__("Name")}}</span>
+                                    <input name="method_name" type="text" class="form-control" value="{{ old('method_name', $existingData[0]->method_name ?? '') }}" value="" placeholder="{{__('enter method name')}}"/>
+                                </div>
+                            </div>
+                            <!--end::Input group-->
+                            <!--begin::Input group-->
+                            <div class="row mb-5">
+                                <div class="input-group input-group-lg mb-5">
+                                    <span class="input-group-text">{{__("AC Name")}}</span>
+                                    <input name="method_ac_name" type="text" class="form-control" value="{{ old('method_name', $existingData[0]->method_ac_name ?? '') }}" value="" placeholder="{{__('enter method ac name')}}"/>
+                                    {{-- <textarea name="description" type="text" class="form-control" value="" placeholder="{{__('enter description')}}"></textarea> --}}
+                                </div>
+                            </div>
+                            <!--end::Input group-->
+                            <!--begin::Input group-->
+                            <div class="row mb-5">
+                                <div class="input-group input-group-lg mb-5">
+                                    <span class="input-group-text">{{__("AC Number")}}</span>
+                                    <input name="method_ac_number" type="text" class="form-control" value="{{ old('method_name', $existingData[0]->method_ac_number ?? '') }}" value="" placeholder="{{__('enter method ac number')}}"/>
+                                    {{-- <textarea name="description" type="text" class="form-control" value="" placeholder="{{__('enter description')}}"></textarea> --}}
+                                </div>
+                            </div>
+                            <!--end::Input group-->
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">{{__('Update')}}</button>
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{__("Close")}}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--end::Modal group-->
+        <!--begin::Modal group-->
+        <div class="modal fade" tabindex="-1" id="withdraw_method_modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">{{__("Add Withdraw Fund Details")}}</h3>
+                        <!--begin::Close-->
+                        <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                            <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
+                        </div>
+                        <!--end::Close-->
+                    </div>
+                    <form class="my-auto pb-5" action="{{route('business.finance.withdraw')}}" method="POST">
+                        @csrf
+                        <div class="modal-body">
+                            <!--begin::Input group-->
+                            <div class="row mb-5">
+                                <div class="input-group input-group-lg mb-5">
+                                    <span class="input-group-text">{{__("Amount")}}</span>
+                                    <input name="amount" type="number" class="form-control" placeholder="{{__('enter amount')}}"/>
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="input-group input-group-lg mb-5">
+                                    <span class="input-group-text">{{__("Category")}}</span>
+                                    <select name="category" class="form-select">
+                                        <option value="general">General</option>
+                                        <option value="income">Income</option>
+                                        <option value="expense">Expense</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!--end::Input group-->
+                            <!--begin::Input group-->
+                            <div class="row mb-5">
+                                <div class="input-group input-group-lg mb-5">
+                                    <span class="input-group-text">{{__("Description")}}</span>
+                                    {{-- <input name="method_ac_name" type="text" class="form-control" placeholder="{{__('enter method ac name')}}"/> --}}
+                                    <textarea name="description" type="text" class="form-control" placeholder="{{__('enter description')}}"></textarea>
+                                </div>
+                            </div>
+                            <!--end::Input group-->
+                        </div>
+    
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">{{__('Update')}}</button>
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{__("Close")}}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!--end::Modal group-->
 @endsection
 
 @section('footer_js')

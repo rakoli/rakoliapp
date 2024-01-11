@@ -268,10 +268,10 @@
                     </span>
                     <span class="menu-title">{{ __('Users') }}</span>
                 </a>
-                <a class="menu-link" href="{{route('business.payments')}}"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('business.finance')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ __('Payments') }}</span>
+                    <span class="menu-title">{{ __('Finance') }}</span>
                 </a>
                 <a class="menu-link" href="{{route('business.profile.update')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>

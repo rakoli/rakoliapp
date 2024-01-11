@@ -56,7 +56,7 @@ class BusinessController extends Controller
         $dataTableHtml = $builder->columns([
             ['data' => 'id', 'title' => __('ID')],
             ['data' => 'business_code', 'title' => __('Business Code')],
-            ['data' => 'code', 'title' => __('Code')],
+            // ['data' => 'code', 'title' => __('Code')],
             ['data' => 'name', 'title' => __('Name')],
             ['data' => 'description', 'title' => __('Description')],
             ['data' => 'actions', 'title' => __('Actions')],
