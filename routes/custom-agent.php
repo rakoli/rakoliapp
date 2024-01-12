@@ -2,12 +2,13 @@
 
 /// This is custom route only for agent routes. All agent routes will be registered in here
 
+use App\Http\Controllers\Agent\Networks\AddNetworkController;
+use App\Http\Controllers\Agent\Networks\NetworkController;
 use App\Http\Controllers\Agent\Shift\CloseShiftController;
 use App\Http\Controllers\Agent\Shift\Loans\AddLoanController;
 use App\Http\Controllers\Agent\Shift\Loans\LoanController;
 use App\Http\Controllers\Agent\Shift\Loans\PayLoanController;
 use App\Http\Controllers\Agent\Shift\Loans\ShowLoanController;
-use App\Http\Controllers\Agent\Shift\NetworkController;
 use App\Http\Controllers\Agent\Shift\OpenShiftController;
 use App\Http\Controllers\Agent\Shift\TillController;
 use App\Http\Controllers\Agent\Transaction\AddExpenseTransactionController;
@@ -37,14 +38,25 @@ Route::middleware(['auth','should_complete_registration','onlyagent'])->group(fu
             Route::post('/close/store', [CloseShiftController::class, 'store'])->name('agency.shift.close.store');
             Route::get('{shift}/tills', [TillController::class, 'index'])->name('agency.shift.till');
         });
-        Route::get('tills', [App\Http\Controllers\Agent\AgencyController::class, 'tills'])->name('agency.tills');
-        Route::get('networks', NetworkController::class)->name('agency.networks');
+
+
 
         Route::prefix('loans')->group(function () {
             Route::get('/', [LoanController::class, 'index'])->name('agency.loans');
             Route::post('/', AddLoanController::class)->name('agency.loans.store');
             Route::get('/{loan}/', ShowLoanController::class)->name('agency.loans.show');
             Route::post('/{loan}/', PayLoanController::class)->name('agency.loans.pay');
+        });
+
+        Route::prefix('networks')->group(function () {
+            Route::get('/', NetworkController::class)->name('agency.networks');
+            Route::post('/', AddNetworkController::class)->name('agency.networks.store');
+
+        });
+
+        Route::prefix('tills')->group(function () {
+            Route::get('/', [App\Http\Controllers\Agent\AgencyController::class, 'tills'])->name('agency.tills');
+
         });
 
 
