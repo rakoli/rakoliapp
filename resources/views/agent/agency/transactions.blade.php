@@ -60,7 +60,7 @@
                                 isStacked="true"
                             >
 
-                                <livewire:transaction.add-expense lazy />
+                                @include('agent.agency.transaction.add-expense')
 
 
                             </x-modal_with_button>  <x-modal_with_button
