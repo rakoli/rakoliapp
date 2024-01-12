@@ -48,7 +48,7 @@
                                 isStacked="true"
                             >
 
-                                <livewire:shift.add-loan lazy />
+                                @include('agent.agency._shift.add-loan')
 
 
                             </x-modal_with_button>

@@ -15,25 +15,49 @@
 @section('content')
 
     <div class="docs-content d-flex flex-column flex-column-fluid" id="kt_docs_content">
+
         <!--begin::Container-->
         <div class="container d-flex flex-column flex-lg-row" id="kt_docs_content_container">
+
+
             <!--begin::Card-->
             <div class="card card-docs flex-row-fluid mb-2" id="kt_docs_content_card">
                 <!--begin::Card Body-->
                 <div class="card-body fs-6 py-15 px-10 py-lg-15 px-lg-15 text-gray-700">
+                    <div  @class("d-flex flex-column flex-lg-row") @style("display: flex; align-content: space-between; gap:1rem;")>
+                        <div class=" d-flex flex-column flex-lg-row"  @style("display: flex; align-items: space-between; gap:1rem;")>
+                            <x-a-button
+                                route="#"
+                                class="btn-success btn-active-color-dark"
+                                label="Loan Amount: {{ money($loan->amount , currencyCode(), true)  }}">
+
+                            </x-a-button>
+                            <x-a-button
+                                route="#"
+                                class="btn-success btn-active-color-dark"
+                                label="Loan Balance: {{ money($loan->balance , currencyCode(), true)  }}">
+
+                            </x-a-button>
+                        </div>
+
+                        <x-modal_with_button
+                            targetId="receive-loan-payment"
+                            label="Receive Payment"
+                            modalTitle="Fill the form below record Loan payment"
+                            isStacked="true"
+                        >
+
+                            @include('agent.agency._shift.pay-loan')
 
 
-                    <x-modal_with_button
-                        targetId="receive-loan-payment"
-                        label="Receive Payment"
-                        modalTitle="Fill the form below record Loan payment"
-                        isStacked="true"
-                    >
+                        </x-modal_with_button>
 
-                        <livewire:shift.pay-loan :loan="$loan" lazy/>
+                    </div>
 
 
-                    </x-modal_with_button>
+
+
+
 
 
 

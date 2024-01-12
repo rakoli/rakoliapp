@@ -7,7 +7,7 @@
         </x-empty>
     @else
 
-        <form wire:submit.prevent="addLoan">
+        <form method="post" id="add-loan-form">
 
             <div class="modal-body">
 
@@ -18,7 +18,7 @@
                         <x-label class="" label="Select Till" for="network_code"/>
                         <x-select2
                             class="form-control-solid w-100 form-control @error('network_code') form-control-error @enderror"
-                            wire:model.blur="network_code"
+                               name="network_code"
                             placeholder="{{ __('Select a Till') }}"
                             id="network_code">
                             <option value="">{{ __('Select Till ') }}</option>
@@ -38,7 +38,7 @@
                         <x-label class="" label="Select Location" for="location_code"/>
                         <x-select2
                             class="form-control-solid  form-control @error('location_code') form-control-error @enderror"
-                            wire:model.blur="location_code"
+                               name="location_code"
                             placeholder="{{ __('Select a location') }}"
                             id="location">
                             <option value="">{{ __('Select location ') }}</option>
@@ -63,7 +63,7 @@
 
                         <x-input
                             class="form-control-solid   @error('amount') form-control-feedback @enderror"
-                            wire:model.blur="amount"
+                               name="amount"
                             placeholder="{{ __('amount') }}"
                             id="amount"/>
 
@@ -81,8 +81,8 @@
 
                         <x-select2
 
-                            class="form-control-solid select2  form-control @error('type') form-control-error border-danger @enderror"
-                            wire:model="type"
+                            class="form-control-solid select2  form-control @error('type') form-control-error  @enderror"
+                               name="type"
                             placeholder="{{ __('Select a Transaction Type') }}"
                             id="type">
                             <option value="">{{ __('Select a Transaction Type') }}</option>
@@ -105,7 +105,7 @@
                 <div class="row fv-row py-3">
                     <div class="col-12">
                         <x-label label="notes" class="" for="notes"/>
-                        <textarea wire:model="notes" class="form-control form-control form-control-solid" rows="3"
+                        <textarea    name="notes" class="form-control form-control form-control-solid" rows="3"
                                   data-kt-autosize="false"></textarea>
                         @error('notes')
                         <div class="help-block text-danger">
@@ -115,11 +115,27 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Save changes</button>
+            <div class="modal-footer my-4">
+
+                <button type="button" id="add-loan-button" class="btn btn-primary">Save changes</button>
             </div>
         </form>
 
     @endif
+
+        @push('js')
+            <script src="{{ asset('assets/js/rakoli_ajax.js') }}"></script>
+
+            <script>
+                $("button#add-loan-button").click(function (event){
+                    event.preventDefault();
+
+                    submitForm(
+                        $("form#add-loan-form"),
+                        "{{ route('agency.loans.store') }}"
+                    );
+
+                });
+            </script>
+        @endpush
 </div>

@@ -2,7 +2,9 @@
 <div>
 
 
-        <form wire:submit.prevent="payLoan">
+        <form method="post" id="pay-loan-form">
+
+            @csrf
 
             <div class="modal-body">
 
@@ -13,7 +15,8 @@
 
                         <x-input
                             class="form-control-solid   @error('amount') form-control-feedback @enderror"
-                            wire:model.blur="amount"
+                               name="amount"
+                            value="{{ $loan->balance }}"
                             placeholder="{{ __('amount') }}"
                             id="amount"/>
 
@@ -31,7 +34,7 @@
                         <x-input
                             type="date"
                             class="form-control-solid   @error('deposited_at') form-control-feedback @enderror"
-                            wire:model.blur="deposited_at"
+                               name="deposited_at"
                             placeholder="{{ __('date') }}"
                             id="date"/>
 
@@ -53,7 +56,7 @@
                         <x-input
                             type="text"
                             class="form-control-solid   @error('payment_method') form-control-feedback @enderror"
-                            wire:model.blur="payment_method"
+                               name="payment_method"
                             placeholder="{{ __('payment_method') }}"
                             id="payment_method"/>
 
@@ -63,7 +66,7 @@
                 <div class="row fv-row py-3">
                     <div class="col-12">
                         <x-label label="notes" class="" for="notes"/>
-                        <textarea wire:model="notes" class="form-control form-control form-control-solid" rows="3"
+                        <textarea    name="notes" class="form-control form-control form-control-solid" rows="3"
                                   data-kt-autosize="false"></textarea>
                         @error('notes')
                         <div class="help-block text-danger">
@@ -74,15 +77,27 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Save changes</button>
+
+                <button type="button" id="pay-loan-button" class="btn btn-primary">Save changes</button>
             </div>
         </form>
 
     @push('js')
-        <script>
-            $("input#date").datepicker()
-        </script>
+        @push('js')
+            <script src="{{ asset('assets/js/rakoli_ajax.js') }}"></script>
+
+            <script>
+                $("button#pay-loan-button").click(function (event){
+                    event.preventDefault();
+
+                    submitForm(
+                        $("form#pay-loan-form"),
+                        "{{ route('agency.loans.pay',['loan' => $loan]) }}"
+                    );
+
+                });
+            </script>
+        @endpush
     @endpush
 
 </div>
