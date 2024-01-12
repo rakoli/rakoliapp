@@ -3,6 +3,7 @@
 /// This is custom route only for agent routes. All agent routes will be registered in here
 
 use App\Http\Controllers\Agent\Shift\AddExpenseTransactionController;
+use App\Http\Controllers\Agent\Shift\AddIncomeTransactionController;
 use App\Http\Controllers\Agent\Shift\AddTransactionController;
 use App\Http\Controllers\Agent\Shift\CloseShiftController;
 use App\Http\Controllers\Agent\Shift\LoanController;
@@ -21,6 +22,7 @@ Route::middleware(['auth','should_complete_registration','onlyagent'])->group(fu
         Route::get('transactions', TransactionsController::class)->name('agency.transactions');
         Route::post('add-transaction', AddTransactionController::class)->name('agency.transactions.add.transaction');
         Route::post('add-expense', AddExpenseTransactionController::class)->name('agency.transactions.add.expense');
+        Route::post('add-income', AddIncomeTransactionController::class)->name('agency.transactions.add.income');
 
 
         // shift groups
