@@ -70,7 +70,7 @@
                                 isStacked="true"
                             >
 
-                                <livewire:transaction.add-income lazy />
+                                @include('agent.agency.transaction.add-income')
 
 
                             </x-modal_with_button>

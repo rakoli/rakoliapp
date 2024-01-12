@@ -1,6 +1,7 @@
 <div>
-    <form wire:submit.prevent="addTransaction">
+    <form method="post" id="add-income-form">
 
+        @csrf
         <div class="modal-body">
 
             <div class="row fv-row py-2">
@@ -8,7 +9,7 @@
                     <x-label class="" label="{{ __('Amount') }}" for="amount"/>
                     <x-input
                         class="form-control-solid   @error('amount') form-control-feedback @enderror"
-                        wire:model.blur="amount"
+                           name="amount"
                         placeholder="{{ __('amount') }}" id="amount"/>
                     @error('amount')
                     <div class="help-block text-danger">
@@ -20,7 +21,7 @@
                     <x-label class="" label="Select Location" for="location_code"/>
                     <x-select2
                         class="form-control-solid  form-control @error('location_code') form-control-error @enderror"
-                        wire:model.blur="location_code"
+                           name="location_code"
                         placeholder="{{ __('Select a location') }}"
                         id="location">
                         <option value="">{{ __('Select location ') }}</option>
@@ -42,7 +43,7 @@
             <div class="row fv-row py-3">
                 <div class="col-12">
                     <x-label label="notes" class="" for="notes"/>
-                    <textarea wire:model="notes" class="form-control form-control form-control-solid" rows="3"  data-kt-autosize="false"></textarea>
+                    <textarea    name="notes" class="form-control form-control form-control-solid" rows="3"  data-kt-autosize="false"></textarea>
                     @error('notes')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -54,10 +55,25 @@
         </div>
 
 
-        <div class="modal-footer">
-            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Save changes</button>
+        <div class="modal-footer my-2">
+
+            <button type="button" id="add-income-button" class="btn btn-primary">Save changes</button>
         </div>
 
     </form>
+
+    @push('js')
+
+        <script>
+            $("button#add-income-button").click(function (event){
+                event.preventDefault();
+
+                submitForm(
+                    $("form#add-income-form"),
+                    "{{ route('agency.transactions.add.income') }}"
+                );
+
+            });
+        </script>
+    @endpush
 </div>
