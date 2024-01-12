@@ -122,7 +122,7 @@
 
                 submitForm(
                     $("form#add-transaction-form"),
-                    "{{ route('agency.transactions.add_transaction') }}"
+                    "{{ route('agency.transactions.add.transaction') }}"
                 );
 
             });
