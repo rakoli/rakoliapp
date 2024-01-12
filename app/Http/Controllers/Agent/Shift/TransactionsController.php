@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Agent\Shift;
 
 use App\Http\Controllers\Controller;
+use App\Models\Location;
+use App\Models\Network;
 use App\Models\Shift;
 use App\Utils\Datatables\Agent\Shift\ShiftTransactionDatatable;
 use Illuminate\Contracts\View\Factory;
@@ -24,15 +26,22 @@ class TransactionsController extends Controller
         if ($request->ajax()) {
 
 
-            return $transactionDatatable->index();
+            return $transactionDatatable->index(isToday: true);
         }
 
         $dataTableHtml = $transactionDatatable->columns(datatableBuilder: $datatableBuilder);
 
 
-        return view('agent.agency.transactions')
-            ->with([
-                'dataTableHtml' => $dataTableHtml,
-            ]);
+
+        $tills = Network::query()->with('agency')->cursor();
+
+        $locations = Location::query()->cursor();
+
+
+        return view('agent.agency.transactions',[
+            'dataTableHtml' => $dataTableHtml,
+            'locations' => $locations,
+            'tills' => $tills,
+        ]);
     }
 }

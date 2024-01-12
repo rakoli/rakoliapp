@@ -15,9 +15,6 @@ class CloseShiftController extends Controller
 
     private function checkForOpenShift()
     {
-
-
-
     }
     public function index()
     {
@@ -41,7 +38,6 @@ class CloseShiftController extends Controller
     public function store(Request $request)
     {
         abort_if(! Shift::query()->where('status',ShiftStatusEnum::OPEN)->exists(), 404, "No open shift to close");
-
 
         try {
             $validated = $request->validate(rules: [

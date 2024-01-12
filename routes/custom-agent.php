@@ -2,6 +2,7 @@
 
 /// This is custom route only for agent routes. All agent routes will be registered in here
 
+use App\Http\Controllers\Agent\Shift\AddTransactionController;
 use App\Http\Controllers\Agent\Shift\CloseShiftController;
 use App\Http\Controllers\Agent\Shift\LoanController;
 use App\Http\Controllers\Agent\Shift\NetworkController;
@@ -17,6 +18,7 @@ Route::middleware(['auth','should_complete_registration','onlyagent'])->group(fu
     Route::group(['prefix' => 'agency', 'route' => 'agency.'], function () {
 
         Route::get('transactions', TransactionsController::class)->name('agency.transactions');
+        Route::post('add-transaction', AddTransactionController::class)->name('agency.transactions.add_transaction');
 
 
         // shift groups

@@ -1,5 +1,6 @@
 <div>
-    <form wire:submit.prevent="addTransaction">
+    <form method="post" id="add-transaction-form">
+        @csrf
 
         <div class="modal-body">
 
@@ -7,8 +8,9 @@
                 <div class="col-6">
                     <x-label class="" label="{{ __('Amount') }}" for="amount"/>
                     <x-input
+                        type="number"
+                        name="amount"
                         class="form-control-solid   @error('amount') form-control-feedback @enderror"
-                        wire:model.blur="amount"
                         placeholder="{{ __('amount') }}" id="amount"/>
                     @error('amount')
                     <div class="help-block text-danger">
@@ -20,7 +22,8 @@
                     <x-label class="" label="Select Location" for="location_code"/>
                     <x-select2
                         class="form-control-solid  form-control @error('location_code') form-control-error @enderror"
-                        wire:model.blur="location_code"
+                        name="location_code"
+
                         placeholder="{{ __('Select a location') }}"
                         id="location">
                         <option value="">{{ __('Select location ') }}</option>
@@ -46,7 +49,7 @@
 
                         <x-select2
                             class="form-control-solid  form-control @error('till_code') form-control-error @enderror"
-                            wire:model.blur="till_code"
+                            name="till_code"
                             placeholder="{{ __('Select a till') }}"
                             id="till_code">
                             <option value="">{{ __('Select till ') }}</option>
@@ -69,7 +72,7 @@
                         <x-select2
 
                             class="form-control-solid select2  form-control @error('transaction_type') form-control-error @enderror"
-                            wire:model.blur="type"
+                            name="type"
                             placeholder="{{ __('Select a Transaction Type') }}"
                             id="type">
                             <option value="">{{ __('Select a Transaction Type') }}</option>
@@ -92,7 +95,7 @@
             <div class="row fv-row py-3">
                 <div class="col-12">
                     <x-label label="notes" class="" for="notes"/>
-                    <textarea wire:model="notes" class="form-control form-control form-control-solid" rows="3"  data-kt-autosize="false"></textarea>
+                    <textarea name="notes" class="form-control form-control form-control-solid" rows="3"  data-kt-autosize="false"></textarea>
                     @error('notes')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -104,10 +107,25 @@
         </div>
 
 
-        <div class="modal-footer">
-            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Save changes</button>
+        <div class="modal-footer my-4 py-2">
+
+            <button type="button"  id="add-transaction" class="btn btn-primary">Save changes</button>
         </div>
 
     </form>
+
+    @push('js')
+
+        <script>
+            $("button#add-transaction").click(function (event){
+                event.preventDefault();
+
+                submitForm(
+                    $("form#add-transaction-form"),
+                    "{{ route('agency.transactions.add_transaction') }}"
+                );
+
+            });
+        </script>
+    @endpush
 </div>

@@ -48,7 +48,7 @@
                                 isStacked="true"
                             >
 
-                                <livewire:transaction.add-transaction lazy />
+                                @include('agent.agency.transaction.add-transaction')
 
 
                             </x-modal_with_button>
@@ -99,8 +99,12 @@
                 type="text/javascript"></script>
       {{ $dataTableHtml->scripts()  }}
 
+        <script src="{{ asset('assets/js/rakoli_ajax.js') }}"></script>
+
         <script>
             $(document).ready(function (){
+
+
 
                 window.LaravelDataTables['transaction-table'].on('draw', function () {
                     KTMenu.createInstances();

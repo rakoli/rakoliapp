@@ -3,8 +3,8 @@
 ])
 <select
     data-dropdown-parent="body"
-    {{ $attributes->merge(['class' => 'form-select']) }}
-    data-control="select2"
+    {{ $attributes->merge(['class' => 'form-select select2']) }}
+
     data-placeholder="{{ __($placeholder) }}">
     {{ $slot }}
 </select>

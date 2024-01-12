@@ -10,6 +10,9 @@ function submitForm(formId, url, redirect = null) {
             );
 
 
+            setTimeout(function () {
+                window.location.reload()
+            }, 1000);
 
 
         })
