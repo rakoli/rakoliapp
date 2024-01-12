@@ -2,15 +2,15 @@
 
 /// This is custom route only for agent routes. All agent routes will be registered in here
 
-use App\Http\Controllers\Agent\Shift\AddExpenseTransactionController;
-use App\Http\Controllers\Agent\Shift\AddIncomeTransactionController;
-use App\Http\Controllers\Agent\Shift\AddTransactionController;
 use App\Http\Controllers\Agent\Shift\CloseShiftController;
 use App\Http\Controllers\Agent\Shift\LoanController;
 use App\Http\Controllers\Agent\Shift\NetworkController;
 use App\Http\Controllers\Agent\Shift\OpenShiftController;
 use App\Http\Controllers\Agent\Shift\TillController;
-use App\Http\Controllers\Agent\Shift\TransactionsController;
+use App\Http\Controllers\Agent\Transaction\AddExpenseTransactionController;
+use App\Http\Controllers\Agent\Transaction\AddIncomeTransactionController;
+use App\Http\Controllers\Agent\Transaction\AddTransactionController;
+use App\Http\Controllers\Agent\Transaction\TransactionsController;
 use Illuminate\Support\Facades\Route;
 
 // All get methods will be loaded with this route

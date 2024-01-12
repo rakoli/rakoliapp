@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Agent\Shift;
+namespace App\Http\Controllers\Agent\Transaction;
 
 use App\Http\Controllers\Controller;
 use App\Utils\Enums\TransactionCategoryEnum;

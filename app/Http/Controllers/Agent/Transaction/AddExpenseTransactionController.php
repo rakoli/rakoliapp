@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Agent\Shift;
+namespace App\Http\Controllers\Agent\Transaction;
 
 use App\Actions\Agent\Shift\AddIncomeExpenseTransaction;
 use App\Http\Controllers\Controller;
