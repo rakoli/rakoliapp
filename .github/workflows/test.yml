@@ -10,7 +10,6 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
-          MYSQL_ROOT_PASSWORD: root_password
           MYSQL_DATABASE: test_database
           MYSQL_USER: test_user
           MYSQL_PASSWORD: test_password
@@ -28,6 +27,12 @@ jobs:
 
       - name: Install dependencies
         run: composer install
+
+      - name: Create .env file
+        run: cp .env.ci .env
+
+      - name: Generate application key
+        run: php artisan key:generate
 
       - name: Run PHPUnit
         run: vendor/bin/phpunit
