@@ -3,7 +3,7 @@
 /// This is custom route only for agent routes. All agent routes will be registered in here
 
 use App\Http\Controllers\Agent\Shift\CloseShiftController;
-use App\Http\Controllers\Agent\Shift\LoanController;
+use App\Http\Controllers\Agent\Shift\Loans\LoanController;
 use App\Http\Controllers\Agent\Shift\NetworkController;
 use App\Http\Controllers\Agent\Shift\OpenShiftController;
 use App\Http\Controllers\Agent\Shift\TillController;

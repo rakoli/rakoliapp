@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Agent\Shift;
+namespace App\Http\Controllers\Agent\Shift\Loans;
 
 use App\Http\Controllers\Controller;
 use App\Models\Loan;
