@@ -1,13 +1,12 @@
 <div>
 
     @if($hasOpenShift)
+
+
+
         <x-empty
             heading="There is an opened Shift, Close it to open a new shift">
-            <x-button
-                wire:click="closeShift"
-                class="btn-danger">
-                Close Shift
-            </x-button>
+
         </x-empty>
     @else
 
@@ -17,6 +16,7 @@
                 <div class="col-6">
                     <x-label class="" label="{{ __('Cash at hand') }}" for="amount"/>
                     <x-input
+                        type="number"
                         class="form-control-solid   @error('cash_at_hand') form-control-feedback @enderror"
                         wire:model.blur="cash_at_hand"
                         name="cash_at_hand"
@@ -85,7 +85,7 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                <button type="button" onclick="submitForm()" class="btn btn-primary">Save changes</button>
+                <button type="button" onclick="submitOpenShiftForm()" class="btn btn-primary">Save changes</button>
             </div>
 
 
@@ -94,55 +94,17 @@
     @endif
 
     @push('js')
+        <script src="{{ asset('assets/js/rakoli_ajax.js') }}"></script>
 
         <script>
-            function submitForm() {
+            function submitOpenShiftForm(){
 
-                var formData = new FormData($("form#openShift")[0])
-
-
-                console.log(formData);
-
-
-                fetch("{{ route('agency.shift.store') }}", {
-                    method: 'POST',
-                    body: formData
-                })
-                    .then(response => {
-
-                        console.log(response)
-                        if(! response.ok)
-                        {
-                            SwalAlert(
-                                "warning",
-                                "Failed to Open Shift"
-                            );
-
-                        }
-                        return response.json();
-                    }) // Assuming server responds with JSON
-                    .then(data => {
-                        SwalAlert(
-                            "success",
-                            data.message
-                        );
-
-                        setTimeout(function() {
-                            window.location.reload();
-                        }, 500);
-
-
-
-                    })
-                    .catch((error) => {
-                        console.error('Error:', error);
-                        console.error('Error:', error.data);
-                        SwalAlert(
-                            "warning",
-                            error.message
-                        );
-                    });
+                return submitForm(
+                    $("form#openShift"),
+                    "{{ route('agency.shift.store') }}"
+                );
             }
+
         </script>
 
     @endpush
