@@ -248,7 +248,7 @@
 
             <!--begin:Menu sub-->
             <div class="menu-sub menu-sub-accordion">
-                <a class="menu-link" href="/dashboard/vas/permission"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('business.subscription')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Account Subscription') }}</span>
