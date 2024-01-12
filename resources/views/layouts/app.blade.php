@@ -22,7 +22,7 @@
     <script>
         // Frame-busting to prevent site from being loaded within a frame without permission (click-jacking) if (window.top != window.self) { window.top.location.replace(window.self.location.href); }
     </script>
-    @livewireStyles
+
 
     @stack('styles')
 </head>
@@ -823,7 +823,7 @@
                 }
             })
         }
-        const SwalConfirm = (icon, title, html, confirmButtonText, successEvent, params, cancelEvent) => {
+        const SwalConfirm = (icon, title, html, confirmButtonText) => {
             Swal.fire({
                 icon,
                 title,
@@ -839,13 +839,6 @@
                 hideClass: {
                     popup: 'animate__animated animate__fadeOutUp'
                 }
-            }).then(result => {
-                if (result.isConfirmed) {
-
-                    Livewire.emit(successEvent, params);
-                    return;
-                }
-                Livewire.emit(cancelEvent);
             })
         }
 
@@ -868,48 +861,9 @@
                 timeout: title
             });
         }
-        document.addEventListener("livewire:initialized", function (event) {
-            Livewire.on('swal:modal', data => {
-                SwalModal(data[0].icon, data[0].title, data[0].text)
-            })
-            Livewire.on('swal:confirm', data => {
-
-                SwalConfirm(data[0].icon, data[0].title, data[0].html,  data[0].confirmText ,data[0].successEvent, data[0].params, data[0].cancelEvent, data[0].html )
-            })
-            Livewire.on('swal:alert', data => {
-
-                console.table(data)
-                SwalAlert(data[0].icon, data[0].title, data[0].timeout)
-            });
-            Livewire.on('swal:inputAlert', data => {
-                SwalInput(data[0].title, data[0].input, data[0].inputLabel, data[0].inputPlaceholder)
-            });
-            Livewire.on('modal:dismiss', data => {
-                $("#"+data[0].modalId).modal('hide')
-            });
-            Livewire.on('modal:open', data => {
-
-                $("#"+data[0].modalId).modal('show')
-            });
-            Livewire.on('table:refresh', data => {
-                $("table#"+data[0].tableId).DataTable().ajax.reload();
-            });
-            Livewire.on('refresh:component_data', data => {
-
-                if(data[0].appendType == 'text')
-                {
-                    $(data[0].attribute_name).text(data[0].attribute_value)
-                }
-                if(data[0].appendType == 'val')
-                {
-                    $(data[0].attribute_name).val(data[0].attribute_value)
-                }
-            });
-
-        });
 
     </script>
-   @livewireScripts
+
     @yield('footer_js')
     @stack('js')
 

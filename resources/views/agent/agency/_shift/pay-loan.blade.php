@@ -19,8 +19,6 @@
                             value="{{ $loan->balance }}"
                             placeholder="{{ __('amount') }}"
                             id="amount"/>
-
-
                         @error('amount')
                         <div class="help-block text-danger">
                             {{ $message }}
@@ -82,7 +80,7 @@
             </div>
         </form>
 
-    @push('js')
+
         @push('js')
             <script src="{{ asset('assets/js/rakoli_ajax.js') }}"></script>
 
@@ -98,6 +96,6 @@
                 });
             </script>
         @endpush
-    @endpush
+
 
 </div>
