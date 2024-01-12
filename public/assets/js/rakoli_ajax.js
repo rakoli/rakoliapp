@@ -1,4 +1,4 @@
-function submitForm(formId, url) {
+function submitForm(formId, url, redirect = null) {
 
     var formData = new FormData(formId[0])
 
@@ -8,9 +8,9 @@ function submitForm(formId, url) {
                 "success",
                 response.data.message
             );
-            setTimeout(function () {
-                window.location.reload();
-            }, 1000);
+
+
+
 
         })
         .catch(error => {

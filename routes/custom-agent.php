@@ -2,6 +2,7 @@
 
 /// This is custom route only for agent routes. All agent routes will be registered in here
 
+use App\Http\Controllers\Agent\Shift\CloseShiftController;
 use App\Http\Controllers\Agent\Shift\LoanController;
 use App\Http\Controllers\Agent\Shift\NetworkController;
 use App\Http\Controllers\Agent\Shift\OpenShiftController;
@@ -23,8 +24,9 @@ Route::middleware(['auth','should_complete_registration','onlyagent'])->group(fu
         Route::prefix('shift')->group(function () {
             Route::get('/', [App\Http\Controllers\Agent\AgencyController::class, 'shift'])->name('agency.shift');
             Route::post('/', OpenShiftController::class)->name('agency.shift.store');
+            Route::get('/close', [CloseShiftController::class, 'index'])->name('agency.shift.close');
+            Route::post('/close/store', [CloseShiftController::class, 'store'])->name('agency.shift.close.store');
             Route::get('{shift}/tills', [TillController::class, 'index'])->name('agency.shift.till');
-
         });
         Route::get('tills', [App\Http\Controllers\Agent\AgencyController::class, 'tills'])->name('agency.tills');
         Route::get('networks', NetworkController::class)->name('agency.networks');

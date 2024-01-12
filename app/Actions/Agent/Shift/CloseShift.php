@@ -18,7 +18,7 @@ class CloseShift
     use AsAction;
 
 
-    public function handle(float $closingBalance, string $locationCode, ?string $notes = null)
+    public function handle(float $closingBalance, string $locationCode, ?string $notes = null ,? array $tills = [])
     {
 
         try {
@@ -34,6 +34,21 @@ class CloseShift
                 'status' => ShiftStatusEnum::CLOSED,
                 'notes' => str($shift->notes)->append(" $notes")->toString()
             ]);
+
+
+            foreach ($tills as $tillCode => $amount) {
+
+                Network::query()
+                    ->where([
+                        'code' => $tillCode
+                    ])
+                    ->first()
+                    ->updateQuietly([
+                        'balance' => floatval($amount)
+                    ]);
+
+            }
+
 
             DB::commit();
 

@@ -55,16 +55,10 @@
                             </x-modal_with_button>
 
                            <div class="mx-6">
-                               <x-modal_with_button
-                                   targetId="closeShift"
-                                   label="Close Shift"
-                                   modalTitle="Fill the form below to close shift"
-                               >
-
-                                 <livewire:shift.close-shift/>
-
-
-                               </x-modal_with_button>
+                               <x-a-button
+                                    class="btn-danger"
+                                    route="{{ route('agency.shift.close') }}"
+                                    label="{{ __('Close Shift') }}" />
                            </div>
                         </div>
                         <!--end::Toolbar-->
