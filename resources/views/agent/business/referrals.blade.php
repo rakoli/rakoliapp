@@ -62,13 +62,18 @@
                     <div class="modal-body">
 
                         <div class="fv-row mb-8">
-                            <!--begin::Email-->
-                            <input type="text" placeholder="{{ __('Email') }}" name="email" autocomplete="off"
-                                class="form-control bg-transparent" />
-                            <!--end::Email-->
+                            <div class="d-flex flex-column flex-md-row gap-5">
+                                <div class="fv-row flex-row-fluid">
+                                    <input type="text" placeholder="{{ __("First Name") }}" name="fname" autocomplete="off" class="form-control bg-transparent" />
+                                </div>
+                                <div class="fv-row flex-row-fluid">
+                                    <input type="text" placeholder="{{ __("Last Name") }}" name="lname" autocomplete="off" class="form-control bg-transparent" />
+                                </div>
+                            </div>
                         </div>
                         <div class="fv-row mb-8">
                             <div class="d-flex flex-column flex-md-row gap-5">
+
                                 <div class="flex-row-fluid" style="max-width: 160px;">
                                     <!--begin::Input-->
                                     <select id="countrySelect" class="form-control bg-transparent" name="country">
@@ -94,6 +99,13 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="fv-row mb-8">
+                            <!--begin::Email-->
+                            <input type="text" placeholder="{{ __('Email') }}" name="email" autocomplete="off"
+                                class="form-control bg-transparent" />
+                            <!--end::Email-->
+                        </div>
+
                     </div>
 
                     <div class="modal-footer">

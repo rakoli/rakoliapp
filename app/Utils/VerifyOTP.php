@@ -4,6 +4,7 @@ namespace App\Utils;
 
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
 use function Laravel\Prompts\select;
 
 class VerifyOTP
@@ -87,4 +88,8 @@ class VerifyOTP
         return false;
     }
 
+    public static function generateHashedPassword($password)
+    {
+        return Hash::make($password);
+    }
 }

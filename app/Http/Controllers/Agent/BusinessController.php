@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers\Agent;
 
+use App\Actions\RequestEmailVerificationCode;
+use App\Actions\SendPasswordEmail;
+use App\Actions\SendPasswordSms;
 use App\Http\Controllers\Controller;
 use App\Models\Area;
 use App\Models\Business;
 use App\Models\BusinessRole;
+use App\Models\Country;
 use App\Models\ExchangeAds;
 use App\Models\ExchangeBusinessMethod;
 use App\Models\ExchangePaymentMethod;
@@ -23,6 +27,8 @@ use App\Utils\Enums\UserTypeEnum;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use App\Utils\VerifyOTP;
+use TimeHunter\LaravelGoogleReCaptchaV3\Validations\GoogleReCaptchaV3ValidationRule;
 
 class BusinessController extends Controller
 {
@@ -73,10 +79,6 @@ class BusinessController extends Controller
 
     public function rolesCreate()
     {
-        // $businessCode = \auth()->user()->business_code;
-        // $branches = Location::where('business_code',$businessCode)->get();
-        // $regions = Region::where('country_code',session('country_code'))->get();
-        // $businessExchangeMethods = ExchangeBusinessMethod::where('business_code',$businessCode)->get();
         return view('agent.business.roles_create');
     }
 
@@ -119,11 +121,6 @@ class BusinessController extends Controller
 
         $BusinessRole = BusinessRole::where('id', $request->edit_id)->first();
 
-        // $isAllowed = $exchangeBusinessMethod->isUserAllowed($request->user());
-        // if($isAllowed == false){
-        //     return redirect()->route('exchange.methods')->withErrors(['Not authorized to access method']);
-        // }
-
         $BusinessRole->name = $request->edit_name;
         $BusinessRole->description = $request->edit_description;
         $BusinessRole->save();
@@ -139,11 +136,6 @@ class BusinessController extends Controller
         ]);
 
         $role = Role::where('id', $request->get('role_id'))->first();
-
-        // $isAllowed = $role->isUserAllowed($request->user());
-        // if($isAllowed == false){
-        //     return redirect()->route('business.role')->withErrors(['Not authorized to access transaction']);
-        // }
         $role->name = $request->get('name');
         $role->save();
 
@@ -157,11 +149,6 @@ class BusinessController extends Controller
         ]);
 
         $BusinessRole = BusinessRole::where('id', $request->delete_id)->first();
-
-        // $isAllowed = $BusinessRole->isUserAllowed($request->user());
-        // if($isAllowed == false){
-        //     return redirect()->route('exchange.methods')->withErrors(['Not authorized to access method']);
-        // }
 
         $BusinessRole->delete();
 
@@ -183,7 +170,7 @@ class BusinessController extends Controller
         $builder = $dataTable->getHtmlBuilder();
 
         if (request()->ajax()) {
-            $location = Location::where('business_code',$user->business_code);
+            $location = Location::where('business_code', $user->business_code);
             return \Yajra\DataTables\Facades\DataTables::eloquent($location)
                 ->addColumn('actions', function (Location $location) {
                     $content = '<a class="btn btn-secondary btn-sm me-2" href="' . route('business.branches.edit', $location->id) . '">' . __("Edit") . '</a>';
@@ -277,12 +264,6 @@ class BusinessController extends Controller
         if (empty($branches)) {
             return redirect()->back()->withErrors(['Invalid Branches']);
         }
-        // $isAllowed = $branches->isUserAllowed($request->user());
-        // if($isAllowed == false){
-        //     return redirect()->route('business.branches')->withErrors(['Not authorized to access transaction']);
-        // }
-        // $businessCode = \auth()->user()->business_code;
-        // $branches = Location::where('business_code',$businessCode)->get();
         $regions = Region::where('country_code', session('country_code'))->get();
         $towns = null;
         $areas = null;
@@ -397,10 +378,6 @@ class BusinessController extends Controller
 
         $business = Business::where('id', $request->get('business_id'))->first();
 
-        // $isAllowed = $role->isUserAllowed($request->user());
-        // if($isAllowed == false){
-        //     return redirect()->route('business.role')->withErrors(['Not authorized to access transaction']);
-        // }
         $business->business_name = $request->get('business_name');
         $business->tax_id = $request->get('tax_id');
         $business->business_regno = $request->get('business_regno');
@@ -450,7 +427,6 @@ class BusinessController extends Controller
             ['data' => 'lname', 'title' => __("Last Name")],
             ['data' => 'phone', 'title' => __("Phone Number")],
             ['data' => 'email', 'title' => __("Email")],
-            // ['data' => 'business_code', 'title' => __("Business Code")],
             ['data' => 'action', 'title' => __("Action")],
         ])->responsive(true)
             ->ordering(false)
@@ -516,16 +492,17 @@ class BusinessController extends Controller
     {
         $users = User::where('id', $id)->first();
         $user = \auth()->user()->business_code;
-         $locationdata =LocationUser::where('user_code',$users->code)->get();
+        $locationdata = LocationUser::where('user_code', $users->code)->get();
         if (empty($users)) {
             return redirect()->back()->withErrors(['Invalid Branches']);
         }
         $branches = Location::where('business_code', $user)->get();
         $businessRole = BusinessRole::where('business_code', $user)->get();
 
-        return view('agent.business.users_edit', compact('users','branches', 'businessRole','locationdata'));
+        return view('agent.business.users_edit', compact('users', 'branches', 'businessRole', 'locationdata'));
     }
-    public function usersEditSubmit(Request $request){
+    public function usersEditSubmit(Request $request)
+    {
         $request->validate([
             'fname' => 'required|string',
             'lname' => 'required|string',
@@ -543,8 +520,8 @@ class BusinessController extends Controller
         $user->password = Hash::make($request->password);
         $user->save();
 
-        $locationUser =LocationUser::where('user_code',$user->code)->get();
-        $userRole =UserRole::where('user_code',$user->code)->get();
+        $locationUser = LocationUser::where('user_code', $user->code)->get();
+        $userRole = UserRole::where('user_code', $user->code)->get();
         $locationUser->each->delete();
         $userRole->each->delete();
         $locations = $request->input('branches');
@@ -563,9 +540,9 @@ class BusinessController extends Controller
             'user_role' => $roles,
         ]);
         return redirect()->route('business.users')->with(['message' => 'users Edited Successfully']);
-
     }
-    public function usersDelete($id){
+    public function usersDelete($id)
+    {
         $users = User::where('id', $id)->first();
         if (empty($users)) {
             return redirect()->back()->withErrors(['Invalid Exchange Ad']);
@@ -574,7 +551,8 @@ class BusinessController extends Controller
         return redirect()->route('business.users')->with(['message' => 'Users Deleted Successfully']);
     }
 
-    public function referrals(Request $request){
+    public function referrals(Request $request)
+    {
         $user = \auth()->user();
         $dataTable = new DataTables();
         $builder = $dataTable->getHtmlBuilder();
@@ -585,11 +563,11 @@ class BusinessController extends Controller
             $orderBy = ['order_by' => $request->get('order_by')];
             $orderByFilter = $request->get('order_by');
         }
-        $roles = Business::where('referral_business_code', $user->business_code)->orderBy('id', 'desc');
-
+        // $roles = Business::where('referral_business_code', $user->business_code)->with('package')->orderBy('id', 'desc');
+        $users = User::where('referral_business_code',$user->business_code)->with('business.package')->orderBy('id', 'desc');
         if (request()->ajax()) {
-            return \Yajra\DataTables\Facades\DataTables::eloquent($roles)
-                ->addColumn('actions', function (Business $role) {
+            return \Yajra\DataTables\Facades\DataTables::eloquent($users)
+                ->addColumn('actions', function (User $users) {
                     // $content = '<button class="btn btn-secondary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#edit_method_modal" onclick="editClicked(' . $role->id . ')">' . __("Edit") . '</button>';
                     // $content .= '<button class="btn btn-secondary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#delete_method_modal" onclick="deleteClicked(' . $role->id . ')">' . __("Delete") . '</button>';
                     // return $content;
@@ -601,20 +579,50 @@ class BusinessController extends Controller
         // DataTable
         $dataTableHtml = $builder->columns([
             ['data' => 'id', 'title' => __('ID')],
-            ['data' => 'business_name', 'title' => __('Business name')],
-            ['data' => 'code', 'title' => __('Code')],
-            ['data' => 'business_phone_number', 'title' => __('Business phone number ')],
-            // ['data' => 'actions', 'title' => __('Actions')],
+            ['data' => 'business.business_name', 'title' => __('Business name')],
+            ['data' => 'business.business_phone_number', 'title' => __('Business phone number')],
+            ['data' => 'business.status', 'title' => __('Package status')],
+            ['data' => 'business.package.name', 'title' => __('Package name')],
+            ['data' => 'business.package.price', 'title' => __('Amount')],
         ])->responsive(true)
             ->ordering(false)
             ->ajax(route('business.referrals', $orderBy))
             ->paging(true)
             ->dom('frtilp')
             ->lengthMenu([[25, 50, 100, -1], [25, 50, 100, "All"]]);
-        $methodsJson = $roles->get()->toJson();
+        $methodsJson = $users->get()->toJson();
         return view('agent.business.referrals', compact('dataTableHtml', 'orderByFilter', 'methodsJson'));
     }
-    public function referr(Request $request){
-        dd($request->all());
+    public function referr(Request $request)
+    {
+        $data = $request->validate([
+            'country_dial_code' => ['required', 'exists:countries,dialing_code'],
+            'fname' => ['required', 'string', 'max:20'],
+            'lname' => ['required', 'string', 'max:20'],
+            'phone' => ['required', 'numeric'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        ]);
+        $business_code = \auth()->user()->business_code;
+        $password = VerifyOTP::generateOTPCode();
+        $pass = VerifyOTP::generateHashedPassword($password);
+        $country_code = Country::where('dialing_code', $data['country_dial_code'])->first()->code;
+        $country_dial_code = substr($data['country_dial_code'], 1);
+        $plainPhone = substr($data['phone'], 1);
+        $fullPhone = $country_dial_code . $plainPhone;
+        $user = User::create([
+            'country_code' => $country_code,
+            'code' => generateCode($data['fname'] . ' ' . $data['lname'], $country_code),
+            'type' => UserTypeEnum::AGENT->value,
+            'fname' => $data['fname'],
+            'lname' => $data['lname'],
+            'phone' => $fullPhone,
+            'email' => $data['email'],
+            'password' => $pass,
+            'referral_business_code' => $business_code,
+        ]);
+        SendPasswordEmail::dispatch($user);
+        // SendPasswordSms::dispatch($user,$password);
+        return redirect()->route('business.referrals')->with(['message' => 'Refer Successfully']);
     }
+
 }
