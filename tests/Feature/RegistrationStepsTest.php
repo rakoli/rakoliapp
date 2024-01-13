@@ -326,7 +326,7 @@ class RegistrationStepsTest extends TestCase
             'business_code'=> $business->code
         ]);
         $this->actingAs($user);
-        $packages = Package::factory()->count(3)->create();
+        $packages = Package::factory()->count(3)->create(['country_code' => $user->country_code]);
 
         $response = $this->get(route('registration.agent'));
         $response->assertStatus(200);
