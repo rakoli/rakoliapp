@@ -36,7 +36,7 @@ jobs:
         run: php artisan key:generate
 
       - name: Migrate and seed database
-        run: php artisan migrate --seed
+        run: php artisan migrate:fresh --seed
 
       - name: Run PHPUnit
         run: vendor/bin/phpunit
