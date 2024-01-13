@@ -70,6 +70,7 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
         Route::post('profile/update', [App\Http\Controllers\Agent\BusinessController::class, 'profileUpdate'])->name('profile.update.submit');
 
         Route::get('subscription', [App\Http\Controllers\Agent\SubscriptionController::class, 'subscription'])->name('subscription');
+        Route::get('subscription_buy', [App\Http\Controllers\Agent\SubscriptionController::class, 'subscriptionBuy'])->name('subscription.buy');
 
 
         Route::get('branches', [App\Http\Controllers\Agent\BusinessController::class, 'branches'])->name('branches');
