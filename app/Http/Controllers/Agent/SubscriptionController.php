@@ -27,8 +27,10 @@ class SubscriptionController extends Controller
             $orderByFilter = $request->get('order_by');
         }
         $roles = InitiatedPayment::where('business_code', $user->business_code)->orderBy('id', 'desc');
-        $balance = Business::where('code', $user->business_code)->get();
+        $balance = Business::where('code', $user->business_code)->with('package')->with('package.featuress')->with('package.featuress.feature')->get();
+        // dd($balance[0]->package->featuress[0]->feature);
         $country_code = session('country_code');
+        $currency = session('currency');
         $packages = Package::where('country_code', $country_code)->get();
         $existingData = BusinessWithdrawMethod::where('business_code', $user->business_code)->get();
 
@@ -46,23 +48,27 @@ class SubscriptionController extends Controller
 
         // DataTable
         $dataTableHtml = $builder->columns([
-            ['data' => 'id', 'title' => __('ID')],
-            ['data' => 'business_code', 'title' => __('Business Code')],
-            ['data' => 'type', 'title' => __('Type')],
-            ['data' => 'category', 'title' => __('Category')],
+            ['data' => 'channel', 'title' => __('Channel')],
+            ['data' => 'income_category', 'title' => __('Income Category')],
             ['data' => 'amount', 'title' => __('Amount')],
-            ['data' => 'amount_currency', 'title' => __('Amount Currency')],
-            ['data' => 'description', 'title' => __('Description')],
+            ['data' => 'status', 'title' => __('Status')],
+            ['data' => 'channel_ref_name', 'title' => __('Channel Ref Name')],
+            // ['data' => 'amount_currency', 'title' => __('Amount Currency')],
+            // ['data' => 'description', 'title' => __('Description')],
             // ['data' => 'note', 'title' => __('Note')],
             // ['data' => 'actions', 'title' => __('Actions')],
         ])->responsive(true)
             ->ordering(false)
-            ->ajax(route('business.finance', $orderBy)) // Assuming you have a named route for the roles.index endpoint
+            ->ajax(route('business.subscription', $orderBy)) // Assuming you have a named route for the roles.index endpoint
             ->paging(true)
             ->dom('frtilp')
             ->lengthMenu([[25, 50, 100, -1], [25, 50, 100, "All"]]);
 
         $methodsJson = $roles->get()->toJson();
-        return view('agent.business.subsciption', compact('dataTableHtml', 'orderByFilter', 'methodsJson', 'balance','existingData','packages','country_code'));
+        return view('agent.business.subsciption', compact('dataTableHtml', 'orderByFilter','currency', 'methodsJson', 'balance','existingData','packages','country_code'));
+    }
+
+    public function subscriptionBuy(Request $request){
+        return view('agent.business.buy_subscription');
     }
 }

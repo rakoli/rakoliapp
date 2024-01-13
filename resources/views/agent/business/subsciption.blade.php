@@ -49,34 +49,35 @@
                             </div> --}}
                             <div class=" fs-6">
                                 <div class="fw-bold mt-5">{{ __("Package Name") }}
-                                    @foreach($packages as $package)
+                                    {{-- @foreach($packages as $package) --}}
                                         <div class="text-gray-600">
-                                            {{ $package->name }} - {{ $package->price }} - {{ $package->package_interval_days }}Days
+                                            {{ $balance[0]->package->name ?? '' }}
                                         </div>
-                                    @endforeach
+                                    {{-- @endforeach --}}
+                                </div>
+                                <div class="fw-bold mt-5">{{ __("Package Price") }}
+                                    {{-- @foreach($packages as $package) --}}
+                                        <div class="text-gray-600">
+                                            {{ $balance[0]->package->price ?? ''}}
+                                        </div>
+                                    {{-- @endforeach --}}
+                                </div>
+                                <div class="fw-bold mt-5">{{ __("Package Expiry At") }}
+                                    {{-- @foreach($packages as $package) --}}
+                                        <div class="text-gray-600">
+                                            {{ $balance[0]->package_expiry_at ?? ''}}
+                                        </div>
+                                    {{-- @endforeach --}}
                                 </div>
 
                                 <div class="fw-bold mt-5">{{__("Features List")}}
                                     <div class="text-gray-600">
-                                        {{ old('method_name', $existingData[0]->method_ac_name ?? '') }}
-                                    </div>
-                                </div>
-
-                                <div class="fw-bold mt-5">{{__("Method AC Number")}}
-                                    <div class="text-gray-600">
-                                        {{ old('method_name', $existingData[0]->method_ac_number ?? '') }}
-                                    </div>
-                                </div>
-                     
-                                <div class="fw-bold mt-5">{{__("Amount Currency")}}
-                                    <div class="text-gray-600">
-                                        {{ old('method_name', $existingData[0]->amount_currency ?? '') }}
-                                    </div>
-                                </div>
-
-                                <div class="fw-bold mt-5">{{__("Status")}}
-                                    <div class="text-gray-600">
-                                        {{ old('method_name', $existingData[0]->status ?? '') }}
+                                        @foreach($balance[0]->package->featuress as $pack)
+                                           <div class="text-gray-600">
+                                                * {{ $pack->feature->name ?? '' }}
+                                            </div>
+                                        @endforeach
+                                        {{-- {{ old('method_name', $existingData[0]->method_ac_name ?? '') }} --}}
                                     </div>
                                 </div>
                             </div>
@@ -93,62 +94,119 @@
             <div class="flex-lg-row-fluid ms-lg-15">
 
                 <!--begin::Messenger-->
-                <div class="card" id="kt_chat_messenger">
                     <!--begin::Card header-->
-                    <div class="card-header" id="kt_chat_messenger_header">
-                        <!--begin::Title-->
-                        <div class="card-title">
-                            <!--begin::User-->
-                            <div class="d-flex justify-content-center flex-column me-3">
-                                <h2 class="mb-5 text-gray-600 text-center">
-                                    <h1 class="text-center fw-bold">{{__("Business Balance:-")}}{{$balance[0]->balance}}</h1>
-                                </h2>
-                                {{-- <a href="#" class="fs-1 fw-bold text-gray-900 text-hover-primary me-1 mb-2 mt-5 lh-1">{{__("Transactions")}}</a> --}}
-                                {{-- <a href="#" class="fs-1 fw-bold text-gray-900 text-hover-primary me-1 mb-2 mt-5 lh-1 text-center">{{__("Transactions")}}</a> --}}
-                                                               
-                                <!--begin::Info-->
-                                <div class="card-body pt-0">
-                                    {{-- <button type="button" class="btn btn-primary me-1 mb-2 mt-5 lh-1" data-bs-toggle="modal" data-bs-target="#withdraw_method_modal">
-                                        {{__('Withdraw Fund')}}
-                                    </button> --}}
-    
-                                    <!--begin::Table container-->
-                                    <div class="table-responsive">
-                    
-                                        {!! $dataTableHtml->table(['class' => 'table table-row-bordered table-row-dashed gy-4' , 'style="font-size: 1.1rem;"'],true) !!}
-                    
+                    <div class="tab-pane fade show active" id="kt_ecommerce_customer_overview" role="tabpanel">
+                        <div class="row row-cols-1 row-cols-md-2 mb-6 mb-xl-1">
+                            <div class="col">
+                                <!--begin::Card-->
+                                <div class="card pt-4 h-md-100 mb-6 mb-md-0">
+                                    <!--begin::Card header-->
+                                    <div class="card-header border-0">
+                                        <!--begin::Card title-->
+                                        <div class="card-title">
+                                            {{-- <h2 class="fw-bold">Reward Points</h2> --}}
+                                            <h2 class="fw-bold">
+                                                <h1 class="text-center fw-bold">{{__("Business Balance")}}</h1>
+                                            </h2>
+                                        </div>
+                                        <!--end::Card title-->
                                     </div>
-                                    <!--end::Table container-->
+                                    <!--end::Card header-->
+                                    <!--begin::Card body-->
+                                    <div class="card-body pt-0">
+                                        <div class="fw-bold fs-2">
+                                            <div class="d-flex">
+                                                <i class="ki-outline text-info fs-2x"></i>
+                                                <div class="ms-2">{{$balance[0]->balance}}  {{$currency}}
+                                                {{-- <span class="text-muted fs-4 fw-semibold">Points earned</span> --}}
+                                                </div>
+                                            </div>
+                                            {{-- <div class="fs-7 fw-normal text-muted">Earn reward points with every purchase.</div> --}}
+                                        </div>
+                                    </div>
+                                    <!--end::Card body-->
                                 </div>
-                                <!--end::Info-->
-
+                                <!--end::Card-->
                             </div>
-                            <!--end::User-->
+                            <div class="col">
+                                <!--begin::Card-->
+                                <div class="card pt-4 h-md-100 mb-6 mb-md-0"  style="background-color: {{ now()->lt($balance[0]->package_expiry_at) ? 'lightgreen' : 'yellow' }}">
+                                    <!--begin::Card header-->
+                                    <div class="card-header border-0">
+                                        <!--begin::Card title-->
+                                        <div class="card-title">
+                                            {{-- <h2 class="fw-bold">Reward Points</h2> --}}
+                                            <h2 class="fw-bold">
+                                                <h1 class="text-center fw-bold">{{__("Current Subscription")}}</h1>
+                                            </h2>
+                                        </div>
+                                        <!--end::Card title-->
+                                    </div>
+                                    <!--end::Card header-->
+                                    <!--begin::Card body-->
+                                    <div class="card-body pt-0">
+                                        <div class="fw-bold fs-2">
+                                            <div class="d-flex">
+                                                <i class="ki-outline text-info fs-2x"></i>
+                                                <div class="ms-2">
+                                                        {{ now()->lt($balance[0]->package_expiry_at) ? 'Active' : 'Inactive' }}
+                                                {{-- <span class="text-muted fs-4 fw-semibold">Points earned</span> --}}
+                                                </div>
+                                            </div>
+                                            {{-- <div class="fs-7 fw-normal text-muted">Earn reward points with every purchase.</div> --}}
+                                        </div>
+                                    </div>
+                                    <!--end::Card body-->
+                                </div>
+                                <!--end::Card-->
+                            </div>
+                            {{-- <div class="col">
+                                <!--begin::Reward Tier-->
+                                <a href="#" class="card bg-info hoverable h-md-100">
+                                    <!--begin::Body-->
+                                    <div class="card-body">
+                                        <i class="ki-outline ki-award text-white fs-3x ms-n1"></i>
+                                        <div class="text-white fw-bold fs-2 mt-5">Premium Member</div>
+                                        <div class="fw-semibold text-white">Tier Milestone Reached</div>
+                                    </div>
+                                    <!--end::Body-->
+                                </a>
+                                <!--end::Reward Tier-->
+                            </div> --}}
                         </div>
-                        <!--end::Title-->
+                        <div class="py-3 fs-5 text-center">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#update_method_modal">
+                                {{__('Renew')}}
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="window.location.href = '{{route('business.subscription.buy')}}'">
+                                {{ __('Upgrade') }}
+                            </button>                            
+                        </div>
+                        <!--begin::Card-->
+                        <div class="card pt-4 mb-6 mb-xl-9">
+                            <!--begin::Card header-->
+                           
+                            <!--end::Card header-->
+                            <!--begin::Card body-->
+                            <div class="card-body pt-0 pb-5">
+                                <div class="card-header border-0">
+                                    <!--begin::Card title-->
+                                    <div class="card-title">
+                                        <h2>Transaction History</h2>
+                                    </div>
+                                    <!--end::Card title-->
+                                </div>
+                                <!--begin::Table-->
+                    
+                                    {!! $dataTableHtml->table(['class' => 'table table-row-bordered table-row-dashed gy-4' , 'style="font-size: 1.1rem;"'],true) !!}
+                
+                                <!--end::Table -->
+                            </div>
+                            <!--end::Card body-->
+                        </div>
+                        <!--end::Card-->
                     </div>
                     <!--end::Card header-->
-
-                    {{-- <div class="separator separator-content border-dark my-5"><span class="w-250px fw-bold">{{__("Payment Method")}}</span></div>
-
-                    <div class="card-body">
-                        <div class="input-group input-group-solid input-group-sm mb-5">
-                            <span class="input-group-text">{{__('Financial Institution')}}</span>
-                            <input type="text" class="form-control" value="{{str_camelcase($exchangeTransaction->paymentMethod->method_name)}}" disabled/>
-                        </div>
-                        <div class="input-group input-group-solid input-group-sm mb-5">
-                            <span class="input-group-text">{{__("Account Name")}}</span>
-                            <input id="kt_clipboard_acname" type="text" class="form-control" value="{{str_camelcase($exchangeTransaction->paymentMethod->account_name)}}" readonly/>
-                            <button class="btn btn-primary" data-clipboard-target="#kt_clipboard_acname">Copy</button>
-                        </div>
-                        <div class="input-group input-group-solid input-group-sm mb-5">
-                            <span class="input-group-text">{{__("Account Number")}}</span>
-                            <input id="kt_clipboard_acnumber" type="text" class="form-control" value="{{str_camelcase($exchangeTransaction->paymentMethod->account_number)}}" readonly/>
-                            <button class="btn btn-primary" data-clipboard-target="#kt_clipboard_acnumber">Copy</button>
-                        </div>
-                    </div> --}}
-
-                </div>
                 <!--end::Messenger-->
             </div>
             <!--end::Content-->

@@ -21,6 +21,11 @@ class Package extends Model
         return  $this->hasMany(PackageFeature::class,'package_code','code');
     }
 
+    public function featuress() : HasMany
+    {
+        return  $this->hasMany(PackageFeature::class,'package_code','code')->where('available', 1);;
+    }
+
     public function businesses() : HasMany
     {
         return $this->hasMany(Business::class, 'package_code', 'code');
