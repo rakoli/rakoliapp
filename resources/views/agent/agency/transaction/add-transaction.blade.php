@@ -18,24 +18,28 @@
                     </div>
                     @enderror
                 </div>
-                <div class="col-6">
+
+                <div class="col-6 py-3">
                     <x-label class="" label="Select Location" for="location_code"/>
-                    <x-select2
+
+                    <select
+                        data-control="select2"
+                        data-dropdown-parent="#add-transaction"
                         class=" @error('location_code') form-control-error @enderror"
                         name="location_code"
-                        placeholder="{{ __('Select a location') }}"
-                        id="location">
-
-
+                        data-placeholder="{{ __('Select a Location') }}"
+                        id="location_code">
                         @foreach($locations as $location)
                             <option value="{{ $location->code }}">{{ $location->name }}</option>
+
                         @endforeach
-                    </x-select2>
+                    </select>
                     @error('location_code')
                     <div class="help-block text-danger">
                         {{ $message }}
                     </div>
                     @enderror
+
                 </div>
 
             </div>
@@ -49,6 +53,7 @@
                         <x-select2
                             class=" @error('till_code') form-control-error @enderror"
                             name="till_code"
+                            modalId="add-transaction"
                             placeholder="{{ __('Select a till') }}"
                             id="till_code">
 
@@ -73,6 +78,7 @@
 
                             class=" @error('transaction_type') form-control-error @enderror"
                             name="type"
+                            modalId="add-transaction"
                             placeholder="{{ __('Select a Transaction Type') }}"
                             id="transaction_type">
 

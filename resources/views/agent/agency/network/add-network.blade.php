@@ -21,17 +21,18 @@
                 <div class="col-6">
 
                     <x-label class="" label="Select Agent" for="fsp_code"/>
-                    <x-select2
+                    <select
+                        data-control="select2"
+                        data-dropdown-parent="#add-network"
                         class="form-control-solid w-100 form-control @error('fsp_code') form-control-error @enderror"
                         name="fsp_code"
                         placeholder="{{ __('Select a Agency') }}"
                         id="fsp_code">
-                        <option value="">{{ __('Select Agency ') }}</option>
 
                         @foreach($agencies as $agency)
                             <option value="{{ $agency->code }}">{{ $agency->name }}</option>
                         @endforeach
-                    </x-select2>
+                    </select>
                     @error('fsp_code')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -68,17 +69,19 @@
             <div class="row fv-row py-2">
                 <div class="col-6">
                     <x-label class="" label="Select Location" for="location_code"/>
-                    <x-select2
-                        class="form-control-solid  form-control @error('location_code') form-control-error @enderror"
+                    <select
+                        class="form-select"
+                        data-control="select2"
+                        data-dropdown-parent="#add-network"
+                        modalId="#add-network"
                         name="location_code"
                         placeholder="{{ __('Select a location') }}"
                         id="location">
-                        <option value="">{{ __('Select location ') }}</option>
 
                         @foreach($locations as $location)
                             <option value="{{ $location->code }}">{{ $location->name }}</option>
                         @endforeach
-                    </x-select2>
+                    </select>
                     @error('location_code')
                     <div class="help-block text-danger">
                         {{ $message }}

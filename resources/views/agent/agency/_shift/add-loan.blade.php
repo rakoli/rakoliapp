@@ -17,7 +17,8 @@
 
                         <x-label class="" label="Select Till" for="network_code"/>
                         <x-select2
-                            class="form-control-solid w-100 form-control @error('network_code') form-control-error @enderror"
+                            modalId="add-loan"
+                            class=" @error('network_code')  @enderror"
                                name="network_code"
                             placeholder="{{ __('Select a Till') }}"
                             id="network_code">
@@ -37,7 +38,8 @@
                     <div class="col-6">
                         <x-label class="" label="Select Location" for="location_code"/>
                         <x-select2
-                            class="form-control-solid  form-control @error('location_code') form-control-error @enderror"
+                            modalId="add-loan"
+                            class=" @error('location_code') form-control-error @enderror"
                                name="location_code"
                             placeholder="{{ __('Select a location') }}"
                             id="location">
@@ -80,8 +82,8 @@
                         <x-label class="" label="Transaction Type" for="type"/>
 
                         <x-select2
-
-                            class="form-control-solid select2  form-control @error('type') form-control-error  @enderror"
+                            modalId="add-loan"
+                            class=" @error('type') @enderror"
                                name="type"
                             placeholder="{{ __('Select a Transaction Type') }}"
                             id="type">
