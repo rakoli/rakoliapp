@@ -39,7 +39,7 @@ class ShiftDatatable implements HasDatatable
                     ],
                     'Transaction' => [
                         'route' => route('agency.shift.transactions', $shift),
-                        'attributes' => "null",
+                        'attributes' => 'null',
                     ],
                 ]);
             })

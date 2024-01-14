@@ -33,8 +33,6 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
             Route::post('add-income', AddIncomeTransactionController::class)->name('agency.transactions.add.income');
         });
 
-
-
         // shift groups
 
         Route::prefix('shift')->group(function () {

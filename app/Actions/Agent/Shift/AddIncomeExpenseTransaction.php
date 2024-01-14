@@ -2,7 +2,6 @@
 
 namespace App\Actions\Agent\Shift;
 
-
 use App\Models\Shift;
 use App\Models\Transaction;
 use App\Utils\Enums\TransactionTypeEnum;
@@ -12,15 +11,14 @@ use Lorisleiva\Actions\Concerns\AsAction;
 class AddIncomeExpenseTransaction
 {
     use AsAction;
-
     use InteractsWithShift;
 
     /**
-     * @param Shift $shift
-     * @param array{till_code: string, amount: float, type: string , category: string , notes: ?string } $data
+     * @param  array{till_code: string, location_code: string ,  amount: float, type: string , category: string , notes: ?string }  $data
+     *
      * @throws \Throwable
      */
-    public function handle(Shift $shift , array $data)
+    public function handle(Shift $shift, array $data)
     {
 
         try {
@@ -45,21 +43,12 @@ class AddIncomeExpenseTransaction
                 'description' => $data['notes'],
             ]);
 
-
-            $shift->transactions()->create([
-                'business_code' => $shift->business_code,
-                'location_code' => $shift->location_code,
-                'network_code' => $data['till_code'],
-                'code' => generateCode($shift->user_code, time() ),
-                'user_code' => auth()->user()->code,
-                'amount' => $data['amount'],
-                'amount_currency' => currencyCode(),
-                'type' => $data['type'],
-                'category' => $data['category'],
-                'balance_old' => $oldBalance,
-                'balance_new' => $newBalance,
-                'description' => $data['notes'],
-            ]);
+            $this->createShiftTransaction(
+                shift: $shift,
+                data: $data,
+                oldBalance: $oldBalance,
+                newBalance: $newBalance
+            );
 
             DB::commit();
         } catch (\Exception $e) {
@@ -68,5 +57,4 @@ class AddIncomeExpenseTransaction
         }
 
     }
-
 }

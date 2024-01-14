@@ -3,9 +3,6 @@
 namespace App\Http\Controllers\Agent\Transaction;
 
 use App\Http\Controllers\Controller;
-use App\Models\Location;
-use App\Models\Network;
-use App\Utils\Datatables\Agent\Shift\ShiftTransactionDatatable;
 use App\Utils\Datatables\Agent\Shift\TransactionDatatable;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;

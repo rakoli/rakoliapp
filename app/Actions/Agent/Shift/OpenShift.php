@@ -28,10 +28,7 @@ class OpenShift
 
             $nos = Shift::query()->latest('created_at')
                 ->whereDate('created_at', Carbon::today())
-                ->first([
-                    "id"
-                ])
-            ->id;
+                ->first()?->no;
 
             tap(Shift::create([
                 'user_code' => auth()->user()->code,

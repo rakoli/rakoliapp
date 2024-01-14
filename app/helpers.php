@@ -29,7 +29,7 @@ if (! function_exists('settings')) {
 }
 
 if (! function_exists('generateCode')) {
-    function generateCode(string|int $name, string $prefixText = ''): string
+    function generateCode(string|int $name, string|int $prefixText = ''): string
     {
         $cleanName = cleanText($name);
         $code = str($cleanName)->trim()->lower()->value();

@@ -4,11 +4,9 @@ namespace App\Utils\Datatables\Agent\Shift;
 
 use App\Models\Shift;
 use App\Models\ShiftTransaction;
-use App\Models\Transaction;
 use App\Utils\Datatables\LakoriDatatable;
 use App\Utils\HasDatatable;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder as ElequentBuilder;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 use Yajra\DataTables\Html\Column;
@@ -17,13 +15,13 @@ class ShiftTransactionDatatable implements HasDatatable
 {
     use LakoriDatatable;
 
-    public function index(Shift $shift , bool $isToday = false): \Illuminate\Http\JsonResponse
+    public function index(Shift $shift, bool $isToday = false): \Illuminate\Http\JsonResponse
     {
 
         $transactions = ShiftTransaction::query()
-            ->whereBelongsTo($shift,'shift')
-            ->with('location', 'user')
-            ->when($isToday, fn ( $query)  => $query->whereDate('created_at', Carbon::today()));
+            ->whereBelongsTo($shift, 'shift')
+            ->with('location', 'user', 'network.agency')
+            ->when($isToday, fn ($query) => $query->whereDate('created_at', Carbon::today()));
 
         return Datatables::eloquent($transactions)
             ->filter(function ($query) {
@@ -52,6 +50,7 @@ class ShiftTransactionDatatable implements HasDatatable
 
             })
             ->addColumn('location_name', fn (ShiftTransaction $transaction) => $transaction->location->name)
+            ->addColumn('network_name', fn (ShiftTransaction $transaction) => $transaction->network?->agency?->name)
 
             ->rawColumns(['balance_old', 'balance_new', 'transaction_type', 'actions'])
             ->toJson();
@@ -67,6 +66,7 @@ class ShiftTransactionDatatable implements HasDatatable
             Column::make('balance_old')->title(__('Old Balance').' '.strtoupper(session('currency')))->searchable()->orderable(),
             Column::make('amount')->title(__('Amount Transacted').' '.strtoupper(session('currency')))->searchable()->orderable(),
             Column::make('balance_new')->title(__('New Balance'))->searchable()->orderable(),
+            Column::make('network_name')->title(__('network'))->searchable()->orderable(),
             Column::make('transaction_type')->title(__('Type'))->searchable()->orderable(),
         ])
             ->orderBy(0);

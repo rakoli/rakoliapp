@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-
 use App\Models\Scopes\BusinessScoped;
 use App\Models\Scopes\LocationScoped;
 use App\Utils\Enums\LoanPaymentStatusEnum;
@@ -18,7 +17,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Loan extends Model
 {
-
     use HasFactory;
 
     protected $casts = [
@@ -65,7 +63,6 @@ class Loan extends Model
     {
         return $this->belongsTo(Location::class, 'location_code', 'code');
     }
-
 
     public function balance(): Attribute
     {

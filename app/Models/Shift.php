@@ -44,7 +44,7 @@ class Shift extends Model
 
     public function transactions(): HasMany
     {
-        return $this->hasMany(ShiftTransaction::class, 'shift_id','id');
+        return $this->hasMany(ShiftTransaction::class, 'shift_id', 'id');
     }
 
     public function location(): BelongsTo

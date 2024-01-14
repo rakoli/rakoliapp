@@ -16,7 +16,6 @@ use Spatie\Permission\Traits\HasRoles;
 /**
  * @property string $full_name
  */
-
 class User extends Authenticatable
 {
     use AuthenticationLoggable, HasApiTokens, HasFactory, HasRoles, Notifiable;
@@ -26,7 +25,6 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-
     protected $fillable = [
         'type',
         'fname',
@@ -63,14 +61,12 @@ class User extends Authenticatable
         return $this->fname.' '.$this->lname;
     }
 
-
     /**  #[AllowDynamicProperties]
      * private $full_name
-     * @return Attribute
      */
     public function fullName(): Attribute
     {
-        return new Attribute(get: fn () : string => $this->name());
+        return new Attribute(get: fn (): string => $this->name());
     }
 
     public function getEmailOTPCode()

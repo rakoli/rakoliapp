@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Agent\Shift\Transaction;
 
 use App\Http\Controllers\Controller;
 use App\Models\Location;
-use App\Models\Network;
 use App\Models\Shift;
 use App\Models\ShiftNetwork;
 use App\Utils\Datatables\Agent\Shift\ShiftTransactionDatatable;
@@ -15,7 +14,7 @@ use Yajra\DataTables\Html\Builder;
 
 class ShiftTransactionController extends Controller
 {
-    public function __invoke(Request $request, Shift $shift , Builder $datatableBuilder, ShiftTransactionDatatable $transactionDatatable): View|JsonResponse
+    public function __invoke(Request $request, Shift $shift, Builder $datatableBuilder, ShiftTransactionDatatable $transactionDatatable): View|JsonResponse
     {
 
         if ($request->ajax()) {

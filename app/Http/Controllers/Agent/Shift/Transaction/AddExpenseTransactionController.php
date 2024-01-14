@@ -28,7 +28,7 @@ class AddExpenseTransactionController extends Controller
             $validated['category'] = TransactionCategoryEnum::EXPENSE;
             $validated['type'] = TransactionTypeEnum::MONEY_OUT->value;
 
-            AddIncomeExpenseTransaction::run(shift: $shift , data: $validated);
+            AddIncomeExpenseTransaction::run(shift: $shift, data: $validated);
 
             return response()
                 ->json([

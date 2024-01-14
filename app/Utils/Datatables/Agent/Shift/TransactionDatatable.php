@@ -2,13 +2,10 @@
 
 namespace App\Utils\Datatables\Agent\Shift;
 
-use App\Models\Shift;
-use App\Models\ShiftTransaction;
 use App\Models\Transaction;
 use App\Utils\Datatables\LakoriDatatable;
 use App\Utils\HasDatatable;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder as ElequentBuilder;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 use Yajra\DataTables\Html\Column;
@@ -22,7 +19,7 @@ class TransactionDatatable implements HasDatatable
 
         $transactions = Transaction::query()
             ->with('location', 'user')
-            ->when($isToday, fn ( $query)  => $query->whereDate('created_at', Carbon::today()));
+            ->when($isToday, fn ($query) => $query->whereDate('created_at', Carbon::today()));
 
         return Datatables::eloquent($transactions)
             ->filter(function ($query) {
@@ -46,7 +43,7 @@ class TransactionDatatable implements HasDatatable
                     label: $transaction->type->label(),
                     badgeClass: $transaction->type->color()
                 );
-            }) ->addColumn('category_label', function (Transaction $transaction) {
+            })->addColumn('category_label', function (Transaction $transaction) {
 
                 $table = new self();
 
@@ -60,7 +57,7 @@ class TransactionDatatable implements HasDatatable
             })
             ->addColumn('location_name', fn (Transaction $transaction) => $transaction->location->name)
 
-            ->rawColumns(['balance_old', 'balance_new', 'transaction_type',"category_label", 'actions'])
+            ->rawColumns(['balance_old', 'balance_new', 'transaction_type', 'category_label', 'actions'])
             ->toJson();
     }
 

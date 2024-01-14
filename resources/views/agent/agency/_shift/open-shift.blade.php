@@ -103,11 +103,7 @@
                     $("form#openShift"),
                     "{{ route('agency.shift.store') }}"
                 );
-                setTimeout(function () {
-                    window.location.reload();
-                }, 1000);
 
-                return;
             }
 
         </script>

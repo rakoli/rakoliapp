@@ -6,7 +6,6 @@ use App\Models\Loan;
 use App\Models\LoanPayment;
 use App\Utils\Datatables\LakoriDatatable;
 use App\Utils\HasDatatable;
-use Illuminate\Database\Eloquent\Model;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 use Yajra\DataTables\Html\Column;

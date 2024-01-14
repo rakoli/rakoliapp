@@ -4,11 +4,9 @@ namespace App\Actions\Agent\Shift;
 
 use App\Models\Loan;
 use App\Models\Shift;
-use App\Models\ShiftNetwork;
 use App\Utils\Enums\LoanPaymentStatusEnum;
 use App\Utils\Enums\LoanTypeEnum;
 use App\Utils\Enums\ShiftStatusEnum;
-use App\Utils\Enums\TransactionTypeEnum;
 use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -29,7 +27,6 @@ class AddLoan
             );
 
             DB::beginTransaction();
-
 
             $shiftId = Shift::query()->where('status', ShiftStatusEnum::OPEN)->first(['id'])?->id;
 
@@ -53,5 +50,4 @@ class AddLoan
         }
 
     }
-
 }

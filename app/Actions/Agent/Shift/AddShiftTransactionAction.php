@@ -3,7 +3,6 @@
 namespace App\Actions\Agent\Shift;
 
 use App\Models\Shift;
-use App\Models\ShiftTransaction;
 use App\Utils\Enums\ShiftStatusEnum;
 use App\Utils\Enums\TransactionTypeEnum;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -11,28 +10,24 @@ use Lorisleiva\Actions\Concerns\AsAction;
 class AddShiftTransactionAction
 {
     use AsAction;
-
     use InteractsWithShift;
 
-
     /**
-     * @param Shift $shift
-     * @param array{till_code: string,  amount: float , type: string, notes: ?string, description: ?string} $data
+     * @param  array{till_code: string,  amount: float , type: string, notes: ?string, description: ?string}  $data
      * @return void
      */
     public function handle(Shift $shift, array $data)
     {
 
         try {
-            if ($shift->status != ShiftStatusEnum::OPEN)
-            {
-                throw new \Exception("Shift is closed, and cannot accept a transaction");
+            if ($shift->status != ShiftStatusEnum::OPEN) {
+                throw new \Exception('Shift is closed, and cannot accept a transaction');
             }
 
             [$newBalance, $oldBalance] = match ($data['type']) {
                 TransactionTypeEnum::MONEY_IN->value => AddShiftTransactionAction::moneyIn($data),
                 TransactionTypeEnum::MONEY_OUT->value => AddShiftTransactionAction::moneyOut($data),
-                default => [0,0],
+                default => [0, 0],
             };
 
             $shift->transactions()
@@ -48,9 +43,7 @@ class AddShiftTransactionAction
                     'balance_new' => $newBalance,
                 ]);
 
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
 
         }
     }

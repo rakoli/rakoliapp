@@ -27,7 +27,7 @@ class AddTransactionController extends Controller
         $validated['category'] = TransactionCategoryEnum::GENERAL;
 
         try {
-            \App\Actions\Agent\Shift\AddTransaction::run($shift. $validated);
+            \App\Actions\Agent\Shift\AddTransaction::run(shift: $shift, data: $validated);
 
             return response()
                 ->json([
@@ -35,6 +35,7 @@ class AddTransactionController extends Controller
                 ]);
 
         } catch (\Exception|\Throwable $e) {
+
             return response()
                 ->json([
                     'message' => 'Transaction could not be added',

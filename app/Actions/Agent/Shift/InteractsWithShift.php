@@ -8,18 +8,40 @@ use App\Utils\Enums\ShiftStatusEnum;
 
 trait InteractsWithShift
 {
+    /**
+     * @param  array{till_code: string,location_code: string,amount: float, type: string , category: string , notes: ?string } $data
+     *
+     * @throws \Exception
+     */
+    public function createShiftTransaction(Shift $shift, array $data, float $oldBalance, $newBalance)
+    {
+
+        $shift->transactions()->create([
+            'business_code' => $shift->business_code,
+            'location_code' => $shift->location_code,
+            'network_code' => $data['till_code'],
+            'code' => generateCode($shift->user_code, time()),
+            'user_code' => auth()->user()->code,
+            'amount' => $data['amount'],
+            'amount_currency' => currencyCode(),
+            'type' => $data['type'],
+            'category' => $data['category'],
+            'balance_old' => $oldBalance,
+            'balance_new' => $newBalance,
+            'description' => $data['notes'],
+        ]);
+    }
 
     public static function moneyIn(array $data): array
     {
 
         // till for the opened shift
 
-
         $tillCheck = ShiftNetwork::query()
-            ->whereHas('shift', fn($query) => $query->where('status', ShiftStatusEnum::OPEN))
+            ->whereHas('shift', fn ($query) => $query->where('status', ShiftStatusEnum::OPEN))
             ->where('network_code', $data['till_code']);
 
-        if (!$tillCheck->exists()) {
+        if (! $tillCheck->exists()) {
             throw new \Exception('You cannot transact without an open shift');
         }
 
@@ -61,10 +83,10 @@ trait InteractsWithShift
         // till for the opened shift
 
         $tillCheck = ShiftNetwork::query()
-            ->whereHas('shift', fn($query) => $query->where('status', ShiftStatusEnum::OPEN))
+            ->whereHas('shift', fn ($query) => $query->where('status', ShiftStatusEnum::OPEN))
             ->where('network_code', $data['till_code']);
 
-        if (!$tillCheck->exists()) {
+        if (! $tillCheck->exists()) {
             throw new \Exception('You cannot transact without an open shift');
         }
 

@@ -3,7 +3,6 @@
 namespace App\Actions\Agent\Shift;
 
 use App\Models\Shift;
-use App\Models\ShiftNetwork;
 use App\Models\Transaction;
 use App\Utils\Enums\ShiftStatusEnum;
 use App\Utils\Enums\TransactionTypeEnum;
@@ -13,14 +12,14 @@ use Lorisleiva\Actions\Concerns\AsAction;
 class AddTransaction
 {
     use AsAction;
-
     use InteractsWithShift;
 
-
     /**
+     * @param  array{till_code: string,location_code: string,amount: float, type: string , category: string , notes: ?string } $data
+     *
      * @throws \Throwable
      */
-    public function handle(array $data)
+    public function handle(Shift $shift, array $data)
     {
 
         try {
@@ -49,14 +48,20 @@ class AddTransaction
                 'description' => $data['notes'],
             ]);
 
+            $this->createShiftTransaction(
+                shift: $shift,
+                data: $data,
+                oldBalance: $oldBalance,
+                newBalance: $newBalance
+            );
+
             DB::commit();
+
         } catch (\Exception $e) {
+
             DB::rollBack();
             throw new \Exception($e->getMessage());
         }
 
     }
-
-    // reduce till float and increase cash at hand
-
 }

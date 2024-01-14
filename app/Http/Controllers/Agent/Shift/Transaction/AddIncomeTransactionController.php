@@ -8,7 +8,6 @@ use App\Models\Shift;
 use App\Utils\Enums\TransactionCategoryEnum;
 use App\Utils\Enums\TransactionTypeEnum;
 use Illuminate\Http\Request;
-use function Psy\sh;
 
 class AddIncomeTransactionController extends Controller
 {
@@ -29,7 +28,7 @@ class AddIncomeTransactionController extends Controller
             $validated['category'] = TransactionCategoryEnum::INCOME;
             $validated['type'] = TransactionTypeEnum::MONEY_IN->value;
 
-            AddIncomeExpenseTransaction::run($shift , $validated);
+            AddIncomeExpenseTransaction::run($shift, $validated);
 
             return response()
                 ->json([
@@ -39,7 +38,7 @@ class AddIncomeTransactionController extends Controller
         } catch (\Exception|\Throwable $e) {
             return response()
                 ->json([
-                    'message' => 'Income could not be added' . $e->getMessage(),
+                    'message' => 'Income could not be added'.$e->getMessage(),
                 ], 422);
         }
     }

@@ -16,14 +16,15 @@ class OpenShiftController extends Controller
 
         //validate
 
+        $validated = $request->validate([
+            'cash_at_hand' => 'required|numeric',
+            'location_code' => 'required|exists:locations,code',
+            'notes' => 'required|string',
+        ], [
+            'network_code.required',
+        ]);
+
         try {
-            $validated = $request->validate([
-                'cash_at_hand' => 'required|numeric',
-                'location_code' => 'required|exists:locations,code',
-                'notes' => 'required|string',
-            ], [
-                'network_code.required',
-            ]);
 
             OpenShift::run(
                 cashAtHand: $validated['cash_at_hand'],
@@ -38,7 +39,7 @@ class OpenShiftController extends Controller
         } catch (\Exception $e) {
             return response()
                 ->json([
-                    'message' => 'Failed to open shift',
+                    'message' => $e->getMessage(),
                 ], 422);
         }
 

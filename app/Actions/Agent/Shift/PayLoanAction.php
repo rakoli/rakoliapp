@@ -5,10 +5,7 @@ namespace App\Actions\Agent\Shift;
 use App\Events\Shift\LoanPaidEvent;
 use App\Models\Loan;
 use App\Models\LoanPayment;
-use App\Models\Shift;
-use App\Models\ShiftNetwork;
 use App\Utils\Enums\LoanPaymentStatusEnum;
-use App\Utils\Enums\ShiftStatusEnum;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -18,8 +15,8 @@ class PayLoanAction
     use AsAction;
 
     /**
-     * @param Loan $loan
-     * @param array{amount: float, description: ?string, notes: ?string , payment_method: ?string, deposited_at: string} $data
+     * @param  array{amount: float, description: ?string, notes: ?string , payment_method: ?string, deposited_at: string}  $data
+     *
      * @throws \Throwable
      */
     public function handle(Loan $loan, array $data)
@@ -64,5 +61,4 @@ class PayLoanAction
             throw new \Exception($e->getMessage());
         }
     }
-
 }

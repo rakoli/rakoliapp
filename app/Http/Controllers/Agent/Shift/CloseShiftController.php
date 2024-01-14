@@ -12,8 +12,6 @@ use Illuminate\Validation\ValidationException;
 
 class CloseShiftController extends Controller
 {
-
-
     public function index()
     {
 

@@ -15,13 +15,14 @@ class ShiftTransaction extends Model
     use HasFactory;
 
     protected $guarded = [
-        'id'
+        'id',
     ];
 
     protected $casts = [
         'type' => TransactionTypeEnum::class,
         'category' => TransactionCategoryEnum::class,
     ];
+
     protected static function booted()
     {
         static::addGlobalScope(new LocationScoped());
