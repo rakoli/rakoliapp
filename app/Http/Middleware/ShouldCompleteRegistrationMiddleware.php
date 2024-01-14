@@ -16,15 +16,16 @@ class ShouldCompleteRegistrationMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if($request->user()->registration_step != 0){
-            if($request->user()->type == UserTypeEnum::AGENT->value){
+        if ($request->user()->registration_step != 0) {
+            if ($request->user()->type == UserTypeEnum::AGENT->value) {
                 return redirect()->route('registration.agent');
-            }elseif ($request->user()->type == UserTypeEnum::VAS->value){
+            } elseif ($request->user()->type == UserTypeEnum::VAS->value) {
                 return redirect()->route('registration.vas');
-            }else{
+            } else {
                 return redirect()->route('logout');
             }
         }
+
         return $next($request);
     }
 }

@@ -44,11 +44,11 @@ return new class extends Migration
                 ->onUpdate('cascade');
 
             $table->string('code')->unique();
-            $table->string('type');// enum <TransactionTypeEnum<Money_in, Money_out>>
-            $table->decimal('amount' , 12, 2);
+            $table->string('type'); // enum <TransactionTypeEnum<Money_in, Money_out>>
+            $table->decimal('amount', 12, 2);
             $table->string('amount_currency');
-            $table->decimal('balance_old' , 12, 2);
-            $table->decimal('balance_new' , 12, 2);
+            $table->decimal('balance_old', 12, 2);
+            $table->decimal('balance_new', 12, 2);
             $table->string('description');
             $table->text('note')->nullable();
 

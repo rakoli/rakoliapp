@@ -2,23 +2,21 @@
 
 namespace App\Utils\Enums;
 
-enum IDCardType : string
+enum IDCardType: string
 {
+    case NAT_ID = 'national_id_card';
+    case DRIVER_LICENCE = 'driving_licence';
 
-    case NAT_ID = "national_id_card";
-    case DRIVER_LICENCE = "driving_licence";
-
-    case PASSPORT= "passport";
+    case PASSPORT = 'passport';
 
     public function label()
     {
-        return match ($this){
+        return match ($this) {
 
-            static::NAT_ID => "National ID No",
-            static::DRIVER_LICENCE => "Driving licence",
-            static::PASSPORT => "Passport",
+            self::NAT_ID => 'National ID No',
+            self::DRIVER_LICENCE => 'Driving licence',
+            self::PASSPORT => 'Passport',
         };
 
     }
-
 }

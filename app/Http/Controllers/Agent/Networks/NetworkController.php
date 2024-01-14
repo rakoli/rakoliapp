@@ -13,9 +13,8 @@ class NetworkController extends Controller
     public function __invoke(Builder $datatableBuilder, NetworkDatatable $networkDatatable)
     {
 
-        if (\request()->ajax())
-        {
-            return  $networkDatatable->index();
+        if (\request()->ajax()) {
+            return $networkDatatable->index();
         }
 
         $locations = Location::query()->cursor();
@@ -25,7 +24,7 @@ class NetworkController extends Controller
         return view('agent.agency.network.networks')->with([
             'dataTableHtml' => $networkDatatable->columns($datatableBuilder),
             'locations' => $locations,
-            'agencies' => $fsps
+            'agencies' => $fsps,
         ]);
     }
 }

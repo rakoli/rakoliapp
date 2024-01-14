@@ -8,7 +8,6 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
@@ -42,11 +41,9 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-
     /**
      * Log the user out of the application.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function logout(Request $request)
@@ -55,6 +52,7 @@ class LoginController extends Controller
         Auth::logout();
         Session::flush();
         Session::put('locale', $locale);
+
         return redirect()->route('home');
     }
 

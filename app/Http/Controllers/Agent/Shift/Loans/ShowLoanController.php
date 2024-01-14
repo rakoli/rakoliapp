@@ -15,16 +15,14 @@ class ShowLoanController extends Controller
      */
     public function __invoke(Request $request, Loan $loan, LoanPaymentDatatable $paymentDatatable, Builder $datatableBuilder)
     {
-        if ($request->ajax())
-        {
+        if ($request->ajax()) {
             return $paymentDatatable->index($loan);
         }
 
         return view('agent.agency.loans.show')->with([
             'loan' => $loan,
-            'datatableHtml' => $paymentDatatable->columns($datatableBuilder)
+            'datatableHtml' => $paymentDatatable->columns($datatableBuilder),
 
         ]);
     }
 }
-

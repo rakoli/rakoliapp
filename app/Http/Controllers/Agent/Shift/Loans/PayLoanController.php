@@ -30,18 +30,14 @@ class PayLoanController extends Controller
 
             return response()
                 ->json([
-                    'message' => "Loan Paid successfully"
+                    'message' => 'Loan Paid successfully',
                 ], 201);
 
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             return response()
                 ->json([
-                    'message' => $e->getMessage()
+                    'message' => $e->getMessage(),
                 ], 422);
-
-
 
         }
     }

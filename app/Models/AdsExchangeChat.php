@@ -10,14 +10,13 @@ class AdsExchangeChat extends Model
 {
     use HasFactory;
 
-    public function exchange_ad() : BelongsTo
+    public function exchange_ad(): BelongsTo
     {
         return $this->belongsTo(ExchangeAds::class, 'exchange_ads_code', 'code');
     }
 
-    public function user() : BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'sender_code', 'code');
     }
-
 }

@@ -13,16 +13,16 @@ class ShiftNetwork extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+
     protected static function booted(): void
     {
         static::addGlobalScope(new LocationScoped());
         static::addGlobalScope(new BusinessScoped());
     }
 
-
     public function network(): BelongsTo
     {
-        return $this->belongsTo(Network::class,'network_code','code')->with('agency');
+        return $this->belongsTo(Network::class, 'network_code', 'code')->with('agency');
     }
 
     public function business(): BelongsTo
@@ -39,5 +39,4 @@ class ShiftNetwork extends Model
     {
         return $this->belongsTo(Shift::class);
     }
-
 }

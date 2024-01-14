@@ -26,7 +26,6 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-
             $table->string('document_type')->nullable();
             $table->string('uploader_name')->nullable();
             $table->string('document_name')->nullable();

@@ -20,8 +20,6 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-
-
             $table->string('submitter_user_code');
             $table->foreign('submitter_user_code')->references('code')
                 ->on('users')

@@ -3,16 +3,8 @@
 namespace App\Utils\Datatables\Agent\Shift;
 
 use App\Models\Loan;
-use App\Models\Network;
-use App\Models\Shift;
-use App\Models\ShiftNetwork;
-use App\Models\Transaction;
 use App\Utils\Datatables\LakoriDatatable;
-use App\Utils\Enums\LoanPaymentStatusEnum;
-use App\Utils\Enums\ShiftStatusEnum;
-use App\Utils\Enums\TransactionTypeEnum;
 use App\Utils\HasDatatable;
-use Illuminate\Support\HtmlString;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 use Yajra\DataTables\Html\Column;
@@ -20,7 +12,6 @@ use Yajra\DataTables\Html\Column;
 class LoanDatatable implements HasDatatable
 {
     use LakoriDatatable;
-
 
     public function index(): \Illuminate\Http\JsonResponse
     {
@@ -36,10 +27,10 @@ class LoanDatatable implements HasDatatable
             })
             ->startsWithSearch()
             ->addIndexColumn()
-            ->addColumn('created_at', fn(Loan $record) => $record->created_at->format('Y-F-d'))
-            ->addColumn('location_name', fn(Loan $record) => $record->location->name)
-            ->addColumn('user_name', fn(Loan $record) => $record->user->full_name)
-            ->addColumn('agency_name', fn(Loan $record) => $record->network->agency->name)
+            ->addColumn('created_at', fn (Loan $record) => $record->created_at->format('Y-F-d'))
+            ->addColumn('location_name', fn (Loan $record) => $record->location->name)
+            ->addColumn('user_name', fn (Loan $record) => $record->user->full_name)
+            ->addColumn('agency_name', fn (Loan $record) => $record->network->agency->name)
             ->addColumn('status', function (Loan $record) {
 
                 $table = new self();
@@ -58,16 +49,16 @@ class LoanDatatable implements HasDatatable
                     badgeClass: $record->type->color()
                 );
             })
-            ->addColumn('action', fn(Loan $record) => (new self())->buttons([
+            ->addColumn('action', fn (Loan $record) => (new self())->buttons([
 
                 'pay' => [
                     'route' => route('agency.loans.show', $record),
-                    'attributes' => ''
+                    'attributes' => '',
                 ],
             ]))
-            ->addColumn('amount', fn(Loan $record) => money($record->amount, currencyCode(), true))
-            ->addColumn('balance', fn(Loan $record) => money($record->balance, currencyCode(), true))
-            ->rawColumns(['balance', 'agency_name', "action", 'location_name', 'user_name', 'type', 'status'])
+            ->addColumn('amount', fn (Loan $record) => money($record->amount, currencyCode(), true))
+            ->addColumn('balance', fn (Loan $record) => money($record->balance, currencyCode(), true))
+            ->rawColumns(['balance', 'agency_name', 'action', 'location_name', 'user_name', 'type', 'status'])
             ->toJson();
     }
 
@@ -82,8 +73,8 @@ class LoanDatatable implements HasDatatable
             Column::make('agency_name')->title(__('Agency'))->searchable()->orderable(),
             Column::make('status')->title(__('status'))->searchable()->orderable(),
             Column::make('type')->title(__('type'))->searchable()->orderable(),
-            Column::make('amount')->title(__('amount') . ' ' . strtoupper(session('currency')))->searchable()->orderable(),
-            Column::make('balance')->title(__('balance') . ' ' . strtoupper(session('currency')))->searchable()->orderable(),
+            Column::make('amount')->title(__('amount').' '.strtoupper(session('currency')))->searchable()->orderable(),
+            Column::make('balance')->title(__('balance').' '.strtoupper(session('currency')))->searchable()->orderable(),
             Column::make('action')->data('action')->title(__('action')),
 
         ])

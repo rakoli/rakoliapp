@@ -41,7 +41,7 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->decimal('amount',12,2);
+            $table->decimal('amount', 12, 2);
             $table->string('amount_currency');
             $table->string('status')->default(ExchangeTransactionStatusEnum::OPEN);
             $table->timestamps();

@@ -8,10 +8,9 @@ use App\Models\Package;
 use App\Models\User;
 use App\Utils\Enums\BusinessStatusEnum;
 use App\Utils\Enums\UserTypeEnum;
-use App\Utils\Enums\WalkThroughStepEnums;
+use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Faker\Factory as Faker;
 use Illuminate\Support\Str;
 
 class UsersTableSeeder extends Seeder
@@ -26,45 +25,45 @@ class UsersTableSeeder extends Seeder
         $faker = Faker::create();
 
         //AGENT BUSINESS
-        $name = "Vertice Agents Ltd";
+        $name = 'Vertice Agents Ltd';
         $agentBusiness = Business::create([
-            'country_code' => "TZ",
+            'country_code' => 'TZ',
             'type' => UserTypeEnum::AGENT->value,
-            'code'=> generateCode($name),
+            'code' => generateCode($name),
             'business_name' => $name,
             'tax_id' => $faker->unique()->numerify('###-###-###'),
             'business_regno' => $faker->unique()->numerify('#########'),
             'business_phone_number' => '255739466080',
-            'business_email' => "agent@rakoli.com",
+            'business_email' => 'agent@rakoli.com',
             'business_location' => $faker->address,
-            'package_code' => Package::where('name','prosperity')->first()->code,
-            'package_expiry_at' => now()->addDays(random_int(5,30)),
-            'status' => BusinessStatusEnum::ACTIVE->value
+            'package_code' => Package::where('name', 'prosperity')->first()->code,
+            'package_expiry_at' => now()->addDays(random_int(5, 30)),
+            'status' => BusinessStatusEnum::ACTIVE->value,
         ]);
 
         Location::create([
             'business_code' => $agentBusiness->code,
-            'code' => Str::random(10) ,
+            'code' => Str::random(10),
             'name' => 'Vertice HQ',
             'balance' => fake()->numberBetween(500000, 5000000),
-            'balance_currency' => fake()->randomElement(['kes','tzs']),
+            'balance_currency' => fake()->randomElement(['kes', 'tzs']),
         ]);
 
         //VAS BUSINESS
-        $name = "Pulsans Advertisement Ltd";
+        $name = 'Pulsans Advertisement Ltd';
         $vasBusiness = Business::create([
-            'country_code' => "TZ",
+            'country_code' => 'TZ',
             'type' => UserTypeEnum::VAS->value,
-            'code'=> generateCode($name),
+            'code' => generateCode($name),
             'business_name' => $name,
             'tax_id' => $faker->unique()->numerify('###-###-###'),
             'business_regno' => $faker->unique()->numerify('#########'),
             'business_phone_number' => '255739466080',
-            'business_email' => "vas@rakoli.com",
+            'business_email' => 'vas@rakoli.com',
             'business_location' => $faker->address,
             'package_code' => null,
             'package_expiry_at' => null,
-            'status' => BusinessStatusEnum::ACTIVE->value
+            'status' => BusinessStatusEnum::ACTIVE->value,
         ]);
 
         // Specific users provided in the data
@@ -75,7 +74,7 @@ class UsersTableSeeder extends Seeder
                 'lname' => 'Erick',
                 'phone' => '255739466080',
                 'email' => 'agent@rakoli.com',
-                'code' => generateCode('Elin Erick',),
+                'code' => generateCode('Elin Erick'),
                 'password' => Hash::make('12345678'),
                 'type' => UserTypeEnum::AGENT->value,
                 'business_code' => $agentBusiness->code,
@@ -106,7 +105,7 @@ class UsersTableSeeder extends Seeder
             ],
         ];
 
-        foreach($users as $user) {
+        foreach ($users as $user) {
 
             User::create($user);
 

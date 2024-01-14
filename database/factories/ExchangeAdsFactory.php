@@ -5,7 +5,6 @@ namespace Database\Factories;
 use App\Models\Business;
 use App\Models\ExchangeAds;
 use App\Models\Location;
-use App\Models\Package;
 use App\Utils\Enums\ExchangeStatusEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -16,6 +15,7 @@ use Illuminate\Support\Str;
 class ExchangeAdsFactory extends Factory
 {
     protected $model = ExchangeAds::class;
+
     /**
      * Define the model's default state.
      *
@@ -32,7 +32,7 @@ class ExchangeAdsFactory extends Factory
             'code' => Str::random(10),
             'min_amount' => 50000,
             'max_amount' => 350000,
-            'currency' => fake()->randomElement(['kes','tzs']),
+            'currency' => fake()->randomElement(['kes', 'tzs']),
             'status' => fake()->randomElement(ExchangeStatusEnum::class),
         ];
     }

@@ -18,13 +18,12 @@ class BusinessVerificationUpload extends Model
         'document_path',
     ];
 
-
     protected $casts = [
-        'document_type' => BusinessUploadDocumentTypeEnums::class
+        'document_type' => BusinessUploadDocumentTypeEnums::class,
     ];
 
-    public function business() : BelongsTo
+    public function business(): BelongsTo
     {
-        return $this->belongsTo(Business::class,'business_code','code');
+        return $this->belongsTo(Business::class, 'business_code', 'code');
     }
 }

@@ -4,17 +4,9 @@ namespace App\Utils\Datatables\Agent\Shift;
 
 use App\Models\Loan;
 use App\Models\LoanPayment;
-use App\Models\Network;
-use App\Models\Shift;
-use App\Models\ShiftNetwork;
-use App\Models\Transaction;
 use App\Utils\Datatables\LakoriDatatable;
-use App\Utils\Enums\LoanPaymentStatusEnum;
-use App\Utils\Enums\ShiftStatusEnum;
-use App\Utils\Enums\TransactionTypeEnum;
 use App\Utils\HasDatatable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\HtmlString;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 use Yajra\DataTables\Html\Column;
@@ -22,7 +14,6 @@ use Yajra\DataTables\Html\Column;
 class LoanPaymentDatatable implements HasDatatable
 {
     use LakoriDatatable;
-
 
     public function index(Loan $loan): \Illuminate\Http\JsonResponse
     {
@@ -38,10 +29,10 @@ class LoanPaymentDatatable implements HasDatatable
             })
             ->startsWithSearch()
             ->addIndexColumn()
-            ->addColumn('created_at', fn(Model $record) => $record->created_at->format('Y-F-d'))
-            ->addColumn('deposited_at', fn(Model $record) => $record->deposited_at->format('Y-F-d'))
-            ->addColumn('user_name', fn(Model $record) => $record->user->full_name)
-            ->addColumn('amount', fn(Model $record) => money($record->amount, currencyCode(), true))
+            ->addColumn('created_at', fn (LoanPayment $record) => $record->created_at->format('Y-F-d'))
+            ->addColumn('deposited_at', fn (LoanPayment $record) => $record->deposited_at->format('Y-F-d'))
+            ->addColumn('user_name', fn (LoanPayment $record) => $record->user->full_name)
+            ->addColumn('amount', fn (LoanPayment $record) => money($record->amount, currencyCode(), true))
 
             ->rawColumns(['balance', 'user_name'])
             ->toJson();
@@ -55,7 +46,7 @@ class LoanPaymentDatatable implements HasDatatable
             Column::make('created_at')->title(__('Date Received'))->searchable()->orderable(),
             Column::make('deposited_at')->title(__('Date Deposited'))->searchable()->orderable(),
             Column::make('user_name')->title(__('User'))->searchable()->orderable(),
-            Column::make('amount')->title(__('amount') . ' ' . strtoupper(session('currency')))->searchable()->orderable(),
+            Column::make('amount')->title(__('amount').' '.strtoupper(session('currency')))->searchable()->orderable(),
 
         ])
             ->orderBy(0);

@@ -6,7 +6,6 @@ use App\Models\Business;
 use App\Models\FinancialServiceProvider;
 use App\Models\Location;
 use App\Utils\Enums\BusinessTypeEnum;
-use App\Utils\Enums\TransactionTypeEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -22,10 +21,10 @@ class NetworkFactory extends Factory
      */
     public function definition(): array
     {
-        $business = Business::where('type',BusinessTypeEnum::AGENCY->value)->first();
+        $business = Business::where('type', BusinessTypeEnum::AGENCY->value)->first();
         $businessCode = $business->code;
-        $locations = Location::where('business_code',$businessCode)->get('code')->toArray();
-        $fsps = FinancialServiceProvider::where('country_code',$business->country_code)->get('code')->toArray();
+        $locations = Location::where('business_code', $businessCode)->get('code')->toArray();
+        $fsps = FinancialServiceProvider::where('country_code', $business->country_code)->get('code')->toArray();
         $selectedFsp = fake()->randomElement($fsps)['code'];
 
         return [
@@ -34,9 +33,9 @@ class NetworkFactory extends Factory
             'fsp_code' => fake()->randomElement($fsps)['code'],
             'code' => Str::random(10),
             'agent_no' => strtoupper(Str::random(5)),
-            'name' => $selectedFsp . ' till',
+            'name' => $selectedFsp.' till',
             'balance' => fake()->numberBetween(500000, 5000000),
-            'balance_currency' => fake()->randomElement(['kes','tzs']),
+            'balance_currency' => fake()->randomElement(['kes', 'tzs']),
             'description' => fake()->sentence,
         ];
     }

@@ -55,7 +55,7 @@
                             <option value="">{{ __('Select till ') }}</option>
 
                             @foreach($tills as $till)
-                                <option value="{{ $till->code }}">{{ $till->agency->name }}</option>
+                                <option value="{{ $till->network_code }}">{{ $till->network?->agency?->name }}</option>
                             @endforeach
                         </x-select2>
                         @error('till_code')
@@ -122,7 +122,7 @@
 
                 submitForm(
                     $("form#add-transaction-form"),
-                    "{{ route('agency.transactions.add.transaction') }}"
+                    "{{ route('agency.transactions.add.transaction', $shift) }}"
                 );
 
             });

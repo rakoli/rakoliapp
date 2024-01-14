@@ -41,6 +41,28 @@
 
 
             <div class="row fv-row py-3">
+
+                <div class="col-6">
+                    <x-label class="" label="Select Network" for="till_code"/>
+                    <x-select2
+                        class="form-control-solid  form-control @error('till_code') form-control-error @enderror"
+                        name="till_code"
+                        placeholder="{{ __('Select a location') }}"
+                        id="till_code">
+                        <option value="">{{ __('Select location ') }}</option>
+
+                        @foreach($tills as $till)
+                            <option value="{{ $till->network_code }}">{{ $till->network?->agency?->name }}</option>
+                        @endforeach
+                    </x-select2>
+                    @error('till_code')
+                    <div class="help-block text-danger">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </div>
+            </div>
+            <div class="row fv-row py-3">
                 <div class="col-12">
                     <x-label label="notes" class="" for="notes"/>
                     <textarea    name="notes" class="form-control form-control form-control-solid" rows="3"  data-kt-autosize="false"></textarea>
@@ -70,7 +92,7 @@
 
                 submitForm(
                     $("form#add-income-form"),
-                    "{{ route('agency.transactions.add.income') }}"
+                    "{{ route('agency.transactions.add.income', $shift) }}"
                 );
 
             });

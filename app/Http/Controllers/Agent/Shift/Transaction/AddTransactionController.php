@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Agent\Transaction;
+namespace App\Http\Controllers\Agent\Shift\Transaction;
 
 use App\Http\Controllers\Controller;
+use App\Models\Shift;
 use App\Utils\Enums\TransactionCategoryEnum;
 use Illuminate\Http\Request;
 
 class AddTransactionController extends Controller
 {
-    public function __invoke(Request $request)
+    public function __invoke(Request $request, Shift $shift)
     {
 
         $validated = $request->validate([
@@ -23,23 +24,20 @@ class AddTransactionController extends Controller
             'type.required' => 'Transaction Type is required',
         ]);
 
-        $validated['category'] =  TransactionCategoryEnum::GENERAL;
+        $validated['category'] = TransactionCategoryEnum::GENERAL;
 
         try {
-            \App\Actions\Agent\Shift\AddTransaction::run($validated);
-
+            \App\Actions\Agent\Shift\AddTransaction::run($shift. $validated);
 
             return response()
                 ->json([
-                    'message' => "Transaction Added successfully"
+                    'message' => 'Transaction Added successfully',
                 ]);
 
-        }
-        catch (\Exception|\Throwable $e)
-        {
+        } catch (\Exception|\Throwable $e) {
             return response()
                 ->json([
-                    'message' => "Transaction could not be added"
+                    'message' => 'Transaction could not be added',
                 ], 422);
         }
 

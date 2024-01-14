@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\Scopes\BusinessScoped;
-use App\Models\Scopes\LocationScoped;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -70,37 +69,37 @@ class Location extends Model
         return $this->belongsTo(Towns::class, 'town_code', 'code');
     }
 
-    public function exchange_ads() : HasMany
+    public function exchange_ads(): HasMany
     {
         return $this->hasMany(ExchangeAds::class, 'location_code', 'code');
     }
 
-    public function loans() : HasMany
+    public function loans(): HasMany
     {
         return $this->hasMany(Loan::class, 'location_code', 'code');
     }
 
-    public function shift_networks() : HasMany
+    public function shift_networks(): HasMany
     {
         return $this->hasMany(ShiftNetwork::class, 'location_code', 'code');
     }
 
-    public function shift_transactions() : HasMany
+    public function shift_transactions(): HasMany
     {
         return $this->hasMany(ShiftTransaction::class, 'location_code', 'code');
     }
 
-    public function shifts() : HasMany
+    public function shifts(): HasMany
     {
         return $this->hasMany(Shift::class, 'location_code', 'code');
     }
 
-    public function shorts() : HasMany
+    public function shorts(): HasMany
     {
         return $this->hasMany(Short::class, 'location_code', 'code');
     }
 
-    public function transactions() : HasMany
+    public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class, 'location_code', 'code');
     }

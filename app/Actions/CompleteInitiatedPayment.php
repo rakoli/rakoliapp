@@ -9,7 +9,6 @@ use App\Models\User;
 use App\Utils\Enums\InitiatedPaymentStatusEnum;
 use App\Utils\Enums\SystemIncomeCategoryEnum;
 use App\Utils\Enums\SystemIncomeStatusEnum;
-use Illuminate\Support\Str;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class CompleteInitiatedPayment
@@ -19,18 +18,18 @@ class CompleteInitiatedPayment
     public function handle(InitiatedPayment $initiatedPayment)
     {
         $business = $initiatedPayment->business;
-        $description = "complete";
+        $description = 'complete';
 
         //COMPLETE SUBSCRIPTION PAYMENT
-        if($initiatedPayment->income_category == SystemIncomeCategoryEnum::SUBSCRIPTION->value){
+        if ($initiatedPayment->income_category == SystemIncomeCategoryEnum::SUBSCRIPTION->value) {
 
-            $package = Package::where('code',$initiatedPayment->description)->first();
+            $package = Package::where('code', $initiatedPayment->description)->first();
             $business->package_code = $package->code;
             $business->package_expiry_at = now()->addDays($package->package_interval_days);
             $business->save();
 
-            $userToComplete = User::where('business_code',$business->code)->where('registration_step','>',0)->first();
-            if($userToComplete != null){
+            $userToComplete = User::where('business_code', $business->code)->where('registration_step', '>', 0)->first();
+            if ($userToComplete != null) {
                 $userToComplete->registration_step = $userToComplete->registration_step + 1;
                 $userToComplete->save();
             }

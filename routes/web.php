@@ -2,9 +2,9 @@
 
 // This is general route for general purpose route registration
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\LanguageController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 Route::get('testing', [\App\Http\Controllers\TestController::class, 'testing']);
 
@@ -31,15 +31,10 @@ Route::get('registration/vas', [App\Http\Controllers\RegistrationStepController:
 Route::post('registration/vas/uploads', [App\Http\Controllers\RegistrationStepController::class, 'registrationUploads'])->name('registration.vas.uploads');
 Route::post('registration/vas/finish', [App\Http\Controllers\RegistrationStepController::class, 'registrationFinish'])->name('registration.vas.finish');
 
-
-
-
-
-
 //LANGUAGE SWITCHER
 Route::get('lang/switch', [LanguageController::class, 'languageSwitch'])->name('languageSwitch');
 
 //USERTYPE SPECIFIC ROUTES
-include('custom-admin.php');
-include('custom-agent.php');
-include('custom-vas.php');
+include 'custom-admin.php';
+include 'custom-agent.php';
+include 'custom-vas.php';

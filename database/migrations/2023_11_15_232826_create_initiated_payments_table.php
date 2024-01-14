@@ -27,13 +27,13 @@ return new class extends Migration
 
             $table->string('code')->unique();
             $table->string('channel');
-            $table->string('income_category');//\App\Utils\Enums\SystemIncomeCategoryEnum::class
+            $table->string('income_category'); //\App\Utils\Enums\SystemIncomeCategoryEnum::class
             $table->string('description');
-            $table->decimal('amount', 12,2)->default('0.00');
+            $table->decimal('amount', 12, 2)->default('0.00');
             $table->string('amount_currency');
             $table->timestamp('expiry_time');
-            $table->string('pay_code')->nullable();//Reference needed to pay
-            $table->string('pay_url')->nullable();//Reference needed to pay
+            $table->string('pay_code')->nullable(); //Reference needed to pay
+            $table->string('pay_url')->nullable(); //Reference needed to pay
             $table->string('status')->default(\App\Utils\Enums\InitiatedPaymentStatusEnum::INITIATED);
             $table->string('channel_ref_name');
             $table->string('channel_ref');

@@ -25,10 +25,11 @@ class BusinessFactory extends Factory
     {
         $referral = Business::first();
         $referralCode = null;
-        if($referral != null){
+        if ($referral != null) {
             $referralCode = $referral->code;
         }
         $packages = Package::get('code')->toArray();
+
         return [
             'country_code' => fake()->randomElement(['TZ', 'KE']),
             'referral_business_code' => $referralCode,
@@ -37,7 +38,7 @@ class BusinessFactory extends Factory
             'business_name' => fake()->company,
             'status' => fake()->randomElement(BusinessStatusEnum::class),
             'package_code' => fake()->randomElement($packages)['code'],
-            'package_expiry_at' => now()->addDays(random_int(1,30)),
+            'package_expiry_at' => now()->addDays(random_int(1, 30)),
         ];
     }
 }

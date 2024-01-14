@@ -2,31 +2,27 @@
 
 namespace App\Utils\Enums;
 
-enum LoanTypeEnum : string
+enum LoanTypeEnum: string
 {
+    case MONEY_IN = 'money_in';
 
-    case MONEY_IN = "money_in";
+    case MONEY_OUT = 'money_out';
 
-    case MONEY_OUT = "money_out";
-
-
-
-
-    public function label() : string
+    public function label(): string
     {
-        return match ($this){
+        return match ($this) {
 
-            static::MONEY_IN => "Money In",
-            static::MONEY_OUT => "Money Out",
+            self::MONEY_IN => 'Money In',
+            self::MONEY_OUT => 'Money Out',
 
         };
     }
-    public function color() : string
+
+    public function color(): string
     {
-        return match ($this){
-            static::MONEY_OUT => "badge badge-warning",
-            static::MONEY_IN => "badge badge-primary",
+        return match ($this) {
+            self::MONEY_OUT => 'badge badge-warning',
+            self::MONEY_IN => 'badge badge-primary',
         };
     }
-
 }

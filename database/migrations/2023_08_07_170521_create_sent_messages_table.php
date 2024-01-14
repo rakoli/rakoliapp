@@ -23,4 +23,3 @@ class CreateSentMessagesTable extends Migration
         Schema::dropIfExists('sent_messages');
     }
 }
-

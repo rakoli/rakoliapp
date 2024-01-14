@@ -2,8 +2,8 @@
 
 namespace App\Utils\Enums;
 
-enum ExchangeTransactionTypeEnum : string
+enum ExchangeTransactionTypeEnum: string
 {
-    case BUY = "buy";
-    case SELL = "sell";
+    case BUY = 'buy';
+    case SELL = 'sell';
 }

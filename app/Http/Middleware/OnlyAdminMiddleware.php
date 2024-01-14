@@ -16,9 +16,10 @@ class OnlyAdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if($request->user()->type != UserTypeEnum::ADMIN->value){
+        if ($request->user()->type != UserTypeEnum::ADMIN->value) {
             return redirect()->route('home');
         }
+
         return $next($request);
     }
 }

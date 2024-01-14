@@ -2,9 +2,9 @@
 
 namespace App\Utils\Enums;
 
-enum FeatureAccessEnum : string
+enum FeatureAccessEnum: string
 {
-    case NOTAVAILABLE = "none";
-    case AVAILABLE = "available";
-    case UNLIMTED = "unlimited";
+    case NOTAVAILABLE = 'none';
+    case AVAILABLE = 'available';
+    case UNLIMTED = 'unlimited';
 }

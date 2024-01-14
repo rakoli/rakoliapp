@@ -2,7 +2,7 @@
 
 namespace App\Utils\Enums;
 
-enum SystemIncomeCategoryEnum : string
+enum SystemIncomeCategoryEnum: string
 {
     case SUBSCRIPTION = 'subscription';
     case ADS = 'advertisement';

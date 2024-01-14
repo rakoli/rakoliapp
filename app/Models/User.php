@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Actions\InitiateSubscriptionPayment;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,15 +13,20 @@ use Laravel\Sanctum\HasApiTokens;
 use Rappasoft\LaravelAuthenticationLog\Traits\AuthenticationLoggable;
 use Spatie\Permission\Traits\HasRoles;
 
+/**
+ * @property string $full_name
+ */
+
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, AuthenticationLoggable;
+    use AuthenticationLoggable, HasApiTokens, HasFactory, HasRoles, Notifiable;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
+
     protected $fillable = [
         'type',
         'fname',
@@ -57,12 +60,17 @@ class User extends Authenticatable
 
     public function name()
     {
-        return $this->fname .' '.$this->lname;
+        return $this->fname.' '.$this->lname;
     }
 
-    public function fullName() : Attribute
+
+    /**  #[AllowDynamicProperties]
+     * private $full_name
+     * @return Attribute
+     */
+    public function fullName(): Attribute
     {
-        return new Attribute(get: fn() => $this->name());
+        return new Attribute(get: fn () : string => $this->name());
     }
 
     public function getEmailOTPCode()
@@ -75,94 +83,93 @@ class User extends Authenticatable
         return $this->phone_otp;
     }
 
-    public function country() : BelongsTo
+    public function country(): BelongsTo
     {
-        return $this->belongsTo(Country::class,'country_code','code');
+        return $this->belongsTo(Country::class, 'country_code', 'code');
     }
 
-    public function business() : BelongsTo
+    public function business(): BelongsTo
     {
-        return $this->belongsTo(Business::class,'business_code','code');
+        return $this->belongsTo(Business::class, 'business_code', 'code');
     }
 
-    public function loan_payments() : HasMany
+    public function loan_payments(): HasMany
     {
         return $this->hasMany(LoanPayment::class, 'user_code', 'code');
     }
 
-    public function loans() : HasMany
+    public function loans(): HasMany
     {
         return $this->hasMany(Loan::class, 'user_code', 'code');
     }
 
-    public function locations() : BelongsToMany
+    public function locations(): BelongsToMany
     {
         return $this->belongsToMany(Location::class, 'location_users', 'user_code', 'location_code')
             ->withPivot('id', 'business_code')
             ->withTimestamps();
     }
 
-    public function shift_transactions() : HasMany
+    public function shift_transactions(): HasMany
     {
         return $this->hasMany(ShiftTransaction::class, 'user_code', 'code');
     }
 
-    public function shifts() : HasMany
+    public function shifts(): HasMany
     {
         return $this->hasMany(Shift::class, 'user_code', 'code');
     }
 
-    public function short_payments() : HasMany
+    public function short_payments(): HasMany
     {
         return $this->hasMany(ShortPayment::class, 'user_code', 'code');
     }
 
-    public function shorts() : HasMany
+    public function shorts(): HasMany
     {
         return $this->hasMany(Short::class, 'user_code', 'code');
     }
 
-    public function transactions() : HasMany
+    public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class, 'user_code', 'code');
     }
 
-    public function vas_submitter_submissions() : HasMany
+    public function vas_submitter_submissions(): HasMany
     {
         return $this->hasMany(VasSubmission::class, 'submitter_user_code', 'code');
     }
 
-    public function vas_reviewer_submissions() : HasMany
+    public function vas_reviewer_submissions(): HasMany
     {
         return $this->hasMany(VasSubmission::class, 'reviewer_user_code', 'code');
     }
 
-    public function vas_chats() : HasMany
+    public function vas_chats(): HasMany
     {
         return $this->hasMany(VasChat::class, 'sender_code', 'code');
     }
 
-    public function ads_exchange_chats() : HasMany
+    public function ads_exchange_chats(): HasMany
     {
         return $this->hasMany(AdsExchangeChat::class, 'sender_code', 'code');
     }
 
     public function getBusinessPendingPayments()
     {
-        return InitiatedPayment::where('business_code',$this->business_code)
-            ->where('expiry_time','>',now())
-            ->where('status',0)->get();
+        return InitiatedPayment::where('business_code', $this->business_code)
+            ->where('expiry_time', '>', now())
+            ->where('status', 0)->get();
     }
 
-    public function hasPendingPayment() : bool
+    public function hasPendingPayment(): bool
     {
         $initiatedPayments = $this->getBusinessPendingPayments();
 
-        if($initiatedPayments->isEmpty()){
+        if ($initiatedPayments->isEmpty()) {
             return false;
         }
 
         return true;
     }
-
 }

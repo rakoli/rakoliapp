@@ -26,7 +26,7 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->decimal('amount', 12 , 2);
+            $table->decimal('amount', 12, 2);
 
             $table->string('description')->nullable();
 

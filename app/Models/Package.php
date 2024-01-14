@@ -11,19 +11,18 @@ class Package extends Model
 {
     use HasFactory;
 
-    public function country() : BelongsTo
+    public function country(): BelongsTo
     {
-        return  $this->belongsTo(Country::class,'country_code','code');
+        return $this->belongsTo(Country::class, 'country_code', 'code');
     }
 
-    public function features() : HasMany
+    public function features(): HasMany
     {
-        return  $this->hasMany(PackageFeature::class,'package_code','code');
+        return $this->hasMany(PackageFeature::class, 'package_code', 'code');
     }
 
-    public function businesses() : HasMany
+    public function businesses(): HasMany
     {
         return $this->hasMany(Business::class, 'package_code', 'code');
     }
-
 }

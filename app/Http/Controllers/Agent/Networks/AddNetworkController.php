@@ -20,7 +20,7 @@ class AddNetworkController extends Controller
             'notes' => 'required',
             'balance' => 'required|numeric',
             'location_code' => 'required|exists:locations,code',
-        ],[
+        ], [
             'fsp_code.required' => 'Financial service provider is required',
             'balance.required' => 'Till balance is required',
             'location_code.required' => 'Location is required',
@@ -32,18 +32,14 @@ class AddNetworkController extends Controller
 
             return response()
                 ->json([
-                    'message' => "Network Added successfully"
+                    'message' => 'Network Added successfully',
                 ], 201);
 
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             return response()
                 ->json([
-                    'message' => $e->getMessage()
+                    'message' => $e->getMessage(),
                 ], 422);
-
-
 
         }
     }

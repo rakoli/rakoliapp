@@ -2,7 +2,7 @@
 
 namespace App\Utils\Enums;
 
-enum InitiatedPaymentStatusEnum : string
+enum InitiatedPaymentStatusEnum: string
 {
     case INITIATED = 'initiated';
     case COMPLETED = 'completed';

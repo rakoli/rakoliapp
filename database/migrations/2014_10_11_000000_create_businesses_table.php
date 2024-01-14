@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Country;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -29,19 +28,19 @@ return new class extends Migration
             $table->timestamp('business_reg_date')->nullable();
             $table->string('business_phone_number')->nullable()->index();
             $table->string('business_email')->nullable()->index();
-            $table->string("package_code")->nullable();
+            $table->string('package_code')->nullable();
             $table->foreign('package_code')->references('code')
                 ->on('packages')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->timestamp('package_expiry_at')->nullable();
             $table->string('business_location')->nullable();
-            $table->string('status')->default(\App\Utils\Enums\BusinessStatusEnum::ACTIVE->value);//1- Active, 0 - Disabled, 2 - Inactive
-            $table->decimal('balance',12,2)->default(0); //Earning from referral and VAS
+            $table->string('status')->default(\App\Utils\Enums\BusinessStatusEnum::ACTIVE->value); //1- Active, 0 - Disabled, 2 - Inactive
+            $table->decimal('balance', 12, 2)->default(0); //Earning from referral and VAS
             $table->timestamps();
         });
 
-        Schema::table('businesses', function (Blueprint $table){
+        Schema::table('businesses', function (Blueprint $table) {
             $table->foreign('referral_business_code', 'parent_business_fk')->references('code')
                 ->on('businesses')
                 ->onDelete('cascade')

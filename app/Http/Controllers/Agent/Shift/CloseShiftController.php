@@ -13,31 +13,29 @@ use Illuminate\Validation\ValidationException;
 class CloseShiftController extends Controller
 {
 
-    private function checkForOpenShift()
-    {
-    }
+
     public function index()
     {
 
-        if (! Shift::query()->where('status',ShiftStatusEnum::OPEN)->exists())
-        {
+        if (! Shift::query()->where('status', ShiftStatusEnum::OPEN)->exists()) {
             return to_route('agency.shift');
         }
 
         $tills = Network::query()->with('agency')->cursor();
         $locations = Location::query()->cursor();
 
-        $shift =  Shift::query()->where('status',ShiftStatusEnum::OPEN)->first();
+        $shift = Shift::query()->where('status', ShiftStatusEnum::OPEN)->first();
 
         return view('agent.agency.close-shift')->with([
             'tills' => $tills,
             'locations' => $locations,
-            'shift' => $shift
+            'shift' => $shift,
         ]);
     }
+
     public function store(Request $request)
     {
-        abort_if(! Shift::query()->where('status',ShiftStatusEnum::OPEN)->exists(), 404, "No open shift to close");
+        abort_if(! Shift::query()->where('status', ShiftStatusEnum::OPEN)->exists(), 404, 'No open shift to close');
 
         try {
             $validated = $request->validate(rules: [
@@ -56,17 +54,15 @@ class CloseShiftController extends Controller
 
             return response()
                 ->json([
-                    'message' => "Closed Shift successfully"
+                    'message' => 'Closed Shift successfully',
                 ], 200);
 
-        } catch (ValidationException|\Throwable | \Exception $e)
-        {
+        } catch (ValidationException|\Throwable|\Exception $e) {
             return response()
                 ->json([
-                    'message' => $e->getMessage()
+                    'message' => $e->getMessage(),
                 ], 422);
         }
-
 
     }
 }

@@ -2,9 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Network;
 use App\Models\Shift;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class SampleShiftSeeder extends Seeder

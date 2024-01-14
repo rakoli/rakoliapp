@@ -3,11 +3,8 @@
 namespace App\Events\Shift;
 
 use App\Models\LoanPayment;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
@@ -18,7 +15,7 @@ class LoanPaidEvent
     /**
      * Create a new event instance.
      */
-    public function __construct(readonly  public LoanPayment $payment)
+    public function __construct(readonly public LoanPayment $payment)
     {
         //
     }

@@ -34,12 +34,12 @@ return new class extends Migration
             $table->string('code')->unique();
             $table->string('agent_no')->index();
             $table->string('name');
-            $table->double('balance', 12 ,0);
+            $table->double('balance', 12, 0);
             $table->string('balance_currency');
             $table->string('description')->nullable();
             $table->timestamps();
 
-            $table->unique(['location_code','fsp_code','agent_no'],'uniq_agent');
+            $table->unique(['location_code', 'fsp_code', 'agent_no'], 'uniq_agent');
         });
     }
 

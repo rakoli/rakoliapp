@@ -2,9 +2,8 @@
 
 namespace App\Utils\Enums;
 
-enum AgentRegistrationStepsEnums : int
+enum AgentRegistrationStepsEnums: int
 {
-
     case VERIFICATION = 1;
 
     case BUSINESS_INFORMATION = 2;

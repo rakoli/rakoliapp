@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\VasTask;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class SampleVasTaskSeeder extends Seeder

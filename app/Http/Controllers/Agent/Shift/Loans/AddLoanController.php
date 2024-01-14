@@ -19,10 +19,10 @@ class AddLoanController extends Controller
             'location_code' => 'required|exists:locations,code',
             'type' => 'required',
             'notes' => 'required',
-        ],[
-            'type.required' => "Transaction Type is Required",
-            'location_code.required' => "Location is Required",
-            'network_code.required' => "Network is Required",
+        ], [
+            'type.required' => 'Transaction Type is Required',
+            'location_code.required' => 'Location is Required',
+            'network_code.required' => 'Network is Required',
         ]);
 
         try {
@@ -31,18 +31,14 @@ class AddLoanController extends Controller
 
             return response()
                 ->json([
-                    'message' => "Loan Added successfully"
+                    'message' => 'Loan Added successfully',
                 ], 201);
 
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             return response()
                 ->json([
-                    'message' => "Something went wrong"
+                    'message' => 'Something went wrong',
                 ], 422);
-
-
 
         }
     }

@@ -3,28 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Actions\CheckUserPendingSystemPayments;
-use App\Actions\GenerateDPOPayment;
 use App\Actions\InitiateSubscriptionPayment;
 use App\Actions\RequestEmailVerificationCode;
 use App\Actions\RequestPhoneVerificationCode;
-use App\Actions\Vas\Registration\DocumentUploads;
-use App\Events\RegistrationCompletedEvent;
 use App\Actions\SendTelegramNotification;
+use App\Actions\Vas\Registration\DocumentUploads;
 use App\Models\Business;
 use App\Models\BusinessVerificationUpload;
 use App\Models\Package;
 use App\Models\User;
-use App\Utils\DPORequestTokenFormat;
 use App\Utils\Enums\BusinessUploadDocumentTypeEnums;
 use App\Utils\VerifyOTP;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class RegistrationStepController extends Controller
 {
-
     public function __construct()
     {
         $this->middleware(['auth']); //Confirm it is a loggedin user
@@ -40,14 +35,15 @@ class RegistrationStepController extends Controller
 
         $initiatedPayments = auth()->user()->getBusinessPendingPayments();
 
-        if (!$initiatedPayments->isEmpty()) {
+        if (! $initiatedPayments->isEmpty()) {
             $hasPendingPayment = true;
             CheckUserPendingSystemPayments::run(auth()->user(), $initiatedPayments);
             //To redirect to next registration step
-            if (!auth()->user()->hasPendingPayment()) {
+            if (! auth()->user()->hasPendingPayment()) {
                 $step = User::where('code', auth()->user()->code)->first()->registration_step;
             }
         }
+
         return view('auth.registration_agent.index', compact('step', 'hasPendingPayment'));
     }
 
@@ -58,21 +54,21 @@ class RegistrationStepController extends Controller
         if ($user->email_verified_at != null) {
             return [
                 'status' => 200,
-                'message' => 'Email already verified'
+                'message' => 'Email already verified',
             ];
         }
 
         if (VerifyOTP::hasActiveEmailOTP($user)) {
             return [
                 'status' => 201,
-                'message' => __('Email already sent try again in ') . Carbon::create($user->email_otp_time)->addSeconds(VerifyOTP::$validtime)->diffForHumans()
+                'message' => __('Email already sent try again in ').Carbon::create($user->email_otp_time)->addSeconds(VerifyOTP::$validtime)->diffForHumans(),
             ];
         }
 
         if (VerifyOTP::shouldLockEmailOTP($user)) {
             return [
                 'status' => 201,
-                'message' => __('Account locked! Reached trial limit')
+                'message' => __('Account locked! Reached trial limit'),
             ];
         }
 
@@ -80,7 +76,7 @@ class RegistrationStepController extends Controller
 
         return [
             'status' => 200,
-            'message' => 'successful'
+            'message' => 'successful',
         ];
     }
 
@@ -91,7 +87,7 @@ class RegistrationStepController extends Controller
         if ($user->email_verified_at != null) {
             return [
                 'status' => 200,
-                'message' => 'Email already verified'
+                'message' => 'Email already verified',
             ];
         }
 
@@ -114,14 +110,13 @@ class RegistrationStepController extends Controller
 
             return [
                 'status' => 200,
-                'message' => 'valid'
+                'message' => 'valid',
             ];
         }
 
-
         return [
             'status' => 201,
-            'message' => 'invalid'
+            'message' => 'invalid',
         ];
     }
 
@@ -132,21 +127,21 @@ class RegistrationStepController extends Controller
         if ($user->phone_verified_at != null) {
             return [
                 'status' => 200,
-                'message' => 'Phone already verified'
+                'message' => 'Phone already verified',
             ];
         }
 
         if (VerifyOTP::hasActivePhoneOTP($user)) {
             return [
                 'status' => 201,
-                'message' => __('SMS already sent try again in ') . Carbon::create($user->phone_otp_time)->addSeconds(VerifyOTP::$validtime)->diffForHumans()
+                'message' => __('SMS already sent try again in ').Carbon::create($user->phone_otp_time)->addSeconds(VerifyOTP::$validtime)->diffForHumans(),
             ];
         }
 
         if (VerifyOTP::shouldLockPhoneOTP($user)) {
             return [
                 'status' => 201,
-                'message' => __('Account locked! Reached trial limit')
+                'message' => __('Account locked! Reached trial limit'),
             ];
         }
 
@@ -154,7 +149,7 @@ class RegistrationStepController extends Controller
 
         return [
             'status' => 200,
-            'message' => 'successful'
+            'message' => 'successful',
         ];
     }
 
@@ -165,7 +160,7 @@ class RegistrationStepController extends Controller
         if ($user->phone_verified_at != null) {
             return [
                 'status' => 200,
-                'message' => 'Phone already verified'
+                'message' => 'Phone already verified',
             ];
         }
 
@@ -188,13 +183,13 @@ class RegistrationStepController extends Controller
 
             return [
                 'status' => 200,
-                'message' => 'valid'
+                'message' => 'valid',
             ];
         }
 
         return [
             'status' => 201,
-            'message' => 'invalid'
+            'message' => 'invalid',
         ];
     }
 
@@ -224,7 +219,7 @@ class RegistrationStepController extends Controller
         }
 
         if ($emailExist != null) {
-            return redirect()->back()->withErrors([__("Email already exist")]);
+            return redirect()->back()->withErrors([__('Email already exist')]);
         }
 
         $user->save();
@@ -252,21 +247,20 @@ class RegistrationStepController extends Controller
 
             return [
                 'status' => 200,
-                'message' => __('Complete')
+                'message' => __('Complete'),
             ];
         }
 
         if ($currentRegistrationStep < $nextStep) {
             return [
                 'status' => 201,
-                'message' => __('Complete current step before proceeding')
+                'message' => __('Complete current step before proceeding'),
             ];
         }
 
-
         return [
             'status' => 200,
-            'message' => 'continue'
+            'message' => 'continue',
         ];
     }
 
@@ -277,7 +271,7 @@ class RegistrationStepController extends Controller
         if ($user->business_code != null) {
             return [
                 'status' => 200,
-                'message' => 'business details already updated'
+                'message' => 'business details already updated',
             ];
         }
 
@@ -306,7 +300,7 @@ class RegistrationStepController extends Controller
         if ($response === false) {
             return [
                 'status' => 201,
-                'message' => "Failed to Update Business. Try again!"
+                'message' => 'Failed to Update Business. Try again!',
             ];
         }
 
@@ -316,7 +310,7 @@ class RegistrationStepController extends Controller
 
         return [
             'status' => 200,
-            'message' => 'updated'
+            'message' => 'updated',
         ];
     }
 
@@ -326,7 +320,7 @@ class RegistrationStepController extends Controller
 
         $request->validate([
             'selected_plan_code' => 'required|exists:packages,code',
-            'payment_method' => 'required|in:' . implode(',', config('dpo-laravel.accepted_payment_methods')),
+            'payment_method' => 'required|in:'.implode(',', config('dpo-laravel.accepted_payment_methods')),
         ]);
 
         $package = Package::where('code', $request->get('selected_plan_code'))->first();
@@ -342,17 +336,14 @@ class RegistrationStepController extends Controller
         return redirect($requestResult['result']);
     }
 
-
     public function registrationUploads(Request $request)
     {
         /** @var Business $business */
-
         $business = auth()->user()->business;
 
         $file = $request->file($request->document_name);
 
-
-        $path = $file->store("uploads/business_verification/{$business->code}",'s3');
+        $path = $file->store("uploads/business_verification/{$business->code}", 's3');
 
         $url = Storage::disk('s3')->url($path);
 
@@ -362,13 +353,12 @@ class RegistrationStepController extends Controller
             documentName: $request->document_name,
             documentType: BusinessUploadDocumentTypeEnums::tryFrom($request->document_type),
             updateColumns: [
-                $request->column_name => $request->column_value
+                $request->column_name => $request->column_value,
             ],
 
         );
 
         return response()->json(['url' => $url], 200);
-
 
     }
 
@@ -379,43 +369,41 @@ class RegistrationStepController extends Controller
             /** @var Business $business */
             $business = auth()->user()->business;
 
-            if (!filled($business->tax_id)) {
-                throw new \Exception("Business Tax Id is Required");
+            if (! filled($business->tax_id)) {
+                throw new \Exception('Business Tax Id is Required');
             }
-            if (!filled($business->business_regno)) {
-                throw new \Exception("Business Registration No is Required");
+            if (! filled($business->business_regno)) {
+                throw new \Exception('Business Registration No is Required');
             }
-            if (!BusinessVerificationUpload::query()->where(['document_type' => BusinessUploadDocumentTypeEnums::TAX_ID->value])->exists()) {
+            if (! BusinessVerificationUpload::query()->where(['document_type' => BusinessUploadDocumentTypeEnums::TAX_ID->value])->exists()) {
 
-                throw new \Exception("Kindly upload your tax certificate Document");
-            }
-
-            if (!BusinessVerificationUpload::query()->where(['document_type' => BusinessUploadDocumentTypeEnums::REGISTRATION->value])->exists()) {
-
-                throw new \Exception("Kindly upload your business Registration certificate Document");
+                throw new \Exception('Kindly upload your tax certificate Document');
             }
 
-            if (!BusinessVerificationUpload::query()->where(['document_type' => BusinessUploadDocumentTypeEnums::NAT->value])->exists()) {
+            if (! BusinessVerificationUpload::query()->where(['document_type' => BusinessUploadDocumentTypeEnums::REGISTRATION->value])->exists()) {
 
-                throw new \Exception("Kindly upload your Identification Document");
+                throw new \Exception('Kindly upload your business Registration certificate Document');
             }
 
+            if (! BusinessVerificationUpload::query()->where(['document_type' => BusinessUploadDocumentTypeEnums::NAT->value])->exists()) {
+
+                throw new \Exception('Kindly upload your Identification Document');
+            }
 
             /** @var User $user */
-
             $user = auth()->user();
             $user->registration_step = $user->registration_step + 1;
             $user->save();
 
             return [
                 'status' => 200,
-                'message' => 'updated'
+                'message' => 'updated',
             ];
 
         } catch (\Exception $e) {
             return [
                 'status' => 422,
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ];
         }
     }
@@ -428,6 +416,7 @@ class RegistrationStepController extends Controller
         if ($step == 0) {
             return redirect()->route('home');
         }
+
         return view('auth.registration_vas.index', compact('step'));
     }
 }

@@ -2,10 +2,10 @@
 
 namespace App\Utils\Enums;
 
-enum ExchangeTransactionStatusEnum : string
+enum ExchangeTransactionStatusEnum: string
 {
-    case OPEN = "open";
-    case CLOSED = "closed";
-    case PENDING_RELEASE = "pending_release";
-    case APPEAL = "appeal";
+    case OPEN = 'open';
+    case CLOSED = 'closed';
+    case PENDING_RELEASE = 'pending_release';
+    case APPEAL = 'appeal';
 }

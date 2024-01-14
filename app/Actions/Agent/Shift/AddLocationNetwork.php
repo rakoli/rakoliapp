@@ -8,13 +8,9 @@ use Lorisleiva\Actions\Concerns\AsAction;
 
 class AddLocationNetwork
 {
-
     use AsAction;
 
-
     /**
-     * @param array $data
-     * @return void
      * @throws \Throwable
      */
     public function handle(array $data): void
@@ -29,10 +25,9 @@ class AddLocationNetwork
                 ])
                 ->exists();
 
+            throw_if($networkCheck, new \Exception('Network exists with the same details in this location'));
 
-            throw_if($networkCheck, new \Exception("Network exists with the same details in this location"));
-
-            $network =  Network::create([
+            $network = Network::create([
                 'business_code' => auth()->user()->business_code,
                 'location_code' => $data['location_code'],
                 'fsp_code' => $data['fsp_code'],
@@ -46,8 +41,7 @@ class AddLocationNetwork
 
             event(new NetworkCreatedEvent(network: $network));
 
-        }catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
 

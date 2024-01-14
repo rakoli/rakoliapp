@@ -26,13 +26,13 @@ class InitiatedPayment extends Model
         'channel_ref',
     ];
 
-    public function country() : BelongsTo
+    public function country(): BelongsTo
     {
-        return $this->belongsTo(Country::class,'country_code','code');
+        return $this->belongsTo(Country::class, 'country_code', 'code');
     }
 
-    public function business() : BelongsTo
+    public function business(): BelongsTo
     {
-        return $this->belongsTo(Business::class,'business_code','code');
+        return $this->belongsTo(Business::class, 'business_code', 'code');
     }
 }

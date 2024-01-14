@@ -32,7 +32,6 @@ return new class extends Migration
 
             $table->string('type'); // enum<cash,network>
 
-
             $table->string('network_code')->nullable();
             $table->foreign('network_code')->references('code')
                 ->on('networks')
@@ -48,8 +47,8 @@ return new class extends Migration
             $table->string('code')->unique();
             $table->string('recovery_status')->nullable();
             $table->string('recovery_period')->nullable();
-            $table->decimal('instalment_amount', 12,2)->nullable();
-            $table->decimal('amount' , 12, 2);
+            $table->decimal('instalment_amount', 12, 2)->nullable();
+            $table->decimal('amount', 12, 2);
             $table->string('description')->nullable();
             $table->text('note')->invisible()->nullable();
             $table->timestamps();

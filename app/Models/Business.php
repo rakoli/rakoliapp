@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Utils\Enums\BusinessStatusEnum;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -34,29 +33,30 @@ class Business extends Model
 
         try {
             $businessInstance = self::create($data);
-            $country = Country::where('code',$businessInstance->country_code)->first();
-            $locationName = $businessInstance->business_name . " HQ";
+            $country = Country::where('code', $businessInstance->country_code)->first();
+            $locationName = $businessInstance->business_name.' HQ';
             Location::create([
                 'business_code' => $businessInstance->code,
-                'code' => generateCode($locationName,$country->code) ,
+                'code' => generateCode($locationName, $country->code),
                 'name' => $locationName,
                 'balance' => 0,
                 'balance_currency' => $country->currency,
             ]);
             DB::commit();
-        }catch (\Exception $exception) {
+        } catch (\Exception $exception) {
             DB::rollback();
-            Log::debug("ADD BUSINESS ERROR: ".$exception->getMessage());
+            Log::debug('ADD BUSINESS ERROR: '.$exception->getMessage());
             Bugsnag::notifyException($exception);
+
             return false;
         }
 
         return $businessInstance;
     }
 
-    public function country() : BelongsTo
+    public function country(): BelongsTo
     {
-        return $this->belongsTo(Country::class,'country_code','code');
+        return $this->belongsTo(Country::class, 'country_code', 'code');
     }
 
     public function user(): BelongsTo
@@ -76,17 +76,17 @@ class Business extends Model
 
     public function taskSubmissions(): HasManyThrough
     {
-        return $this->hasManyThrough(VasSubmission::class, VasContract::class,'agent_code','vas_contract_code','code','code');
+        return $this->hasManyThrough(VasSubmission::class, VasContract::class, 'agent_code', 'vas_contract_code', 'code', 'code');
     }
 
     public function agentsSubmissions(): HasManyThrough
     {
-        return $this->hasManyThrough(VasSubmission::class, VasContract::class,'vas_business_code','vas_contract_code','code','code');
+        return $this->hasManyThrough(VasSubmission::class, VasContract::class, 'vas_business_code', 'vas_contract_code', 'code', 'code');
     }
 
     public function vasPaymentsDone(): HasManyThrough
     {
-        return $this->hasManyThrough(VasPayment::class, VasContract::class,'vas_business_code','vas_contract_code','code','code');
+        return $this->hasManyThrough(VasPayment::class, VasContract::class, 'vas_business_code', 'vas_contract_code', 'code', 'code');
     }
 
     public function parent_referral(): BelongsTo
@@ -98,7 +98,6 @@ class Business extends Model
     {
         return $this->hasMany(Business::class, 'referral_business_code', 'code');
     }
-
 
     public function verificationUploads(): HasMany
     {
@@ -194,5 +193,4 @@ class Business extends Model
     {
         return $this->hasMany(VasTaskAvailability::class, 'agent_business_code', 'code');
     }
-
 }

@@ -4,7 +4,7 @@
     "description": "Management System for Banking & Mobile Money Network Agents",
     "license": "proprietary",
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "ext-simplexml": "*",
         "africastalking/africastalking": "^3.0",
         "akaunting/laravel-money": "^5.1",
@@ -32,6 +32,7 @@
         "barryvdh/laravel-debugbar": "^3.9",
         "barryvdh/laravel-ide-helper": "^2.13",
         "fakerphp/faker": "^1.9.1",
+        "larastan/larastan": "^2.0",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.18",
         "mockery/mockery": "^1.4.4",
@@ -55,6 +56,8 @@
         }
     },
     "scripts": {
+        "pint" : "./vendor/bin/pint",
+        "phpstan" : "./vendor/bin/phpstan analyse --memory-limit=2G",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"

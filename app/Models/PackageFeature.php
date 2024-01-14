@@ -10,12 +10,12 @@ class PackageFeature extends Model
 {
     use HasFactory;
 
-    public function package() : BelongsTo
+    public function package(): BelongsTo
     {
         return $this->belongsTo(Package::class, 'package_code', 'code');
     }
 
-    public function feature() : BelongsTo
+    public function feature(): BelongsTo
     {
         return $this->belongsTo(PackageAvailableFeatures::class, 'feature_code', 'code');
     }

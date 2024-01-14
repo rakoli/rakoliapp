@@ -11,20 +11,20 @@ class LoanPayment extends Model
     use HasFactory;
 
     protected $guarded = [
-        'id'
+        'id',
     ];
 
     protected $casts = [
-        'deposited_at' => 'date'
+        'deposited_at' => 'date',
     ];
-    public function loan() : BelongsTo
+
+    public function loan(): BelongsTo
     {
         return $this->belongsTo(Loan::class, 'loan_code', 'code');
     }
 
-    public function user() : BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_code', 'code');
     }
-
 }

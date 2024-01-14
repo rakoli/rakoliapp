@@ -31,7 +31,6 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-
             $table->string('vas_task_code')->nullable();
             $table->foreign('vas_task_code')->references('code')
                 ->on('vas_tasks')
@@ -44,10 +43,8 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-
-
-            $table->decimal('rating_agent',12,2);
-            $table->decimal('rating_vas_provider',12,2);
+            $table->decimal('rating_agent', 12, 2);
+            $table->decimal('rating_vas_provider', 12, 2);
 
             $table->text('comment_agent')->invisible()->nullable();
             $table->text('comment_vas_provider')->invisible()->nullable();

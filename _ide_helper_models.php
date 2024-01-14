@@ -1262,6 +1262,7 @@ namespace App\Models{
  * @property-read int|null $authentications_count
  * @property-read \App\Models\Business|null $business
  * @property-read \App\Models\Country $country
+ * @property-read string $full_name
  * @property-read \Rappasoft\LaravelAuthenticationLog\Models\AuthenticationLog|null $latestAuthentication
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\LoanPayment> $loan_payments
  * @property-read int|null $loan_payments_count

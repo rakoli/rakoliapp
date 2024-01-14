@@ -12,14 +12,11 @@ use Yajra\DataTables\Html\Column;
 
 class ShiftDatatable implements HasDatatable
 {
-
     use LakoriDatatable;
-
 
     public function index()
     {
         $shifts = Shift::query()->with('user');
-
 
         return Datatables::eloquent($shifts)
             ->filter(function ($query) {
@@ -29,41 +26,40 @@ class ShiftDatatable implements HasDatatable
                 return $query->orderBy('status', 'desc');
             })
             ->addIndexColumn()
-            ->addColumn('created_at', fn(Shift $shift) => $shift->created_at->format('Y-F-d'))
-            ->addColumn('user_name', fn(Shift $shift) => $shift->user->full_name)
-            ->addColumn('cash_start', fn(Shift $shift) => money($shift->cash_start , currencyCode(), true))
-            ->addColumn('cash_end', fn(Shift $shift) => money($shift->cash_end ,  currencyCode(), true))
-            ->addColumn('action', function(Shift  $shift){
+            ->addColumn('created_at', fn (Shift $shift) => $shift->created_at->format('Y-F-d'))
+            ->addColumn('user_name', fn (Shift $shift) => $shift->user->full_name)
+            ->addColumn('cash_start', fn (Shift $shift) => money($shift->cash_start, currencyCode(), true))
+            ->addColumn('cash_end', fn (Shift $shift) => money($shift->cash_end, currencyCode(), true))
+            ->addColumn('action', function (Shift $shift) {
 
                 return (new self())->buttons([
                     'Tills' => [
                         'route' => route('agency.shift.till', $shift),
-                        'attributes' => null
+                        'attributes' => null,
                     ],
                     'Transaction' => [
-                        'route' => route('agency.transactions'),
-                        'attributes' => route('agency.transactions'),
+                        'route' => route('agency.shift.transactions', $shift),
+                        'attributes' => "null",
                     ],
                 ]);
             })
-            ->addColumn('status',function (Shift $shift){
+            ->addColumn('status', function (Shift $shift) {
 
                 $table = new self();
 
                 return $shift->status == ShiftStatusEnum::OPEN ? $table->active() : $table->notActive();
             })
-            ->rawColumns(['created_at','action','status'])
+            ->rawColumns(['created_at', 'action', 'status'])
             ->toJson();
     }
 
     public function columns(Builder $datatableBuilder): Builder
     {
         return $datatableBuilder->columns([
-            Column::make('created_at')->title(__('date'))->searchable()->orderable(),
             Column::make('no')->title(__('No'))->searchable()->orderable(),
             Column::make('user_name')->title(__('user'))->searchable()->orderable(),
-            Column::make('cash_start')->title(__('Start Cash') . ' ' . strtoupper(session('currency')))->searchable()->orderable(),
-            Column::make('cash_end')->title(__('End Cash') . ' ' . strtoupper(session('currency')))->searchable()->orderable(),
+            Column::make('cash_start')->title(__('Start Cash').' '.strtoupper(session('currency')))->searchable()->orderable(),
+            Column::make('cash_end')->title(__('End Cash').' '.strtoupper(session('currency')))->searchable()->orderable(),
             Column::make('status')->title(__('Status'))->searchable()->orderable(),
             Column::make('action')->title(__('Actions'))->searchable()->orderable(),
         ]);

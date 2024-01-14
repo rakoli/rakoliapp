@@ -5,12 +5,9 @@ namespace Database\Factories;
 use App\Models\Business;
 use App\Models\ExchangeAds;
 use App\Models\FinancialServiceProvider;
-use App\Models\Location;
-use App\Models\User;
 use App\Utils\Enums\BusinessTypeEnum;
 use App\Utils\Enums\ExchangeTransactionStatusEnum;
 use App\Utils\Enums\ExchangeTransactionTypeEnum;
-use App\Utils\Enums\TransactionTypeEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -29,9 +26,9 @@ class ExchangeTransactionFactory extends Factory
         $vasBusinessCode = Business::where('type', BusinessTypeEnum::VAS->value)->first()->code;
         $exchangeCode = null;
         $exchange = ExchangeAds::where('business_code', $agentBusinessCode)->first();
-        if($exchange == null){
+        if ($exchange == null) {
             $exchangeCode = ExchangeAds::first()->code;
-        }else{
+        } else {
             $exchangeCode = $exchange->code;
         }
         $fsps = FinancialServiceProvider::get('code')->toArray();
@@ -43,7 +40,7 @@ class ExchangeTransactionFactory extends Factory
             'type' => fake()->randomElement(ExchangeTransactionTypeEnum::class),
             'fsp_code' => fake()->randomElement($fsps)['code'],
             'amount' => fake()->numberBetween(5000, 250000),
-            'amount_currency' => fake()->randomElement(['kes','tzs']),
+            'amount_currency' => fake()->randomElement(['kes', 'tzs']),
             'status' => fake()->randomElement(ExchangeTransactionStatusEnum::class),
         ];
     }

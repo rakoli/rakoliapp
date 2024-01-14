@@ -10,9 +10,8 @@ class VasTaskInstruction extends Model
 {
     use HasFactory;
 
-    public function vas_task() : BelongsTo
+    public function vas_task(): BelongsTo
     {
         return $this->belongsTo(VasTask::class, 'vas_task_code', 'code');
     }
-
 }

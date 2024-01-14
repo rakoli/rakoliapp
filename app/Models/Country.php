@@ -64,5 +64,4 @@ class Country extends Model
     {
         return $this->hasMany(VasTask::class, 'country_code', 'code');
     }
-
 }

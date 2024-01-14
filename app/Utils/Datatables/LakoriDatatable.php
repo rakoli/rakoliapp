@@ -2,12 +2,8 @@
 
 namespace App\Utils\Datatables;
 
-use Yajra\DataTables\Html\Builder;
-
 trait LakoriDatatable
 {
-
-
     protected function buttons(array $actions): bool|string
     {
         ob_start();
@@ -21,8 +17,7 @@ trait LakoriDatatable
         return ob_get_clean();
     }
 
-
-    private function active($label = "Active")
+    private function active($label = 'Active')
     {
         ob_start();
         ?>
@@ -32,7 +27,7 @@ trait LakoriDatatable
 
     }
 
-    private function status(string $label = "Active", string $badgeClass = "badge badge-success")
+    private function status(string $label = 'Active', string $badgeClass = 'badge badge-success')
     {
         ob_start();
         ?>
@@ -42,7 +37,7 @@ trait LakoriDatatable
 
     }
 
-    private function notActive($label = "Not Active")
+    private function notActive($label = 'Not Active')
     {
         ob_start();
         ?>
@@ -51,6 +46,4 @@ trait LakoriDatatable
         return ob_get_clean();
 
     }
-
-
 }
