@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 use Yajra\DataTables\Html\Column;
+use Yajra\DataTables\Html\SearchPane;
 
 class ShiftTransactionDatatable implements HasDatatable
 {
@@ -58,16 +59,15 @@ class ShiftTransactionDatatable implements HasDatatable
 
     public function columns(Builder $datatableBuilder): Builder
     {
-        return $datatableBuilder->columns([
-            Column::make('id')->title('#')->searchable(false)->orderable(),
-            Column::make('created_at')->title(__('date'))->searchable()->orderable(),
-            Column::make('location.name')->title(__('Location'))->searchable()->orderable(),
-            Column::make('user_name')->title(__('user'))->searchable()->orderable(),
-            Column::make('balance_old')->title(__('Old Balance').' '.strtoupper(session('currency')))->searchable()->orderable(),
-            Column::make('amount')->title(__('Amount Transacted').' '.strtoupper(session('currency')))->searchable()->orderable(),
-            Column::make('balance_new')->title(__('New Balance'))->searchable()->orderable(),
-            Column::make('network_name')->title(__('network'))->searchable()->orderable(),
-            Column::make('transaction_type')->title(__('Type'))->searchable()->orderable(),
+        return $datatableBuilder
+                ->columns([
+            Column::make('location.name')->title(__('Location')),
+            Column::make('user_name')->title(__('user'))->orderable(),
+            Column::make('balance_old')->title(__('Old Balance').' '.strtoupper(session('currency')))->orderable(),
+            Column::make('amount')->title(__('Amount Transacted').' '.strtoupper(session('currency')))->orderable(),
+            Column::make('balance_new')->title(__('New Balance')),
+            Column::make('network_name')->title(__('network')),
+            Column::make('transaction_type')->title(__('Type'))->orderable(),
         ])
             ->orderBy(0);
     }

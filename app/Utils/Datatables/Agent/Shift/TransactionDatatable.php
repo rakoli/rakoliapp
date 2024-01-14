@@ -74,6 +74,7 @@ class TransactionDatatable implements HasDatatable
             Column::make('transaction_type')->title(__('Type'))->searchable()->orderable(),
             Column::make('category_label')->title(__('category'))->searchable()->orderable(),
         ])
+
             ->orderBy(0);
     }
 }

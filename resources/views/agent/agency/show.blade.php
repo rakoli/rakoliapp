@@ -15,13 +15,16 @@
     <!--end::Description-->
 @endsection
 
+
 @section('content')
+
 
     <div class="d-flex flex-column flex-column-fluid">
 
 
         <!--begin::Content-->
         <div id="kt_app_content" class="app-content  flex-column-fluid ">
+
 
 
             <!--begin::Content container-->
@@ -80,19 +83,23 @@
                                 <div id="kt_customer_view_details" class="collapse show">
                                     <div class="py-5 fs-6">
 
-                                        @foreach($tills as  $network)
-                                            <!--begin::Details item-->
-                                            <div class="fw-bold mt-5 border-bottom-2 border-primary">Network</div>
-                                            <div class="text-gray-600">{{ $network->network->agency->name }}</div>
-                                            <!--begin::Details item-->
 
-                                            <!--begin::Details item-->
-                                            <div class="fw-bold mt-5">Balance</div>
-                                            <div
-                                                class="text-gray-600">{{ money(amount: $network->balance_new ,currency: currencyCode(), convert: true)  }}
+                                        <!--begin::Details item-->
+                                        <div class="fw-bold mt-5 border-bottom-2 border-primary">Status</div>
+                                        <div class="text-gray-600">{{ $shift->status->value }}</div>
+                                        <!--begin::Details item-->
 
-                                            </div>
-                                        @endforeach
+                                        <!--begin::Details item-->
+                                        <div class="fw-bold mt-5">Days</div>
+                                        <div
+                                            class="text-gray-600">{{ $shift->created_at  }}
+
+                                        </div>
+                                        <div class="fw-bold mt-5">Today's Shift</div>
+                                        <div
+                                            class="text-gray-600">{{ $shift->no  }}
+
+                                        </div>
 
 
                                     </div>
@@ -176,7 +183,7 @@
                                         <div id="kt_table_customers_payment_wrapper"
                                              class="dataTables_wrapper dt-bootstrap4 no-footer">
                                             <div class="table-responsive">
-                                                {!! $dataTableHtml->table(['class' => 'table table-row-bordered table-row-dashed gy-4 align-middle fw-bold table align-middle gs-0 gy-4' , 'id' => 'transaction-table'],true) !!}
+                                                {!! $dataTableHtml->table(['class' => 'table align-middle table-row-dashed fs-6 fw-bold gy-5 dataTable no-footer' , 'id' => 'transaction-table'],true) !!}
 
                                             </div>
 
@@ -191,6 +198,82 @@
                             </div>
                             <!--end:::Tab pane-->
 
+
+                            <div class="card pt-2 mb-6 mb-xl-9">
+                                <!--begin::Card header-->
+                                <div class="card-header border-0">
+                                    <!--begin::Card title-->
+                                    <div class="card-title">
+                                        <h2>Networks</h2>
+                                    </div>
+                                    <!--end::Card title-->
+                                </div>
+                                <!--end::Card header-->
+
+                                <!--begin::Card body-->
+                                <div class="card-body pt-0">
+                                    <!--begin::Tab Content-->
+                                    <div id="" class="tab-content">
+                                        <!--begin::Tab panel-->
+                                        <div id="kt_customer_details_invoices_1" class="py-0 tab-pane fade show active"
+                                             role="tabpanel" aria-labelledby="kt_referrals_year_tab">
+                                            <!--begin::Table-->
+                                            <div id="kt_customer_details_invoices_table_1_wrapper"
+                                                 class="dataTables_wrapper dt-bootstrap4 no-footer">
+                                                <div class="table-responsive">
+                                                    <table id="kt_customer_details_invoices_table_1"
+                                                           class="table align-middle table-row-dashed fs-6 fw-bold gy-5 dataTable no-footer">
+                                                        <thead
+                                                            class="border-bottom border-gray-200 fs-7 text-uppercase fw-bold">
+                                                        <tr class="text-start text-muted gs-0">
+                                                            <th class="min-w-100px sorting" tabindex="0"
+                                                                aria-controls="kt_customer_details_invoices_table_1"
+                                                                rowspan="1" colspan="1"
+                                                                aria-label="Order ID: activate to sort column ascending"
+                                                                style="width: 119.35px;">Network
+                                                            </th>
+                                                            <th class="min-w-100px sorting" tabindex="0"
+                                                                aria-controls="kt_customer_details_invoices_table_1"
+                                                                rowspan="1" colspan="1"
+                                                                aria-label="Amount: activate to sort column ascending"
+                                                                style="width: 121.238px;">{{ __('Balance old') }}
+                                                            </th>
+                                                            <th class="min-w-100px sorting" tabindex="0"
+                                                                aria-controls="kt_customer_details_invoices_table_1"
+                                                                rowspan="1" colspan="1"
+                                                                aria-label="Status: activate to sort column ascending"
+                                                                style="width: 121.238px;">{{ __('Balance New') }}
+                                                            </th>
+
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody class="fs-6 fw-semibold text-gray-600">
+
+                                                        @foreach($tills as $network)
+                                                            <tr class="odd">
+                                                                <td data-order="Invalid date">{{ $network->network->agency->name }}</td>
+                                                                <td class="text-success">{{{ money(amount: $network->balance_old, currency: currencyCode(),convert: true) }}}</td>
+                                                                <td class="text-primary">{{{ money(amount: $network->balance_new, currency: currencyCode(),convert: true) }}}</td>
+
+
+                                                            </tr>
+                                                        @endforeach
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                            </div>
+                                            <!--end::Table-->
+                                        </div>
+                                        <!--end::Tab panel-->
+                                        <!--end::Tab panel-->
+                                    </div>
+                                    <!--end::Tab Content-->
+                                </div>
+                                <!--end::Card body-->
+                            </div>
+
                         </div>
                         <!--end:::Tab content-->
                     </div>
@@ -203,6 +286,7 @@
             <!--end::Content-->
 
         </div>
+    </div>
 
 
         @push('js')

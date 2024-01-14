@@ -78,6 +78,7 @@ class LoanDatatable implements HasDatatable
             Column::make('action')->data('action')->title(__('action')),
 
         ])
+
             ->orderBy(0);
     }
 }

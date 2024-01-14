@@ -45,6 +45,7 @@ class NetworkDatatable implements HasDatatable
             Column::make('agent_no')->title(__('Agent No'))->searchable()->orderable(),
             Column::make('balance')->title(__('Balance').' '.strtoupper(session('currency')))->searchable()->orderable(),
         ])
+
             ->orderBy(0);
     }
 }

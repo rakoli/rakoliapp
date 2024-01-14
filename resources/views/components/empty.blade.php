@@ -1,7 +1,9 @@
 @props([
-    'heading',
+    'heading' => null,
     'subheading' => null
 ])
+
+
 <div class="card">
     <!--begin::Card body-->
     <div class="card-body">
@@ -26,3 +28,4 @@
     </div>
     <!--end::Card body-->
 </div>
+
