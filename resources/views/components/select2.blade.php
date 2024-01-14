@@ -2,9 +2,12 @@
     'placeholder' => "Select an option"
 ])
 <select
-    data-dropdown-parent="body"
-    {{ $attributes->merge(['class' => 'form-select select2']) }}
-
+    id="{{ str($placeholder)->slug()->value() }}"
+    data-control="select2"
+    {{ $attributes->merge(['class' => 'form-select']) }}
     data-placeholder="{{ __($placeholder) }}">
     {{ $slot }}
 </select>
+
+
+

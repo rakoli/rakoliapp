@@ -21,12 +21,11 @@
                 <div class="col-6">
                     <x-label class="" label="Select Location" for="location_code"/>
                     <x-select2
-                        class="form-control-solid  form-control @error('location_code') form-control-error @enderror"
+                        class=" @error('location_code') form-control-error @enderror"
                         name="location_code"
-
                         placeholder="{{ __('Select a location') }}"
                         id="location">
-                        <option value="">{{ __('Select location ') }}</option>
+
 
                         @foreach($locations as $location)
                             <option value="{{ $location->code }}">{{ $location->name }}</option>
@@ -48,11 +47,10 @@
                         <x-label class="" label="Select till" for="till_code"/>
 
                         <x-select2
-                            class="form-control-solid  form-control @error('till_code') form-control-error @enderror"
+                            class=" @error('till_code') form-control-error @enderror"
                             name="till_code"
                             placeholder="{{ __('Select a till') }}"
                             id="till_code">
-                            <option value="">{{ __('Select till ') }}</option>
 
                             @foreach($tills as $till)
                                 <option value="{{ $till->network_code }}">{{ $till->network?->agency?->name }}</option>
@@ -66,19 +64,21 @@
 
                     </div>
 
+
+
                     <div class="col-6 py-3">
-                        <x-label class="" label="Transaction Type" for="type"/>
+                        <x-label class="" label="Transaction Type" for="transaction_type"/>
 
                         <x-select2
 
-                            class="form-control-solid select2  form-control @error('transaction_type') form-control-error @enderror"
+                            class=" @error('transaction_type') form-control-error @enderror"
                             name="type"
                             placeholder="{{ __('Select a Transaction Type') }}"
-                            id="type">
-                            <option value="">{{ __('Select a Transaction Type') }}</option>
+                            id="transaction_type">
+
 
                             @foreach(\App\Utils\Enums\TransactionTypeEnum::cases() as $transactionType)
-                                <option value="{{ $transactionType->value }}">{{ $transactionType->value }}</option>
+                                <option value="{{ $transactionType->value }}">{{ $transactionType->label() }}</option>
                             @endforeach
                         </x-select2>
                         @error('type')
