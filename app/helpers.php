@@ -31,6 +31,8 @@ if (! function_exists('settings')) {
 if (! function_exists('generateCode')) {
     function generateCode(string|int $name, string|int $prefixText = ''): string
     {
+        $prefixText =  (string)$prefixText;
+
         $cleanName = cleanText($name);
         $code = str($cleanName)->trim()->lower()->value();
         $randomNumbers = rand(10, 999);

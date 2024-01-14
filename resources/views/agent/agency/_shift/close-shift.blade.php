@@ -48,13 +48,15 @@
             </div>
             <div class="row fv-row py-3">
 
+
+
                 @foreach($tills as $till)
                     <div class="col-6 py-3">
-                        <x-label class="" label="{{ __($till->agency->name) }}" :for="$till->id"/>
+                        <x-label class="" label="{{ __($till->network?->agency?->name) }}" :for="$till->id"/>
                         <x-input class="form-control-solid"
-                                 name="tills[{{ $till->code }}]"
-                                 value="{{ $till->balance }}"
-                                 placeholder="{{ __($till->balance) }}"
+                                 name="tills[{{ $till->network_code }}]"
+                                 value="{{ $till->balance_new }}"
+                                 placeholder="{{ __($till->balance_new) }}"
                                  id="{{ $till->id }}
                                                          "/>
                     </div>

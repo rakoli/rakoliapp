@@ -30,7 +30,7 @@ class AddTransaction
 
             DB::beginTransaction();
 
-            [$newBalance, $oldBalance] = match ($data['type']) {
+            [$newBalance, $oldBalance, $till] = match ($data['type']) {
                 TransactionTypeEnum::MONEY_IN->value => AddTransaction::moneyIn($data),
                 TransactionTypeEnum::MONEY_OUT->value => AddTransaction::moneyOut($data),
             };
@@ -51,13 +51,14 @@ class AddTransaction
             $this->createShiftTransaction(
                 shift: $shift,
                 data: $data,
-                oldBalance: $oldBalance,
-                newBalance: $newBalance
+                oldBalance: $till->balance_old,
+                newBalance: $till->balance_new
             );
 
             DB::commit();
 
         } catch (\Exception $e) {
+
 
             DB::rollBack();
             throw new \Exception($e->getMessage());

@@ -16,6 +16,7 @@ trait InteractsWithShift
     public function createShiftTransaction(Shift $shift, array $data, float $oldBalance, $newBalance)
     {
 
+
         $shift->transactions()->create([
             'business_code' => $shift->business_code,
             'location_code' => $shift->location_code,
@@ -30,6 +31,14 @@ trait InteractsWithShift
             'balance_new' => $newBalance,
             'description' => $data['notes'],
         ]);
+
+
+        $this->updateNetworkBalance(
+            shift: $shift,
+            networkCode: $data['till_code'],
+            olBalance: $oldBalance,
+            newBalance: $newBalance,
+        );
     }
 
     public static function moneyIn(array $data): array
@@ -45,6 +54,7 @@ trait InteractsWithShift
             throw new \Exception('You cannot transact without an open shift');
         }
 
+        /** @var ShiftNetwork $till */
         $till = $tillCheck
             ->with('shift')
             ->first();
@@ -73,6 +83,7 @@ trait InteractsWithShift
         return [
             $shift->cash_end,
             $shift->cash_start,
+            $till
         ];
 
     }
@@ -89,6 +100,9 @@ trait InteractsWithShift
         if (! $tillCheck->exists()) {
             throw new \Exception('You cannot transact without an open shift');
         }
+
+
+        /** @var ShiftNetwork $till */
 
         $till = $tillCheck
             ->with('shift')
@@ -120,7 +134,23 @@ trait InteractsWithShift
         return [
             $shift->cash_end,
             $shift->cash_start,
+            $till,
         ];
+
+    }
+
+
+    private function updateNetworkBalance(Shift $shift , string $networkCode, float $olBalance, float $newBalance)
+    {
+
+        ShiftNetwork::query()
+            ->whereBelongsTo($shift,'shift')
+            ->where('network_code', $networkCode)
+            ->first()
+            ->update([
+                'balance_old' => $olBalance,
+                'balance_new' => $newBalance
+            ]);
 
     }
 }

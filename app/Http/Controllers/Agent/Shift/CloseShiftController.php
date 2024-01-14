@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Location;
 use App\Models\Network;
 use App\Models\Shift;
+use App\Models\ShiftNetwork;
 use App\Utils\Enums\ShiftStatusEnum;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -19,10 +20,14 @@ class CloseShiftController extends Controller
             return to_route('agency.shift');
         }
 
-        $tills = Network::query()->with('agency')->cursor();
+
         $locations = Location::query()->cursor();
 
         $shift = Shift::query()->where('status', ShiftStatusEnum::OPEN)->first();
+
+        $tills = ShiftNetwork::query()->where('shift_id', $shift->id)
+            ->where('balance_new', '>', 0)->with('network.agency')->cursor();
+
 
         return view('agent.agency.close-shift')->with([
             'tills' => $tills,
