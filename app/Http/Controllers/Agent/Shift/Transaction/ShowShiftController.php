@@ -24,7 +24,7 @@ class ShowShiftController extends Controller
 
         $dataTableHtml = $transactionDatatable->columns(datatableBuilder: $datatableBuilder);
 
-        $tills = ShiftNetwork::query()->where('shift_id', $shift->id)->where('balance_new', '>', 0)->with('network.agency')->cursor();
+        $tills = ShiftNetwork::query()->where('shift_id', $shift->id)->with('network.agency')->cursor();
 
         $locations = Location::query()->cursor();
 
