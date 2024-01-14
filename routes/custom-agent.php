@@ -14,7 +14,7 @@ use App\Http\Controllers\Agent\Shift\TillController;
 use App\Http\Controllers\Agent\Shift\Transaction\AddExpenseTransactionController;
 use App\Http\Controllers\Agent\Shift\Transaction\AddIncomeTransactionController;
 use App\Http\Controllers\Agent\Shift\Transaction\AddTransactionController;
-use App\Http\Controllers\Agent\Shift\Transaction\ShiftTransactionController;
+use App\Http\Controllers\Agent\Shift\Transaction\ShowShiftController;
 use App\Http\Controllers\Agent\Transaction\TransactionsController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,7 +27,6 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
         Route::get('transactions', TransactionsController::class)->name('agency.transactions');
 
         Route::prefix('transactions/{shift}')->group(function () {
-            Route::get('/', ShiftTransactionController::class)->name('agency.shift.transactions');
             Route::post('add-transaction', AddTransactionController::class)->name('agency.transactions.add.transaction');
             Route::post('add-expense', AddExpenseTransactionController::class)->name('agency.transactions.add.expense');
             Route::post('add-income', AddIncomeTransactionController::class)->name('agency.transactions.add.income');
@@ -40,6 +39,7 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
             Route::post('/', OpenShiftController::class)->name('agency.shift.store');
             Route::get('/close', [CloseShiftController::class, 'index'])->name('agency.shift.close');
             Route::post('/close/store', [CloseShiftController::class, 'store'])->name('agency.shift.close.store');
+            Route::get('/{shift}/show', ShowShiftController::class)->name('agency.shift.show');
             Route::get('{shift}/tills', [TillController::class, 'index'])->name('agency.shift.till');
         });
 

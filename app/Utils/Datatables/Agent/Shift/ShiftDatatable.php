@@ -33,13 +33,14 @@ class ShiftDatatable implements HasDatatable
             ->addColumn('action', function (Shift $shift) {
 
                 return (new self())->buttons([
+
+                    'Details' => [
+                        'route' => route('agency.shift.show', $shift),
+                        'attributes' => 'null',
+                    ],
                     'Tills' => [
                         'route' => route('agency.shift.till', $shift),
                         'attributes' => null,
-                    ],
-                    'Transaction' => [
-                        'route' => route('agency.shift.transactions', $shift),
-                        'attributes' => 'null',
                     ],
                 ]);
             })

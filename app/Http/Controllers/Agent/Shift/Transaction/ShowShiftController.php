@@ -12,7 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Html\Builder;
 
-class ShiftTransactionController extends Controller
+class ShowShiftController extends Controller
 {
     public function __invoke(Request $request, Shift $shift, Builder $datatableBuilder, ShiftTransactionDatatable $transactionDatatable): View|JsonResponse
     {
@@ -28,7 +28,7 @@ class ShiftTransactionController extends Controller
 
         $locations = Location::query()->cursor();
 
-        return view('agent.agency.transactions', [
+        return view('agent.agency.show', [
             'dataTableHtml' => $dataTableHtml,
             'locations' => $locations,
             'tills' => $tills,
