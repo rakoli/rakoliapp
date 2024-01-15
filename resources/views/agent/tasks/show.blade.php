@@ -1,6 +1,6 @@
 @extends('layouts.users.agent')
 
-@section('title', __("Exchange Ad Detail"))
+@section('title', __("Task Detail"))
 
 @section('content')
     <!--begin::Container-->
@@ -21,69 +21,45 @@
 
                                 <!--begin::Details item-->
                                 <div class="fw-bold mt-5">{{__("Business")}}</div>
-                                <div class="text-gray-600">{{$exchangeAd->business->business_name}}</div>
+                                <div class="text-gray-600">{{$task->business->business_name}}</div>
                                 <!--begin::Details item-->
                                 <!--begin::Details item-->
-                                <div class="fw-bold mt-5">{{__("general.exchange.trade")}}</div>
+                                <div class="fw-bold mt-5">{{__("Duration")}}</div>
                                 <div class="text-gray-600">
                                     <div class="text-gray-600">
-                                        {{$exchangeAd->trades}} {{__("trades")}} |
-                                        {{$exchangeAd->completion}}% {{__('completion')}} |
-                                        <i class="ki-solid ki-like fs-6"></i> {{$exchangeAd->feedback}}%
-                                    </div>
-                                    <div class="text-gray-600">
-                                        {{__("Exchange Volume")}}: {{number_format($exchangeAd->business->exchange_stats->volume_traded)}} {{session('currency')}}
+                                        {{ Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $task->time_start)->format('d.m.Y h:i a') }}
+                                        @if(!empty($task->time_end))
+                                         To {{ Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $task->time_end)->format('d.m.Y h:i a') }}
+                                        @endif
                                     </div>
                                 </div>
                                 <!--begin::Details item-->
                                 <!--begin::Details item-->
                                 <div class="fw-bold mt-5">{{__("Address")}}</div>
                                 <div class="text-gray-600">
-                                    @if(!empty($exchangeAd->business->business_location))
-                                        {{$exchangeAd->business->business_location}}
-                                    @else
-                                        None
+                                    @if(!empty($task->region_code))
+                                        Region:{{$task->region->name}}
+                                    @endif
+                                    @if(!empty($task->town_code))
+                                        | Town:{{$task->town->name}}
+                                    @endif
+                                    @if(!empty($task->area_code))
+                                        | Area:{{$task->area->name}}
                                     @endif
                                 </div>
                                 <!--begin::Details item-->
                                 <!--begin::Details item-->
-                                <div class="fw-bold mt-5">{{__('Verification')}}</div>
+                                <div class="fw-bold mt-5">{{__('Task Type')}}</div>
                                 <div class="text-gray-600">
-                                    {{__("Phone")}}
-                                    @if(!empty(auth()->user()->phone_verified_at))
-                                        <i class="ki-duotone ki-verify fs-3">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>
-                                    @else
-                                        <i class="ki-duotone ki-information fs-3">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                            <span class="path3"></span>
-                                        </i>
-                                    @endif
-                                    |
-                                    {{__("Identification")}}
-                                    @if(!empty(auth()->user()->id_verified_at))
-                                        <i class="ki-duotone ki-verify fs-3">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>
-                                    @else
-                                        <i class="ki-duotone ki-information fs-3">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                            <span class="path3"></span>
-                                        </i>
-                                    @endif
+                                    {!! $task->task_type !!}
                                 </div>
                                 <!--begin::Details item-->
-                                <div class="fw-bold mt-5">{{__("Exchange Availability")}}</div>
-                                <div class="text-gray-600">{{$exchangeAd->availability_desc}}</div>
+                                <div class="fw-bold mt-5">{{__("Status")}}</div>
+                                <div class="text-gray-600">{{$task->status}}</div>
                                 <!--begin::Details item-->
                                 <!--begin::Details item-->
-                                <div class="fw-bold mt-5">{{__("Terms")}}</div>
-                                <div class="text-gray-600">{{$exchangeAd->terms}}</div>
+                                <div class="fw-bold mt-5">{{__("Note")}}</div>
+                                <div class="text-gray-600">{{$task->note}}</div>
                                 <!--begin::Details item-->
                             </div>
                         </div>
@@ -103,94 +79,18 @@
                     <div class="card-header border-0">
                         <!--begin::Card title-->
                         <div class="card-title">
-                            <h2 class="fw-bold">{{__("general.exchange.trade")}}</h2>
+                            <h2 class="fw-bold">{{__("Task")}}</h2>
                         </div>
                         <!--end::Card title-->
                     </div>
                     <!--end::Card header-->
                     <!--begin::Card body-->
                     <div class="card-body pt-0">
-                        <div class="fs-6 fw-normal mb-10">{{$exchangeAd->description}}</div>
+                        <div class="fs-6 fw-normal mb-10">{{$task->description}}</div>
 
                         <!--begin::Form-->
-                        <form class="form" data-kt-redirect-url="{{route('exchange.transactions.view','')}}" action="{{route('exchange.ads.openorder')}}" method="post" id="kt_form">
-
-                            <input type="hidden" name="exchange_id" value="{{$exchangeAd->id}}">
-                            <!--begin::Input group-->
-                            <div class="row fv-row mb-7">
-                                <div class="col-md-3 text-md-end">
-                                    <!--begin::Label-->
-                                    <label class="fs-6 fw-semibold form-label mt-3">
-                                        {{__("Action")}}
-                                    </label>
-                                    <!--end::Label-->
-                                </div>
-                                <div class="col-md-9">
-                                    <!--begin::Select2-->
-                                    <select class="form-select form-select-solid" name="action_select" id="action_select" onchange="actionChanged(this.value)">
-                                        <option selected disabled>{{__("Selected desired action")}}</option>
-                                        <option value="buy">{{__("Buy (Receive)")}}</option>
-                                        <option value="sell">{{__("Sell (Give)")}}</option>
-                                    </select>
-                                    <!--end::Select2-->
-                                </div>
-                            </div>
-                            <!--end::Input group-->
-
-                            <!--begin::Input group-->
-                            <div class="row fv-row mb-7">
-                                <div class="col-md-3 text-md-end">
-                                    <!--begin::Label-->
-                                    <label class="fs-6 fw-semibold form-label mt-3" id="action_target_select_label">
-
-                                    </label>
-                                    <!--end::Label-->
-                                </div>
-                                <div class="col-md-9">
-                                    <!--begin::Select2-->
-                                    <select class="form-select form-select-solid" name="action_target_select" id="action_target_select">
-                                        <option disabled>{{__("Select payment method")}}</option>
-                                    </select>
-                                    <!--end::Select2-->
-                                </div>
-                            </div>
-                            <!--end::Input group-->
-
-                            <!--begin::Input group-->
-                            <div class="row fv-row mb-7">
-                                <div class="col-md-3 text-md-end">
-                                    <!--begin::Label-->
-                                    <label class="fs-6 fw-semibold form-label mt-3" id="action_via_select_label">
-
-                                    </label>
-                                    <!--end::Label-->
-                                </div>
-                                <div class="col-md-9">
-                                    <!--begin::Select2-->
-                                    <select class="form-select form-select-solid" name="action_via_select" id="action_via_select">
-                                        <option disabled>{{__("Select payment method")}}</option>
-                                    </select>
-                                    <!--end::Select2-->
-                                </div>
-                            </div>
-                            <!--end::Input group-->
-
-                            <!--begin::Input group-->
-                            <div class="row fv-row mb-7">
-                                <div class="col-md-3 text-md-end">
-                                    <!--begin::Label-->
-                                    <label class="fs-6 fw-semibold form-label mt-3">
-                                        {{__("Amount")}}
-                                    </label>
-                                    <!--end::Label-->
-                                </div>
-                                <div class="col-md-9">
-                                    <input id="amount" name="amount" type="number" class="form-control" placeholder="{{__("amount for trade")}}" min="{{$exchangeAd->min_amount}}" max="{{$exchangeAd->max_amount}}"/>
-                                    <div class="text-gray-600">{{number_format($exchangeAd->min_amount)}} - {{number_format($exchangeAd->max_amount)}} {{$exchangeAd->currency}}</div>
-                                </div>
-                            </div>
-                            <!--end::Input group-->
-
+                        <form class="form" data-kt-redirect-url="{{route('agent.task.show',array($task->id))}}" action="{{route('agent.task.apply')}}" method="post" id="kt_form">
+                            <input type="hidden" name="task_id" value="{{$task->id}}">
                             <!--begin::Input group-->
                             <div class="row fv-row mb-7">
                                 <div class="col-md-3 text-md-end">
@@ -213,11 +113,11 @@
                                 <div class="col-md-9 offset-md-3">
                                     <div class="d-flex">
                                         <!--begin::Button-->
-                                        <a href="{{route('exchange.ads')}}" class="btn btn-light me-3">{{__("Cancel")}}</a>
+                                        <a href="{{route('agent.tasks')}}" class="btn btn-light me-3">{{__("Cancel")}}</a>
                                         <!--end::Button-->
                                         <!--begin::Button-->
                                         <button type="submit" class="btn btn-primary" id="kt_submit">
-                                            <span class="indicator-label">{{__("Open Trade")}}</span>
+                                            <span class="indicator-label">{{__("Apply")}}</span>
                                             <span class="indicator-progress">{{__("Please wait...")}}
 																<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                                         </button>
@@ -245,60 +145,6 @@
 @endsection
 
 @section('footer_js')
-    <script>
-        var traderSellMethods = JSON.parse('{!! $traderSellMethods->toJson() !!}');
-        var traderBuyMethods = JSON.parse('{!! $traderBuyMethods->toJson() !!}');
-
-        var targetLabel = document.getElementById('action_target_select_label');
-        var actionLabel = document.getElementById('action_via_select_label');
-
-        function actionChanged(selectedAction) {
-
-            removeAllOptions('action_target_select');
-            removeAllOptions('action_via_select');
-
-            if(selectedAction == 'sell'){
-                traderSellMethods.forEach(item => {
-                    addOption('action_target_select',item.method_name,item.id);
-                });
-                traderBuyMethods.forEach(item => {
-                    addOption('action_via_select',item.method_name,item.id);
-                });
-                targetLabel.innerHTML = "{{__("Sell")}}";
-                actionLabel.innerHTML = "{{__("Receive")}}";
-            }
-
-            if(selectedAction == 'buy'){
-                traderBuyMethods.forEach(item => {
-                    addOption('action_target_select',item.method_name,item.id);
-                });
-                traderSellMethods.forEach(item => {
-                    addOption('action_via_select',item.method_name,item.id);
-                });
-                targetLabel.innerHTML = "{{__("Buy")}}";
-                actionLabel.innerHTML = "{{__("Pay with")}}";
-            }
-        }
-
-        function removeAllOptions(selectElementId) {
-            var select = document.getElementById(selectElementId);
-            while (select.options.length > 0) {
-                select.remove(0);
-            }
-        }
-
-        function addOption(selectorId, optionText, optionValue) {
-            var select = document.getElementById(selectorId);
-            var option = document.createElement("option");
-
-            option.text = optionText;
-            option.value = optionValue;
-
-            select.add(option);
-        }
-
-    </script>
-
     <script>
         "use strict";
 
@@ -380,8 +226,10 @@
 
                                     if(response.data.success == true){
                                         form.reset();
-                                        const redirectUrl = form.getAttribute("data-kt-redirect-url")+ "/"+ response.data.orderid;
-                                        redirectUrl && (location.href = redirectUrl)
+                                        Swal.fire({
+                                            text: "Applied",
+                                            icon: "success",
+                                        });
                                     }else Swal.fire({
                                         text: response.data.resultExplanation,
                                         icon: "error",

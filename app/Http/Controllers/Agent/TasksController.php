@@ -8,11 +8,13 @@ use App\Models\ExchangeBusinessMethod;
 use App\Models\Location;
 use App\Models\Region;
 use App\Models\Towns;
+use App\Models\VasSubmission;
 use App\Models\VasTask;
 use App\Utils\Enums\VasTaskStatusEnum;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Str;
+use Auth;
 
 
 class TasksController extends Controller
@@ -81,9 +83,35 @@ class TasksController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(VasTask $task)
+    public function show($id)
     {
+        $task = VasTask::find($id);
         return view('agent.tasks.show',compact('task'));
+    }
+
+    public function apply(Request $request)
+    {
+        $user = auth()->user();
+        $task = VasTask::find($request->task_id);
+        $checkSubmission = VasSubmission::where('vas_contract_code',$task->code)->where('submitter_user_code',$user->bussiness_code)->exists();
+        if($checkSubmission){
+            return [
+                'success'           => false,
+                'result'            => "failed",
+                'resultExplanation' => "You have already applied for task.",
+            ];
+        }
+        // $submission = new VasSubmission;
+        // $submission->vas_contract_code = $task->code;
+        // $submission->submitter_user_code = $user->business_code;
+        // $submission->description = $request->description;
+        // $submission->save();
+
+        return [
+            'success'           => true,
+            'result'            => "successful",
+            'resultExplanation' => "Applied successfully",
+        ];
     }
 
 }
