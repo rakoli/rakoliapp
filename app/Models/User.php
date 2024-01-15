@@ -54,10 +54,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
-        'phone_otp_time' => \DateTimeInterface::class,
-        'email_otp_time' => \DateTimeInterface::class,
+        'phone_otp_time' => "datetime",
+        'email_otp_time' => "datetime",
     ];
-
 
     public function name()
     {

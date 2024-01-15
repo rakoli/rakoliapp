@@ -14,6 +14,7 @@ class InitiatedPayment extends Model
     protected $casts = [
         'status' => InitiatedPaymentStatusEnum::class,
     ];
+
     protected $fillable = [
         'country_code',
         'business_code',

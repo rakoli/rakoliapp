@@ -9,9 +9,6 @@ trait LakoriDatatable
         return new self();
     }
 
-    /**
-     * @param array  $actions
-     */
     protected function buttons(array $actions): bool|string
     {
         ob_start();
