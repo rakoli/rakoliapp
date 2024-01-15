@@ -27,23 +27,33 @@ class NetworkDatatable implements HasDatatable
             })
             ->startsWithSearch()
             ->addIndexColumn()
-            ->addColumn('created_at', fn (Network $record) => $record->created_at->format('Y-F-d'))
-            ->addColumn('location_name', fn (Network $record) => $record->location->name)
-            ->addColumn('name', fn (Network $record) => $record->agency->name)
-            ->addColumn('balance', fn (Network $record) => money($record->balance, currencyCode(), true))
-            ->rawColumns(['balance', 'agency_name', 'location_name'])
+            ->addColumn('created_at', fn (Network $network) => $network->created_at->format('Y-F-d'))
+            ->addColumn('location_name', fn (Network $network) => $network->location->name)
+            ->addColumn('name', fn (Network $network) => $network->agency->name)
+            ->addColumn('balance', fn (Network $network) => money($network->balance, currencyCode(), true))
+            ->addColumn('actions', function (Network $network) {
+                return NetworkDatatable::make()
+                    ->buttons([
+                        "Show" => [
+                            'route' => '#',
+                            'attributes' => '#',
+                        ]
+                    ]);
+            })
+            ->rawColumns(['balance', 'agency_name', 'location_name','actions'])
             ->toJson();
     }
 
     public function columns(Builder $datatableBuilder): Builder
     {
         return $datatableBuilder->columns([
-            Column::make('id')->title('#')->searchable(false)->orderable(),
+
             Column::make('created_at')->title(__('date'))->searchable()->orderable(),
             Column::make('location_name')->title(__('Location'))->searchable()->orderable(),
             Column::make('name')->title(__('Agency'))->searchable()->orderable(),
             Column::make('agent_no')->title(__('Agent No'))->searchable()->orderable(),
             Column::make('balance')->title(__('Balance').' '.strtoupper(session('currency')))->searchable()->orderable(),
+            Column::make('actions')->title('Actions'),
         ])
 
             ->orderBy(0);
