@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Utils\Enums\InitiatedPaymentStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,6 +11,9 @@ class InitiatedPayment extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'status' => InitiatedPaymentStatusEnum::class,
+    ];
     protected $fillable = [
         'country_code',
         'business_code',

@@ -29,7 +29,7 @@ class VerifyOTP
 
     public static function emailOTPTimeRemaining(User $user)
     {
-        return Carbon::create($user->email_otp_time)->addSeconds(self::$validtime)->diffInSeconds(now());
+        return Carbon::create(Carbon::parse($user->email_otp_time))->addSeconds(self::$validtime)->diffInSeconds(now());
     }
 
     public static function phoneOTPTimeRemaining(User $user)

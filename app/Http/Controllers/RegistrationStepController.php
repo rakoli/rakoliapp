@@ -61,7 +61,7 @@ class RegistrationStepController extends Controller
         if (VerifyOTP::hasActiveEmailOTP($user)) {
             return [
                 'status' => 201,
-                'message' => __('Email already sent try again in ').Carbon::create($user->email_otp_time)->addSeconds(VerifyOTP::$validtime)->diffForHumans(),
+                'message' => __('Email already sent try again in ').Carbon::create(Carbon::parse($user->email_otp_time))->addSeconds(VerifyOTP::$validtime)->diffForHumans(),
             ];
         }
 

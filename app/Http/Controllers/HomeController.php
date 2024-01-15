@@ -64,7 +64,7 @@ class HomeController extends Controller
             //Dashboard Statistics
             $businesses = Business::get();
             $stats['business'] = $businesses->count();
-            $stats['total_income'] = SystemIncome::where('status', \App\Utils\Enums\SystemIncomeStatusEnum::RECEIVED->value)->get()->sum('amount');
+            $stats['total_income'] = SystemIncome::where('status', \App\Utils\Enums\SystemIncomeStatusEnum::RECEIVED->value)->sum('amount');
             $stats['exchange_listings'] = ExchangeAds::count();
             $stats['vas_listings'] = VasTask::count();
             $stats['active_subscription'] = $businesses->whereNotNull('package_code')->count();
@@ -105,7 +105,7 @@ class HomeController extends Controller
             $stats['total_services'] = VasTask::where('vas_business_code', auth()->user()->business_code)->count();
             $stats['total_submission'] = Business::where('code', auth()->user()->business_code)->first()->agentsSubmissions()->count();
             $stats['users'] = User::where('business_code', auth()->user()->business_code)->count();
-            $stats['payments_made'] = VasPayment::where('business_code', auth()->user()->business_code)->get()->sum('amount');
+            $stats['payments_made'] = VasPayment::where('business_code', auth()->user()->business_code)->sum('amount');
 
             return view('dashboard.vas', compact('dataTableHtml', 'stats'));
         }
@@ -146,35 +146,35 @@ class HomeController extends Controller
             ])->orderBy(0, 'desc');
 
             //Dashboard Statistics
-            $stats['networks'] = Network::where('business_code', auth()->user()->business_code)->get()->count();
-            $stats['open_shifts'] = Shift::where('status', ShiftStatusEnum::OPEN)->get()->count();
+            $stats['networks'] = Network::where('business_code', auth()->user()->business_code)->count();
+            $stats['open_shifts'] = Shift::where('status', ShiftStatusEnum::OPEN)->count();
 
-            $cashBalance = Location::where('business_code', auth()->user()->business_code)->get()->sum('balance');
-            $tillBalance = Network::where('business_code', auth()->user()->business_code)->get()->sum('balance');
+            $cashBalance = Location::where('business_code', auth()->user()->business_code)->sum('balance');
+            $tillBalance = Network::where('business_code', auth()->user()->business_code)->sum('balance');
             $stats['cash_balance'] = number_format($cashBalance);
             $stats['till_balance'] = number_format($tillBalance);
             $stats['total_location_balance'] = number_format($cashBalance + $tillBalance);
 
-            $stats['awarded_vas'] = VasContract::where('agent_business_code', auth()->user()->business_code)->get()->count();
+            $stats['awarded_vas'] = VasContract::where('agent_business_code', auth()->user()->business_code)->count();
             $stats['pending_exchange'] = ExchangeTransaction::where([
                 'trader_business_code' => auth()->user()->business_code,
                 'status' => ExchangeTransactionStatusEnum::OPEN,
             ])->orWhere(function (\Illuminate\Database\Eloquent\Builder $query) {
                 $query->where('owner_business_code', auth()->user()->business_code)
                     ->where('status', ExchangeTransactionStatusEnum::OPEN);
-            })->get()->count(); // where (trader_business_code AND status) OR (owner_business_code AND status)
+            })->count(); // where (trader_business_code AND status) OR (owner_business_code AND status)
 
             $stats['highlights']['income'] = number_format(Transaction::where([
                 'business_code' => auth()->user()->business_code,
                 'category' => TransactionCategoryEnum::INCOME,
-            ])->where('created_at', '>=', now()->subDays(30))->get()->sum('amount'));
+            ])->where('created_at', '>=', now()->subDays(30))->sum('amount'));
 
             $stats['highlights']['expense'] = number_format(Transaction::where([
                 'business_code' => auth()->user()->business_code,
                 'category' => TransactionCategoryEnum::EXPENSE,
-            ])->where('created_at', '>=', now()->subDays(30))->get()->sum('amount'));
+            ])->where('created_at', '>=', now()->subDays(30))->sum('amount'));
 
-            $stats['highlights']['referrals'] = number_format(Business::where('referral_business_code', auth()->user()->business_code)->get()->count());
+            $stats['highlights']['referrals'] = number_format(Business::where('referral_business_code', auth()->user()->business_code)->count());
 
             return view('dashboard.agent', compact('dataTableHtml', 'stats'));
         }

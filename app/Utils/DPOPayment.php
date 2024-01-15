@@ -16,7 +16,7 @@ class DPOPayment
 
     private $dpoGateway;
 
-    private $testMode = false;
+    private bool $testMode = false;
 
     private $company_token;
 
@@ -33,7 +33,7 @@ class DPOPayment
         $this->company_type = config('dpo-laravel.account_type');
         $this->dpo_back_url = config('dpo-laravel.back_url');
         $this->dpo_redirect_url = config('dpo-laravel.redirect_url');
-        if (false) {
+        if ($this->testMode) {
             $this->dpoUrl = self::DPO_URL_TEST;
         } else {
             $this->dpoUrl = self::DPO_URL_LIVE;
@@ -222,8 +222,8 @@ class DPOPayment
 
             return [
                 'success' => false,
-                'result' => ! empty($exception) ? $exception : 'Unknown error occurred in token creation',
-                'resultExplanation' => ! empty($exception) ? $exception : 'Unknown error occurred in token creation',
+                'result' => filled($exception) ? $exception : 'Unknown error occurred in token creation',
+                'resultExplanation' => filled($exception) ? $exception : 'Unknown error occurred in token creation',
             ];
         }
     }

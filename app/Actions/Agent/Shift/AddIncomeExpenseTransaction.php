@@ -47,7 +47,7 @@ class AddIncomeExpenseTransaction
                 shift: $shift,
                 data: $data,
                 oldBalance: $till->balance_old,
-                newBalance: $till->balance_new
+                newBalance: $till->balance_old
             );
 
             DB::commit();
