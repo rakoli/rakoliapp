@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Agent\Networks;
 
-use App\Actions\Agent\Shift\Network\AddLocationNetwork;
 use App\Actions\Agent\Shift\Network\UpdateLocationNetwork;
 use App\Http\Controllers\Controller;
 use App\Models\Network;
@@ -20,12 +19,11 @@ class UpdateNetworkController extends Controller
             'name' => 'required|string',
             'agent_no' => [
                 'required',
-                Rule::unique('networks','agent_no')
-                    ->where('id', '!=', $network->id)
+                Rule::unique('networks', 'agent_no')
                     ->whereNull('deleted_at')
-                ->ignore($network->id)
+                    ->ignore($network->id),
             ],
-            'fsp_code' =>[
+            'fsp_code' => [
                 'required',
 
             ],
@@ -42,7 +40,7 @@ class UpdateNetworkController extends Controller
         try {
             UpdateLocationNetwork::run(
                 network: $network,
-                data:$validated
+                data: $validated
             );
 
             return response()

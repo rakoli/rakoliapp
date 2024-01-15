@@ -9,13 +9,12 @@ use App\Utils\Enums\ShiftStatusEnum;
 trait InteractsWithShift
 {
     /**
-     * @param  array{till_code: string,location_code: string,amount: float, type: string , category: string , notes: ?string } $data
+     * @param  array{till_code: string,location_code: string,amount: float, type: string , category: string , notes: ?string }  $data
      *
      * @throws \Exception
      */
     public function createShiftTransaction(Shift $shift, array $data, float $oldBalance, $newBalance)
     {
-
 
         $shift->transactions()->create([
             'business_code' => $shift->business_code,
@@ -31,7 +30,6 @@ trait InteractsWithShift
             'balance_new' => $newBalance,
             'description' => $data['notes'],
         ]);
-
 
         $this->updateNetworkBalance(
             shift: $shift,
@@ -83,7 +81,7 @@ trait InteractsWithShift
         return [
             $shift->cash_end,
             $shift->cash_start,
-            $till
+            $till,
         ];
 
     }
@@ -101,9 +99,7 @@ trait InteractsWithShift
             throw new \Exception('You cannot transact without an open shift');
         }
 
-
         /** @var ShiftNetwork $till */
-
         $till = $tillCheck
             ->with('shift')
             ->first();
@@ -139,17 +135,16 @@ trait InteractsWithShift
 
     }
 
-
-    private function updateNetworkBalance(Shift $shift , string $networkCode, float $olBalance, float $newBalance)
+    private function updateNetworkBalance(Shift $shift, string $networkCode, float $olBalance, float $newBalance)
     {
 
         ShiftNetwork::query()
-            ->whereBelongsTo($shift,'shift')
+            ->whereBelongsTo($shift, 'shift')
             ->where('network_code', $networkCode)
             ->first()
             ->update([
                 'balance_old' => $olBalance,
-                'balance_new' => $newBalance
+                'balance_new' => $newBalance,
             ]);
 
     }

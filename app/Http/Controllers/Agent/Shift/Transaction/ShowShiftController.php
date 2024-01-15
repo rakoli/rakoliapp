@@ -32,7 +32,7 @@ class ShowShiftController extends Controller
             'dataTableHtml' => $dataTableHtml,
             'locations' => $locations,
             'tills' => $tills,
-            'shift' => $shift->loadMissing('user','location'),
+            'shift' => $shift->loadMissing('user', 'location'),
         ]);
     }
 }

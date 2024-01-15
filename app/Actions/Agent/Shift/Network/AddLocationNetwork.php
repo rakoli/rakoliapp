@@ -11,7 +11,8 @@ class AddLocationNetwork
     use AsAction;
 
     /**
-     * @param array{location_code:string , fsp_code:string,name:string , agent_no: string , balance:float , notes: string } $data
+     * @param  array{location_code:string , fsp_code:string,name:string , agent_no: string , balance:float , notes: string }  $data
+     *
      * @throws \Throwable
      */
     public function handle(array $data): void

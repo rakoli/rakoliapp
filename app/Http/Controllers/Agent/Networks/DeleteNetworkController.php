@@ -16,10 +16,10 @@ class DeleteNetworkController extends Controller
 
         try {
 
-         /*   throw_if(
-                condition:  "DELETE" != $request->name ,
-                exception: new \Exception("Network name do not match")
-            );*/
+            /*   throw_if(
+                   condition:  "DELETE" != $request->name ,
+                   exception: new \Exception("Network name do not match")
+               );*/
 
             $network->delete();
 
@@ -28,8 +28,7 @@ class DeleteNetworkController extends Controller
                     'message' => 'Network Updated successfully',
                 ], 200);
 
-        }catch (\Exception $exception)
-        {
+        } catch (\Exception $exception) {
             return response()
                 ->json([
                     'message' => $exception->getMessage(),

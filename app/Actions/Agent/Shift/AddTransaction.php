@@ -15,7 +15,7 @@ class AddTransaction
     use InteractsWithShift;
 
     /**
-     * @param  array{till_code: string,location_code: string,amount: float, type: string , category: string , notes: ?string } $data
+     * @param  array{till_code: string,location_code: string,amount: float, type: string , category: string , notes: ?string }  $data
      *
      * @throws \Throwable
      */
@@ -58,7 +58,6 @@ class AddTransaction
             DB::commit();
 
         } catch (\Exception $e) {
-
 
             DB::rollBack();
             throw new \Exception($e->getMessage());

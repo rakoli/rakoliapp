@@ -36,8 +36,6 @@ class AddTransactionController extends Controller
 
         } catch (\Exception|\Throwable $e) {
 
-
-
             return response()
                 ->json([
                     'message' => 'Transaction could not be added',

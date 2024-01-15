@@ -14,8 +14,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Network extends Model
 {
     use HasFactory;
-
     use SoftDeletes;
+
     protected $guarded = [];
 
     protected static function booted()

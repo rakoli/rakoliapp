@@ -16,17 +16,15 @@ class ShowNetworkController extends Controller
     public function __invoke(Request $request, $id)
     {
 
-        $network  = Network::query()->where('id', $id)->first();
+        $network = Network::query()->where('id', $id)->first();
 
-        if (! isset($network->id) && ! $request->ajax())
-        {
+        if (! isset($network->id) && ! $request->ajax()) {
             return to_route('agency.networks');
         }
-        if (! isset($network->id) &&  $request->ajax())
-        {
-            return  \request()
+        if (! isset($network->id) && $request->ajax()) {
+            return response()
                 ->json([
-                    'message' => "Network not found"
+                    'message' => 'Network not found',
                 ], 404);
         }
 
@@ -35,7 +33,7 @@ class ShowNetworkController extends Controller
         $fsps = FinancialServiceProvider::query()->cursor();
 
         return view('agent.agency.network.show', [
-            'network' => $network->loadMissing('agency','location'),
+            'network' => $network->loadMissing('agency', 'location'),
             'locations' => $locations,
             'agencies' => $fsps,
         ]);

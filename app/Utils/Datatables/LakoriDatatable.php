@@ -4,14 +4,13 @@ namespace App\Utils\Datatables;
 
 trait LakoriDatatable
 {
-    public static function make() : self
+    public static function make(): self
     {
-        return (new self());
+        return new self();
     }
 
     /**
-     * @param array{} $actions
-     * @return bool|string
+     * @param array  $actions
      */
     protected function buttons(array $actions): bool|string
     {

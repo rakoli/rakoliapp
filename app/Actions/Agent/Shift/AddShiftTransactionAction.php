@@ -39,7 +39,7 @@ class AddShiftTransactionAction
                     'description' => $data['description'] ?? null,
                     'amount_currency' => currencyCode(),
                     'amount' => $data['amount'],
-                    'balance_old' =>  $till->balance_old,
+                    'balance_old' => $till->balance_old,
                     'balance_new' => $till->balance_new,
                 ]);
 

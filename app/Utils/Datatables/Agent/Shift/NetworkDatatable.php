@@ -34,13 +34,13 @@ class NetworkDatatable implements HasDatatable
             ->addColumn('actions', function (Network $network) {
                 return NetworkDatatable::make()
                     ->buttons([
-                        "Show" => [
+                        'Show' => [
                             'route' => route('agency.networks.show', $network),
                             'attributes' => '#',
-                        ]
+                        ],
                     ]);
             })
-            ->rawColumns(['balance', 'agency_name', 'location_name','actions'])
+            ->rawColumns(['balance', 'agency_name', 'location_name', 'actions'])
             ->toJson();
     }
 
