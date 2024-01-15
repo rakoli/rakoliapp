@@ -3,20 +3,32 @@
 namespace App\Http\Controllers\Agent\Networks;
 
 use App\Actions\Agent\Shift\Network\AddLocationNetwork;
+use App\Actions\Agent\Shift\Network\UpdateLocationNetwork;
 use App\Http\Controllers\Controller;
+use App\Models\Network;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
-class AddNetworkController extends Controller
+class UpdateNetworkController extends Controller
 {
     /**
      * Handle the incoming request.
      */
-    public function __invoke(Request $request)
+    public function __invoke(Request $request, Network $network)
     {
         $validated = $request->validate([
             'name' => 'required|string',
-            'agent_no' => 'required',
-            'fsp_code' => 'required',
+            'agent_no' => [
+                'required',
+                Rule::unique('networks','agent_no')
+                    ->where('id', '!=', $network->id)
+                    ->whereNull('deleted_at')
+                ->ignore($network->id)
+            ],
+            'fsp_code' =>[
+                'required',
+
+            ],
             'notes' => 'required',
             'balance' => 'required|numeric',
             'location_code' => 'required|exists:locations,code',
@@ -28,11 +40,14 @@ class AddNetworkController extends Controller
         ]);
 
         try {
-            AddLocationNetwork::run($validated);
+            UpdateLocationNetwork::run(
+                network: $network,
+                data:$validated
+            );
 
             return response()
                 ->json([
-                    'message' => 'Network Added successfully',
+                    'message' => 'Network Updated successfully',
                 ], 201);
 
         } catch (\Exception $e) {

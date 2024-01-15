@@ -2,14 +2,16 @@
     'targetId',
     'label',
     'modalTitle',
+    'btnClass' => "btn btn-primary",
+    'size' => "modal-lg",
     'isStacked' => false
 ])
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#{{ $targetId }}">
+<button type="button" class="{{ $btnClass }}" data-bs-toggle="modal" data-bs-target="#{{ $targetId }}">
     {{ __($label) }}
 </button>
 
 <div class="modal fade" tabindex="-1" id="{{ $targetId }}">
-    <div class="modal-dialog modal-lg  modal-dialog-centered">
+    <div class="modal-dialog {{ $size }}  modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">{{ $modalTitle }}</h3>

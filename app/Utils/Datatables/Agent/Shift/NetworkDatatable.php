@@ -35,7 +35,7 @@ class NetworkDatatable implements HasDatatable
                 return NetworkDatatable::make()
                     ->buttons([
                         "Show" => [
-                            'route' => '#',
+                            'route' => route('agency.networks.show', $network),
                             'attributes' => '#',
                         ]
                     ]);

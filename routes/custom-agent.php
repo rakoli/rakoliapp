@@ -3,7 +3,10 @@
 /// This is custom route only for agent routes. All agent routes will be registered in here
 
 use App\Http\Controllers\Agent\Networks\AddNetworkController;
+use App\Http\Controllers\Agent\Networks\DeleteNetworkController;
 use App\Http\Controllers\Agent\Networks\NetworkController;
+use App\Http\Controllers\Agent\Networks\ShowNetworkController;
+use App\Http\Controllers\Agent\Networks\UpdateNetworkController;
 use App\Http\Controllers\Agent\Shift\CloseShiftController;
 use App\Http\Controllers\Agent\Shift\Loans\AddLoanController;
 use App\Http\Controllers\Agent\Shift\Loans\LoanController;
@@ -53,6 +56,9 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
         Route::prefix('networks')->group(function () {
             Route::get('/', NetworkController::class)->name('agency.networks');
             Route::post('/', AddNetworkController::class)->name('agency.networks.store');
+            Route::get('{network}/show', ShowNetworkController::class)->name('agency.networks.show');
+            Route::patch('{network}/', UpdateNetworkController::class)->name('agency.networks.update');
+            Route::delete('{network}/', DeleteNetworkController::class)->name('agency.networks.delete');
 
         });
 
