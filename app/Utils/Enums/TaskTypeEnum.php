@@ -9,4 +9,15 @@ enum TaskTypeEnum : string
     case SALES = "sales";
     case VERIFICATION = "verification";
 
+    public static function toArray()
+    {
+        $values = [];
+
+        foreach (self::cases() as $props) {
+            array_push($values, $props->value);
+        }
+
+        return $values;
+    }
+
 }

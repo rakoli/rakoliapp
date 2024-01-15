@@ -1,7 +1,7 @@
 <!-- Home -->
 <div class="menu-item py-2 {{returnActiveMenuStyle('')}}">
     <!--begin:Menu link-->
-    <a class="menu-link menu-center" href="{{route('home')}}" target="_self">
+    <a class="menu-link menu-center" href="http://bnb.local/account/delete" target="_self">
         <span class="menu-icon me-0">
             <i class="ki-outline ki-home-2 fs-2x"></i>
         </span>

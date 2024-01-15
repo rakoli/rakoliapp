@@ -33,6 +33,10 @@ Route::get('registration/vas', [App\Http\Controllers\RegistrationStepController:
 //LANGUAGE SWITCHER
 Route::get('lang/switch', [LanguageController::class, 'languageSwitch'])->name('languageSwitch');
 
+//Town and Area List
+Route::get('towns', [App\Http\Controllers\Controller::class, 'getTown'])->name('get.towns');
+Route::get('areas', [App\Http\Controllers\Controller::class, 'getArea'])->name('get.areas');
+
 //USERTYPE SPECIFIC ROUTES
 include('custom-admin.php');
 include('custom-agent.php');

@@ -1,0 +1,89 @@
+<?php
+
+namespace App\Http\Controllers\Agent;
+
+use App\Http\Controllers\Controller;
+use App\Models\Area;
+use App\Models\ExchangeBusinessMethod;
+use App\Models\Location;
+use App\Models\Region;
+use App\Models\Towns;
+use App\Models\VasTask;
+use App\Utils\Enums\VasTaskStatusEnum;
+use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
+use Illuminate\Support\Str;
+
+
+class TasksController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index($type = "")
+    {
+        $user = \auth()->user();
+        $dataTable = new DataTables();
+        $builder = $dataTable->getHtmlBuilder();
+
+        if (request()->ajax()) {
+
+            $tasks = VasTask::where('status',VasTaskStatusEnum::ACTIVE->value)
+                ->with(['country','business','area','region','town'])
+                ->orderBy('id','desc');
+
+            if($type){
+                $tasks = $tasks->where('is_public',"0")->whereHas('vas_task_availabilities',function($query) use($user){
+                    $query->where('agent_business_code',$user->business_code);
+                });
+            }
+
+            return \Yajra\DataTables\Facades\DataTables::eloquent($tasks)
+                ->editColumn('task_type', function($task) {
+                    return __($task->task_type);
+                })
+                ->addColumn('action', function(VasTask $task) {
+                    $content = '<a class="btn btn-secondary btn-sm me-2" href="'.route('agent.task.show', $task->id).'">'.__("View Task").'</a>';
+                    return $content;
+                })
+                ->addIndexColumn()
+                ->rawColumns(['action'])
+                ->editColumn('id',function($task) {
+                    return idNumberDisplay($task->id);
+                })
+                ->toJson();
+        }
+
+        //Datatable
+        $dataTableHtml = $builder->columns([
+            ['data' => 'id', 'title' => __('id')],
+            ['data' => 'country.name', 'title' => __("Country")],
+            ['data' => 'business.business_name', 'title' => __("Business")],
+            ['data' => 'area.name', 'title' => __("Area")],
+            ['data' => 'region.name', 'title' => __("Region")],
+            ['data' => 'town.name', 'title' => __("Town")],
+            ['data' => 'task_type' , 'title' => __("Type")],
+            ['data' => 'time_start' , 'title' => __("Start Time")],
+            ['data' => 'time_start' , 'title' => __("End Time")],
+            ['data' => 'no_of_agents' , 'title' => __("Agents")],
+            ['data' => 'description' , 'title' => __("Description")],
+            ['data' => 'action' , 'title' => __("Action")],
+        ])->responsive(true)
+            ->ordering(false)
+            ->ajax(route('agent.tasks'))
+            ->paging(true)
+            ->dom('frtilp')
+            ->lengthMenu([[25, 50, 100, -1], [25, 50, 100, "All"]]);
+
+        return view('agent.tasks.index',compact('dataTableHtml'));
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(VasTask $task)
+    {
+        return view('agent.tasks.show',compact('task'));
+    }
+
+}

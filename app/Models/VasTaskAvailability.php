@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class VasTaskAvailability extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
 
     public function business() : BelongsTo
     {

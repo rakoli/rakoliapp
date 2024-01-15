@@ -11,6 +11,9 @@ class VasTask extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['id'];
+
+
     public function area() : BelongsTo
     {
         return $this->belongsTo(Area::class, 'area_code', 'code');

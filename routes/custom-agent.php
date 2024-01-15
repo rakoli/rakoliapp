@@ -53,4 +53,8 @@ Route::middleware(['auth','should_complete_registration','onlyagent'])->group(fu
     });
     //END: EXCHANGE MODULE
 
+    //Opportunity
+    Route::get('tasks/{type?}',[App\Http\Controllers\Agent\TasksController::class, 'index'])->name('agent.tasks');
+    Route::get('tasks/view/{id}',[App\Http\Controllers\Agent\TasksController::class, 'show'])->name('agent.task.show');
+
 });

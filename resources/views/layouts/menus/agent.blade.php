@@ -1,7 +1,7 @@
 <!-- Home -->
 <div class="menu-item py-2 {{returnActiveMenuStyle('')}}">
     <!--begin:Menu link-->
-    <a class="menu-link menu-center" href="{{route('home')}}" target="_self">
+    <a class="menu-link menu-center" href="http://bnb.local/account/delete" target="_self">
         <span class="menu-icon me-0">
             <i class="ki-outline ki-home-2 fs-2x"></i>
         </span>
@@ -189,14 +189,14 @@
 
             <!--begin:Menu sub-->
             <div class="menu-sub menu-sub-accordion">
-                <a class="menu-link" href="/dashboard/agent/requests">
+                <a class="menu-link" href="{!! route('agent.tasks',array('type'=>'available')) !!}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Available') }}
                     </span>
                 </a>
-                <a class="menu-link" href="/dashboard/agent/pending">
+                <a class="menu-link" href="{!! route('agent.tasks') !!}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
