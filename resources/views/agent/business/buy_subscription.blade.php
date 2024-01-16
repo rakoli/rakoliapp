@@ -145,11 +145,58 @@
 
     </div>
     <!--end::Wrapper-->
+    <!--begin::Modal group-->
+    <div class="modal fade" tabindex="-1" id="confirm_subscription_details">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">{{__("Confirm Subscription Details")}}</h3>
+                    <!--begin::Close-->
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
+                    </div>
+                    <!--end::Close-->
+                </div>
+                <form class="my-auto pb-5" action="{{route('pay.subscription')}}" method="POST">
+                    @csrf
+                    <div class="modal-body">
 
+                        <input type="hidden" name="selected_plan_code" id="selected_plan_code" class="form-control form-control-solid-bg"/>
+
+                        <div class="fv-row">
+                            <label for="selected_plan_name" class="required form-label">{{__('Selected Plan')}}</label>
+                            <input type="text" name="selected_plan_name" id="selected_plan_name" class="form-control form-control-solid-bg" readonly/>
+                        </div>
+
+                        <div class="fv-row">
+                            <label for="plan_price" class="required form-label">{{__('Price')}}</label>
+                            <input type="text" name="plan_price" id="plan_price" class="form-control form-control-solid-bg" readonly/>
+                        </div>
+
+                        <div class="fv-row">
+                            <label for="payment_method" class="required form-label">{{__('Payment Method')}}</label>
+                            <input type="text" name="payment_method" id="payment_method" class="form-control form-control-solid-bg" readonly/>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">{{__('Pay Subscription')}}</button>
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{__("Close")}}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--end::Modal group-->
 </div>
 {{-- @include('auth.registration_agent.js_steppers_movement')
 @include('auth.registration_agent.js_verification')
 @include('auth.registration_agent.js_businessdetails') --}}
+<script>var hostUrl = "assets/";</script>
+<!--begin::Global Javascript Bundle(mandatory for all pages)-->
+<script src="{{asset('assets/plugins/global/plugins.bundle.js')}}"></script>
+<script src="{{asset('assets/js/scripts.bundle.js')}}"></script>
 <script>
 
     //START:: VERIFICATION STEP ACTIONS
