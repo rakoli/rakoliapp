@@ -578,7 +578,7 @@ class BusinessController extends Controller
         }
         // DataTable
         $dataTableHtml = $builder->columns([
-            ['data' => 'id', 'title' => __('ID')],
+            ['data' => 'business.id', 'title' => __('ID')],
             ['data' => 'business.business_name', 'title' => __('Business name')],
             ['data' => 'business.business_phone_number', 'title' => __('Business phone number')],
             ['data' => 'business.status', 'title' => __('Package status')],
