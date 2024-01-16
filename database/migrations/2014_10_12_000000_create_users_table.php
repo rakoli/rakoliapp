@@ -52,6 +52,7 @@ return new class extends Migration
             $table->string('iddoc_path')->nullable();
             $table->boolean('iddoc_verified')->default(0);
 
+            $table->string('referral_business_code')->nullable();
 
             $table->string('password');
             $table->rememberToken();
