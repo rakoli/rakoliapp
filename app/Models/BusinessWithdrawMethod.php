@@ -20,5 +20,10 @@ class BusinessWithdrawMethod extends Model
         'method_ac_number',
         'status',
     ];
-    
+
+    public function business() : BelongsTo
+    {
+        return $this->belongsTo(Business::class,'business_code','code');
+    }
+
 }

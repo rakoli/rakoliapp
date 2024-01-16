@@ -81,6 +81,11 @@ class Business extends Model
         return $this->HasMany(User::class, 'business_code', 'code');
     }
 
+    public function roles(): HasMany
+    {
+        return $this->HasMany(BusinessRole::class, 'business_code', 'code');
+    }
+
     public function package(): BelongsTo
     {
         return $this->belongsTo(Package::class, 'package_code', 'code');
@@ -169,6 +174,11 @@ class Business extends Model
     public function exchange_stats() : HasOne
     {
         return $this->hasOne(ExchangeStat::class,'business_code','code');
+    }
+
+    public function withdraw_method() : HasOne
+    {
+        return $this->hasOne(BusinessWithdrawMethod::class,'business_code','code');
     }
 
     public function exchange_transactions_owned(): HasMany
