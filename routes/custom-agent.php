@@ -52,6 +52,7 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
     });
     //END: EXCHANGE MODULE
 
+    //BUSINESS MANAGEMENT MODULE
     Route::name('business.')->prefix('business')->middleware('lastseen_update')->group(function () {
         Route::get('role', [App\Http\Controllers\Agent\BusinessController::class, 'roles'])->name('role');
         Route::get('role/create', [App\Http\Controllers\Agent\BusinessController::class, 'rolesCreate'])->name('roles.create');
@@ -94,5 +95,6 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
         Route::get('referrals',[App\Http\Controllers\Agent\BusinessController::class,'referrals'])->name('referrals');
         Route::post('referrals.referr', [App\Http\Controllers\Agent\BusinessController::class, 'referr'])->name('referrals.referr');
     });
+    //END: BUSINESS MANAGEMENT MODULE
 
 });
