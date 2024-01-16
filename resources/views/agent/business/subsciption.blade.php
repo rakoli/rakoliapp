@@ -55,14 +55,14 @@
                                         </div>
                                     {{-- @endforeach --}}
                                 </div>
-                                <div class="fw-bold mt-5">{{ __("Package Price") }}
+                                <div class="fw-bold mt-8">{{ __("Package Price") }}
                                     {{-- @foreach($packages as $package) --}}
                                         <div class="text-gray-600">
                                             {{ $balance[0]->package->price ?? ''}}
                                         </div>
                                     {{-- @endforeach --}}
                                 </div>
-                                <div class="fw-bold mt-5">{{ __("Package Expiry At") }}
+                                <div class="fw-bold mt-8">{{ __("Package Expiry At") }}
                                     {{-- @foreach($packages as $package) --}}
                                         <div class="text-gray-600">
                                             {{ $balance[0]->package_expiry_at ?? ''}}
@@ -70,15 +70,36 @@
                                     {{-- @endforeach --}}
                                 </div>
 
-                                <div class="fw-bold mt-5">{{__("Features List")}}
+                                {{-- <div class="fw-bold mt-5">{{__("Features List")}}
                                     <div class="text-gray-600">
                                         @foreach($balance[0]->package->featuress as $pack)
                                            <div class="text-gray-600">
                                                 * {{ $pack->feature->name ?? '' }}
                                             </div>
                                         @endforeach
-                                        {{-- {{ old('method_name', $existingData[0]->method_ac_name ?? '') }} --}}
                                     </div>
+                                </div> --}}
+                                <div class="fw-bold mt-8">{{__("Features List")}}
+                                    @foreach(\App\Models\PackageFeature::where("package_code", $balance[0]->package->code)->get() as $packageFeature)
+                                        <!--begin::Item-->
+                                        <div class="d-flex align-items-center mb-1">
+                                            <span class="fw-bold text-gray-600 flex-grow-1 pe-3">{{$packageFeature->feature->name}}
+                                                @if($packageFeature->feature->name == 'tills')
+                                                    per branch
+                                                @endif
+                                                @if($packageFeature->feature_value != null)
+                                                    ({{$packageFeature->feature_value}})
+                                                @endif
+                                            </span>
+                                            <i class="ki-outline
+                                            @if($packageFeature->available == true)
+                                                ki-check-circle fs-1 text-success
+                                            @else
+                                                ki-cross-circle fs-1
+                                            @endif"></i>
+                                        </div>
+                                        <!--end::Item-->
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
