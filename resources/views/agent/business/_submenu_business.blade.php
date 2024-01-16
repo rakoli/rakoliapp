@@ -8,9 +8,13 @@
             <ul class="nav flex-wrap border-transparent fw-bold">
                 <!--begin::Nav item-->
                 <li class="nav-item my-1">
-                    <a class="btn btn-color-gray-600 btn-active-secondary btn-active-color-primary fw-bolder fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 {{returnActiveSubMenuStyle('subscription')}}"
-                       href="{{route('business.subscription')}}">{{__('Account Subscription')}}</a>
-                </li>
+                    <a class="btn btn-color-gray-600 btn-active-secondary btn-active-color-primary fw-bolder fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 
+                       {{ returnActiveSubMenuStyle('subscription') }} 
+                       {{ request()->is('business/subscription') || request()->is('business/subscription_buy') ? 'active' : '' }}"
+                       href="{{ route('business.subscription') }}">
+                       {{__('Account Subscription')}}
+                    </a>
+                </li>                
                 <!--end::Nav item-->
                 <!--begin::Nav item-->
                 <li class="nav-item my-1">
@@ -26,8 +30,11 @@
                 <!--end::Nav item-->
                 <!--begin::Nav item-->
                 <li class="nav-item my-1">
-                    <a class="btn btn-color-gray-600 btn-active-secondary btn-active-color-primary fw-bolder fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 {{returnActiveSubMenuStyle('users')}}"
-                       href="{{route('business.users')}}">{{__('Users')}}</a>
+                    <a class="btn btn-color-gray-600 btn-active-secondary btn-active-color-primary fw-bolder fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 
+                    {{returnActiveSubMenuStyle('users')}}
+                    {{ request()->is('business/users') || request()->is('business/users/create') ? 'active' : '' }}"
+                    href="{{route('business.users')}}">
+                    {{__('Users')}}</a>
                 </li>
                 <!--end::Nav item-->
                  <!--begin::Nav item-->
@@ -44,8 +51,11 @@
                 <!--end::Nav item-->
                  <!--begin::Nav item-->
                  <li class="nav-item my-1">
-                    <a class="btn btn-color-gray-600 btn-active-secondary btn-active-color-primary fw-bolder fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 {{returnActiveSubMenuStyle('branches')}}"
-                       href="{{route('business.branches')}}">{{__('Branches')}}</a>
+                    <a class="btn btn-color-gray-600 btn-active-secondary btn-active-color-primary fw-bolder fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 
+                    {{returnActiveSubMenuStyle('branches')}}
+                    {{ request()->is('business/branches') || request()->is('business/branches/create') ? 'active' : '' }}"
+                    href="{{route('business.branches')}}">
+                    {{__('Branches')}}</a>
                 </li>
                 <!--end::Nav item-->
             </ul>
