@@ -58,4 +58,7 @@ Route::middleware(['auth','should_complete_registration','onlyagent'])->group(fu
     Route::get('task/view/{id}',[App\Http\Controllers\Agent\TasksController::class, 'show'])->name('agent.task.show');
     Route::post('task/apply',[App\Http\Controllers\Agent\TasksController::class, 'apply'])->name('agent.task.apply');
 
+    //Contracts
+    Route::resource('contracts',App\Http\Controllers\Agent\ContractsController::class);
+
 });

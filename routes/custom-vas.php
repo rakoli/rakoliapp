@@ -23,4 +23,8 @@ Route::name('vas.')->prefix('vas')->middleware(['auth','should_complete_registra
     //Tasks
     Route::resource('tasks',App\Http\Controllers\Vas\TasksController::class);
 
+    //Contracts
+    Route::resource('contracts',App\Http\Controllers\Vas\ContractsController::class);
+
+
 });

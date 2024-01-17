@@ -113,7 +113,7 @@
                     <span class="menu-title">{{ __('Tasks') }} <!--Ongoing-->
                     </span>
                 </a>
-                <a class="menu-link" href="/dashboard/agent/transaction">
+                <a class="menu-link" href="{{ route('vas.contracts.index') }}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>

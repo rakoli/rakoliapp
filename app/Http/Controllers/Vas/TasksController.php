@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Vas;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\Area;
 use App\Models\ExchangeBusinessMethod;
 use App\Models\Location;
@@ -13,7 +14,6 @@ use App\Models\VasTask;
 use App\Models\VasTaskAvailability;
 use App\Utils\Enums\UserTypeEnum;
 use App\Utils\Enums\VasTaskStatusEnum;
-use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Str;
 
@@ -42,7 +42,8 @@ class TasksController extends Controller
                     return __($task->task_type);
                 })
                 ->addColumn('action', function(VasTask $task) {
-                    $content = '<a class="btn btn-secondary btn-sm me-2" href="'.route('vas.tasks.edit', $task->id).'">'.__("Edit").'</a>';
+                    $content = '<a class="btn btn-secondary btn-sm me-2" href="'.route('vas.tasks.show', $task->id).'">'.__("View Task").'</a>
+                                <a class="btn btn-secondary btn-sm me-2" href="'.route('vas.tasks.edit', $task->id).'">'.__("Edit").'</a>';
                     if($task->status != VasTaskStatusEnum::DELETED->value){
                         $content .= '<button class="btn btn-secondary btn-sm me-2" onclick="deleteClicked('.$task->id.')">'.__("Delete").'</button>';
                     }
@@ -140,12 +141,10 @@ class TasksController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(VasTask $task)
+    public function show(String $id)
     {
-        $businessCode = \auth()->user()->business_code;
-        $branches = Location::where('business_code',$businessCode)->get();
-        $regions = Region::where('country_code',session('country_code'))->get();
-        return view('vas.tasks.create',compact('businessCode','branches','regions','task'));
+        $task = VasTask::find($id);
+        return view('vas.tasks.show',compact('task'));
     }
 
     /**

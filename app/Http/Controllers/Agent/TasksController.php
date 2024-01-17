@@ -10,6 +10,7 @@ use App\Models\Region;
 use App\Models\Towns;
 use App\Models\VasSubmission;
 use App\Models\VasTask;
+use App\Models\VasTaskApplication;
 use App\Utils\Enums\VasTaskStatusEnum;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
@@ -101,11 +102,11 @@ class TasksController extends Controller
                 'resultExplanation' => "You have already applied for task.",
             ];
         }
-        // $submission = new VasSubmission;
-        // $submission->vas_contract_code = $task->code;
-        // $submission->submitter_user_code = $user->business_code;
-        // $submission->description = $request->description;
-        // $submission->save();
+        $application = new VasTaskApplication;
+        $application->vas_contract_code = $task->code;
+        $application->agent_user_code = $user->business_code;
+        $application->comment = $request->comment;
+        $application->save();
 
         return [
             'success'           => true,

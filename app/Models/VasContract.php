@@ -16,6 +16,11 @@ class VasContract extends Model
         return $this->belongsTo(Business::class, 'vas_business_code', 'code');
     }
 
+    public function agent() : BelongsTo
+    {
+        return $this->belongsTo(Business::class, 'agent_business_code', 'code');
+    }
+
     public function country() : BelongsTo
     {
         return $this->belongsTo(Country::class, 'country_code', 'code');
