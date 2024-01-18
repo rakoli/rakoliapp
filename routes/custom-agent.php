@@ -38,8 +38,9 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
         // shift groups
 
         Route::prefix('shift')->group(function () {
-            Route::get('/', [App\Http\Controllers\Agent\AgencyController::class, 'shift'])->name('agency.shift');
-            Route::post('/', OpenShiftController::class)->name('agency.shift.store');
+            Route::get('/', [\App\Http\Controllers\Agent\Shift\AgencyController::class, 'shift'])->name('agency.shift');
+            Route::get('/open', [OpenShiftController::class , 'index'])->name('agency.shift.open.index');
+            Route::post('/open', [OpenShiftController::class , 'store'])->name('agency.shift.open.store');
             Route::get('/close', [CloseShiftController::class, 'index'])->name('agency.shift.close');
             Route::post('/close/store', [CloseShiftController::class, 'store'])->name('agency.shift.close.store');
             Route::get('/{shift}/show', ShowShiftController::class)->name('agency.shift.show');
@@ -63,7 +64,7 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
         });
 
         Route::prefix('tills')->group(function () {
-            Route::get('/', [App\Http\Controllers\Agent\AgencyController::class, 'tills'])->name('agency.tills');
+            Route::get('/', [\App\Http\Controllers\Agent\Shift\AgencyController::class, 'tills'])->name('agency.tills');
 
         });
 

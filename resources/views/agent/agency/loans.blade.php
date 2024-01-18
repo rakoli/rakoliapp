@@ -3,7 +3,7 @@
 @section('title', "Loans")
 
 @push('styles')
-    <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css"/>
 @endpush
 
 @section('breadcrumb')
@@ -16,7 +16,6 @@
 @endsection
 
 @section('content')
-
 
     <div class="docs-content d-flex flex-column flex-column-fluid" id="kt_docs_content">
         <!--begin::Container-->
@@ -42,13 +41,13 @@
 
                             <!--begin::Add customer-->
                             <x-modal_with_button
-                                targetId="add-loan"
-                                label="Add Loan"
-                                modalTitle="Fill the form below record a Loan"
-                                isStacked="true"
+                                    targetId="add-loan"
+                                    label="Add Loan"
+                                    modalTitle="Fill the form below record a Loan"
+                                    isStacked="true"
                             >
 
-                                @include('agent.agency._shift.add-loan')
+                                @include('agent.agency.shift.add-loan')
 
 
                             </x-modal_with_button>
@@ -64,7 +63,6 @@
                     {!! $datatableHtml->table(['class' => 'table table-row-bordered table-row-dashed gy-4 align-middle fw-bold' , 'id' => 'loans-table']) !!}
 
 
-
                 </div>
             </div>
         </div>
@@ -74,7 +72,6 @@
 
     @push('js')
 
-
         <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}"
                 type="text/javascript"></script>
         {{ $datatableHtml->scripts(attributes:[ "ajax" => route('agency.loans')])  }}
@@ -82,13 +79,12 @@
         <script>
 
 
-            $(document).ready(function (){
+            $(document).ready(function () {
 
                 window.LaravelDataTables['loans-table'].on('draw', function () {
                     KTMenu.createInstances();
                 })
             })
-
 
 
             // // Re-init functions on every table re-draw -- more info: https://datatables.net/reference/event/draw

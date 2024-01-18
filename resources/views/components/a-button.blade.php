@@ -1,8 +1,8 @@
 @props([
     'route',
-    'label',
+    'label' => null,
 ])
 <a href="{{ $route }}" {{ $attributes->merge(['class' => 'btn btn-primary']) }}>
-    {{ __($label) }}
+    {{ __($label) ?? $slot }}
 </a>
 

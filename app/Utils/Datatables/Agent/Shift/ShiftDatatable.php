@@ -16,7 +16,9 @@ class ShiftDatatable implements HasDatatable
 
     public function index()
     {
-        $shifts = Shift::query()->with('user');
+        $shifts = Shift::query()->with([
+            'user','location'
+        ]);
 
         return Datatables::eloquent($shifts)
             ->filter(function ($query) {
@@ -30,6 +32,7 @@ class ShiftDatatable implements HasDatatable
             ->addColumn('user_name', fn (Shift $shift) => $shift->user->full_name)
             ->addColumn('cash_start', fn (Shift $shift) => money($shift->cash_start, currencyCode(), true))
             ->addColumn('cash_end', fn (Shift $shift) => money($shift->cash_end, currencyCode(), true))
+            ->addColumn('branch', fn (Shift $shift) =>  $shift->location->name)
             ->addColumn('action', function (Shift $shift) {
 
                 return (new self())->buttons([
@@ -57,7 +60,8 @@ class ShiftDatatable implements HasDatatable
     public function columns(Builder $datatableBuilder): Builder
     {
         return $datatableBuilder->columns([
-            Column::make('no')->title(__('No'))->searchable()->orderable(),
+            Column::make('no')->title(__('#No'))->searchable()->orderable(),
+            Column::make('branch')->title(__('Branch'))->searchable()->orderable(),
             Column::make('user_name')->title(__('user'))->searchable()->orderable(),
             Column::make('cash_start')->title(__('Start Cash').' '.strtoupper(session('currency')))->searchable()->orderable(),
             Column::make('cash_end')->title(__('End Cash').' '.strtoupper(session('currency')))->searchable()->orderable(),

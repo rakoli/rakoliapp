@@ -4,7 +4,10 @@
 ])
 <select
     data-control="select2"
-    data-dropdown-parent="#{{ $modalId }}"
+    @if(filled($modalId))
+        data-dropdown-parent="#{{ $modalId }}"
+    @endif
+
     data-allow-clear="true"
     {{ $attributes->merge(['class' => 'form-select']) }}
     data-placeholder="{{ __($placeholder) }}">

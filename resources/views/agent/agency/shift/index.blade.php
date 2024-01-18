@@ -36,36 +36,29 @@
                         <!--end::Search-->
 
 
-
                         <!--begin::Toolbar-->
                         <div class="d-flex justify-content-end" data-kt-docs-table-toolbar="base">
 
 
                             <!--begin::Add customer-->
-                            <x-modal_with_button
-                                targetId="openShift"
-                                label="Open Shift"
-                                modalTitle="Fill the form below to open a new shift"
-                                isStacked="true"
+                            <x-a-button
+                                route="{{ route('agency.shift.open.index') }}"
                             >
 
-                                @include('agent.agency._shift.open-shift')
+                                {{ __('Open Shift') }}
+                            </x-a-button>
 
-
-                            </x-modal_with_button>
-
-                           <div class="mx-6">
-                               <x-a-button
-                                    class="btn-danger"
-                                    route="{{ route('agency.shift.close') }}"
-                                    label="{{ __('Close Shift') }}" />
-                           </div>
+                            <div class="mx-6">
+                                <x-a-button
+                                        class="btn-danger"
+                                        route="{{ route('agency.shift.close') }}"
+                                        label="{{ __('Close Shift') }}"/>
+                            </div>
                         </div>
                         <!--end::Toolbar-->
 
                     </div>
                     <!--end::Wrapper-->
-
 
 
                     {!! $dataTableHtml->table(['class' => 'table table-row-bordered table-row-dashed gy-4 align-middle fw-bold' , 'id' => 'shift-table'],true) !!}

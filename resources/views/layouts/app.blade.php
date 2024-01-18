@@ -858,7 +858,7 @@
                 text: title,
                 icon: icon,
                 buttonsStyling: false,
-                timeout: title
+                timeout: timeout
             });
         }
 

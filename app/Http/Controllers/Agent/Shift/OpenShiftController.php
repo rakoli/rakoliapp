@@ -4,14 +4,36 @@ namespace App\Http\Controllers\Agent\Shift;
 
 use App\Actions\Agent\Shift\OpenShift;
 use App\Http\Controllers\Controller;
+use App\Models\Location;
+use App\Models\Network;
+use App\Models\Shift;
+use App\Utils\Enums\ShiftStatusEnum;
 use Illuminate\Http\Request;
 
 class OpenShiftController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
-    public function __invoke(Request $request)
+
+    public function index()
+    {
+
+
+        if ( Shift::query()->where('status', ShiftStatusEnum::OPEN)->exists())
+        {
+            return  to_route('agency.shift')->withErrors([
+                'error' => "cannot Open another shift"
+            ]);
+        }
+        $tills = Network::query()->with('agency')->cursor();
+
+        $locations = Location::query()->cursor();
+
+
+        return view('agent.agency.shift.open-shift',[
+            'tills' => $tills,
+            'locations' => $locations,
+        ]);
+    }
+    public function store(Request $request)
     {
 
         //validate

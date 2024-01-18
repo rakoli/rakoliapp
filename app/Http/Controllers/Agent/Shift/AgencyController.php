@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Agent;
+namespace App\Http\Controllers\Agent\Shift;
 
 use App\Http\Controllers\Controller;
 use App\Models\Location;
@@ -18,16 +18,10 @@ class AgencyController extends Controller
             return $shiftDatatable->index();
         }
 
-        $hasOpenShift = Shift::query()->where('status', ShiftStatusEnum::OPEN)->exists();
 
-        $tills = Network::query()->with('agency')->cursor();
 
-        $locations = Location::query()->cursor();
+        return view('agent.agency.shift.index', [
 
-        return view('agent.agency.shift', [
-            'hasOpenShift' => $hasOpenShift,
-            'tills' => $tills,
-            'locations' => $locations,
             'dataTableHtml' => $shiftDatatable->columns(datatableBuilder: $datatableBuilder),
         ]);
     }

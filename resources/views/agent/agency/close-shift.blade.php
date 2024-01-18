@@ -43,7 +43,7 @@
                     </div>
                     <!--end::Wrapper-->
 
-                    @include('agent.agency._shift.close-shift')
+                    @include('agent.agency.shift.close-shift')
 
 
                 </div>

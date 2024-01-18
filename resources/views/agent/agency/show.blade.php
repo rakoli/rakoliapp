@@ -18,13 +18,11 @@
 
 @section('content')
 
-
     <div class="d-flex flex-column flex-column-fluid">
 
 
         <!--begin::Content-->
         <div id="kt_app_content" class="app-content  flex-column-fluid ">
-
 
 
             <!--begin::Content container-->
@@ -34,7 +32,7 @@
                     <!--begin::Sidebar-->
                     <div class="flex-column flex-lg-row-auto w-100 w-xl-350px mb-10">
 
-                        @include('agent.agency._shift._user_card', ['user' => $shift->user])
+                        @include('agent.agency.shift._user_card', ['user' => $shift->user])
 
                         <!--begin::Card-->
 
@@ -67,10 +65,10 @@
                                             <div class="d-flex justify-content-end gap-2"
                                                  data-kt-docs-table-toolbar="base">
                                                 <x-modal_with_button
-                                                    targetId="add-transaction"
-                                                    label="Add Transaction"
-                                                    modalTitle="Fill the form below record a transaction"
-                                                    isStacked="true"
+                                                        targetId="add-transaction"
+                                                        label="Add Transaction"
+                                                        modalTitle="Fill the form below record a transaction"
+                                                        isStacked="true"
                                                 >
 
                                                     @include('agent.agency.transaction.add-transaction')
@@ -79,10 +77,10 @@
                                                 </x-modal_with_button>
 
                                                 <x-modal_with_button
-                                                    targetId="add-expenses"
-                                                    label="Add Expenses"
-                                                    modalTitle="Fill the form below record a Expenses"
-                                                    isStacked="true"
+                                                        targetId="add-expenses"
+                                                        label="Add Expenses"
+                                                        modalTitle="Fill the form below record a Expenses"
+                                                        isStacked="true"
                                                 >
 
                                                     @include('agent.agency.transaction.add-expense')
@@ -90,10 +88,10 @@
 
                                                 </x-modal_with_button>
                                                 <x-modal_with_button
-                                                    targetId="add-income"
-                                                    label="Add Income"
-                                                    modalTitle="Fill the form below record a income"
-                                                    isStacked="true"
+                                                        targetId="add-income"
+                                                        label="Add Income"
+                                                        modalTitle="Fill the form below record a income"
+                                                        isStacked="true"
                                                 >
 
                                                     @include('agent.agency.transaction.add-income')
@@ -154,7 +152,7 @@
                                                     <table id="kt_customer_details_invoices_table_1"
                                                            class="table align-middle table-row-dashed fs-6 fw-bold gy-5 dataTable no-footer">
                                                         <thead
-                                                            class="border-bottom border-gray-200 fs-7 text-uppercase fw-bold">
+                                                                class="border-bottom border-gray-200 fs-7 text-uppercase fw-bold">
                                                         <tr class="text-start text-muted gs-0">
                                                             <th class="min-w-100px sorting" tabindex="0"
                                                                 aria-controls="kt_customer_details_invoices_table_1"
@@ -219,23 +217,23 @@
     </div>
 
 
-        @push('js')
+    @push('js')
 
-            <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}"
-                    type="text/javascript"></script>
-            {{ $dataTableHtml->scripts()  }}
+        <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}"
+                type="text/javascript"></script>
+        {{ $dataTableHtml->scripts()  }}
 
-            <script src="{{ asset('assets/js/rakoli_ajax.js') }}"></script>
+        <script src="{{ asset('assets/js/rakoli_ajax.js') }}"></script>
 
-            <script>
-                $(document).ready(function () {
+        <script>
+            $(document).ready(function () {
 
 
-                    window.LaravelDataTables['transaction-table'].on('draw', function () {
-                        KTMenu.createInstances();
-                    })
+                window.LaravelDataTables['transaction-table'].on('draw', function () {
+                    KTMenu.createInstances();
                 })
-            </script>
+            })
+        </script>
 
     @endpush
 @endsection

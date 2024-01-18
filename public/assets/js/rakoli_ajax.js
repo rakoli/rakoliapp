@@ -15,6 +15,7 @@ function submitForm(formId, url, method = 'post') {
 
 
         request.then(response => {
+
             SwalAlert(
                 "success",
                 response.data.message
