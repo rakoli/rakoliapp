@@ -22,17 +22,12 @@
                 <!--begin::Card-->
                 <div class="card mb-5 mb-xl-8">
 
-                    <!--Begin::Card Footer (Actions)-->
                     <div class="card-body pt-5">
-
-                        <!--Begin::Status Details-->
                         <h1 class="text-center fw-bold">{{__("Balance")}}</h1>
                         <h2 class="mb-5 text-gray-600 text-center">
                             {{$balance[0]->balance}}
                         </h2>
-                        <!--End::Status Details-->
                     </div>
-                    <!--end::Card Footer (Actions)-->
 
                     <!--end::Details toggle-->
                     <div class="separator separator-dashed"></div>
@@ -56,25 +51,19 @@
 
                                 <div class="fw-bold mt-5">{{__("Method AC Name")}}
                                     <div class="text-gray-600">
-                                        {{ old('method_name', $existingData[0]->method_ac_name ?? '') }}
+                                        {{ old('method_ac_name', $existingData[0]->method_ac_name ?? '') }}
                                     </div>
                                 </div>
 
                                 <div class="fw-bold mt-5">{{__("Method AC Number")}}
                                     <div class="text-gray-600">
-                                        {{ old('method_name', $existingData[0]->method_ac_number ?? '') }}
+                                        {{ old('method_ac_number', $existingData[0]->method_ac_number ?? '') }}
                                     </div>
                                 </div>
                      
                                 <div class="fw-bold mt-5">{{__("Amount Currency")}}
                                     <div class="text-gray-600">
-                                        {{ old('method_name', $existingData[0]->amount_currency ?? '') }}
-                                    </div>
-                                </div>
-
-                                <div class="fw-bold mt-5">{{__("Status")}}
-                                    <div class="text-gray-600">
-                                        {{ old('method_name', $existingData[0]->status ?? '') }}
+                                        {{ old('amount_currency', $existingData[0]->amount_currency ?? '') }}
                                     </div>
                                 </div>
                             </div>
@@ -179,7 +168,7 @@
                             <div class="row mb-5">
                                 <div class="input-group input-group-lg mb-5">
                                     <span class="input-group-text">{{__("AC Name")}}</span>
-                                    <input name="method_ac_name" type="text" class="form-control" value="{{ old('method_name', $existingData[0]->method_ac_name ?? '') }}" value="" placeholder="{{__('enter method ac name')}}"/>
+                                    <input name="method_ac_name" type="text" class="form-control" value="{{ old('method_ac_name', $existingData[0]->method_ac_name ?? '') }}" value="" placeholder="{{__('enter method ac name')}}"/>
                                     {{-- <textarea name="description" type="text" class="form-control" value="" placeholder="{{__('enter description')}}"></textarea> --}}
                                 </div>
                             </div>
@@ -188,7 +177,7 @@
                             <div class="row mb-5">
                                 <div class="input-group input-group-lg mb-5">
                                     <span class="input-group-text">{{__("AC Number")}}</span>
-                                    <input name="method_ac_number" type="text" class="form-control" value="{{ old('method_name', $existingData[0]->method_ac_number ?? '') }}" value="" placeholder="{{__('enter method ac number')}}"/>
+                                    <input name="method_ac_number" type="text" class="form-control" value="{{ old('method_ac_number', $existingData[0]->method_ac_number ?? '') }}" value="" placeholder="{{__('enter method ac number')}}"/>
                                     {{-- <textarea name="description" type="text" class="form-control" value="" placeholder="{{__('enter description')}}"></textarea> --}}
                                 </div>
                             </div>
