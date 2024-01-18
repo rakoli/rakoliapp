@@ -153,7 +153,7 @@
             <!--begin::Card header-->
             <div class="card-header">
                 <div class="card-title">
-                    <h2>{{__("Ads Detail")}}</h2>
+                    <h2>{{__("Task Detail")}}</h2>
                 </div>
             </div>
             <!--end::Card header-->

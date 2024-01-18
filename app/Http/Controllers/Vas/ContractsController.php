@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Vas;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Models\VasContract;
+use App\Models\VasTask;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Str;
 
 
 class ContractsController extends Controller
@@ -61,19 +64,42 @@ class ContractsController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'region_code' => 'sometimes',
+            'town_code' => 'sometimes',
+            'area_code' => 'sometimes',
+            'vas_task_code' => 'required',
+            'agent_business_code' => 'required',
+            'title' => 'required',
+            'time_start' => 'required|date|after:today',
+            'time_end' => 'required|date|after:time_start',
+            'notes' => 'required|string|max:200',
+        ]);
+        $user = $request->user();
+
+        $contractData = [
+            'country_code' => $user->country_code,
+            'vas_business_code' => $user->business_code,
+            'code' => generateCode(Str::random(10),'TZ'),
+            'vas_task_code' => $request->vas_task_code,
+            'agent_business_code' => $request->agent_business_code,
+            'title' => $request->title,
+            'time_start' => $request->time_start,
+            'time_end' => $request->time_end,
+            'notes' => $request->notes,
+        ];
+
+        $contract = VasContract::create($contractData);
+
+        return [
+            'success'           => true,
+            'result'            => "successful",
+            'resultExplanation' => "Conntract generated successfully",
+        ];
     }
 
     /**

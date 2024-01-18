@@ -79,16 +79,101 @@
                     <div class="card-header border-0">
                         <!--begin::Card title-->
                         <div class="card-title">
-                            <h2 class="fw-bold">{{__("Task")}}</h2>
+                            <h2 class="fw-bold">{{__("Create Contract")}}</h2>
                         </div>
                         <!--end::Card title-->
                     </div>
                     <!--end::Card header-->
+                    <form class="form" data-kt-redirect-url="{{route('vas.tasks.show',array($task->id))}}" action="{{route('vas.contracts.store')}}" method="post" id="kt_form">
                     <!--begin::Card body-->
                     <div class="card-body pt-0">
-                        <div class="fs-6 fw-normal mb-10">{{$task->description}}</div>
+                        <!--begin::Input group-->
+                        <div class="row fv-row mb-7">
+                            <div class="col-md-3 text-md-end">
+                                <!--begin::Label-->
+                                <label class="fs-6 fw-semibold form-label mt-3">
+                                    {{__("Agents")}}
+                                </label>
+                                <!--end::Label-->
+                            </div>
+                            <div class="col-md-9">
+                                <select class="form-select mb-2" data-control="select2" data-placeholder="{{__("Select a Agent")}}" id="agent_business_code" name="agent_business_code">
+                                    <option value="">{{__('ALL')}}</option>
+                                    @foreach($agents as $agent)
+                                        <option value="{{$agent->business_code}}">{{strtoupper($agent->fname)}} {{ strtoupper($agent->lname)}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <!--begin::Input group-->
+                        <div class="row fv-row mb-7">
+                            <div class="col-md-3 text-md-end">
+                                <!--begin::Label-->
+                                <label class="fs-6 fw-semibold form-label mt-3">
+                                    {{__("Title")}}
+                                </label>
+                                <!--end::Label-->
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" name="title" class="form-control form-control-solid" placeholder="{{__('Title')}}" />
+                            </div>
+                        </div>
+                        <!--end::Input group-->
+
+                        <!--begin::Input group-->
+                        <div class="row fv-row mb-7">
+                            <div class="col-md-3 text-md-end">
+                                <!--begin::Label-->
+                                <label class="fs-6 fw-semibold form-label mt-3">
+                                    {{__("Duration")}}
+                                </label>
+                                <!--end::Label-->
+                            </div>
+                            <div class="col-md-4">
+                                <input type="datetime-local" name="time_start" class="form-control form-control-solid" placeholder="{{__('Start Time')}}" />
+                            </div>
+                            <div class="col-md-4">
+                                <input type="datetime-local" name="time_end" class="form-control form-control-solid" placeholder="{{__('End Time')}}" />
+                            </div>
+                        </div>
+                        <!--end::Input group-->
+                        <!--begin::Input group-->
+                        <div class="row fv-row mb-7">
+                            <div class="col-md-3 text-md-end">
+                                <!--begin::Label-->
+                                <label class="fs-6 fw-semibold form-label mt-3">
+                                    {{__("Notes")}}
+                                </label>
+                                <!--end::Label-->
+                            </div>
+                            <div class="col-md-9">
+                                <textarea class="form-control form-control-solid" id="notes" name="notes"></textarea>
+                            </div>
+                        </div>
+                        <!--end::Input group-->
+
+                        <!--begin::Action buttons-->
+                        <div class="row py-5">
+                            <div class="col-md-9 offset-md-3">
+                                <div class="d-flex">
+                                    <!--begin::Button-->
+                                    <a href="{{route('agent.tasks')}}" class="btn btn-light me-3">{{__("Cancel")}}</a>
+                                    <!--end::Button-->
+                                    <!--begin::Button-->
+                                    <button type="submit" class="btn btn-primary" id="kt_submit">
+                                        <span class="indicator-label">{{__("Submit")}}</span>
+                                        <span class="indicator-progress">{{__("Please wait...")}}
+                                                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                    </button>
+                                    <!--end::Button-->
+                                </div>
+                            </div>
+                        </div>
+                        <!--end::Action buttons-->
                     </div>
                     <!--end::Card body-->
+                </form>
+                <!--end::Form-->
                 </div>
                 <!--end::Card-->
             </div>
@@ -100,3 +185,182 @@
     </div>
     <!--end::Container-->
 @endsection
+
+
+@section('footer_js')
+    <script>
+        "use strict";
+
+        // Class definition
+        var KTFormGeneral = function () {
+            // Elements
+            var form;
+            var submitButton;
+            var validator;
+
+            // Handle form validation
+            var handleValidation = function (e) {
+                // Init form validation rules. For more info check the FormValidation plugin's official documentation: https://formvalidation.io/
+                validator = FormValidation.formValidation(
+                    form,
+                    {
+                        fields: {
+                            'action_select': {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'The Action is required'
+                                    }
+                                }
+                            },
+                            'action_method_select': {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'The Action Payment Method is required'
+                                    }
+                                }
+                            },
+                            'action_for_select': {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'The Action For is required'
+                                    }
+                                }
+                            },
+                            'amount': {
+                                validators: {
+                                    min: 10000,
+                                    max: 40000,
+                                    message: 'The Amount is required'
+                                }
+                            }
+                        },
+                        plugins: {
+                            trigger: new FormValidation.plugins.Trigger(),
+                            bootstrap: new FormValidation.plugins.Bootstrap5({
+                                rowSelector: '.fv-row',
+                                eleInvalidClass: '',  // comment to enable invalid state icons
+                                eleValidClass: '' // comment to enable valid state icons
+                            })
+                        }
+                    }
+                );
+            }
+
+            // Handle form submission via AJAX
+            var handleSubmitAjax = function (e) {
+                // Handle form submit
+                submitButton.addEventListener('click', function (e) {
+                    // Prevent button default action
+                    e.preventDefault();
+
+                    // Validate form
+                    validator.validate().then(function (status) {
+                        if (status == 'Valid') {
+                            // Show loading indication
+                            submitButton.setAttribute('data-kt-indicator', 'on');
+
+                            // Disable button to avoid multiple clicks
+                            submitButton.disabled = true;
+
+                            // Check axios library docs: https://axios-http.com/docs/intro
+                            axios.post(submitButton.closest('form').getAttribute('action'), new FormData(form)).then(function (response) {
+
+                                if (response) {
+
+                                    if(response.data.success == true){
+                                        form.reset();
+                                        Swal.fire({
+                                            text: "Applied",
+                                            icon: "success",
+                                        });
+                                    }else Swal.fire({
+                                        text: response.data.resultExplanation,
+                                        icon: "error",
+                                        buttonsStyling: !1,
+                                        confirmButtonText: "Ok, got it!",
+                                        customClass: {
+                                            confirmButton: "btn btn-primary"
+                                        }
+                                    })
+                                } else Swal.fire({
+                                    text: "Sorry, errors trying to submit, please try again or contact support",
+                                    icon: "error",
+                                    buttonsStyling: !1,
+                                    confirmButtonText: "Ok, got it!",
+                                    customClass: {
+                                        confirmButton: "btn btn-primary"
+                                    }
+                                })
+
+
+                            }).catch(function (error) {
+                                // Show error message
+                                Swal.fire({
+                                    text: "Error! " + error.response.data.message,
+                                    icon: "error",
+                                    buttonsStyling: false,
+                                    confirmButtonText: "Ok, got it!",
+                                    customClass: {
+                                        confirmButton: "btn btn-primary"
+                                    }
+                                });
+                            }).then(() => {
+                                // Hide loading indication
+                                submitButton.removeAttribute('data-kt-indicator');
+
+                                // Enable button
+                                submitButton.disabled = false;
+                            });
+                        } else {
+                            // Show validation error message
+                            Swal.fire({
+                                text: "Sorry, looks like there are some errors detected, please try again.",
+                                icon: "error",
+                                buttonsStyling: false,
+                                confirmButtonText: "Ok, got it!",
+                                customClass: {
+                                    confirmButton: "btn btn-primary"
+                                }
+                            });
+                        }
+                    });
+                });
+            }
+
+            // Function to check if a string is a valid URL
+            var isValidUrl = function (url) {
+                try {
+                    new URL(url);
+                    return true;
+                } catch (e) {
+                    return false;
+                }
+            }
+
+            // Public functions
+            return {
+                // Initialization
+                init: function () {
+                    // Get form and submit button elements
+                    form = document.querySelector('#kt_form');
+                    submitButton = document.querySelector('#kt_submit');
+
+                    // Get help block element
+                    document.querySelector('.fv-help-block');
+
+                    // Initialize form validation
+                    handleValidation();
+
+                    // Handle form submission via AJAX
+                    handleSubmitAjax();
+                }
+            };
+        }();
+
+        // On document ready
+        KTUtil.onDOMContentLoaded(function () {
+            KTFormGeneral.init();
+        });
+
+    </script>
+@endsections

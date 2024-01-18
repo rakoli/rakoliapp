@@ -103,8 +103,8 @@ class TasksController extends Controller
             ];
         }
         $application = new VasTaskApplication;
-        $application->vas_contract_code = $task->code;
-        $application->agent_user_code = $user->business_code;
+        $application->vas_task_code = $task->code;
+        $application->agent_business_code = $user->business_code;
         $application->comment = $request->comment;
         $application->save();
 

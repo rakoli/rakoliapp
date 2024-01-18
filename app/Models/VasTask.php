@@ -59,4 +59,9 @@ class VasTask extends Model
         return $this->hasMany(VasTaskInstruction::class, 'vas_task_code', 'code');
     }
 
+    public function vas_task_applications() : HasMany
+    {
+        return $this->hasMany(VasTaskApplication::class, 'vas_task_code', 'code');
+    }
+
 }
