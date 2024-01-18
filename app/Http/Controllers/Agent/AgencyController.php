@@ -3,37 +3,38 @@
 namespace App\Http\Controllers\Agent;
 
 use App\Http\Controllers\Controller;
-use App\Models\Location;
-use App\Models\Network;
-use App\Models\Shift;
-use App\Utils\Datatables\Agent\Shift\ShiftDatatable;
-use App\Utils\Enums\ShiftStatusEnum;
-use Yajra\DataTables\Html\Builder;
+use Illuminate\Http\Request;
 
 class AgencyController extends Controller
 {
-    public function shift(Builder $datatableBuilder, ShiftDatatable $shiftDatatable)
+    public function transactions()
     {
-        if (\request()->ajax()) {
-            return $shiftDatatable->index();
-        }
 
-        $hasOpenShift = Shift::query()->where('status', ShiftStatusEnum::OPEN)->exists();
+        return view('agent.agency.transactions');
+    }
 
-        $tills = Network::query()->with('agency')->cursor();
+    public function shift()
+    {
 
-        $locations = Location::query()->cursor();
-
-        return view('agent.agency.shift', [
-            'hasOpenShift' => $hasOpenShift,
-            'tills' => $tills,
-            'locations' => $locations,
-            'dataTableHtml' => $shiftDatatable->columns(datatableBuilder: $datatableBuilder),
-        ]);
+        return view('agent.agency.shift');
     }
 
     public function tills()
     {
-        return view('agent.agency.shift_tills');
+
+        return view('agent.agency.tills');
     }
+
+    public function networks()
+    {
+
+        return view('agent.agency.networks');
+    }
+
+    public function loans()
+    {
+
+        return view('agent.agency.loans');
+    }
+
 }
