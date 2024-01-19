@@ -14,7 +14,7 @@ class OpenShift
 {
     use AsAction;
 
-    public function handle(float $cashAtHand, string $locationCode, ?string $notes = null)
+    public function handle(float $cashAtHand, string $locationCode, ?string $notes = null , ?string $description = null)
     {
 
         try {
@@ -37,7 +37,8 @@ class OpenShift
                 'cash_start' => $cashAtHand,
                 'cash_end' => $cashAtHand,
                 'currency' => auth()->user()->business->country->currency,
-                'notes' => $notes,
+                'note' => $notes,
+                'description' => $notes,
                 'no' => $nos + 1,
 
             ]), function (Shift $shift) {

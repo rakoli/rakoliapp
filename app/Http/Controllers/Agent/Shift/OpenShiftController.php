@@ -39,19 +39,18 @@ class OpenShiftController extends Controller
         //validate
 
         $validated = $request->validate([
-            'cash_at_hand' => 'required|numeric',
             'location_code' => 'required|exists:locations,code',
-            'notes' => 'required|string',
-        ], [
-            'network_code.required',
+            'description' => 'required|string',
+            'notes' => 'nullable|string',
         ]);
 
         try {
 
             OpenShift::run(
-                cashAtHand: $validated['cash_at_hand'],
+                cashAtHand: Location::query()->where('code', $validated['location_code'])->pluck('balance')->first(),
                 locationCode: $validated['location_code'],
-                notes: $validated['notes']
+                notes: $validated['notes'],
+                description: $validated['description']
             );
 
             return response()

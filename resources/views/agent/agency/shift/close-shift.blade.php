@@ -93,8 +93,8 @@
         <script>
             function submitCloseShiftForm(){
 
-                submitForm(
-                    $("form#close-shift"),
+                submitFormAction(
+                    $("form#close-shift")[0],
                     "{{ route('agency.shift.close.store') }}"
                 );
             }

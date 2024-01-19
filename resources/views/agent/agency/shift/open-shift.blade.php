@@ -35,127 +35,126 @@
                             {{ __('Back ') }}
                         </x-a-button>
 
-                            <form method="post" id="openShift" action="{{ route('agency.shift.open.store') }}">
-                                @csrf
-                                <div class="row fv-row py-2">
+                        <form method="post" id="openShift" action="{{ route('agency.shift.open.store') }}">
+                            @csrf
+                            <div class="row fv-row py-2">
 
-                                    <div class="col-6">
-                                        <x-label class="" label="{{ __('location') }}" for="location"/>
-                                        <x-select2
-                                            class="@error('location_code') form-control-error @enderror"
-                                            name="location_code"
-                                            placeholder="{{ __('Select a location') }}"
-                                            id="location">
-                                            <option value="">{{ __('Select location ') }}</option>
+                                <div class="col-6">
+                                    <x-label class="" label="{{ __('location') }}" for="location"/>
+                                    <x-select2
+                                        class="@error('location_code') form-control-error @enderror"
+                                        name="location_code"
+                                        placeholder="{{ __('Select a location') }}"
+                                        id="location_code">
+                                        <option value="">{{ __('Select location ') }}</option>
 
-                                            @foreach($locations as $location)
-                                                <option
-                                                    value="{{ $location->code }}"
-                                                    data-balance="{{  $location->balance }}"
-                                                >{{ $location->name }}</option>
+                                        @foreach($locations as $location)
+                                            <option
+                                                value="{{ $location->code }}"
+                                                data-balance="{{  $location->balance }}"
+                                            >{{ $location->name }}</option>
+                                        @endforeach
+                                    </x-select2>
+                                    @error('location_code')
+                                    <div class="help-block text-danger">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+
+
+                                <div class="col-6">
+                                    <x-label class="" label="{{ __('Cash at hand') }}" for="amount"/>
+                                    <x-input
+                                        type="number"
+                                        class="form-control-solid   @error('cash_at_hand') form-control-feedback @enderror"
+                                        name="cash_at_hand"
+                                        placeholder="{{ __('cash at hand') }}"
+                                        readonly="readonly"
+                                        id="amount"/>
+                                    @error('cash_at_hand')
+                                    <div class="help-block text-danger">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+
+
+                            </div>
+                            <div class="row fv-row py-3 bg-gray-100 px-4 py-4">
+
+
+                                <div class="col-12 py-3">
+
+                                    <fieldset>
+                                        <legend>
+                                            {{ __("Tills") }}
+                                        </legend>
+                                        <table class="table table-striped wrapper">
+
+
+                                            <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Balance</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            @foreach($tills as $till)
+                                                <tr>
+                                                    <td>{{ $till->agency?->name }}</td>
+                                                    <td>{{ number_format($till->balance , 2) }}</td>
+                                                </tr>
                                             @endforeach
-                                        </x-select2>
-                                        @error('location_code')
-                                        <div class="help-block text-danger">
-                                            {{ $message }}
-                                        </div>
-                                        @enderror
-                                    </div>
-
-
-                                    <div class="col-6">
-                                        <x-label class="" label="{{ __('Cash at hand') }}" for="amount"/>
-                                        <x-input
-                                            type="number"
-                                            class="form-control-solid   @error('cash_at_hand') form-control-feedback @enderror"
-                                            name="cash_at_hand"
-                                            placeholder="{{ __('cash at hand') }}"
-                                            readonly="readonly"
-                                            id="amount"/>
-                                        @error('cash_at_hand')
-                                        <div class="help-block text-danger">
-                                            {{ $message }}
-                                        </div>
-                                        @enderror
-                                    </div>
-
-
-                                </div>
-                                <div class="row fv-row py-3 bg-gray-100 px-4 py-4">
-
-
-                                        <div class="col-12 py-3">
-
-                                            <fieldset>
-                                                <legend>
-                                                    {{ __("Tills") }}
-                                                </legend>
-                                                <table class="table table-striped wrapper">
-
-
-                                                    <thead>
-                                                    <tr>
-                                                        <th>Name</th>
-                                                        <th>Balance</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    @foreach($tills as $till)
-                                                        <tr>
-                                                            <td>{{ $till->agency?->name }}</td>
-                                                            <td>{{ number_format($till->balance , 2) }}</td>
-                                                        </tr>
-                                                    @endforeach
-                                                    </tbody>
-                                                </table>
-                                            </fieldset>
-
-                                        </div>
+                                            </tbody>
+                                        </table>
+                                    </fieldset>
 
                                 </div>
 
-                                <div class="row fv-row py-3">
-                                    <div class="col-12">
-                                        <x-label label="Description" class="" for="description"/>
-                                        <textarea
-                                            name="description"
-                                            class="form-control form-control form-control-solid"
-                                            rows="3"
-                                            data-kt-autosize="false"></textarea>
-                                        @error('description')
-                                        <div class="help-block text-danger">
-                                            {{ $message }}
-                                        </div>
-                                        @enderror
+                            </div>
+
+                            <div class="row fv-row py-3">
+                                <div class="col-12">
+                                    <x-label label="Description" class="" for="description"/>
+                                    <textarea
+                                        name="description"
+                                        class="form-control form-control form-control-solid"
+                                        rows="3"
+                                        data-kt-autosize="false"></textarea>
+                                    @error('description')
+                                    <div class="help-block text-danger">
+                                        {{ $message }}
                                     </div>
-                                    <div class="col-12">
-                                        <x-label required="" label="notes" class="" for="notes"/>
-                                        <textarea
-                                            wire:model="notes"
-                                            name="notes"
-                                            class="form-control form-control form-control-solid" rows="3"
-                                            data-kt-autosize="false"></textarea>
-                                        @error('notes')
-                                        <div class="help-block text-danger">
-                                            {{ $message }}
-                                        </div>
-                                        @enderror
+                                    @enderror
+                                </div>
+                                <div class="col-12">
+                                    <x-label required="" label="notes" class="" for="notes"/>
+                                    <textarea
+                                        name="notes"
+                                        class="form-control form-control form-control-solid" rows="3"
+                                        data-kt-autosize="false"></textarea>
+                                    @error('notes')
+                                    <div class="help-block text-danger">
+                                        {{ $message }}
                                     </div>
+                                    @enderror
                                 </div>
+                            </div>
 
 
-                                <div class="modal-footer">
+                            <button id="open-shift-button" type="button" class="btn btn-primary">
+                                <span class="indicator-label">
+                                    Validation Form
+                                </span>
+                                <span class="indicator-progress">
+                                    Please wait... <span
+                                        class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                </span>
+                            </button>
 
-                                    <button type="button" onclick="submitOpenShiftForm()" class="btn btn-primary">
 
-                                        {{ __('Open Shift') }}
-                                    </button>
-                                </div>
-
-
-                            </form>
-
-
+                        </form>
 
 
                     </div>
@@ -170,7 +169,7 @@
         <script>
 
 
-            $("select#location").on("change", function (){
+            $("select#location_code").on("change", function () {
 
                 var selectedOption = $(this).find(":selected");
 
@@ -181,16 +180,20 @@
                 $("input#amount").val(balance);
             });
 
+            const validations = [
+                { "name": "description", "error"  :  "Description Field is Required", "validators" : {} },
+                { "name": "location_code", "error"  :  "Location Field is Required", "validators" : {}  },
+                { "name": "cash_at_hand", "error"  :  "Cash Field is Required" ,"validators" : {}  },
+            ];
+
+            const form = document.getElementById('openShift');
 
 
-            function submitOpenShiftForm() {
+            const submitButton = document.getElementById('open-shift-button');
 
-                submitForm(
-                    $("form#openShift"),
-                    "{{ route('agency.shift.open.store') }}"
-                );
 
-            }
+            lakoriValidation(validations, form, submitButton, 'post', '{{  route('agency.shift.open.store') }}');
+
 
         </script>
 
