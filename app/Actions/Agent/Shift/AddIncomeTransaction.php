@@ -50,6 +50,13 @@ class AddIncomeTransaction
                 'balance' => $balance + $data['amount'],
             ]);
 
+
+            $shift->updateQuietly([
+                'cash_end' => $shift->cash_end + $data['amount']
+            ]);
+
+
+
             event(new LocationBalanceUpdate(location: $location , amount: $data['amount']));
 
             DB::commit();
