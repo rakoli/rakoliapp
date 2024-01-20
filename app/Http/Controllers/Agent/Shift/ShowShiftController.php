@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Agent\Shift\Transaction;
+namespace App\Http\Controllers\Agent\Shift;
 
 use App\Http\Controllers\Controller;
 use App\Models\Location;
@@ -26,11 +26,15 @@ class ShowShiftController extends Controller
 
         $tills = ShiftNetwork::query()->where('shift_id', $shift->id)->with('network.agency')->cursor();
 
+
+        $totalBalance = $shift->cash_end + $tills->sum('balance_new');
+
         $locations = Location::query()->cursor();
 
         return view('agent.agency.show', [
             'dataTableHtml' => $dataTableHtml,
             'locations' => $locations,
+            'totalBalance' => $totalBalance,
             'tills' => $tills,
             'shift' => $shift->loadMissing('user', 'location'),
         ]);

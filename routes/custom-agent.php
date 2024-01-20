@@ -13,11 +13,11 @@ use App\Http\Controllers\Agent\Shift\Loans\LoanController;
 use App\Http\Controllers\Agent\Shift\Loans\PayLoanController;
 use App\Http\Controllers\Agent\Shift\Loans\ShowLoanController;
 use App\Http\Controllers\Agent\Shift\OpenShiftController;
+use App\Http\Controllers\Agent\Shift\ShowShiftController;
 use App\Http\Controllers\Agent\Shift\TillController;
 use App\Http\Controllers\Agent\Shift\Transaction\AddExpenseTransactionController;
 use App\Http\Controllers\Agent\Shift\Transaction\AddIncomeTransactionController;
 use App\Http\Controllers\Agent\Shift\Transaction\AddTransactionController;
-use App\Http\Controllers\Agent\Shift\Transaction\ShowShiftController;
 use App\Http\Controllers\Agent\Transaction\TransactionsController;
 use Illuminate\Support\Facades\Route;
 
