@@ -36,8 +36,8 @@
                 Details
                 <span class="ms-2 rotate-180">
 
-                                            <i class="ki-duotone ki-down fs-3"></i>
-                                        </span>
+                    <i class="ki-duotone ki-down fs-3"></i>
+                </span>
             </div>
         </div>
         <!--end::Details toggle-->
@@ -51,7 +51,7 @@
 
                 <!--begin::Details item-->
 
-                <div class="d-flex flex-row mt-5 border-bottom-2 gap-14">
+                <div class="d-flex flex-row mt-5 border-bottom-2 gap-14 justify-content-lg-between">
                     <div class="fw-bold border-primary">Status</div>
                     <div class="text-gray-600">
                         <span class="{{ $shift->status->color() }}">{{ $shift->status->label() }}</span>
@@ -60,18 +60,18 @@
                 <!--begin::Details item-->
 
                 <!--begin::Details item-->
-                <div class="fw-bold mt-5 d-flex between gap-14">Date :  <span> {{ $shift->created_at->format('Y-m-d')  }} </span>
+                <div class="fw-bold mt-5 d-flex between gap-14 justify-content-lg-between">Date :  <span> {{ $shift->created_at->format('Y-m-d')  }} </span>
 
                 </div>
 
 
-                <div class="fw-bold mt-5 d-flex between gap-14">Shift's No: <span>   {{ $shift->no  }}  </span></div>
+                <div class="fw-bold mt-5 d-flex between gap-14 justify-content-lg-between">Shift's No: <span>   {{ $shift->no  }}  </span></div>
 
 
 
                 <div class="pb-5 fs-6">
                     <!--begin::Details item-->
-                    <div class="d-flex flex-row gap-14 mt-5">
+                    <div class="d-flex flex-row gap-14 mt-5 justify-content-lg-between">
                         <div class="fw-bold">User:  </div>
                         <div class="text-gray-600">{{ $shift->user->full_name }}</div>
                     </div>
@@ -114,15 +114,17 @@
                 @foreach($tills as $network)
                     <!--begin::Details item-->
 
-                    <div class="d-flex flex-row mt-5 border-bottom-2 gap-14">
+                    <div class="d-flex flex-row mt-5 border-bottom-2 gap-14 justify-content-lg-between">
                         <div class="fw-bold border-primary">{{ $network->network ->agency->name}}</div>
                         <div class="text-gray-600">
-                            <span>{{ $network->balance_new }}</span>
+                            <span>{{ number_format($network->balance_new , 2)  }}</span>
                         </div>
                     </div>
                     <!--begin::Details item-->
                 @endforeach
-
+                    <div class="text-gray-600 mt-15 fw-bold text-lg-end border-bottom-3 border-dashed py-lg-2 px-lg-3 border-primary">
+                        <span>{{ number_format($tills->sum('balance_new') , 2)  }}</span>
+                    </div>
             </div>
         </div>
         <!--end::Details content-->
