@@ -39,7 +39,7 @@
             <div class="row fv-row py-3">
                 <div class="col-12">
                     <x-label label="notes" required="" class="" for="notes"/>
-                    <textarea    name="notes" class="form-control form-control form-control-solid" rows="3"  data-kt-autosize="false"></textarea>
+                    <textarea  name="notes" class="form-control form-control form-control-solid" rows="3"  data-kt-autosize="false"></textarea>
                     @error('notes')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -59,12 +59,11 @@
     </form>
 
     @push('js')
-        <script src="{{ asset('assets/js/rakoli_ajax.js') }}"></script>
         <script>
 
 
             $(document).ready(() => {
-                const validations = [
+                const expenseValidations = [
                     {
                         "name": "amount",
                         "error": "Amount is Required",
@@ -80,17 +79,17 @@
                 ];
 
 
-                const form = document.getElementById('add-expense-form');
+                const expenseForm = document.getElementById('add-expense-form');
 
 
-                const submitTransactionButton = document.getElementById('add-expense-button');
+                const submitIncomeButton = document.getElementById('add-expense-button');
 
 
-                console.log("form =>", form)
-                console.log("button =>", submitTransactionButton)
+                console.log("form =>", expenseForm)
+                console.log("button =>", submitIncomeButton)
 
 
-                lakoriValidation(validations, form, submitTransactionButton, 'post', '{{  route('agency.transactions.add.expense', $shift) }}');
+                lakoriValidation(expenseValidations, expenseForm, submitIncomeButton, 'post', '{{  route('agency.transactions.add.expense', $shift) }}');
             })
 
 

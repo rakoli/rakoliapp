@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Agent\Shift\Transaction;
 
-use App\Actions\Agent\Shift\AddIncomeExpenseTransaction;
+use App\Actions\Agent\Shift\AddIncomeTransaction;
 use App\Http\Controllers\Controller;
 use App\Models\Shift;
 use App\Utils\Enums\TransactionCategoryEnum;
@@ -15,20 +15,14 @@ class AddIncomeTransactionController extends Controller
     {
         $validated = $request->validate([
             'amount' => 'required',
-            'location_code' => 'required|exists:locations,code',
-            'till_code' => 'required|exists:networks,code',
-            'notes' => 'required|string',
-        ],
-            [
-                'location_code.required' => 'Location is required',
-                'till_code.required' => 'Network is required',
-            ]);
+            'description' => 'required|string|max:255',
+        ]);
 
         try {
             $validated['category'] = TransactionCategoryEnum::INCOME;
             $validated['type'] = TransactionTypeEnum::MONEY_IN->value;
 
-            AddIncomeExpenseTransaction::run($shift, $validated);
+            AddIncomeTransaction::run($shift, $validated);
 
             return response()
                 ->json([

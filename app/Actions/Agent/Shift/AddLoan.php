@@ -8,6 +8,7 @@ use App\Models\Transaction;
 use App\Utils\Enums\LoanPaymentStatusEnum;
 use App\Utils\Enums\LoanTypeEnum;
 use App\Utils\Enums\ShiftStatusEnum;
+use App\Utils\Enums\TransactionTypeEnum;
 use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -19,7 +20,7 @@ class AddLoan
     /**
      * @throws \Throwable
      */
-    public function handle(array $data)
+    public function handle(Shift $shift , array $data)
     {
 
         try {
@@ -34,7 +35,7 @@ class AddLoan
 
             Loan::create([
                 'business_code' => auth()->user()->business_code,
-                'location_code' => $data['location_code'],
+                'location_code' => $shift->location_code,
                 'user_code' => auth()->user()->code,
                 'amount' => $data['amount'],
                 'network_code' => $data['network_code'],
@@ -42,31 +43,35 @@ class AddLoan
                 'status' => LoanPaymentStatusEnum::UN_PAID,
                 'shift_id' => $shift->id,
                 'code' => generateCode(name: time(), prefixText: $data['network_code']),
-                'notes' => $data['notes'],
+                'description' => $data['description'],
+                'note' => $data['notes'],
             ]);
 
-            /*Transaction::create([
-                'business_code' => $shift->business_code,
-                'location_code' => $shift->location_code,
-                'user_code' => auth()->user()->code,
-                'amount' => $data['amount'],
-                'amount_currency' => currencyCode(),
-                'type' => $data['type'],
-                'category' => $data['category'],
-                'balance_old' => 0,
-                'balance_new' => 0,
-                'description' => $data['notes'],
-            ]);
+
+
+            [$newBalance, $oldBalance, $till] = match ($data['type']) {
+                LoanTypeEnum::MONEY_IN->value => AddLoan::moneyIn($data , true),
+                LoanTypeEnum::MONEY_OUT->value => AddLoan::moneyOut($data, true),
+            };
+
+            $data['type'] =  match ($data['type']){
+                LoanTypeEnum::MONEY_IN->value => TransactionTypeEnum::MONEY_IN,
+                LoanTypeEnum::MONEY_OUT->value => TransactionTypeEnum::MONEY_OUT,
+            };
 
             $this->createShiftTransaction(
                 shift: $shift,
                 data: $data,
-                oldBalance: 0,
-                newBalance: 0
-            );*/
+                oldBalance: $oldBalance,
+                newBalance: $newBalance
+            );
+
+
+
 
             DB::commit();
         } catch (\Exception $e) {
+
             DB::rollBack();
             throw new \Exception($e->getMessage());
         }

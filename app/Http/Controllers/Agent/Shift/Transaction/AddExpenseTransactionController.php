@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Agent\Shift\Transaction;
 
 use App\Actions\Agent\Shift\AddExpenseTransaction;
-use App\Actions\Agent\Shift\AddIncomeExpenseTransaction;
+use App\Actions\Agent\Shift\AddIncomeTransaction;
 use App\Http\Controllers\Controller;
 use App\Models\Shift;
 use App\Utils\Enums\TransactionCategoryEnum;
@@ -33,7 +33,7 @@ class AddExpenseTransactionController extends Controller
         } catch (\Exception|\Throwable $e) {
             return response()
                 ->json([
-                    'message' => 'Expense could not be added',
+                    'message' => $e->getMessage()
                 ], 422);
         }
     }

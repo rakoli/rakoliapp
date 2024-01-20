@@ -41,13 +41,13 @@
 
                             <!--begin::Add customer-->
                             <x-modal_with_button
-                                    targetId="add-loan"
-                                    label="Add Loan"
-                                    modalTitle="Fill the form below record a Loan"
-                                    isStacked="true"
+                                targetId="add-loan"
+                                label="Add Loan"
+                                modalTitle="Fill the form below record a Loan"
+                                isStacked="true"
                             >
 
-                                @include('agent.agency.shift.add-loan')
+                                @include('agent.agency.loans.add-loan')
 
 
                             </x-modal_with_button>

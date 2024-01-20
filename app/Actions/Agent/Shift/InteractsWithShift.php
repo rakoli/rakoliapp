@@ -40,7 +40,7 @@ trait InteractsWithShift
         );
     }
 
-    public static function moneyIn(array $data): array
+    public static function moneyIn(array $data, bool $isLoan = false): array
     {
 
         // till for the opened shift
@@ -60,17 +60,20 @@ trait InteractsWithShift
 
         // increase cash
 
-        $newBalance = $till->balance_new;
-
         $cash = $till->shift->cash_end;
 
-        /** @var Shift $shift */
-        $shift = $till->shift;
 
-        $shift->updateQuietly([
-            'cash_start' => $cash,
-            'cash_end' => $cash + floatval($data['amount']),
-        ]);
+        if (! $isLoan)
+        {
+            /** @var Shift $shift */
+            $shift = $till->shift;
+
+            $shift->updateQuietly([
+                'cash_start' => $cash,
+                'cash_end' => $cash + floatval($data['amount']),
+            ]);
+        }
+        $newBalance = $till->balance_new;
 
         $till->updateQuietly([
             'balance_new' => $newBalance - floatval($data['amount']),
@@ -87,7 +90,7 @@ trait InteractsWithShift
 
     }
 
-    public static function moneyOut(array $data): array
+    public static function moneyOut(array $data, bool $isLoan = false): array
     {
 
         // till for the opened shift
@@ -112,14 +115,21 @@ trait InteractsWithShift
         /** @var Shift $shift */
         $shift = $till->shift;
 
-        $cash = $till->shift->cash_end;
 
-        $cashEnd = $cash - floatval($data['amount']);
 
-        $shift->updateQuietly([
-            'cash_start' => floatval($cash),
-            'cash_end' => floatval($cashEnd),
-        ]);
+        if (! $isLoan)
+        {
+            $cash = $till->shift->cash_end;
+
+            $cashEnd = $cash - floatval($data['amount']);
+
+            $shift->updateQuietly([
+                'cash_start' => floatval($cash),
+                'cash_end' => floatval($cashEnd),
+            ]);
+        }
+
+
 
         $till->updateQuietly([
             'balance_old' => $newBalance,

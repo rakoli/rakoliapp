@@ -62,7 +62,6 @@
                         targetId="add-income"
                         label="Add Income"
                         modalTitle="Fill the form below record a income"
-                        isStacked="true"
                     >
 
                         @include('agent.agency.transaction.add-income')
@@ -74,10 +73,10 @@
                         targetId="add-loan"
                         label="Add Loan"
                         modalTitle="Fill the form below record a Loan"
-                        class="btn-warning"
+
                     >
 
-                        @include('agent.agency.transaction.add-income')
+                        @include('agent.agency.loans.add-loan')
 
 
                     </x-modal_with_button>

@@ -2,19 +2,21 @@
 
 namespace App\Actions\Agent\Shift;
 
+use App\Events\Shift\LocationBalanceUpdate;
+use App\Models\Location;
 use App\Models\Shift;
 use App\Models\Transaction;
 use App\Utils\Enums\TransactionTypeEnum;
 use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsAction;
 
-class AddIncomeExpenseTransaction
+class AddIncomeTransaction
 {
     use AsAction;
     use InteractsWithShift;
 
     /**
-     * @param  array{till_code: string, location_code: string ,  amount: float, type: string , category: string , notes: ?string }  $data
+     * @param  array{ amount: float, type: string , category: string , notes: ?string,description: ?string }  $data
      *
      * @throws \Throwable
      */
@@ -25,10 +27,9 @@ class AddIncomeExpenseTransaction
 
             DB::beginTransaction();
 
-            [$newBalance, $oldBalance, $till] = match ($data['type']) {
-                TransactionTypeEnum::MONEY_IN->value => AddIncomeExpenseTransaction::moneyIn($data),
-                TransactionTypeEnum::MONEY_OUT->value => AddIncomeExpenseTransaction::moneyOut($data),
-            };
+            $location = Location::query()->where('code', $shift->location_code)->first();
+
+            $balance =  $location->balance;
 
             Transaction::create([
                 'business_code' => $shift->business_code,
@@ -38,17 +39,18 @@ class AddIncomeExpenseTransaction
                 'amount_currency' => currencyCode(),
                 'type' => $data['type'],
                 'category' => $data['category'],
-                'balance_old' => $oldBalance,
-                'balance_new' => $newBalance,
-                'description' => $data['notes'],
+                'balance_old' => $balance,
+                'balance_new' => $balance + $data['amount'],
+                'description' => $data['description'] ?? null,
+                'note' => $data['notes'] ?? null,
             ]);
 
-            $this->createShiftTransaction(
-                shift: $shift,
-                data: $data,
-                oldBalance: $till->balance_old,
-                newBalance: $till->balance_old
-            );
+
+            $location->updateQuietly([
+                'balance' => $balance + $data['amount'],
+            ]);
+
+            event(new LocationBalanceUpdate(location: $location , amount: $data['amount']));
 
             DB::commit();
         } catch (\Exception $e) {

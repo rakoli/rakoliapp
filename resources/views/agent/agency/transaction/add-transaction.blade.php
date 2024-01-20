@@ -107,7 +107,7 @@
 
 
         <div class="modal-footer my-4 py-2">
-
+            <x-submit-button  id="add-transaction-button" label="Record Transaction"/>
 
         </div>
 
@@ -115,7 +115,6 @@
 
     @push('js')
 
-        <script src="{{ asset('assets/js/rakoli_ajax.js') }}"></script>
         <script>
 
 
