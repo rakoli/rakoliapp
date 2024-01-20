@@ -15,7 +15,7 @@ class AddTransaction
     use InteractsWithShift;
 
     /**
-     * @param  array{till_code: string,location_code: string,amount: float, type: string , category: string , notes: ?string }  $data
+     * @param  array{network_code: string,amount: float, type: string , category: string , notes: ?string , description: ?string }  $data
      *
      * @throws \Throwable
      */
@@ -34,19 +34,6 @@ class AddTransaction
                 TransactionTypeEnum::MONEY_IN->value => AddTransaction::moneyIn($data),
                 TransactionTypeEnum::MONEY_OUT->value => AddTransaction::moneyOut($data),
             };
-
-            Transaction::create([
-                'business_code' => auth()->user()->business_code,
-                'location_code' => $data['location_code'],
-                'user_code' => auth()->user()->code,
-                'amount' => $data['amount'],
-                'amount_currency' => currencyCode(),
-                'type' => $data['type'],
-                'category' => $data['category'],
-                'balance_old' => $oldBalance,
-                'balance_new' => $newBalance,
-                'description' => $data['notes'],
-            ]);
 
             $this->createShiftTransaction(
                 shift: $shift,

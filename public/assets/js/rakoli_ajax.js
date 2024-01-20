@@ -1,55 +1,58 @@
-var submitFormAction = function submitForm(form, url, method = 'post') {
+var submitFormAction = function submitForm(form, url, submitButton, method = 'post') {
 
-        var formData = new FormData(form)
+    var formData = new FormData(form)
 
-        var request =  window.axios;
+    var request = window.axios;
 
-        if (method === 'delete')
-        {
-            request = request.delete(url, formData)
-        }
-        else
-        {
-            request = request.post(url, formData)
-        }
+    if (method === 'delete') {
+        request = request.delete(url, formData)
+    } else {
+        request = request.post(url, formData)
+    }
 
 
-        request.then(response => {
+    request.then(response => {
 
+        submitButton.removeAttribute('data-kt-indicator');
+
+        // Enable button
+        submitButton.disabled = false;
+
+        SwalAlert(
+            "success",
+            response.data.message
+        );
+
+
+        setTimeout(function () {
+            window.location.reload()
+        }, 1000);
+
+
+    })
+        .catch(error => {
             submitButton.removeAttribute('data-kt-indicator');
 
             // Enable button
             submitButton.disabled = false;
 
             SwalAlert(
-                "success",
-                response.data.message
+                "warning",
+                error.response.data.message
             );
-
-
-            setTimeout(function () {
-                window.location.reload()
-            }, 1000);
-
-
         })
-            .catch(error => {
-                submitButton.removeAttribute('data-kt-indicator');
+        .finally(() => {
+            submitButton.removeAttribute('data-kt-indicator');
 
-                // Enable button
-                submitButton.disabled = false;
-
-                SwalAlert(
-                    "warning",
-                    error.response.data.message
-                );
-            })
+            // Enable button
+            submitButton.disabled = false;
+        })
 
 
 }
 
 
-function lakoriValidation(validation, form, submitForm, formMethod , url) {
+function lakoriValidation(validation, form, submitButton, formMethod, url) {
 
     var validationsArray = [];
 
@@ -88,7 +91,6 @@ function lakoriValidation(validation, form, submitForm, formMethod , url) {
     );
 
 
-
     submitButton.addEventListener('click', function (e) {
         // Prevent default button action
         e.preventDefault();
@@ -107,8 +109,10 @@ function lakoriValidation(validation, form, submitForm, formMethod , url) {
                     submitFormAction(
                         form,
                         url,
+                        submitButton
                     );
-                                    }
+
+                }
             });
         }
     });

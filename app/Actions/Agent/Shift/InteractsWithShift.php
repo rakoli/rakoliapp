@@ -9,17 +9,17 @@ use App\Utils\Enums\ShiftStatusEnum;
 trait InteractsWithShift
 {
     /**
-     * @param  array{till_code: string,location_code: string,amount: float, type: string , category: string , notes: ?string }  $data
+     * @param  array{network_code: string, amount: float, type: string , category: string , notes: ?string , description: ?string }  $data
      *
      * @throws \Exception
      */
-    public function createShiftTransaction(Shift $shift, array $data, float $oldBalance, $newBalance)
+    public function createShiftTransaction(Shift $shift, array $data, float $oldBalance, $newBalance): void
     {
 
         $shift->transactions()->create([
             'business_code' => $shift->business_code,
             'location_code' => $shift->location_code,
-            'network_code' => $data['till_code'],
+            'network_code' => $data['network_code'],
             'code' => generateCode($shift->user_code, time()),
             'user_code' => auth()->user()->code,
             'amount' => $data['amount'],
@@ -28,12 +28,13 @@ trait InteractsWithShift
             'category' => $data['category'],
             'balance_old' => $oldBalance,
             'balance_new' => $newBalance,
-            'description' => $data['notes'],
+            'description' => $data['description'] ?? null,
+            'note' => $data['notes'] ?? null,
         ]);
 
         $this->updateNetworkBalance(
             shift: $shift,
-            networkCode: $data['till_code'],
+            networkCode: $data['network_code'],
             olBalance: $oldBalance,
             newBalance: $newBalance,
         );
@@ -46,7 +47,7 @@ trait InteractsWithShift
 
         $tillCheck = ShiftNetwork::query()
             ->whereHas('shift', fn ($query) => $query->where('status', ShiftStatusEnum::OPEN))
-            ->where('network_code', $data['till_code']);
+            ->where('network_code', $data['network_code']);
 
         if (! $tillCheck->exists()) {
             throw new \Exception('You cannot transact without an open shift');
@@ -93,7 +94,7 @@ trait InteractsWithShift
 
         $tillCheck = ShiftNetwork::query()
             ->whereHas('shift', fn ($query) => $query->where('status', ShiftStatusEnum::OPEN))
-            ->where('network_code', $data['till_code']);
+            ->where('network_code', $data['network_code']);
 
         if (! $tillCheck->exists()) {
             throw new \Exception('You cannot transact without an open shift');
@@ -135,7 +136,7 @@ trait InteractsWithShift
 
     }
 
-    private function updateNetworkBalance(Shift $shift, string $networkCode, float $olBalance, float $newBalance)
+    private function updateNetworkBalance(Shift $shift, string $networkCode, float $olBalance, float $newBalance): void
     {
 
         ShiftNetwork::query()

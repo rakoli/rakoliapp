@@ -14,13 +14,12 @@ class AddTransactionController extends Controller
 
         $validated = $request->validate([
             'amount' => 'required|numeric',
-            'location_code' => 'required|exists:locations,code',
-            'till_code' => 'required|exists:networks,code',
+            'network_code' => 'required|exists:networks,code',
             'type' => 'required',
-            'notes' => 'required',
+            'description' => 'required',
         ], [
-            'location_code.required' => 'Location is required',
-            'location_code.exists' => 'Location does not exists',
+            'network_code.required' => 'Network is required',
+            'network_code.exists' => 'Network does not exists',
             'type.required' => 'Transaction Type is required',
         ]);
 
@@ -38,7 +37,7 @@ class AddTransactionController extends Controller
 
             return response()
                 ->json([
-                    'message' => 'Transaction could not be added',
+                    'message' => $e->getMessage(),
                 ], 422);
         }
 

@@ -91,10 +91,6 @@
             $("button#add-income-button").click(function (event){
                 event.preventDefault();
 
-                submitForm(
-                    $("form#add-income-form"),
-                    "{{ route('agency.transactions.add.income', $shift) }}"
-                );
 
             });
         </script>

@@ -33,7 +33,56 @@
             <div class="flex-lg-row-fluid ms-lg-15">
 
 
+                <div class="d-flex flex-lg-row gap-4 py-md-6">
+                    <x-modal_with_button
+                        targetId="add-transaction"
+                        label="Add Transaction"
+                        modalTitle="Fill the form below record a transaction"
+                        isStacked="true"
+                    >
 
+                        @include('agent.agency.transaction.add-transaction')
+
+
+                    </x-modal_with_button>
+
+                    <x-modal_with_button
+                        targetId="add-expenses"
+                        label="Add Expenses"
+                        modalTitle="Fill the form below record a Expenses"
+                        isStacked="true"
+                    >
+
+                        @include('agent.agency.transaction.add-expense')
+
+
+                    </x-modal_with_button>
+
+                    <x-modal_with_button
+                        targetId="add-income"
+                        label="Add Income"
+                        modalTitle="Fill the form below record a income"
+                        isStacked="true"
+                    >
+
+                        @include('agent.agency.transaction.add-income')
+
+
+                    </x-modal_with_button>
+
+                    <x-modal_with_button
+                        targetId="add-loan"
+                        label="Add Loan"
+                        modalTitle="Fill the form below record a Loan"
+                        class="btn-warning"
+                    >
+
+                        @include('agent.agency.transaction.add-income')
+
+
+                    </x-modal_with_button>
+
+                </div>
 
                 <!--begin::Card-->
                 <div class="card pt-4 mb-6 mb-xl-9">
@@ -73,6 +122,7 @@
 
 
     @push('js')
+        <script src="{{ asset('assets/js/rakoli_ajax.js') }}"></script>
 
         <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}"
                 type="text/javascript"></script>

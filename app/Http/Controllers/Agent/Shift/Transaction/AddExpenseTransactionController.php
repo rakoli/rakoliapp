@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Agent\Shift\Transaction;
 
+use App\Actions\Agent\Shift\AddExpenseTransaction;
 use App\Actions\Agent\Shift\AddIncomeExpenseTransaction;
 use App\Http\Controllers\Controller;
 use App\Models\Shift;
@@ -15,20 +16,14 @@ class AddExpenseTransactionController extends Controller
     {
         $validated = $request->validate([
             'amount' => 'required',
-            'location_code' => 'required|exists:locations,code',
-            'till_code' => 'required|exists:networks,code',
-            'notes' => 'required|string',
-        ],
-            [
-                'location_code.required' => 'Location is required',
-                'till_code.required' => 'Network is required',
-            ]);
+            'description' => 'required|string',
+        ]);
 
         try {
             $validated['category'] = TransactionCategoryEnum::EXPENSE;
             $validated['type'] = TransactionTypeEnum::MONEY_OUT->value;
 
-            AddIncomeExpenseTransaction::run(shift: $shift, data: $validated);
+            AddExpenseTransaction::run(shift: $shift, data: $validated);
 
             return response()
                 ->json([
