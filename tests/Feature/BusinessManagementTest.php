@@ -205,11 +205,11 @@ class BusinessManagementTest extends TestCase
         $town = Towns::factory()->create(['region_code'=>$region->code]);
         $area = Area::factory()->create(['region_code'=>$region->code,'town_code'=>$town->code]);
 
-        $branch = Location::factory()->create(['business_code'=>$user->business_code]);//must have
-        $this->session(['currency'=>$branch->balance_currency]);
+        $location = Location::factory()->create(['business_code'=>$user->business_code]);//must have
+        $this->session(['currency'=>$location->balance_currency]);
 
         $editPostData = [
-            'branches_id' => $branch->id,
+            'branches_id' => $location->id,
             'name' => 'edited name',
             'balance' => 10000,
             'availability_desc' => fake()->sentence.'_edited',
@@ -222,12 +222,12 @@ class BusinessManagementTest extends TestCase
 
         $response->assertRedirect(route('business.branches'));
         $data = [
-            'id' => $branch->id,
-            'code' => $branch->code,
+            'id' => $location->id,
+            'code' => $location->code,
             'business_code' => $user->business_code,
             'name' => $editPostData['name'],
             'balance' => $editPostData['balance'],
-            'balance_currency' => $branch->balance_currency,
+            'balance_currency' => $location->balance_currency,
             'region_code' => $region->code,
             'town_code' => $town->code,
             'area_code' => $area->code,
@@ -238,12 +238,17 @@ class BusinessManagementTest extends TestCase
         //Only authorized
         $unauthorizedUser = User::factory()->create(['business_code'=>Business::factory()->create()->code]);
         $this->actingAs($unauthorizedUser);
-        $location = Location::factory()->create(['business_code'=>$user->business_code]);//must have
-
+        $location = Location::factory()->create(['business_code'=>$user->business_code,'description'=>'description content']);//must have
+        $editPostData['branches_id'] = $location->id;
+        $editPostData['availability_desc'] = 'New Description';
         $response = $this->post(route('business.branches.edit.submit',$editPostData));
         $this->assertTrue(session('errors')->first() == 'Not authorized to perform business action');
-        $locationsTable = DB::table('locations')->where('id', $location->id)->first();
-        $this->assertNull($locationsTable->deleted_at);
+        $data = [
+            'code' => $location->code,
+            'description' => $location->description,
+        ];
+        $this->assertDatabaseHas('locations', $data);
+
     }
 
     /** @test */
@@ -271,5 +276,84 @@ class BusinessManagementTest extends TestCase
         $this->assertTrue(session('errors')->first() == 'Not authorized to perform business action');
         $locationsTable = DB::table('locations')->where('id', $location->id)->first();
         $this->assertNull($locationsTable->deleted_at);
+    }
+
+
+    /** @test */
+    public function agent_can_view_business_profile_page(): void
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
+
+        $this->actingAs($user);
+
+        $response = $this->get(route('business.profile.update'));
+        $response->assertOk();
+        $response->assertSee('Business Profile');
+    }
+
+    /** @test */
+    public function agent_can_view_correct_business_data_on_business_profile_page(): void
+    {
+        $business = Business::factory()->create([
+            'tax_id' => 'tax_id_0000',
+            'business_regno' => 'regno_0000',
+            'business_phone_number' => '0763123123',
+            'business_email' => 'test@test.com',
+        ]);
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0, 'business_code'=>$business->code]);
+
+        $this->actingAs($user);
+
+        $response = $this->get(route('business.profile.update'));
+        $response->assertOk();
+        $response->assertSee($business->business_name);
+        $response->assertSee($business->tax_id);
+        $response->assertSee($business->business_regno);
+        $response->assertSee($business->business_phone_number);
+        $response->assertSee($business->business_email);
+        $response->assertSee($business->business_location);
+    }
+
+    /** @test */
+    public function agent_can_edit_business_profile_data()
+    {
+        $business = Business::factory()->create();
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0,'business_code'=>$business->code]);
+
+        $this->actingAs($user);
+
+        $editPostData = [
+            'business_id' => $business->id,
+            'business_name' => 'business name edited',
+            'tax_id' => '123-123-123',
+            'business_regno' => 'reg no',
+            'business_phone_number' => '0753123123',
+            'business_email' => 'emailedited@test.com',
+            'business_location_' => 'location address edited',
+        ];
+
+        $response = $this->post(route('business.profile.update.submit',$editPostData));
+
+        $response->assertRedirect(route('business.profile.update'));
+//        var_dump($response->getContent());
+        $data = [
+            'id' => $business->id,
+            'business_name' => $editPostData['business_name'],
+            'tax_id' => $editPostData['tax_id'],
+            'business_regno' => $editPostData['business_regno'],
+            'business_phone_number' => $editPostData['business_phone_number'],
+            'business_email' => $editPostData['business_email'],
+            'business_location' => $editPostData['business_location_'],
+        ];
+        $this->assertDatabaseHas('businesses', $data);
+
+        //Only authorized
+        $unauthorizedUser = User::factory()->create(['business_code'=>Business::factory()->create()->code]);
+        $this->actingAs($unauthorizedUser);
+        $editPostData['business_location_'] = 'new location';
+        $response = $this->post(route('business.profile.update.submit',$editPostData));
+        $this->assertTrue(session('errors')->first() == 'Not authorized to perform business action');
+        $this->assertDatabaseHas('businesses', $data);
+
     }
 }

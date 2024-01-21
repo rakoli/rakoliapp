@@ -66,7 +66,6 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
         Route::post('finance.update', [App\Http\Controllers\Agent\PaymentController::class, 'financeUpdate'])->name('finance.update');
         Route::post('finance.withdraw', [App\Http\Controllers\Agent\PaymentController::class, 'financeWithdraw'])->name('finance.withdraw');
 
-        Route::get('profile', [App\Http\Controllers\Agent\BusinessController::class, 'profile'])->name('profile');
         Route::get('profile/update', [App\Http\Controllers\Agent\BusinessController::class, 'profileCreate'])->name('profile.update');
         Route::post('profile/update', [App\Http\Controllers\Agent\BusinessController::class, 'profileUpdate'])->name('profile.update.submit');
 

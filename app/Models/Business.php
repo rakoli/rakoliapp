@@ -221,4 +221,13 @@ class Business extends Model
         return $this->hasMany(VasTaskAvailability::class, 'agent_business_code', 'code');
     }
 
+    public function isUserAllowed(User $user)
+    {
+        if($user->business_code == $this->code){
+            return true;
+        }
+        return false;
+
+    }
+
 }

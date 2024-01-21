@@ -389,11 +389,20 @@ class BusinessController extends Controller
     {
         $request->validate([
             'business_id' => 'required|exists:businesses,id',
-            // 'business_email' => ['required', Rule::unique('businesses', 'business_email')->ignore($request->get('business_id'))],
-            // 'business_phone_number' => ['required', Rule::unique('businesses', 'business_phone_number')->ignore($request->get('business_id'))]
+            'business_name' => 'required|string',
+            'tax_id' => 'required|string',
+            'business_regno' => 'required|string',
+            'business_phone_number' => 'required|numeric',
+            'business_email' => 'required|email',
+            'business_location_' => 'required|string',
         ]);
 
         $business = Business::where('id', $request->get('business_id'))->first();
+
+        $isAllowed = $business->isUserAllowed($request->user());
+        if($isAllowed == false){
+            return redirect()->route('business.profile.update')->withErrors(['Not authorized to perform business action']);
+        }
 
         $business->business_name = $request->get('business_name');
         $business->tax_id = $request->get('tax_id');
