@@ -27,8 +27,8 @@ class SubscriptionController extends Controller
             $orderByFilter = $request->get('order_by');
         }
         $roles = InitiatedPayment::where('business_code', $user->business_code)->orderBy('id', 'desc');
-        $balance = Business::where('code', $user->business_code)->with('package')->with('package.featuress')->with('package.featuress.feature')->get();
-        // dd($balance[0]->package->featuress[0]->feature);
+        $balance = Business::where('code', $user->business_code)->with('package')->with('package.featuresAvailable')->with('package.featuresAvailable.feature')->get();
+        // dd($balance[0]->package->featuresAvailable[0]->feature);
         $country_code = session('country_code');
         $currency = session('currency');
         $packages = Package::where('country_code', $country_code)->get();

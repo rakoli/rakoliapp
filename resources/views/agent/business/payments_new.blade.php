@@ -11,7 +11,7 @@
 @section('content')
     <!--begin::Container-->
     <div id="kt_content_container" class="container-xxl">
-
+        
         @include('agent.business._submenu_business')
 
         <!--begin::Layout-->
@@ -22,17 +22,12 @@
                 <!--begin::Card-->
                 <div class="card mb-5 mb-xl-8">
 
-                    <!--Begin::Card Footer (Actions)-->
                     <div class="card-body pt-5">
-
-                        <!--Begin::Status Details-->
                         <h1 class="text-center fw-bold">{{__("Balance")}}</h1>
                         <h2 class="mb-5 text-gray-600 text-center">
-                            {{number_format($balance[0]->balance)}}
+                            {{$balance[0]->balance}}
                         </h2>
-                        <!--End::Status Details-->
                     </div>
-                    <!--end::Card Footer (Actions)-->
 
                     <!--end::Details toggle-->
                     <div class="separator separator-dashed"></div>
@@ -42,6 +37,11 @@
                     <div class="card-body pt-1">
                         <!--begin::Details content-->
                         <div class="collapse show">
+                            @if(isset($existingData[0]->method_name) && $existingData[0]->method_name)
+                            @else
+                                <span style="color: red;">Click on update button for update below info.</span>
+                            @endif
+                        
                             <div class="py-5 fs-6 text-center">
                                 <button type="button" class="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#update_method_modal">
                                     {{__('Update')}}
@@ -50,31 +50,25 @@
                             <div class=" fs-6">
                                 <div class="fw-bold mt-5">{{__("Method Name")}}
                                     <div class="text-gray-600">
-                                        {{ old('method_name', $existingData[0]->method_name ?? '') }}
+                                        {{ old('method_name', $existingData[0]->method_name ?? 'Not mention') }}
                                     </div>
                                 </div>
 
                                 <div class="fw-bold mt-5">{{__("Method AC Name")}}
                                     <div class="text-gray-600">
-                                        {{ old('method_name', $existingData[0]->method_ac_name ?? '') }}
+                                        {{ old('method_ac_name', $existingData[0]->method_ac_name ?? 'Not mention') }}
                                     </div>
                                 </div>
 
                                 <div class="fw-bold mt-5">{{__("Method AC Number")}}
                                     <div class="text-gray-600">
-                                        {{ old('method_name', $existingData[0]->method_ac_number ?? '') }}
+                                        {{ old('method_ac_number', $existingData[0]->method_ac_number ?? 'Not mention') }}
                                     </div>
                                 </div>
-
+                     
                                 <div class="fw-bold mt-5">{{__("Amount Currency")}}
                                     <div class="text-gray-600">
-                                        {{ old('method_name', $existingData[0]->amount_currency ?? '') }}
-                                    </div>
-                                </div>
-
-                                <div class="fw-bold mt-5">{{__("Status")}}
-                                    <div class="text-gray-600">
-                                        {{ old('method_name', $existingData[0]->status ?? '') }}
+                                        {{ old('amount_currency', $existingData[0]->amount_currency ?? 'Not mention') }}
                                     </div>
                                 </div>
                             </div>
@@ -100,18 +94,18 @@
                             <div class="d-flex justify-content-center flex-column me-3">
                                 {{-- <a href="#" class="fs-1 fw-bold text-gray-900 text-hover-primary me-1 mb-2 mt-5 lh-1">{{__("Transactions")}}</a> --}}
                                 {{-- <a href="#" class="fs-1 fw-bold text-gray-900 text-hover-primary me-1 mb-2 mt-5 lh-1 text-center">{{__("Transactions")}}</a> --}}
-
+                                                               
                                 <!--begin::Info-->
                                 <div class="card-body pt-0">
                                     <button type="button" class="btn btn-primary me-1 mb-2 mt-5 lh-1" data-bs-toggle="modal" data-bs-target="#withdraw_method_modal">
                                         {{__('Withdraw Fund')}}
                                     </button>
-
+    
                                     <!--begin::Table container-->
                                     <div class="table-responsive">
-
+                    
                                         {!! $dataTableHtml->table(['class' => 'table table-row-bordered table-row-dashed gy-4' , 'style="font-size: 1.1rem;"'],true) !!}
-
+                    
                                     </div>
                                     <!--end::Table container-->
                                 </div>
@@ -179,7 +173,7 @@
                             <div class="row mb-5">
                                 <div class="input-group input-group-lg mb-5">
                                     <span class="input-group-text">{{__("AC Name")}}</span>
-                                    <input name="method_ac_name" type="text" class="form-control" value="{{ old('method_name', $existingData[0]->method_ac_name ?? '') }}" value="" placeholder="{{__('enter method ac name')}}"/>
+                                    <input name="method_ac_name" type="text" class="form-control" value="{{ old('method_ac_name', $existingData[0]->method_ac_name ?? '') }}" value="" placeholder="{{__('enter method ac name')}}"/>
                                     {{-- <textarea name="description" type="text" class="form-control" value="" placeholder="{{__('enter description')}}"></textarea> --}}
                                 </div>
                             </div>
@@ -188,7 +182,7 @@
                             <div class="row mb-5">
                                 <div class="input-group input-group-lg mb-5">
                                     <span class="input-group-text">{{__("AC Number")}}</span>
-                                    <input name="method_ac_number" type="text" class="form-control" value="{{ old('method_name', $existingData[0]->method_ac_number ?? '') }}" value="" placeholder="{{__('enter method ac number')}}"/>
+                                    <input name="method_ac_number" type="text" class="form-control" value="{{ old('method_ac_number', $existingData[0]->method_ac_number ?? '') }}" value="" placeholder="{{__('enter method ac number')}}"/>
                                     {{-- <textarea name="description" type="text" class="form-control" value="" placeholder="{{__('enter description')}}"></textarea> --}}
                                 </div>
                             </div>
@@ -204,59 +198,78 @@
         </div>
     </div>
     <!--end::Modal group-->
-        <!--begin::Modal group-->
-        <div class="modal fade" tabindex="-1" id="withdraw_method_modal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3 class="modal-title">{{__("Add Withdraw Fund Details")}}</h3>
-                        <!--begin::Close-->
-                        <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
-                            <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
-                        </div>
-                        <!--end::Close-->
-                    </div>
-                    <form class="my-auto pb-5" action="{{route('business.finance.withdraw')}}" method="POST">
-                        @csrf
-                        <div class="modal-body">
-                            <!--begin::Input group-->
-                            <div class="row mb-5">
-                                <div class="input-group input-group-lg mb-5">
-                                    <span class="input-group-text">{{__("Amount")}}</span>
-                                    <input name="amount" type="number" class="form-control" placeholder="{{__('enter amount')}}"/>
-                                </div>
-                            </div>
-                            <div class="row mb-5">
-                                <div class="input-group input-group-lg mb-5">
-                                    <span class="input-group-text">{{__("Category")}}</span>
-                                    <select name="category" class="form-select">
-                                        <option value="general">General</option>
-                                        <option value="income">Income</option>
-                                        <option value="expense">Expense</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <!--end::Input group-->
-                            <!--begin::Input group-->
-                            <div class="row mb-5">
-                                <div class="input-group input-group-lg mb-5">
-                                    <span class="input-group-text">{{__("Description")}}</span>
-                                    {{-- <input name="method_ac_name" type="text" class="form-control" placeholder="{{__('enter method ac name')}}"/> --}}
-                                    <textarea name="description" type="text" class="form-control" placeholder="{{__('enter description')}}"></textarea>
-                                </div>
-                            </div>
-                            <!--end::Input group-->
-                        </div>
 
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">{{__('Update')}}</button>
-                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{__("Close")}}</button>
+    
+    <!--begin::Modal group-->
+    <div class="modal fade" tabindex="-1" id="withdraw_method_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">{{__("Add Withdraw Fund Details")}}</h3>
+                    <!--begin::Close-->
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
+                    </div>
+                    <!--end::Close-->
+                </div>
+                <form id="withdrawForm" class="my-auto pb-5" action="{{route('business.finance.withdraw')}}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <!--begin::Input group-->
+                        <div class="row mb-5">
+                            <div class="input-group input-group-lg mb-5">
+                                <span class="input-group-text">{{__("Amount")}}</span>
+                                <input name="amount" type="number" class="form-control" placeholder="{{__('enter amount')}}"/>
+                            </div>
                         </div>
-                    </form>
+                        {{-- <div class="row mb-5">
+                            <div class="input-group input-group-lg mb-5">
+                                <span class="input-group-text">{{__("Category")}}</span>
+                                <select name="category" class="form-select">
+                                    <option value="general">General</option>
+                                    <option value="income">Income</option>
+                                    <option value="expense">Expense</option>
+                                </select>
+                            </div>
+                        </div> --}}
+                        <!--end::Input group-->
+                        <!--begin::Input group-->
+                        <div class="row mb-5">
+                            <div class="input-group input-group-lg mb-5">
+                                <span class="input-group-text">{{__("Description")}}</span>
+                                <textarea name="description" type="text" class="form-control" placeholder="{{__('enter description')}}"></textarea>
+                            </div>
+                        </div>
+                        <!--end::Input group-->
+                    </div>
+    
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="openConfirmationModal">{{__('Update')}}</button>
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{__("Close")}}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--end::Modal group-->
+    <!-- Confirmation Modal -->
+    <div class="modal fade" tabindex="-1" id="confirmation_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure for processing withdraw request?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="confirmWithdraw">Yes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                 </div>
             </div>
         </div>
-        <!--end::Modal group-->
+    </div>
 @endsection
 
 @section('footer_js')
@@ -265,6 +278,24 @@
     {!! $dataTableHtml->scripts() !!}
 
     <script>
+        document.getElementById('openConfirmationModal').addEventListener('click', function () {
+            // Hide the first modal
+            $('#withdraw_method_modal').modal('hide');
+
+            // Show the confirmation modal
+            $('#confirmation_modal').modal('show');
+        });
+
+        document.getElementById('confirmWithdraw').addEventListener('click', function () {
+            // Submit the form when "Yes" is clicked
+            document.getElementById('withdrawForm').submit();
+        });
+
+        // // Event handler for the "No" button in the confirmation modal
+        // document.getElementById('confirmation_modal').addEventListener('hidden.bs.modal', function () {
+        //     // Show the first modal when the confirmation modal is hidden
+        //     $('#withdraw_method_modal').modal('show');
+        // });
 
         //ACCOUNT NAME - CLIPBOARD
         const targetAcName = document.getElementById('kt_clipboard_acname');

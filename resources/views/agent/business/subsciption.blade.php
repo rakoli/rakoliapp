@@ -58,21 +58,49 @@
                                 <div class="fw-bold mt-8">{{ __("Package Price") }}
                                     {{-- @foreach($packages as $package) --}}
                                         <div class="text-gray-600">
-                                            {{ $balance[0]->package->price ?? ''}}
+                                            {{ number_format($balance[0]->package->price) ?? ''}} {{$currency}}
                                         </div>
                                     {{-- @endforeach --}}
                                 </div>
-                                <div class="fw-bold mt-8">{{ __("Package Expiry At") }}
-                                    {{-- @foreach($packages as $package) --}}
+                                <div class="fw-bold mt-8">
+                                    {{ __("Package Expiry At") }}
+                                
+                                    {{-- Display Package Expiry Date --}}
+                                    <div class="text-gray-600">
+                                        {{ $balance[0]->package_expiry_at ?? '' }}
+                                    </div>
+                                
+                                    {{-- Display Days Left --}}
+                                    @php
+                                        $expiryDateTime = $balance[0]->package_expiry_at ?? null;
+                                        $daysLeft = null;
+                                
+                                        if ($expiryDateTime) {
+                                            $now = now(); // Assuming Laravel's now() helper function is available
+                                            $expiryTime = \Carbon\Carbon::parse($expiryDateTime);
+                                            
+                                            if ($expiryTime > $now) {
+                                                $daysLeft = $now->diffInDays($expiryTime);
+                                            } else {
+                                                $daysLeft = 0; // Package has expired
+                                            }
+                                        }
+                                    @endphp
+                                
+                                    @if($daysLeft !== null)
                                         <div class="text-gray-600">
-                                            {{ $balance[0]->package_expiry_at ?? ''}}
+                                            @if($daysLeft > 0)
+                                                {{ __("Days Left") }}: {{ $daysLeft }} {{ __("day(s)") }}
+                                            @else
+                                                {{ __("Expired") }}
+                                            @endif
                                         </div>
-                                    {{-- @endforeach --}}
-                                </div>
+                                    @endif
+                                </div>                                
 
                                 {{-- <div class="fw-bold mt-5">{{__("Features List")}}
                                     <div class="text-gray-600">
-                                        @foreach($balance[0]->package->featuress as $pack)
+                                        @foreach($balance[0]->package->featuresAvailable as $pack)
                                            <div class="text-gray-600">
                                                 * {{ $pack->feature->name ?? '' }}
                                             </div>
@@ -151,7 +179,7 @@
                             </div>
                             <div class="col">
                                 <!--begin::Card-->
-                                <div class="card pt-4 h-md-100 mb-6 mb-md-0"  style="background-color: {{ now()->lt($balance[0]->package_expiry_at) ? 'lightgreen' : 'yellow' }}">
+                                <div class="card pt-4 h-md-100 mb-6 mb-md-0"  style="background-color: {{ now()->lt($balance[0]->package_expiry_at) ? 'lightgreen' : 'orange' }}">
                                     <!--begin::Card header-->
                                     <div class="card-header border-0">
                                         <!--begin::Card title-->

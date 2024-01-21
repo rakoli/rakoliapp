@@ -21,7 +21,7 @@ class Package extends Model
         return  $this->hasMany(PackageFeature::class,'package_code','code');
     }
 
-    public function featuress() : HasMany
+    public function featuresAvailable() : HasMany
     {
         return  $this->hasMany(PackageFeature::class,'package_code','code')->where('available', 1);;
     }
