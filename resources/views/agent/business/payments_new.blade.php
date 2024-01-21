@@ -11,7 +11,7 @@
 @section('content')
     <!--begin::Container-->
     <div id="kt_content_container" class="container-xxl">
-        
+
         @include('agent.business._submenu_business')
 
         <!--begin::Layout-->
@@ -28,7 +28,7 @@
                         <!--Begin::Status Details-->
                         <h1 class="text-center fw-bold">{{__("Balance")}}</h1>
                         <h2 class="mb-5 text-gray-600 text-center">
-                            {{$balance[0]->balance}}
+                            {{number_format($balance[0]->balance)}}
                         </h2>
                         <!--End::Status Details-->
                     </div>
@@ -65,7 +65,7 @@
                                         {{ old('method_name', $existingData[0]->method_ac_number ?? '') }}
                                     </div>
                                 </div>
-                     
+
                                 <div class="fw-bold mt-5">{{__("Amount Currency")}}
                                     <div class="text-gray-600">
                                         {{ old('method_name', $existingData[0]->amount_currency ?? '') }}
@@ -100,18 +100,18 @@
                             <div class="d-flex justify-content-center flex-column me-3">
                                 {{-- <a href="#" class="fs-1 fw-bold text-gray-900 text-hover-primary me-1 mb-2 mt-5 lh-1">{{__("Transactions")}}</a> --}}
                                 {{-- <a href="#" class="fs-1 fw-bold text-gray-900 text-hover-primary me-1 mb-2 mt-5 lh-1 text-center">{{__("Transactions")}}</a> --}}
-                                                               
+
                                 <!--begin::Info-->
                                 <div class="card-body pt-0">
                                     <button type="button" class="btn btn-primary me-1 mb-2 mt-5 lh-1" data-bs-toggle="modal" data-bs-target="#withdraw_method_modal">
                                         {{__('Withdraw Fund')}}
                                     </button>
-    
+
                                     <!--begin::Table container-->
                                     <div class="table-responsive">
-                    
+
                                         {!! $dataTableHtml->table(['class' => 'table table-row-bordered table-row-dashed gy-4' , 'style="font-size: 1.1rem;"'],true) !!}
-                    
+
                                     </div>
                                     <!--end::Table container-->
                                 </div>
@@ -247,7 +247,7 @@
                             </div>
                             <!--end::Input group-->
                         </div>
-    
+
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary">{{__('Update')}}</button>
                             <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{__("Close")}}</button>

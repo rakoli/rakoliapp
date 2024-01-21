@@ -356,4 +356,18 @@ class BusinessManagementTest extends TestCase
         $this->assertDatabaseHas('businesses', $data);
 
     }
+
+    /** @test */
+    public function agent_can_view_business_finance_page(): void
+    {
+        $business = Business::factory()->create(['balance'=>30000]);
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0, 'business_code'=>$business->code]);
+
+        $this->actingAs($user);
+
+        $response = $this->get(route('business.finance'));
+        $response->assertOk();
+        $response->assertSee('Finance');
+        $response->assertSee(number_format(30000));
+    }
 }
