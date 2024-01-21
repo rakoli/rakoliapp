@@ -11,7 +11,7 @@
 @section('content')
     <!--begin::Container-->
     <div id="kt_content_container" class="container-xxl">
-        
+
         @include('agent.business._submenu_business')
 
         <!--begin::Layout-->
@@ -25,7 +25,7 @@
                     <div class="card-body pt-5">
                         <h1 class="text-center fw-bold">{{__("Balance")}}</h1>
                         <h2 class="mb-5 text-gray-600 text-center">
-                            {{$balance[0]->balance}}
+                            {{number_format($balance[0]->balance)}}
                         </h2>
                     </div>
 
@@ -41,7 +41,7 @@
                             @else
                                 <span style="color: red;">Click on update button for update below info.</span>
                             @endif
-                        
+
                             <div class="py-5 fs-6 text-center">
                                 <button type="button" class="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#update_method_modal">
                                     {{__('Update')}}
@@ -65,7 +65,7 @@
                                         {{ old('method_ac_number', $existingData[0]->method_ac_number ?? 'Not mention') }}
                                     </div>
                                 </div>
-                     
+
                                 <div class="fw-bold mt-5">{{__("Amount Currency")}}
                                     <div class="text-gray-600">
                                         {{ old('amount_currency', $existingData[0]->amount_currency ?? 'Not mention') }}
@@ -94,18 +94,18 @@
                             <div class="d-flex justify-content-center flex-column me-3">
                                 {{-- <a href="#" class="fs-1 fw-bold text-gray-900 text-hover-primary me-1 mb-2 mt-5 lh-1">{{__("Transactions")}}</a> --}}
                                 {{-- <a href="#" class="fs-1 fw-bold text-gray-900 text-hover-primary me-1 mb-2 mt-5 lh-1 text-center">{{__("Transactions")}}</a> --}}
-                                                               
+
                                 <!--begin::Info-->
                                 <div class="card-body pt-0">
                                     <button type="button" class="btn btn-primary me-1 mb-2 mt-5 lh-1" data-bs-toggle="modal" data-bs-target="#withdraw_method_modal">
                                         {{__('Withdraw Fund')}}
                                     </button>
-    
+
                                     <!--begin::Table container-->
                                     <div class="table-responsive">
-                    
+
                                         {!! $dataTableHtml->table(['class' => 'table table-row-bordered table-row-dashed gy-4' , 'style="font-size: 1.1rem;"'],true) !!}
-                    
+
                                     </div>
                                     <!--end::Table container-->
                                 </div>
@@ -199,7 +199,7 @@
     </div>
     <!--end::Modal group-->
 
-    
+
     <!--begin::Modal group-->
     <div class="modal fade" tabindex="-1" id="withdraw_method_modal">
         <div class="modal-dialog">
@@ -242,7 +242,7 @@
                         </div>
                         <!--end::Input group-->
                     </div>
-    
+
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" id="openConfirmationModal">{{__('Update')}}</button>
                         <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{__("Close")}}</button>
