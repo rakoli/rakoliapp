@@ -38,7 +38,7 @@ class BusinessManagementTest extends TestCase
         $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
 
         $noOfNewBranches = 5;
-        Location::factory()->count($noOfNewBranches)->create();
+        Location::factory()->count($noOfNewBranches)->create(['business_code'=>$user->business_code]);
         $totalBranches = Location::where('business_code', $user->business_code)->get();
         $totalBranchCount = $totalBranches->count();
 
@@ -370,4 +370,56 @@ class BusinessManagementTest extends TestCase
         $response->assertSee('Finance');
         $response->assertSee(number_format(30000));
     }
+
+    ////////CONTINUE FINANCE TEST
+
+
+
+
+    /** @test */
+    public function agent_can_view_business_users_page(): void
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
+
+        $this->actingAs($user);
+
+        $response = $this->get(route('business.users'));
+        $response->assertOk();
+        $response->assertSee('Users');
+
+    }
+
+    /** @test */
+    public function agent_can_view_all_business_users_list()
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
+
+        $noOfNewUsers = 5;
+        $userList = User::factory()->count($noOfNewUsers)->create(['business_code'=>$user->business_code]);
+        $totalUsers = User::where('business_code', $user->business_code)->get();
+        $totalUsersCount = $totalUsers->count();
+
+        $this->actingAs($user);
+
+        $response = $this->getJson(route('business.users'),['X-Requested-With'=>'XMLHttpRequest']);
+        $responseArray = json_decode($response->content(),'true');
+
+        $allValuesFound = true;
+        $firstArray = $totalUsers->toArray();
+        $secondArray = $responseArray['data'];
+        $secondArrayIds = [];
+        foreach ($secondArray as $item) {
+            array_push($secondArrayIds, $item['id']);
+        }
+        foreach ($firstArray as $firstArrayItem) {
+            if (!in_array($firstArrayItem['id'], $secondArrayIds)) {
+                $allValuesFound = false;
+                break; // No need to continue checking if one value is not found
+            }
+        }
+
+        $this->assertTrue($allValuesFound);
+        $this->assertEquals($totalUsersCount,$responseArray['recordsTotal']);
+    }
+
 }
