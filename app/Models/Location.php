@@ -9,10 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Location extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'business_code',
@@ -98,5 +99,14 @@ class Location extends Model
     public function transactions() : HasMany
     {
         return $this->hasMany(Transaction::class, 'location_code', 'code');
+    }
+
+    public function isUserAllowed(User $user)
+    {
+        if($user->business_code == $this->business_code){
+            return true;
+        }
+        return false;
+
     }
 }

@@ -170,7 +170,7 @@ class BusinessController extends Controller
         $builder = $dataTable->getHtmlBuilder();
 
         if (request()->ajax()) {
-            $location = Location::where('business_code', $user->business_code);
+            $location = Location::where('business_code', $user->business_code)->orderBy('id','desc');;
             return \Yajra\DataTables\Facades\DataTables::eloquent($location)
                 ->addColumn('actions', function (Location $location) {
                     $content = '<a class="btn btn-secondary btn-sm me-2" href="' . route('business.branches.edit', $location->id) . '">' . __("Edit") . '</a>';
@@ -210,10 +210,10 @@ class BusinessController extends Controller
     }
     public function branchesCreateSubmit(Request $request)
     {
-
         $request->validate([
             'name' => 'required',
             'balance' => 'required|numeric',
+            'availability_desc' => 'sometimes|string|max:255|nullable',
         ]);
         $user = $request->user();
 
@@ -274,14 +274,22 @@ class BusinessController extends Controller
         if ($branches->town_code != null) {
             $areas = Area::where('town_code', $branches->town_code)->get();
         }
+
+        $isAllowed = $branches->isUserAllowed($request->user());
+        if($isAllowed == false){
+            return redirect()->route('business.branches')->withErrors(['Not authorized to perform business action']);
+        }
+
         return view('agent.business.branches_edit', compact('branches', 'regions', 'towns', 'areas'));
     }
 
     public function branchesEditSubmit(Request $request)
     {
         $request->validate([
+            'branches_id' => 'required|exists:locations,id',
             'name' => 'required',
             'balance' => 'required|numeric',
+            'availability_desc' => 'sometimes|string|max:255|nullable',
         ]);
         $user = $request->user();
 
@@ -291,13 +299,10 @@ class BusinessController extends Controller
         }
 
         $branchesData = [
-            'business_code' => $request->user()->business_code,
             'name' => $request->name,
             'balance' => $request->balance,
             'balance_currency' => $currency,
             'description' => $request->availability_desc,
-            'code' => generateCode($request->name, $request->user()->business_code),
-
         ];
 
         $region = $request->get('ad_region');
@@ -325,7 +330,14 @@ class BusinessController extends Controller
         }
 
         $branchesId = $request->input('branches_id');
-        Location::where('id', $branchesId)->update($branchesData);
+
+        $location = Location::where('id', $branchesId)->first();
+        $isAllowed = $location->isUserAllowed($request->user());
+        if($isAllowed == false){
+            return redirect()->route('business.branches')->withErrors(['Not authorized to perform business action']);
+        }
+
+        $location->update($branchesData);
 
         return redirect()->route('business.branches')->with(['message' => 'branches Edited Successfully']);
     }
@@ -334,7 +346,12 @@ class BusinessController extends Controller
     {
         $location = Location::where('id', $id)->first();
         if (empty($location)) {
-            return redirect()->back()->withErrors(['Invalid Exchange Ad']);
+            return redirect()->back()->withErrors(['Invalid BranchId Ad']);
+        }
+
+        $isAllowed = $location->isUserAllowed($request->user());
+        if($isAllowed == false){
+            return redirect()->route('business.branches')->withErrors(['Not authorized to perform business action']);
         }
 
         $location->delete();
