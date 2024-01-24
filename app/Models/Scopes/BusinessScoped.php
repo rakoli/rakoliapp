@@ -12,10 +12,11 @@ class BusinessScoped implements Scope
     /**
      * Apply the scope to a given Eloquent query builder.
      */
-    public function apply(Builder $builder, Model $model): void
+    public function apply(Builder $builder, Model $model): Builder
     {
         if (auth()->user() != null && auth()->user()->type == UserTypeEnum::AGENT->value) {
-            $builder->where('business_code', auth()->user()->business_code);
+           return $builder->where('business_code', auth()->user()->business_code);
         }
+        return  $builder;
     }
 }
