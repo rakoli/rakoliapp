@@ -5,65 +5,81 @@ namespace App\Models;
 use App\Models\Scopes\BusinessScoped;
 use App\Models\Scopes\LocationScoped;
 use App\Utils\Enums\ShiftStatusEnum;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Scout\Searchable;
 
 class Shift extends Model
 {
     use HasFactory;
 
+    use Searchable;
+    protected $guarded = ['id'];
+
     protected $casts = [
-        'status' => ShiftStatusEnum::class
+        'status' => ShiftStatusEnum::class,
     ];
 
-    public function user() : BelongsTo
+    protected static function booted()
     {
-        return $this->belongsTo(User::class,'user_code','code');
+        static::addGlobalScope(new LocationScoped());
+        static::addGlobalScope(new BusinessScoped());
     }
 
-    public function business() : BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(Business::class,'business_code','code');
+        return $this->belongsTo(User::class, 'user_code', 'code');
     }
 
-    public function shiftNetworks() : HasMany
+    public function business(): BelongsTo
     {
-        return $this->hasMany(ShiftNetwork::class,'shift_id','id');
+        return $this->belongsTo(Business::class, 'business_code', 'code');
     }
 
-    public function transactions() : HasMany
+    public function shiftNetworks(): HasMany
     {
-        return  $this->hasMany(Transaction::class);
+        return $this->hasMany(ShiftNetwork::class, 'shift_id', 'id');
     }
 
-    public function location() : BelongsTo
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(ShiftTransaction::class, 'shift_id', 'id');
+    }
+
+    public function location(): BelongsTo
     {
         return $this->belongsTo(Location::class, 'location_code', 'code');
     }
 
-    public function loans() :HasMany
+    public function loans(): HasMany
     {
         return $this->hasMany(Loan::class);
     }
 
-    public function networks() : BelongsToMany
+    public function networks(): BelongsToMany
     {
         return $this->belongsToMany(Network::class, 'shift_networks', 'shift_id', 'network_code')
             ->withPivot('id', 'business_code', 'location_code', 'balance_old', 'balance_new')
             ->withTimestamps();
     }
 
-    public function shift_transactions() : HasMany
+    public function shift_transactions(): HasMany
     {
         return $this->hasMany(ShiftTransaction::class);
     }
 
-    public function shorts() : HasMany
+    public function shorts(): HasMany
     {
         return $this->hasMany(Short::class);
     }
 
+
+    public function scopeOpen(Builder $query)
+    {
+        $query->where('status', ShiftStatusEnum::OPEN);
+    }
 }

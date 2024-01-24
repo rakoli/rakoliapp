@@ -20,7 +20,7 @@ class ShiftDatatable implements HasDatatable
 
 
 
-        return Datatables::eloquent(Shift::query()->with(['user:name,id','location:name,id']))
+        return Datatables::eloquent(Shift::query()->with(['user','location']))
             ->smart()
             ->startsWithSearch()
             ->filter(function ($query){
