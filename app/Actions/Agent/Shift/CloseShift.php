@@ -13,7 +13,7 @@ class CloseShift
 {
     use AsAction;
 
-    public function handle(float $closingBalance, string $locationCode, ?string $notes = null, ?array $tills = [])
+    public function handle(float $closingBalance, string $locationCode, ?string $notes = null,?string $description = null, ?array $tills = [])
     {
 
         try {
@@ -26,6 +26,7 @@ class CloseShift
             $shift->updateQuietly([
                 'cash_end' => $closingBalance,
                 'status' => ShiftStatusEnum::CLOSED,
+                'description' => str($shift->description)->append(" $description")->toString(),
                 'notes' => str($shift->note)->append(" $notes")->toString(),
             ]);
 

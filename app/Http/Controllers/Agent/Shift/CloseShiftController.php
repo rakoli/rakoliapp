@@ -19,7 +19,9 @@ class CloseShiftController extends Controller
             return to_route('agency.shift');
         }
 
-        $locations = Location::query()->cursor();
+        $locations = Location::query()
+            ->whereHas('users', fn($query) => $query->where('user_code', auth()->user()->code))
+            ->cursor();
 
         $shift = Shift::query()->where('status', ShiftStatusEnum::OPEN)->first();
 
@@ -36,20 +38,20 @@ class CloseShiftController extends Controller
     public function store(Request $request)
     {
         abort_if(! Shift::query()->where('status', ShiftStatusEnum::OPEN)->exists(), 404, 'No open shift to close');
+        $validated = $request->validate(rules: [
+            'closing_balance' => 'required|numeric',
+            'location_code' => 'required',
+            'notes' => 'nullable',
+            'description' => 'required',
+        ]);
 
         try {
-            $validated = $request->validate(rules: [
-                'closing_balance' => 'required|numeric',
-                'location_code' => 'required',
-                'notes' => 'required',
-                'tills' => 'required|array',
-            ]);
+
 
             \App\Actions\Agent\Shift\CloseShift::run(
                 closingBalance: $validated['closing_balance'],
                 locationCode: $validated['location_code'],
                 notes: $validated['notes'],
-                tills: $validated['tills']
             );
 
             return response()

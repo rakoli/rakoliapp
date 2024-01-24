@@ -11,7 +11,7 @@
                         type="number"
                         class="form-control-solid
                          @error('closing_balance') form-control-feedback @enderror"
-                        wire:model.blur="closing_balance"
+
                         name="closing_balance"
                         value="{{ $shift->cash_end }}"
                         placeholder="{{ __('Closing Balance') }}" id="closing_balance"/>
@@ -23,9 +23,7 @@
                 </div>
                 <div class="col-6">
                     <x-label class="" label="{{ __('location') }}" for="location"/>
-                    <select
-                        class="form-control-solid  select2 form-control @error('location_code') form-control-error @enderror"
-                        wire:model.blur="location_code"
+                    <x-select2
                         name="location_code"
                         placeholder="{{ __('Select a location') }}"
                         id="location">
@@ -37,7 +35,7 @@
 
                             >{{ $location->name }}</option>
                         @endforeach
-                    </select>
+                    </x-select2>
                     @error('location_code')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -67,8 +65,20 @@
 
             <div class="row fv-row py-3">
                 <div class="col-12">
-                    <x-label label="notes" class="" for="notes"/>
-                    <textarea wire:model="notes" name="notes" class="form-control form-control form-control-solid" rows="3"  data-kt-autosize="false"></textarea>
+                    <x-label label="description" class="" for="description"/>
+                    <textarea name="description" class="form-control form-control form-control-solid" rows="3"  data-kt-autosize="false"></textarea>
+                    @error('description')
+                    <div class="help-block text-danger">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="row fv-row py-3">
+                <div class="col-12">
+                    <x-label label="notes" required="" for="notes"/>
+                    <textarea name="notes" class="form-control form-control form-control-solid" rows="3"  data-kt-autosize="false"></textarea>
                     @error('notes')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -81,7 +91,7 @@
 
 
         <div class="modal-footer my-4">
-            <button type="button" class="btn btn-primary" onclick="submitCloseShiftForm()">Save changes</button>
+            <x-submit-button type="button" id="close-shift-button" class="btn btn-primary" label="Close Shift"/>
         </div>
 
     </form>
@@ -91,13 +101,20 @@
         <script src="{{ asset('assets/js/rakoli_ajax.js') }}"></script>
 
         <script>
-            function submitCloseShiftForm(){
 
-                submitFormAction(
-                    $("form#close-shift")[0],
-                    "{{ route('agency.shift.close.store') }}"
-                );
-            }
+            const validations = [
+                { "name": "description", "error"  :  "Description Field is Required", "validators" : {} },
+                { "name": "location_code", "error"  :  "Location Field is Required", "validators" : {}  },
+                { "name": "description", "error"  :  "Description Field is Required" ,"validators" : {}  },
+            ];
+
+            const form = document.getElementById('close-shift');
+
+
+            const submitButton = document.getElementById('close-shift-button');
+
+
+            lakoriValidation(validations, form, submitButton, 'post', '{{  route('agency.shift.close.store', $shift) }}');
 
 
         </script>

@@ -17,22 +17,24 @@ class OpenShiftController extends Controller
     {
 
 
-        if ( Shift::query()->where('status', ShiftStatusEnum::OPEN)->exists())
-        {
-            return  to_route('agency.shift')->withErrors([
+        if (Shift::query()->where('status', ShiftStatusEnum::OPEN)->exists()) {
+            return to_route('agency.shift')->withErrors([
                 'error' => "cannot Open another shift"
             ]);
         }
         $tills = Network::query()->with('agency')->cursor();
 
-        $locations = Location::query()->cursor();
+        $locations = Location::query()
+            ->whereHas('users', fn($query) => $query->where('user_code', auth()->user()->code))
+            ->cursor();
 
 
-        return view('agent.agency.shift.open-shift',[
+        return view('agent.agency.shift.open-shift', [
             'tills' => $tills,
             'locations' => $locations,
         ]);
     }
+
     public function store(Request $request)
     {
 
