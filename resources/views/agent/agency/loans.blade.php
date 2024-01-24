@@ -47,7 +47,7 @@
                                 isStacked="true"
                             >
 
-                                @include('agent.agency.loans.add-loan')
+                             
 
 
                             </x-modal_with_button>
