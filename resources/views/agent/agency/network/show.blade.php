@@ -92,14 +92,17 @@
                                                         </div>--}}
 
                                                         <!--end::Description-->
-                                                        <div class="modal-footer">
+
                                                             <button type="button" data-bs-dismiss="modal"
                                                                     class="btn btn-primary">Cancel
                                                             </button>
-                                                            <button type="button" id="delete-network-button"
-                                                                    class="btn btn-danger">Yes
-                                                            </button>
-                                                        </div>
+                                                            <x-submit-button
+                                                                type="button"
+                                                                id="delete-network-button"
+                                                                class="btn btn-danger"
+                                                                label="Delete {{ $network->name }}"
+                                                            />
+
                                                     </form>
 
 
@@ -223,9 +226,11 @@
                 $("button#delete-network-button").click(function (event) {
                     event.preventDefault();
 
-                    submitForm(
-                        $("form#delete-network-form"),
+
+                    submitFormAction(
+                        document.getElementById('delete-network-form'),
                         "{{ route('agency.networks.delete', $network) }}",
+                        document.getElementById('delete-network-button'),
                         "delete"
                     );
 

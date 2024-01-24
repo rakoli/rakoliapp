@@ -3,7 +3,7 @@
     'label' => "Save Changes"
 ])
 
-<button id="{{ $id }}" type="button" class="btn btn-primary">
+<button id="{{ $id }}" type="button" {{ $attributes->merge(['class' => "btn btn-primary"]) }}>
     <span class="indicator-label">
         {{ $label }}
     </span>
