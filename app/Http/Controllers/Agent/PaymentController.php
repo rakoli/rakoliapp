@@ -31,12 +31,12 @@ class PaymentController extends Controller
 
         if (request()->ajax()) {
             return \Yajra\DataTables\Facades\DataTables::eloquent($roles)
-            // ->addColumn('actions', function(Transaction $role) {
-            //     $content = '<button class="btn btn-secondary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#edit_method_modal" onclick="editClicked('.$role->id.')">'.__("Edit").'</button>';
-            //     $content .= '<button class="btn btn-secondary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#delete_method_modal" onclick="deleteClicked('.$role->id.')">'.__("Delete").'</button>';
-            //     return $content;
-            // })
-            // ->rawColumns(['actions'])
+                // ->addColumn('actions', function(Transaction $role) {
+                //     $content = '<button class="btn btn-secondary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#edit_method_modal" onclick="editClicked('.$role->id.')">'.__("Edit").'</button>';
+                //     $content .= '<button class="btn btn-secondary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#delete_method_modal" onclick="deleteClicked('.$role->id.')">'.__("Delete").'</button>';
+                //     return $content;
+                // })
+                // ->rawColumns(['actions'])
                 ->addIndexColumn()
                 ->toJson();
         }
@@ -65,7 +65,7 @@ class PaymentController extends Controller
             ->lengthMenu([[25, 50, 100, -1], [25, 50, 100, "All"]]);
 
         $methodsJson = $roles->get()->toJson();
-        return view('agent.business.payments_new', compact('dataTableHtml', 'orderByFilter', 'methodsJson', 'balance','existingData'));
+        return view('agent.business.payments_new', compact('dataTableHtml', 'orderByFilter', 'methodsJson', 'balance', 'existingData'));
     }
 
     public function financeUpdate(Request $request)
@@ -105,8 +105,8 @@ class PaymentController extends Controller
             'amount' => 'required',
         ]);
 
-        $get_withdraw_method = BusinessWithdrawMethod::where('business_code',$request->user()->business_code)->first();
-        
+        $get_withdraw_method = BusinessWithdrawMethod::where('business_code', $request->user()->business_code)->first();
+
         if (!$get_withdraw_method) {
             return redirect()->back()->with(['message' => __('Please add withdrawal method')]);
         }
@@ -118,7 +118,7 @@ class PaymentController extends Controller
         }
         if ($request->description != null) {
             $description = $request->description;
-        }else{
+        } else {
             $description = '';
         }
 
@@ -133,5 +133,15 @@ class PaymentController extends Controller
         $withdraw->save();
 
         return redirect()->back()->with(['message' => __('Withdraw Fund') . ' ' . __('Added Successfully')]);
+    }
+
+    public function checkMethord(Request $request)
+    {
+        $get_withdraw_method = BusinessWithdrawMethod::where('business_code', $request->user()->business_code)->first();
+        if (!$get_withdraw_method) {
+            return response()->json(['message' => __('Please add withdrawal method')]);
+        } else {
+            return response()->json(['message' => 'Withdrawal method exists']);
+        }
     }
 }

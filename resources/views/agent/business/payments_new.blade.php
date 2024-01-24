@@ -1,10 +1,10 @@
 @extends('layouts.users.agent')
 
-@section('title', __("Finance"))
+@section('title', __('Finance'))
 
 @section('header_js')
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
-    <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
 @endsection
 
 
@@ -23,9 +23,9 @@
                 <div class="card mb-5 mb-xl-8">
 
                     <div class="card-body pt-5">
-                        <h1 class="text-center fw-bold">{{__("Balance")}}</h1>
+                        <h1 class="text-center fw-bold">{{ __('Balance') }}</h1>
                         <h2 class="mb-5 text-gray-600 text-center">
-                            {{number_format($balance[0]->balance)}}
+                            {{ number_format($balance[0]->balance) }}
                         </h2>
                     </div>
 
@@ -37,36 +37,37 @@
                     <div class="card-body pt-1">
                         <!--begin::Details content-->
                         <div class="collapse show">
-                            @if(isset($existingData[0]->method_name) && $existingData[0]->method_name)
+                            @if (isset($existingData[0]->method_name) && $existingData[0]->method_name)
                             @else
                                 <span style="color: red;">Click on update button for update below info.</span>
                             @endif
 
                             <div class="py-5 fs-6 text-center">
-                                <button type="button" class="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#update_method_modal">
-                                    {{__('Update')}}
+                                <button type="button" class="btn btn-primary m-2" data-bs-toggle="modal"
+                                    data-bs-target="#update_method_modal">
+                                    {{ __('Update') }}
                                 </button>
                             </div>
                             <div class=" fs-6">
-                                <div class="fw-bold mt-5">{{__("Method Name")}}
+                                <div class="fw-bold mt-5">{{ __('Method Name') }}
                                     <div class="text-gray-600">
                                         {{ old('method_name', $existingData[0]->method_name ?? 'Not mention') }}
                                     </div>
                                 </div>
 
-                                <div class="fw-bold mt-5">{{__("Method AC Name")}}
+                                <div class="fw-bold mt-5">{{ __('Method AC Name') }}
                                     <div class="text-gray-600">
                                         {{ old('method_ac_name', $existingData[0]->method_ac_name ?? 'Not mention') }}
                                     </div>
                                 </div>
 
-                                <div class="fw-bold mt-5">{{__("Method AC Number")}}
+                                <div class="fw-bold mt-5">{{ __('Method AC Number') }}
                                     <div class="text-gray-600">
                                         {{ old('method_ac_number', $existingData[0]->method_ac_number ?? 'Not mention') }}
                                     </div>
                                 </div>
 
-                                <div class="fw-bold mt-5">{{__("Amount Currency")}}
+                                <div class="fw-bold mt-5">{{ __('Amount Currency') }}
                                     <div class="text-gray-600">
                                         {{ old('amount_currency', $existingData[0]->amount_currency ?? 'Not mention') }}
                                     </div>
@@ -97,14 +98,20 @@
 
                                 <!--begin::Info-->
                                 <div class="card-body pt-0">
-                                    <button type="button" class="btn btn-primary me-1 mb-2 mt-5 lh-1" data-bs-toggle="modal" data-bs-target="#withdraw_method_modal">
+                                    {{-- <button type="button" class="btn btn-primary me-1 mb-2 mt-5 lh-1" id="withdrawButton" data-bs-toggle="modal" data-bs-target="#withdraw_method_modal">
                                         {{__('Withdraw Fund')}}
+                                    </button> --}}
+                                    <button type="button" class="btn btn-primary me-1 mb-2 mt-5 lh-1" id="withdrawButton">
+                                        {{ __('Withdraw Fund') }}
                                     </button>
 
                                     <!--begin::Table container-->
                                     <div class="table-responsive">
 
-                                        {!! $dataTableHtml->table(['class' => 'table table-row-bordered table-row-dashed gy-4' , 'style="font-size: 1.1rem;"'],true) !!}
+                                        {!! $dataTableHtml->table(
+                                            ['class' => 'table table-row-bordered table-row-dashed gy-4', 'style="font-size: 1.1rem;"'],
+                                            true,
+                                        ) !!}
 
                                     </div>
                                     <!--end::Table container-->
@@ -151,47 +158,54 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title">{{__("Update Withdraw Details")}}</h3>
+                    <h3 class="modal-title">{{ __('Update Withdraw Details') }}</h3>
                     <!--begin::Close-->
-                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
+                        aria-label="Close">
                         <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
                     </div>
                     <!--end::Close-->
                 </div>
-                <form class="my-auto pb-5" action="{{route('business.finance.update')}}" method="POST">
+                <form class="my-auto pb-5" action="{{ route('business.finance.update') }}" method="POST">
                     @csrf
                     <div class="modal-body">
-                            <!--begin::Input group-->
-                            <div class="row mb-5">
-                                <div class="input-group input-group-lg mb-5">
-                                    <span class="input-group-text">{{__("Name")}}</span>
-                                    <input name="method_name" type="text" class="form-control" value="{{ old('method_name', $existingData[0]->method_name ?? '') }}" value="" placeholder="{{__('enter method name')}}"/>
-                                </div>
+                        <!--begin::Input group-->
+                        <div class="row mb-5">
+                            <div class="input-group input-group-lg mb-5">
+                                <span class="input-group-text">{{ __('Name') }}</span>
+                                <input name="method_name" type="text" class="form-control"
+                                    value="{{ old('method_name', $existingData[0]->method_name ?? '') }}" value=""
+                                    placeholder="{{ __('enter method name') }}" />
                             </div>
-                            <!--end::Input group-->
-                            <!--begin::Input group-->
-                            <div class="row mb-5">
-                                <div class="input-group input-group-lg mb-5">
-                                    <span class="input-group-text">{{__("AC Name")}}</span>
-                                    <input name="method_ac_name" type="text" class="form-control" value="{{ old('method_ac_name', $existingData[0]->method_ac_name ?? '') }}" value="" placeholder="{{__('enter method ac name')}}"/>
-                                    {{-- <textarea name="description" type="text" class="form-control" value="" placeholder="{{__('enter description')}}"></textarea> --}}
-                                </div>
+                        </div>
+                        <!--end::Input group-->
+                        <!--begin::Input group-->
+                        <div class="row mb-5">
+                            <div class="input-group input-group-lg mb-5">
+                                <span class="input-group-text">{{ __('AC Name') }}</span>
+                                <input name="method_ac_name" type="text" class="form-control"
+                                    value="{{ old('method_ac_name', $existingData[0]->method_ac_name ?? '') }}"
+                                    value="" placeholder="{{ __('enter method ac name') }}" />
+                                {{-- <textarea name="description" type="text" class="form-control" value="" placeholder="{{__('enter description')}}"></textarea> --}}
                             </div>
-                            <!--end::Input group-->
-                            <!--begin::Input group-->
-                            <div class="row mb-5">
-                                <div class="input-group input-group-lg mb-5">
-                                    <span class="input-group-text">{{__("AC Number")}}</span>
-                                    <input name="method_ac_number" type="text" class="form-control" value="{{ old('method_ac_number', $existingData[0]->method_ac_number ?? '') }}" value="" placeholder="{{__('enter method ac number')}}"/>
-                                    {{-- <textarea name="description" type="text" class="form-control" value="" placeholder="{{__('enter description')}}"></textarea> --}}
-                                </div>
+                        </div>
+                        <!--end::Input group-->
+                        <!--begin::Input group-->
+                        <div class="row mb-5">
+                            <div class="input-group input-group-lg mb-5">
+                                <span class="input-group-text">{{ __('AC Number') }}</span>
+                                <input name="method_ac_number" type="text" class="form-control"
+                                    value="{{ old('method_ac_number', $existingData[0]->method_ac_number ?? '') }}"
+                                    value="" placeholder="{{ __('enter method ac number') }}" />
+                                {{-- <textarea name="description" type="text" class="form-control" value="" placeholder="{{__('enter description')}}"></textarea> --}}
                             </div>
-                            <!--end::Input group-->
+                        </div>
+                        <!--end::Input group-->
                     </div>
 
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">{{__('Update')}}</button>
-                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{__("Close")}}</button>
+                        <button type="submit" class="btn btn-primary">{{ __('Update') }}</button>
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{ __('Close') }}</button>
                     </div>
                 </form>
             </div>
@@ -205,21 +219,24 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title">{{__("Add Withdraw Fund Details")}}</h3>
+                    <h3 class="modal-title">{{ __('Add Withdraw Fund Details') }}</h3>
                     <!--begin::Close-->
-                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
+                        aria-label="Close">
                         <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
                     </div>
                     <!--end::Close-->
                 </div>
-                <form id="withdrawForm" class="my-auto pb-5" action="{{route('business.finance.withdraw')}}" method="POST">
+                <form id="withdrawForm" class="my-auto pb-5" action="{{ route('business.finance.withdraw') }}"
+                    method="POST">
                     @csrf
                     <div class="modal-body">
                         <!--begin::Input group-->
                         <div class="row mb-5">
                             <div class="input-group input-group-lg mb-5">
-                                <span class="input-group-text">{{__("Amount")}}</span>
-                                <input name="amount" type="number" class="form-control" placeholder="{{__('enter amount')}}"/>
+                                <span class="input-group-text">{{ __('Amount') }}</span>
+                                <input name="amount" type="number" class="form-control"
+                                    placeholder="{{ __('enter amount') }}" />
                             </div>
                         </div>
                         {{-- <div class="row mb-5">
@@ -236,16 +253,18 @@
                         <!--begin::Input group-->
                         <div class="row mb-5">
                             <div class="input-group input-group-lg mb-5">
-                                <span class="input-group-text">{{__("Description")}}</span>
-                                <textarea name="description" type="text" class="form-control" placeholder="{{__('enter description')}}"></textarea>
+                                <span class="input-group-text">{{ __('Description') }}</span>
+                                <textarea name="description" type="text" class="form-control" placeholder="{{ __('enter description') }}"></textarea>
                             </div>
                         </div>
                         <!--end::Input group-->
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" id="openConfirmationModal">{{__('Update')}}</button>
-                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{__("Close")}}</button>
+                        <button type="button" class="btn btn-primary"
+                            id="openConfirmationModal">{{ __('Update') }}</button>
+                        <button type="button" class="btn btn-light"
+                            data-bs-dismiss="modal">{{ __('Close') }}</button>
                     </div>
                 </form>
             </div>
@@ -270,23 +289,62 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" tabindex="-1" id="Messages">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Alert</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h4 id="modalMessage">   </h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('footer_js')
-    <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}" type="text/javascript"></script>
+    <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}" type="text/javascript"></script>
 
     {!! $dataTableHtml->scripts() !!}
 
     <script>
-        document.getElementById('openConfirmationModal').addEventListener('click', function () {
+        // Message modal //
+        $(document).ready(function() {
+            $('#withdrawButton').on('click', function() {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('business.finance.check_methord') }}',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if (response.message === 'Withdrawal method exists') {
+                            $('#withdraw_method_modal').modal('show');
+                        } else {
+                            $('#Messages').modal('show');
+                            $('#modalMessage').text('Please update the withdraw method on left side before submitting withdraw request.').css('color', 'red');
+                        }
+                    },
+                    error: function(error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+        });
+
+        document.getElementById('openConfirmationModal').addEventListener('click', function() {
             // Hide the first modal
             $('#withdraw_method_modal').modal('hide');
-
             // Show the confirmation modal
             $('#confirmation_modal').modal('show');
         });
 
-        document.getElementById('confirmWithdraw').addEventListener('click', function () {
+        document.getElementById('confirmWithdraw').addEventListener('click', function() {
             // Submit the form when "Yes" is clicked
             document.getElementById('withdrawForm').submit();
         });
@@ -308,11 +366,11 @@
         });
         acNameClipboard.on('success', function(e) {
             const currentLabel = acNameButton.innerHTML;
-            if(acNameButton.innerHTML === 'Copied!'){
+            if (acNameButton.innerHTML === 'Copied!') {
                 return;
             }
             acNameButton.innerHTML = 'Copied!';
-            setTimeout(function(){
+            setTimeout(function() {
                 acNameButton.innerHTML = currentLabel;
             }, 3000)
         });
@@ -329,16 +387,15 @@
         });
         acNumberClipboard.on('success', function(e) {
             const currentLabel = acNumberButton.innerHTML;
-            if(acNumberButton.innerHTML === 'Copied!'){
+            if (acNumberButton.innerHTML === 'Copied!') {
                 return;
             }
             acNumberButton.innerHTML = 'Copied!';
-            setTimeout(function(){
+            setTimeout(function() {
                 acNumberButton.innerHTML = currentLabel;
             }, 3000)
         });
         //END:: ACCOUNT NUMBER - CLIPBOARD
-
     </script>
 
 @endsection
