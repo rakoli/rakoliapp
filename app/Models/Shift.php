@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Scopes\BusinessScoped;
 use App\Models\Scopes\LocationScoped;
 use App\Utils\Enums\ShiftStatusEnum;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -72,5 +73,11 @@ class Shift extends Model
     public function shorts(): HasMany
     {
         return $this->hasMany(Short::class);
+    }
+
+
+    public function scopeOpen(Builder $query)
+    {
+        $query->where('status', ShiftStatusEnum::OPEN);
     }
 }
