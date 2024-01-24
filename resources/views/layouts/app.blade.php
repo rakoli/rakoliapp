@@ -748,6 +748,14 @@
                                 <!--begin::Title-->
                                 <h1 class="d-flex align-items-center text-dark fw-bold my-1 fs-3">@yield('title')
                                     @yield('breadcrumb')
+                                    @if(!empty(cleanText(Request()->route()->getPrefix())))
+                                        <!--begin::Separator-->
+                                        <span class="h-20px border-gray-200 border-start ms-3 mx-2"></span>
+                                        <!--end::Separator-->
+                                        <!--begin::Description-->
+                                        <small class="text-muted fs-7 fw-semibold my-1 ms-1">{{__(ucfirst(cleanText(Request()->route()->getPrefix())))}}</small>
+                                        <!--end::Description-->
+                                    @endif
                                     <!--begin::Separator-->
                                     <span class="h-20px border-gray-200 border-start ms-3 mx-2"></span>
                                     <!--end::Separator-->
@@ -765,6 +773,30 @@
                 </div>
                 <!--end::Toolbar-->
 
+                @if ($errors->any())
+                    <!--begin::Container-->
+                    <div class="container-xxl mb-5">
+                        <div class="card card-flush mb-0">
+                            <div class="alert alert-danger mb-0">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                @if(session('message'))
+                    <div class="container-xxl mb-5">
+                        <div class="card card-flush mb-0">
+                            <div class="alert alert-success mb-0">
+                                {{ session('message') }}
+                            </div>
+                        </div>
+                    </div>
+                @endif
 
 
                 <!--begin::Content-->

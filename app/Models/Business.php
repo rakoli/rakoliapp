@@ -8,12 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class Business extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'country_code',
@@ -42,6 +44,16 @@ class Business extends Model
                 'balance' => 0,
                 'balance_currency' => $country->currency,
             ]);
+            ExchangeStat::create([
+                "business_code"=>"$businessInstance->code"
+            ]);
+            ExchangeBusinessMethod::create([
+                'business_code' => $businessInstance->code,
+                'nickname' => 'cash',
+                'method_name' => 'cash',
+                'account_number' => 'cash',
+                'account_name' => 'cash',
+            ]);
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollback();
@@ -59,19 +71,19 @@ class Business extends Model
         return $this->belongsTo(Country::class, 'country_code', 'code');
     }
 
-    public function user(): BelongsTo
+    public function user(): HasMany
     {
-        return $this->belongsTo(User::class, 'code', 'code');
+        return $this->HasMany(User::class, 'business_code', 'code');
     }
 
-    public function users(): BelongsTo //to cover all usage scope
+    public function users(): HasMany //to cover all usage scope
     {
-        return $this->belongsTo(User::class, 'code', 'code');
+        return $this->HasMany(User::class, 'business_code', 'code');
     }
 
     public function package(): BelongsTo
     {
-        return $this->belongsTo(Package::class, 'code', 'code');
+        return $this->belongsTo(Package::class, 'package_code', 'code');
     }
 
     public function taskSubmissions(): HasManyThrough
@@ -149,9 +161,19 @@ class Business extends Model
         return $this->hasMany(Transaction::class, 'business_code', 'code');
     }
 
+    public function exchange_business_methods(): HasMany
+    {
+        return $this->hasMany(ExchangeBusinessMethod::class, 'business_code', 'code');
+    }
+
     public function exchange_ads(): HasMany
     {
         return $this->hasMany(ExchangeAds::class, 'business_code', 'code');
+    }
+
+    public function exchange_stats() : HasOne
+    {
+        return $this->hasOne(ExchangeStat::class,'business_code','code');
     }
 
     public function exchange_transactions_owned(): HasMany

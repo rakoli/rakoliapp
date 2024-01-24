@@ -166,4 +166,45 @@ function setupSession(User $user, $isRegisteringUser = false)
     } else {
         Session::put('business_name', 'ADMIN - RAKOLI SYSTEMS');
     }
+
+    $user->lastSeenUpdate();
+}
+
+function returnActiveMenuStyle($menuSection) : string
+{
+    if($menuSection == cleanText(Request()->route()->getPrefix())){
+        return 'hover';
+    }
+    return '';
+}
+
+function returnActiveSubMenuStyle($subSection) : string
+{
+    if($subSection == cleanText(strstr(Request()->route()->getName(), '.'))){
+        return 'active';
+    }
+    return '';
+}
+
+function str_camelcase($string) : string
+{
+    return ucwords(strtolower($string));
+}
+
+function tradeOrderInvence($type) : string
+{
+    if($type == "sell"){
+        return "buy";
+    }
+
+    if($type == "buy"){
+        return "sell";
+    }
+
+    return $type;
+}
+
+function idNumberDisplay($number)
+{
+    return str_pad("$number", 5,'0',STR_PAD_LEFT);
 }

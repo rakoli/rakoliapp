@@ -1,5 +1,5 @@
 <!-- Home -->
-<div class="menu-item py-2">
+<div class="menu-item py-2 {{returnActiveMenuStyle('')}}">
     <!--begin:Menu link-->
     <a class="menu-link menu-center" href="{{route('home')}}" target="_self">
         <span class="menu-icon me-0">
@@ -14,7 +14,7 @@
 <!-- End: Home -->
 
 <!-- Business and User Management -->
-<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2">
+<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('business')}}">
     <!--begin:Menu link-->
     <span class="menu-link menu-center">
         <span class="menu-icon me-0">
@@ -40,14 +40,14 @@
             <!--begin:Menu sub-->
             <div class="menu-sub menu-sub-accordion">
 
-                <a class="menu-link" href="{{route('business.listbusiness')}}">
+                <a class="menu-link" href="{{route('admin.business.listbusiness')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{__('List Business')}}</span>
                 </a>
 
-                <a class="menu-link" href="{{route('business.listusers')}}">
+                <a class="menu-link" href="{{route('admin.business.listusers')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
@@ -63,7 +63,7 @@
 </div>
 
 <!-- Exchange -->
-<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2">
+<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('adminexchange')}}">
     <!--begin:Menu link-->
     <span class="menu-link menu-center">
         <span class="menu-icon me-0">
@@ -91,29 +91,17 @@
 
             <!--begin:Menu sub-->
             <div class="menu-sub menu-sub-accordion">
-                <a class="menu-link" href="/dashboard/admin/ads">
-                    <span class="menu-bullet">
-                        <span class="bullet bullet-dot"></span>
-                    </span>
-                    <span class="menu-title">{{ __('Listing') }}</span>
-                </a>
-                <a class="menu-link" href="/dashboard/admin/ads">
+                <a class="menu-link" href="{{route('admin.exchange.ads')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Ads') }}</span>
                 </a>
-                <a class="menu-link" href="/dashboard/admin/transactions">
+                <a class="menu-link" href="{{route('admin.exchange.transactions')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Transactions') }}</span>
-                </a>
-                <a class="menu-link" href="/dashboard/admin/security">
-                    <span class="menu-bullet">
-                        <span class="bullet bullet-dot"></span>
-                    </span>
-                    <span class="menu-title">{{ __('Security') }}</span>
                 </a>
             </div>
             <!--end:Menu sub-->
@@ -124,7 +112,7 @@
 </div>
 
 <!-- VAS -->
-<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2">
+<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('vas')}}">
     <!--begin:Menu link-->
     <span class="menu-link menu-center">
         <span class="menu-icon me-0">
@@ -178,7 +166,7 @@
 </div>
 
 <!-- Income -->
-<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2">
+<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('income')}}">
     <!--begin:Menu link-->
     <span class="menu-link menu-center">
         <span class="menu-icon me-0">
@@ -232,8 +220,7 @@
 </div>
 
 <!-- System -->
-<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start"
-    class="menu-item py-2">
+<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('system')}}">
     <!--begin:Menu link-->
     <span class="menu-link menu-center">
         <span class="menu-icon me-0">

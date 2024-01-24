@@ -343,6 +343,19 @@
         document.getElementById('payment_method').value = method.value;
         selectedpaymentMethod = method.value;
     }
+
+    function openModal() {
+        var modal = document.getElementById('confirm_subscription_details');
+        modal.style.display = 'block';
+    }
+
+    function validateSubscriptionAndOpenModal() {
+        if (selectedpackage !== "") {
+            $('#confirm_subscription_details').modal('show');
+        } else {
+            toastr.error("Select Package First");
+        }
+    }
     //END:: SUBSCRIPTION ACTIONS
 
 

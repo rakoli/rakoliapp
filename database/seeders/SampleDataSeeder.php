@@ -14,7 +14,7 @@ class SampleDataSeeder extends Seeder
         $this->call([
             SampleBusinessSeeder::class,
             SampleSystemIncomeSeeder::class,
-            SampleExchangeAdsSeeder::class,
+//            SampleExchangeAdsSeeder::class, //In Business Seeder, PUT OF FOR OTHER TESTINGS
             SampleVasTaskSeeder::class,
             SampleVasContractSeeder::class,
             SampleVasPaymentSeeder::class,
@@ -22,7 +22,7 @@ class SampleDataSeeder extends Seeder
             SampleTransactionSeeder::class,
             SampleNetworkSeeder::class,
             SampleShiftSeeder::class,
-            SampleExchangeTransactionSeeder::class,
+//            SampleExchangeTransactionSeeder::class, //In Business Seeder
         ]);
     }
 }
