@@ -142,17 +142,15 @@
                                 </div>
                             </div>
 
+                            <div class="modal-footer">
+                                <x-submit-button
+                                    type="button"
+                                    class="btn btn-primary"
+                                    label="Open Shift"
+                                    id="open-shift-button"
 
-                            <button id="open-shift-button" type="button" class="btn btn-primary">
-                                <span class="indicator-label">
-                                    Validation Form
-                                </span>
-                                <span class="indicator-progress">
-                                    Please wait... <span
-                                        class="spinner-border spinner-border-sm align-middle ms-2"></span>
-                                </span>
-                            </button>
-
+                                    />
+                            </div>
 
                         </form>
 

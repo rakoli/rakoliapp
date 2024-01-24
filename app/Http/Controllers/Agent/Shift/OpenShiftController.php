@@ -25,7 +25,7 @@ class OpenShiftController extends Controller
         $tills = Network::query()->with('agency')->cursor();
 
         $locations = Location::query()
-            ->whereHas('users', fn($query) => $query->where('user_code', auth()->user()->code))
+            // ->whereHas('users', fn($query) => $query->where('user_code', auth()->user()->code)) //@todo Remove this when implemented
             ->cursor();
 
 

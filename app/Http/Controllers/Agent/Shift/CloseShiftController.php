@@ -20,7 +20,7 @@ class CloseShiftController extends Controller
         }
 
         $locations = Location::query()
-            ->whereHas('users', fn($query) => $query->where('user_code', auth()->user()->code))
+           // ->whereHas('users', fn($query) => $query->where('user_code', auth()->user()->code)) //@todo Remove this when implemented
             ->cursor();
 
         $shift = Shift::query()->where('status', ShiftStatusEnum::OPEN)->first();
