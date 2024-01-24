@@ -40,13 +40,15 @@
                         <div class="d-flex justify-content-end" data-kt-docs-table-toolbar="base">
 
 
-                            <!--begin::Add customer-->
+
+                            @if(! $hasOpenShift)
                             <x-a-button
                                 route="{{ route('agency.shift.open.index') }}"
                             >
 
                                 {{ __('Open Shift') }}
                             </x-a-button>
+                            @else
 
                             <div class="mx-6">
                                 <x-a-button
@@ -54,6 +56,7 @@
                                         route="{{ route('agency.shift.close') }}"
                                         label="{{ __('Close Shift') }}"/>
                             </div>
+                                @endif
                         </div>
                         <!--end::Toolbar-->
 

@@ -21,7 +21,7 @@ class AgencyController extends Controller
 
 
         return view('agent.agency.shift.index', [
-
+            'hasOpenShift' => Shift::query()->open()->exists(),
             'dataTableHtml' => $shiftDatatable->columns(datatableBuilder: $datatableBuilder),
         ]);
     }
