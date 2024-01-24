@@ -19,10 +19,10 @@ class ShiftLoansDatatable implements HasDatatable
     public function index(Shift $shift, bool $isToday = false): \Illuminate\Http\JsonResponse
     {
 
+
         $loans = Loan::query()
             ->whereBelongsTo($shift, 'shift')
-            ->with('location', 'user', 'network.agency')
-            ->when($isToday, fn ($query) => $query->whereDate('created_at', Carbon::today()));
+            ->with('location', 'shift', 'network.agency', 'user');
 
         return Datatables::eloquent($loans)
             ->filter(function ($query) {
@@ -33,42 +33,58 @@ class ShiftLoansDatatable implements HasDatatable
             })
             ->startsWithSearch()
             ->addIndexColumn()
-            ->addColumn('created_at', fn (ShiftTransaction $transaction) => $transaction->created_at->format('Y-F-d'))
-            ->addColumn('balance_old', fn (ShiftTransaction $transaction) => money($transaction->balance_old, currencyCode(), true))
-            ->addColumn('user_name', fn (ShiftTransaction $transaction) => $transaction->user->full_name)
-            ->addColumn('amount', fn (ShiftTransaction $transaction) => money($transaction->amount, currencyCode(), true))
-            ->addColumn('balance_new', fn (ShiftTransaction $transaction) => money($transaction->balance_new, currencyCode(), true))
-            ->addColumn('transaction_type', function (ShiftTransaction $transaction) {
+            ->addColumn('created_at', fn (Loan $record) => $record->created_at->format('Y-F-d'))
+            ->addColumn('location_name', fn (Loan $record) => $record->location->name)
+            ->addColumn('user_name', fn (Loan $record) => $record->user->full_name)
+            ->addColumn('agency_name', fn (Loan $record) => $record->network->agency->name)
+            ->addColumn('status', function (Loan $record) {
 
                 $table = new self();
 
                 return $table->status(
-                    label: $transaction->type->label(),
-                    badgeClass: $transaction->type->color()
+                    label: $record->status->label(),
+                    badgeClass: $record->status->color()
                 );
             })
-            ->addColumn('actions', function (ShiftTransaction $transaction) {
+            ->addColumn('type', function (Loan $record) {
 
+                $table = new self();
+
+                return $table->status(
+                    label: $record->type->label(),
+                    badgeClass: $record->type->color()
+                );
             })
-            ->addColumn('location_name', fn (ShiftTransaction $transaction) => $transaction->location->name)
-            ->addColumn('network_name', fn (ShiftTransaction $transaction) => $transaction->network?->agency?->name)
+            ->addColumn('action', fn (Loan $loan) => (new self())->buttons([
 
-            ->rawColumns(['balance_old', 'balance_new', 'transaction_type', 'actions'])
+                'pay' => [
+                    'route' => route('agency.loans.show', $loan),
+                    'attributes' => '',
+                ],
+            ]))
+            ->addColumn('amount', fn (Loan $record) => money($record->amount, currencyCode(), true))
+            ->addColumn('balance', fn (Loan $record) => money($record->balance, currencyCode(), true))
+            ->rawColumns(['balance'])
             ->toJson();
     }
 
     public function columns(Builder $datatableBuilder): Builder
     {
-        return $datatableBuilder
-            ->columns([
-                Column::make('location.name')->title(__('Location')),
-                Column::make('user_name')->title(__('user'))->orderable(),
-                Column::make('balance_old')->title(__('Old Balance').' '.strtoupper(session('currency')))->orderable(),
-                Column::make('amount')->title(__('Amount Transacted').' '.strtoupper(session('currency')))->orderable(),
-                Column::make('balance_new')->title(__('New Balance')),
-                Column::make('network_name')->title(__('network')),
-                Column::make('transaction_type')->title(__('Type'))->orderable(),
-            ])
+
+        return $datatableBuilder->columns([
+            Column::make('id')->title('#')->searchable(false)->orderable(),
+            Column::make('created_at')->title(__('date'))->searchable()->orderable(),
+            Column::make('location_name')->title(__('Location'))->searchable()->orderable(),
+            Column::make('user_name')->title(__('User'))->searchable()->orderable(),
+            Column::make('agency_name')->title(__('Agency'))->searchable()->orderable(),
+            Column::make('status')->title(__('status'))->searchable()->orderable(),
+            Column::make('type')->title(__('type'))->searchable()->orderable(),
+            Column::make('amount')->title(__('amount').' '.strtoupper(session('currency')))->searchable()->orderable(),
+            Column::make('balance')->title(__('balance').' '.strtoupper(session('currency')))->searchable()->orderable(),
+            Column::make('action')->data('action')->title(__('action')),
+
+        ])
+
             ->orderBy(0);
     }
 }

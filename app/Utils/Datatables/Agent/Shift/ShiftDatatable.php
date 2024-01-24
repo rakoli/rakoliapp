@@ -16,12 +16,14 @@ class ShiftDatatable implements HasDatatable
 
     public function index()
     {
-        $shifts = Shift::query()->with([
-            'user','location'
-        ]);
 
-        return Datatables::eloquent($shifts)
-            ->filter(function ($query) {
+
+
+
+        return Datatables::eloquent(Shift::query()->with(['user:name,id','location:name,id']))
+            ->smart()
+            ->startsWithSearch()
+            ->filter(function ($query){
                 $query->skip(request('start'))->take(request('length'));
             })
             ->order(function ($query) {
@@ -34,12 +36,15 @@ class ShiftDatatable implements HasDatatable
             ->addColumn('cash_end', fn (Shift $shift) => money($shift->cash_end, currencyCode(), true))
             ->addColumn('branch', fn (Shift $shift) =>  $shift->location->name)
             ->addColumn('action', function (Shift $shift) {
-
-                return (new self())->buttons([
+               return ShiftDatatable::make()->buttons([
 
                     'Details' => [
                         'route' => route('agency.shift.show', $shift),
                         'attributes' => 'null',
+                    ],
+                    'Loans' => [
+                        'route' => route('agency.shift.till', $shift),
+                        'attributes' => null,
                     ],
                     'Tills' => [
                         'route' => route('agency.shift.till', $shift),
@@ -49,7 +54,7 @@ class ShiftDatatable implements HasDatatable
             })
             ->addColumn('status', function (Shift $shift) {
 
-                $table = new self();
+                $table = ShiftDatatable::make();
 
                 return $shift->status == ShiftStatusEnum::OPEN ? $table->active() : $table->notActive();
             })
@@ -67,6 +72,11 @@ class ShiftDatatable implements HasDatatable
             Column::make('cash_end')->title(__('End Cash').' '.strtoupper(session('currency')))->searchable()->orderable(),
             Column::make('status')->title(__('Status'))->searchable()->orderable(),
             Column::make('action')->title(__('Actions'))->searchable()->orderable(),
-        ]);
+        ])
+            ->search([
+                "regex" =>  true
+            ])
+            ->ordering(false)
+            ->dom('frtilp');
     }
 }

@@ -67,10 +67,17 @@ class Loan extends Model
         return $this->belongsTo(Location::class, 'location_code', 'code');
     }
 
+    public function paid(): Attribute
+    {
+        return new Attribute(
+            get: fn (): float =>  $this->payments()->sum('amount')
+        );
+    }
+
     public function balance(): Attribute
     {
         return new Attribute(
-            get: fn (): float => $this->amount - $this->payments()->sum('amount')
+            get: fn (): float => $this->amount - $this->paid
         );
     }
 }

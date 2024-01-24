@@ -26,9 +26,11 @@ class AddLoanController extends Controller
             'network_code.required' => 'Network is Required',
         ]);
 
+
+
+
         try {
             $validated['category'] = TransactionCategoryEnum::GENERAL;
-
 
             \App\Actions\Agent\Shift\AddLoan::run(shift: $shift , data:$validated);
 

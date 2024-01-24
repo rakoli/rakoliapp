@@ -38,7 +38,7 @@
                         targetId="add-transaction"
                         label="Add Transaction"
                         modalTitle="Fill the form below record a transaction"
-                        isStacked="true"
+                        btnClass="btn btn-facebook"
                     >
 
                         @include('agent.agency.transaction.add-transaction')
@@ -50,7 +50,7 @@
                         targetId="add-expenses"
                         label="Add Expenses"
                         modalTitle="Fill the form below record a Expenses"
-                        isStacked="true"
+                        btnClass="btn btn-youtube"
                     >
 
                         @include('agent.agency.transaction.add-expense')
@@ -70,6 +70,7 @@
                     </x-modal_with_button>
 
                     <x-modal_with_button
+                        btnClass="btn btn-instagram"
                         targetId="add-loan"
                         label="Add Loan"
                         modalTitle="Fill the form below record a Loan"
@@ -102,7 +103,7 @@
                             <div class="table-responsive">
 
 
-                                {!! $dataTableHtml->table(['class' => 'table align-middle table-row-dashed gy-5 dataTable no-footer' , 'id' => 'shift-table'],true) !!}
+                                {!! $dataTableHtml->table(['class' => 'table align-middle table-row-dashed gy-5 dataTable no-footer' , 'id' => 'transaction-table'],true) !!}
 
                             </div>
 
@@ -112,6 +113,109 @@
                     <!--end::Card body-->
                 </div>
                 <!--end::Card-->
+
+                <!--begin::Loans-->
+                <div class="card pt-4 mb-6 mb-xl-9">
+                    <!--begin::Card header-->
+                    <div class="card-header border-0">
+                        <!--begin::Card title-->
+                        <div class="card-title">
+                            <h2>Shift Loans</h2>
+                        </div>
+                        <!--end::Card title-->
+                    </div>
+                    <!--end::Card header-->
+
+                    <!--begin::Card body-->
+                    <div class="card-body pt-0 pb-5">
+                        <!--begin::Table-->
+                        <div id="kt_table_customers_payment_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                            <div class="table-responsive">
+                                <table class="table align-middle table-row-dashed gy-5 dataTable no-footer"
+                                       id="shift-loan-table">
+                                    <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Location</th>
+                                        <th>User</th>
+                                        <th>Agency</th>
+                                        <th>Status</th>
+                                        <th>Type</th>
+                                        <th>Amount</th>
+                                        <th>Paid</th>
+                                        <th>Balance</th>
+                                        <th>Description</th>
+                                        <th>Statement</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach($loans as $loan)
+                                        <tr>
+                                            <td class="font-sm">{{ $loan->created_at->format('Y-m-d') }}</td>
+                                            <td>{{ $loan->location->name }}</td>
+                                            <td>{{ $loan->user->full_name }}</td>
+                                            <td>{{ $loan->network?->agency?->name }}</td>
+                                            <td>
+                                                <span class="{{ str($loan->status->color())->toHtmlString()  }}">
+                                                {{ str($loan->status->label())->toHtmlString() }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="{{ str($loan->type->color())->toHtmlString()  }}">
+                                                {{ str($loan->type->label())->toHtmlString() }}
+                                                </span>
+                                            </td>
+
+                                            <td>{{ money(amount: $loan->amount, convert: true, currency: currencyCode()) }}</td>
+                                            <td>{{ money(amount: $loan->paid ?? 0, convert: true, currency: currencyCode()) }}</td>
+                                            <td>{{ money(amount: $loan->balance, convert: true, currency: currencyCode()) }}</td>
+                                            <td>
+                                                <x-modal_with_button
+                                                    btnClass="badge badge-google"
+                                                    targetId="view-description-{{ $loan->id }}"
+                                                    label="view Description"
+                                                    modalTitle=" Description and Notes"
+                                                >
+
+                                                    <div class="pb-5 fs-6">
+                                                        <!--begin::Details item-->
+                                                        <div
+                                                            class="d-flex flex-row gap-14 mt-5 justify-content-lg-between">
+                                                            <span>Description</span>
+                                                            <span> {{ str($loan->description)->toHtmlString() }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pb-5 fs-6">
+                                                        <!--begin::Details item-->
+                                                        <div
+                                                            class="d-flex flex-row gap-14 mt-5 justify-content-lg-between">
+                                                            <span>Notes</span>
+                                                            <span> {{ str($loan->note)->toHtmlString() }}</span>
+                                                        </div>
+                                                    </div>
+
+                                                </x-modal_with_button>
+                                            </td>
+                                            <td>
+                                                <a
+                                                    href="{{ route('agency.loans.show', $loan), }}"
+                                                    class="btn btn-sm btn-primary"
+                                                >Statement</a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+                        </div>
+                        <!--end::Table-->
+                    </div>
+                    <!--end::Card body-->
+                </div>
+                <!--end::Card-->
+
             </div>
         </div>
     </div>
@@ -127,6 +231,7 @@
                 type="text/javascript"></script>
         {{ $dataTableHtml->scripts()  }}
 
+
         <script src="{{ asset('assets/js/rakoli_ajax.js') }}"></script>
 
         <script>
@@ -135,6 +240,12 @@
 
                 window.LaravelDataTables['transaction-table'].on('draw', function () {
                     KTMenu.createInstances();
+                })
+
+
+                $("table#shift-loan-table").DataTable({
+                    sort: false,
+                    perPage: 2
                 })
             })
         </script>

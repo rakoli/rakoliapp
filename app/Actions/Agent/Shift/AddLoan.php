@@ -17,21 +17,23 @@ class AddLoan
     use AsAction;
     use InteractsWithShift;
 
+
+
     /**
      * @throws \Throwable
      */
-    public function handle(Shift $shift , array $data)
+    public function handle(Shift $shift , array $data): void
     {
 
         try {
 
-            throw_if(condition: ! Shift::query()->where('status', ShiftStatusEnum::OPEN)->exists(),
+            throw_if(condition: $shift->status  != ShiftStatusEnum::OPEN,
                 exception: new \Exception('You cannot transact without an open shift')
             );
 
-            DB::beginTransaction();
 
-            $shift = Shift::query()->where('status', ShiftStatusEnum::OPEN)->first();
+
+            DB::beginTransaction();
 
             Loan::create([
                 'business_code' => auth()->user()->business_code,
@@ -66,13 +68,12 @@ class AddLoan
                 newBalance: $newBalance
             );
 
-
-
-
             DB::commit();
+
         } catch (\Exception $e) {
 
             DB::rollBack();
+
             throw new \Exception($e->getMessage());
         }
 

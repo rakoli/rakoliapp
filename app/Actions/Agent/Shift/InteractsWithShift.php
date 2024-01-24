@@ -62,11 +62,12 @@ trait InteractsWithShift
 
         $cash = $till->shift->cash_end;
 
+        $shift = $till->shift;
 
         if (! $isLoan)
         {
             /** @var Shift $shift */
-            $shift = $till->shift;
+
 
             $shift->updateQuietly([
                 'cash_start' => $cash,

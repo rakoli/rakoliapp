@@ -45,11 +45,11 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
             Route::post('/close/store', [CloseShiftController::class, 'store'])->name('agency.shift.close.store');
             Route::get('/{shift}/show', ShowShiftController::class)->name('agency.shift.show');
             Route::get('{shift}/tills', [TillController::class, 'index'])->name('agency.shift.till');
+            Route::post('/{shift}/loans/store', AddLoanController::class)->name('agency.loans.store');
         });
 
         Route::prefix('loans')->group(function () {
             Route::get('/', [LoanController::class, 'index'])->name('agency.loans');
-            Route::post('/{shift}', AddLoanController::class)->name('agency.loans.store');
             Route::get('/{loan}/', ShowLoanController::class)->name('agency.loans.show');
             Route::post('/{loan}/', PayLoanController::class)->name('agency.loans.pay');
         });
