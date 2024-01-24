@@ -8,8 +8,9 @@ use Illuminate\Database\Eloquent\Scope;
 
 class LocationScoped implements Scope
 {
-    public function apply(Builder $builder, Model $model): void
+    public function apply(Builder $builder, Model $model): Builder
     {
+        return  $builder;
 
     }
 }
