@@ -15,7 +15,7 @@ class PayLoanAction
     use AsAction;
 
     /**
-     * @param  array{amount: float, description: ?string, notes: ?string , payment_method: ?string, deposited_at: string}  $data
+     * @param array{amount: float, description: ?string, notes: ?string , payment_method: ?string, deposited_at: string} $data
      *
      * @throws \Throwable
      */
@@ -31,19 +31,20 @@ class PayLoanAction
             DB::beginTransaction();
 
             /** @var LoanPayment $payment */
-            $payment = $loan->payments()
-                ->create([
-                    'user_code' => auth()->user()->code,
-                    'amount' => $data['amount'],
-                    'description' => $data['description'] ?? null,
-                    'notes' => $data['notes'] ?? null,
-                    'payment_method' => $data['payment_method'] ?? null,
-                    'deposited_at' => Carbon::parse($data['deposited_at']),
-                ]);
+
+            $payment = LoanPayment::create([
+                'loan_code' => $loan->code,
+                'user_code' => auth()->user()->code,
+                'amount' => $data['amount'],
+                'description' => $data['description'] ?? null,
+                'notes' => $data['notes'] ?? null,
+                'payment_method' => $data['payment_method'] ?? null,
+                'deposited_at' => Carbon::parse($data['deposited_at']),
+            ]);
 
             $loan->refresh();
 
-            if ($loan->payments()->sum('amount') != $loan->amount) {
+            if ($loan->paid != $loan->amount) {
                 $loan->updateQuietly([
                     'status' => LoanPaymentStatusEnum::PARTIALLY,
                 ]);

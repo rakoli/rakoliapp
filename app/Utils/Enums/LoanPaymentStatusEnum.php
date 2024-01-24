@@ -21,8 +21,8 @@ enum LoanPaymentStatusEnum: string
     public function color(): string
     {
         return match ($this) {
-            self::FULL_PAID => 'badge badge-success',
-            self::PARTIALLY => 'badge badge-warning',
+            self::FULL_PAID => 'badge badge-secondary',
+            self::PARTIALLY => 'badge badge-primary',
             self::UN_PAID => 'badge badge-danger',
         };
     }

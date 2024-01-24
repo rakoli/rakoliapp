@@ -18,7 +18,8 @@ class PayLoanController extends Controller
             'amount' => 'required',
             'payment_method' => 'required',
             'deposited_at' => 'required',
-            'notes' => 'required',
+            'notes' => 'nullable',
+            'description' => 'nullable',
         ]);
 
         try {

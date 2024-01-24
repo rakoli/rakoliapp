@@ -117,13 +117,13 @@
                     <div class="d-flex flex-row mt-5 border-bottom-2 gap-14 justify-content-lg-between">
                         <div class="fw-bold border-primary">{{ $network->network ->agency->name}}</div>
                         <div class="text-gray-600">
-                            <span>{{ number_format($network->balance_new , 2)  }}</span>
+                            <span>{{  money(amount: $network->balance_new , convert: true, currency: currencyCode()) }}</span>
                         </div>
                     </div>
                     <!--begin::Details item-->
                 @endforeach
-                    <div class="text-gray-600 mt-15 fw-bold text-lg-end border-bottom-3 border-dashed py-lg-2 px-lg-3 border-primary">
-                        <span>{{ number_format($tills->sum('balance_new') , 2)  }}</span>
+                    <div class="text-gray-600 mt-15 fw-bold text-lg-end  border-bottom-3 border-dashed py-lg-2 px-lg-3 border-primary">
+                        <span>{{ money(amount: $tills->sum('balance_new') , convert: true, currency: currencyCode()) }}</span>
                     </div>
             </div>
         </div>

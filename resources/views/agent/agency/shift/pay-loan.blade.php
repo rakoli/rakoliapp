@@ -29,12 +29,11 @@
                     <div class="col-6">
                         <x-label class="" label="{{ __('Date') }}" for="date"/>
 
-                        <x-input
-                            type="date"
-                            class="form-control-solid   @error('deposited_at') form-control-feedback @enderror"
-                               name="deposited_at"
-                            placeholder="{{ __('date') }}"
-                            id="date"/>
+                        <x-datepicker-input
+                            name="deposited_at"
+                            type="text"
+                            id="date"
+                        />
 
 
                         @error('deposited_at')
@@ -63,7 +62,21 @@
 
                 <div class="row fv-row py-3">
                     <div class="col-12">
-                        <x-label label="notes" class="" for="notes"/>
+                        <x-label label="description" class="" for="description"/>
+                        <textarea    name="description" class="form-control form-control form-control-solid" rows="3"
+                                     data-kt-autosize="false"></textarea>
+                        @error('description')
+                        <div class="help-block text-danger">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
+                </div>
+
+
+                <div class="row fv-row py-3">
+                    <div class="col-12">
+                        <x-label label="notes" required="" for="notes"/>
                         <textarea    name="notes" class="form-control form-control form-control-solid" rows="3"
                                   data-kt-autosize="false"></textarea>
                         @error('notes')
@@ -74,6 +87,9 @@
                     </div>
                 </div>
             </div>
+
+
+
             <div class="modal-footer">
 
                 <button type="button" id="pay-loan-button" class="btn btn-primary">Save changes</button>
@@ -85,15 +101,57 @@
             <script src="{{ asset('assets/js/rakoli_ajax.js') }}"></script>
 
             <script>
-                $("button#pay-loan-button").click(function (event){
-                    event.preventDefault();
 
-                    submitForm(
-                        $("form#pay-loan-form"),
-                        "{{ route('agency.loans.pay',['loan' => $loan]) }}"
-                    );
 
-                });
+
+
+                $(document).ready(() => {
+
+
+
+                    const loanValidations = [
+                        {
+                            "name": "amount",
+                            "error": "Amount is Required",
+                            "validators" : {}
+                        }, {
+                            "name": "amount",
+                            "error": "Amount is Required",
+                            "validators" : {}
+                        },
+
+                        {
+                            "name": "deposited_at",
+                            "error": "Date is Required",
+                            "validators" : {}
+                        },
+
+                        {
+                            "name": "payment_method",
+                            "error": "Payment method is Required",
+                            "validators" : {}
+                        },
+
+                        {
+                            "name": "description",
+                            "error": "Description is Required",
+                            "validators" : {}
+                        },
+
+                    ];
+
+
+                    const loanForm = document.getElementById('pay-loan-form');
+
+
+                    const submitLoanButton = document.getElementById('pay-loan-button');
+
+
+                    lakoriValidation(loanValidations, loanForm, submitLoanButton, 'post', '{{  route('agency.loans.pay', $loan) }}');
+                })
+
+
+
             </script>
         @endpush
 
