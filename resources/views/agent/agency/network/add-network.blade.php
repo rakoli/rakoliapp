@@ -20,19 +20,19 @@
 
                 <div class="col-6">
 
-                    <x-label class="" label="Select Agent" for="fsp_code"/>
-                    <select
-                        data-control="select2"
-                        data-dropdown-parent="#add-network"
-                        class="form-control-solid w-100 form-control @error('fsp_code') form-control-error @enderror"
+                    <x-label class="" label="Select Network Provider" for="fsp_code"/>
+                    <x-select2
+
+                        modalId="add-network"
                         name="fsp_code"
-                        placeholder="{{ __('Select a Agency') }}"
-                        id="fsp_code">
+                        placeholder="{{ __('Select a Network Provider') }}"
+                        id="fsp_code"
+                    >
 
                         @foreach($agencies as $agency)
                             <option value="{{ $agency->code }}">{{ $agency->name }}</option>
                         @endforeach
-                    </select>
+                    </x-select2>
                     @error('fsp_code')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -69,19 +69,17 @@
             <div class="row fv-row py-2">
                 <div class="col-6">
                     <x-label class="" label="Select Location" for="location_code"/>
-                    <select
-                        class="form-select"
-                        data-control="select2"
-                        data-dropdown-parent="#add-network"
-                        modalId="#add-network"
+                    <x-select2
+                        modalId="add-network"
                         name="location_code"
-                        placeholder="{{ __('Select a location') }}"
-                        id="location">
+                        placeholder="{{ __('Select a Location') }}"
+                        id="location_code"
+                    >
 
                         @foreach($locations as $location)
                             <option value="{{ $location->code }}">{{ $location->name }}</option>
                         @endforeach
-                    </select>
+                    </x-select2>
                     @error('location_code')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -91,10 +89,10 @@
             </div>
             <div class="row fv-row py-3">
                 <div class="col-12">
-                    <x-label label="notes" class="" for="notes"/>
-                    <textarea name="notes" class="form-control form-control form-control-solid" rows="3"
+                    <x-label label="description" required="" for="description"/>
+                    <textarea name="description" class="form-control form-control form-control-solid" rows="3"
                               data-kt-autosize="false"></textarea>
-                    @error('notes')
+                    @error('description')
                     <div class="help-block text-danger">
                         {{ $message }}
                     </div>
@@ -104,7 +102,7 @@
         </div>
         <div class="modal-footer">
 
-            <button type="button" id="add-network-button" class="btn btn-primary">Add Network</button>
+            <x-submit-button type="button" id="add-network-button" class="btn btn-primary" label="Add Network"/>
         </div>
     </form>
 
@@ -114,15 +112,21 @@
         <script src="{{ asset('assets/js/rakoli_ajax.js') }}"></script>
 
         <script>
-            $("button#add-network-button").click(function (event){
-                event.preventDefault();
 
-                submitForm(
-                    $("form#add-network-form"),
-                    "{{ route('agency.networks.store') }}"
-                );
+          const validations = [
+              {"name" : "name", "errors" : "Network name is required", "validators" : {}},
+              {"name" : "location_code", "errors" : "Location Code is required", "validators" : {}},
+              {"name" : "agent_no", "errors" : "Agent No is required", "validators" : {}},
+              {"name" : "balance", "errors" : "Balance is required", "validators" : {}},
+          ];
 
-            });
+          const form = document.getElementById('add-network-form');
+
+
+          const submitButton = document.getElementById('add-network-button');
+
+
+          lakoriValidation(validations, form, submitButton, 'post', '{{  route('agency.networks.store') }}');
         </script>
     @endpush
 

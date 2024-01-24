@@ -25,9 +25,8 @@ class UpdateNetworkController extends Controller
             ],
             'fsp_code' => [
                 'required',
-
             ],
-            'notes' => 'required',
+            'description' => 'nullable|string',
             'balance' => 'required|numeric',
             'location_code' => 'required|exists:locations,code',
         ], [

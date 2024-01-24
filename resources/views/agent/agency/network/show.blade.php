@@ -1,6 +1,6 @@
 @extends('layouts.users.agent')
 
-@section('title', "Show Nwtwork")
+@section('title', "Show $network->name")
 
 
 

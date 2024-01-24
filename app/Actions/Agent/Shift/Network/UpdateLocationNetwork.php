@@ -10,7 +10,7 @@ class UpdateLocationNetwork
     use AsAction;
 
     /**
-     * @param  array{location_code:string , fsp_code:string,name:string , agent_no: string , balance:float , notes: string }  $data
+     * @param  array{location_code:string , fsp_code:string,name:string , agent_no: string , balance:float , description: ?string }  $data
      *
      * @throws \Exception
      */
@@ -25,7 +25,7 @@ class UpdateLocationNetwork
                 'balance' => $data['balance'],
                 'balance_currency' => currencyCode(),
                 'name' => $data['name'],
-                'description' => $data['notes'],
+                'description' => $data['description'] ?? null,
             ]);
 
             return $network;

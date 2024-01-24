@@ -17,8 +17,8 @@ class AddNetworkController extends Controller
             'name' => 'required|string',
             'agent_no' => 'required',
             'fsp_code' => 'required',
-            'notes' => 'required',
             'balance' => 'required|numeric',
+            'description' => 'nullable|string',
             'location_code' => 'required|exists:locations,code',
         ], [
             'fsp_code.required' => 'Financial service provider is required',
