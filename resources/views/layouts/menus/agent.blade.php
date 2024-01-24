@@ -56,12 +56,6 @@
                     <span class="menu-title">{{ __('Shift') }}</span>
                 </a>
 
-                <a class="menu-link"  href ="{{route('agency.tills')}}">
-                    <span class="menu-bullet">
-                        <span class="bullet bullet-dot"></span>
-                    </span>
-                    <span class="menu-title">{{ __('Tills') }}</span>
-                </a>
 
                 <a class="menu-link"   href ="{{route('agency.networks')}}">
                     <span class="menu-bullet">
