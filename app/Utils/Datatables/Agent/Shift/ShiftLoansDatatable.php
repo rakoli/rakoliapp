@@ -1,0 +1,74 @@
+<?php
+
+namespace App\Utils\Datatables\Agent\Shift;
+
+use App\Models\Loan;
+use App\Models\Shift;
+use App\Models\ShiftTransaction;
+use App\Utils\Datatables\LakoriDatatable;
+use App\Utils\HasDatatable;
+use Carbon\Carbon;
+use Yajra\DataTables\Facades\DataTables;
+use Yajra\DataTables\Html\Builder;
+use Yajra\DataTables\Html\Column;
+
+class ShiftLoansDatatable implements HasDatatable
+{
+    use LakoriDatatable;
+
+    public function index(Shift $shift, bool $isToday = false): \Illuminate\Http\JsonResponse
+    {
+
+        $loans = Loan::query()
+            ->whereBelongsTo($shift, 'shift')
+            ->with('location', 'user', 'network.agency')
+            ->when($isToday, fn ($query) => $query->whereDate('created_at', Carbon::today()));
+
+        return Datatables::eloquent($loans)
+            ->filter(function ($query) {
+                $query->skip(request('start'))->take(request('length'));
+            })
+            ->order(function ($query) {
+                return $query->orderBy('created_at', 'desc');
+            })
+            ->startsWithSearch()
+            ->addIndexColumn()
+            ->addColumn('created_at', fn (ShiftTransaction $transaction) => $transaction->created_at->format('Y-F-d'))
+            ->addColumn('balance_old', fn (ShiftTransaction $transaction) => money($transaction->balance_old, currencyCode(), true))
+            ->addColumn('user_name', fn (ShiftTransaction $transaction) => $transaction->user->full_name)
+            ->addColumn('amount', fn (ShiftTransaction $transaction) => money($transaction->amount, currencyCode(), true))
+            ->addColumn('balance_new', fn (ShiftTransaction $transaction) => money($transaction->balance_new, currencyCode(), true))
+            ->addColumn('transaction_type', function (ShiftTransaction $transaction) {
+
+                $table = new self();
+
+                return $table->status(
+                    label: $transaction->type->label(),
+                    badgeClass: $transaction->type->color()
+                );
+            })
+            ->addColumn('actions', function (ShiftTransaction $transaction) {
+
+            })
+            ->addColumn('location_name', fn (ShiftTransaction $transaction) => $transaction->location->name)
+            ->addColumn('network_name', fn (ShiftTransaction $transaction) => $transaction->network?->agency?->name)
+
+            ->rawColumns(['balance_old', 'balance_new', 'transaction_type', 'actions'])
+            ->toJson();
+    }
+
+    public function columns(Builder $datatableBuilder): Builder
+    {
+        return $datatableBuilder
+            ->columns([
+                Column::make('location.name')->title(__('Location')),
+                Column::make('user_name')->title(__('user'))->orderable(),
+                Column::make('balance_old')->title(__('Old Balance').' '.strtoupper(session('currency')))->orderable(),
+                Column::make('amount')->title(__('Amount Transacted').' '.strtoupper(session('currency')))->orderable(),
+                Column::make('balance_new')->title(__('New Balance')),
+                Column::make('network_name')->title(__('network')),
+                Column::make('transaction_type')->title(__('Type'))->orderable(),
+            ])
+            ->orderBy(0);
+    }
+}
