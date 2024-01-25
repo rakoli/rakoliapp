@@ -39,7 +39,7 @@
 
         <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}"
                 type="text/javascript"></script>
-        {{ $datatableHtml->scripts(attributes:[ "ajax" => route('agency.loans')])  }}
+        {{ $datatableHtml->scripts()  }}
 
         <script>
 
