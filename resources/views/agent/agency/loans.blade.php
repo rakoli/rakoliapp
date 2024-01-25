@@ -25,41 +25,6 @@
                 <!--begin::Card Body-->
                 <div class="card-body fs-6 py-15 px-10 py-lg-15 px-lg-15 text-gray-700">
 
-                    <!--begin::Wrapper-->
-                    <div class="d-flex flex-stack mb-5">
-                        <!--begin::Search-->
-                        <div class="d-flex align-items-center position-relative my-1">
-
-                        </div>
-                        <!--end::Search-->
-
-                        <!--begin::Toolbar-->
-                        <div class="d-flex justify-content-end gap-2" data-kt-docs-table-toolbar="base">
-                            <!--begin::Filter-->
-
-                            <!--end::Filter-->
-
-                            <!--begin::Add customer-->
-                            <x-modal_with_button
-                                targetId="add-loan"
-                                label="Add Loan"
-                                modalTitle="Fill the form below record a Loan"
-                                isStacked="true"
-                            >
-
-                             
-
-
-                            </x-modal_with_button>
-
-
-                        </div>
-                        <!--end::Toolbar-->
-
-                    </div>
-                    <!--end::Wrapper-->
-
-
                     {!! $datatableHtml->table(['class' => 'table table-row-bordered table-row-dashed gy-4 align-middle fw-bold' , 'id' => 'loans-table']) !!}
 
 
