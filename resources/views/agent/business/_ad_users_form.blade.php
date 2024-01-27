@@ -23,7 +23,7 @@
             <!--begin::Card header-->
             <div class="card-header">
                 <div class="card-title">
-                    <h2>{{ __('Users') }}</h2>
+                    <h2>{{$formTitle}}</h2>
                 </div>
             </div>
             <!--end::Card header-->
@@ -39,7 +39,7 @@
                         <!--end::Label-->
                         <!--begin::Input-->
                         <input type="text" class="form-control mb-2" id="name" name="fname"
-                            value="@if ($isEdit) {{ $users->fname }} @endif"
+                            value="@if($isEdit){{ $users->fname }}@endif"
                             placeholder="{{ __('Enter Name') }}">
                         <!--end::Input-->
                     </div>
@@ -51,7 +51,7 @@
                         <!--end::Label-->
                         <!--begin::Input-->
                         <input type="text" class="form-control mb-2" id="name" name="lname"
-                            value="@if ($isEdit) {{ $users->lname }} @endif"
+                            value="@if($isEdit){{ $users->lname }}@endif"
                             placeholder="{{ __('Enter Name') }}">
                         <!--end::Input-->
                     </div>
@@ -65,7 +65,7 @@
                         <!--end::Label-->
                         <!--begin::Input-->
                         <input type="email" class="form-control mb-2" id="email" name="email"
-                            value="@if ($isEdit) {{ $users->email }} @endif"
+                            value="@if($isEdit){{ $users->email }}@endif"
                             placeholder="{{ __('Enter Email') }}">
                         <!--end::Input-->
                     </div>
@@ -78,7 +78,7 @@
                         <!--end::Label-->
                         <!--begin::Input-->
                         <input type="tel" class="form-control mb-2" id="phone" name="phone"
-                            value="@if ($isEdit) {{ $users->phone }} @endif"
+                            value="@if($isEdit){{ $users->phone }}@endif"
                             placeholder="{{ __('Enter Phone Number') }}">
                         <!--end::Input-->
                     </div>
@@ -93,7 +93,7 @@
                         <label class="form-label">{{ __('Password') }}</label>
                         <!--end::Label-->
                         <input type="password" class="form-control mb-2" id="password" name="password"
-                            placeholder="{{ __('Enter Password') }}">
+                            placeholder="{{ __('Enter Password') }}" value="">
                         <!--end::Input-->
                     </div>
 

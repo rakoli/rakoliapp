@@ -481,7 +481,7 @@ class BusinessController extends Controller
             'phone' => 'required',
             'password' => 'required|string|min:8',
             'branches' => 'required',
-            'roles' => 'required',
+            'roles' => 'required|exists:business_roles,code',
         ]);
         $user = $request->user();
         $usersData = [
@@ -496,7 +496,7 @@ class BusinessController extends Controller
             'code' => generateCode($request->fname, $request->user()->business_code),
         ];
         $newUser = User::create($usersData);
-        // $newUser->locations()->attach($request->branches, ['business_code' => $newUser->business_code]);
+
         $roles = $request->input('roles');
         $locations = $request->input('branches');
         foreach ($locations as $location) {
@@ -511,7 +511,7 @@ class BusinessController extends Controller
             'business_code' => $newUser->business_code,
             'user_role' => $roles,
         ]);
-        return redirect()->route('business.users')->with(['message' => 'users Submitted']);
+        return redirect()->route('business.users')->with(['message' => 'Added User Successfully']);
     }
 
     public function usersEdit(Request $request, $id)
@@ -530,15 +530,22 @@ class BusinessController extends Controller
     public function usersEditSubmit(Request $request)
     {
         $request->validate([
+            'users_id' => 'required|numeric|exists:users,id',
             'fname' => 'required|string',
             'lname' => 'required|string',
             'email' => 'required|email',
             'phone' => 'required',
-            'password' => 'required|string|min:8',
+            'password' => 'sometimes|string|min:8|nullable',
             'branches' => 'required',
-            'roles' => 'required',
+            'roles' => 'required|exists:business_roles,code',
         ]);
         $user = User::where('id', $request->users_id)->firstOrFail();
+
+        $isAllowed = $user->isUserAllowed($request->user());
+        if($isAllowed == false){
+            return redirect()->route('business.users')->withErrors(['Not authorized to perform business action']);
+        }
+
         $user->fname = $request->fname;
         $user->lname = $request->lname;
         $user->email = $request->email;
@@ -567,13 +574,24 @@ class BusinessController extends Controller
         ]);
         return redirect()->route('business.users')->with(['message' => 'users Edited Successfully']);
     }
-    public function usersDelete($id)
+    public function usersDelete(Request $request, $id)
     {
-        $users = User::where('id', $id)->first();
-        if (empty($users)) {
-            return redirect()->back()->withErrors(['Invalid Exchange Ad']);
+        $user = User::where('id', $id)->first();
+        if (empty($user)) {
+            return redirect()->back()->withErrors(['Invalid User Id']);
         }
-        $users->delete();
+
+        if($request->user()->id == $id){
+            return redirect()->back()->withErrors(['You can not delete you own account']);
+        }
+
+        $isAllowed = $user->isUserAllowed($request->user());
+        if($isAllowed == false){
+            return redirect()->route('business.users')->withErrors(['Not authorized to perform business action']);
+        }
+
+        $user->delete();
+
         return redirect()->route('business.users')->with(['message' => 'Users Deleted Successfully']);
     }
 

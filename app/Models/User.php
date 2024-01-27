@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -18,7 +19,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, AuthenticationLoggable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, AuthenticationLoggable, SoftDeletes;
 
     protected $fillable = [
         'type',
@@ -169,6 +170,15 @@ class User extends Authenticatable
     public function businessRoles(): HasManyThrough
     {
         return $this->hasManyThrough( BusinessRole::class,UserRole::class,'user_code','code','code','user_role');
+    }
+
+    public function isUserAllowed(User $user)
+    {
+        if($user->business_code == $this->business_code){
+            return true;
+        }
+        return false;
+
     }
 
 }

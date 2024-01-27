@@ -14,7 +14,7 @@
 
         @include('agent.business._submenu_business')
 
-        @include('agent.business._ad_users_form', ['submitUrl'=>route('business.users.create.submit'),'isEdit'=>false])
+        @include('agent.business._ad_users_form', ['submitUrl'=>route('business.users.create.submit'),'isEdit'=>false, 'formTitle'=>'Add Business User'])
 
     </div>
     <!--end::Container-->

@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Area;
 use App\Models\Business;
+use App\Models\BusinessRole;
 use App\Models\ExchangeAds;
 use App\Models\ExchangeBusinessMethod;
 use App\Models\Location;
@@ -15,6 +16,7 @@ use App\Utils\Enums\UserTypeEnum;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -420,6 +422,157 @@ class BusinessManagementTest extends TestCase
 
         $this->assertTrue($allValuesFound);
         $this->assertEquals($totalUsersCount,$responseArray['recordsTotal']);
+    }
+
+    /** @test */
+    public function agent_can_view_add_business_users_page(): void
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
+
+        $this->actingAs($user);
+
+        $response = $this->get(route('business.users.create'));
+        $response->assertOk();
+        $response->assertSee('Add Business User');
+
+    }
+
+    /** @test */
+    public function agent_can_successfully_add_a_business_user(): void
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
+
+        $this->actingAs($user);
+
+        $branches = Location::factory()->count(2)->create(['business_code'=>$user->business_code])->pluck('code')->toArray();
+        $roleCode = BusinessRole::factory()->create(['business_code'=>$user->business_code])->code;
+
+        $data = [
+            'fname' => fake()->firstName,
+            'lname' => fake()->lastName,
+            'email' => fake()->email,
+            'phone' => fake()->numerify("25576#######"),
+            'password' => Hash::make('12345678'),
+            'branches' => $branches,
+            'roles' => $roleCode,
+        ];
+
+        $response = $this->post(route('business.users.create.submit', $data));
+        $response->assertRedirect(route('business.users'));
+        $testData = [
+            'business_code' => $user->business_code,
+            'email' => $data['email'],
+            'phone' => $data['phone']
+        ];
+        $this->assertDatabaseHas('users', $testData);
+        $userToTest = User::where($testData)->first();
+        foreach ($branches as $branch) {
+            $this->assertDatabaseHas('location_users', [
+                'user_code' => $userToTest->code,
+                'location_code' => $branch,
+            ]);
+        }
+        $this->assertDatabaseHas('user_roles', [
+            'user_code' => $userToTest->code,
+            'user_role' => $roleCode,
+        ]);
+
+    }
+
+    /** @test */
+    public function agent_can_view_edit_business_user_page(): void
+    {
+        $business = Business::factory()->create();
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0,'business_code'=>$business->code]);
+
+        $this->actingAs($user);
+
+        $response = $this->get(route('business.users.edit', $user->id));
+        $response->assertOk();
+        $response->assertSee('Edit Business User');
+
+    }
+
+    /** @test */
+    public function agent_can_successfully_edit_business_user_page(): void
+    {
+        $business = Business::factory()->create();
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0,'business_code'=>$business->code]);
+
+        $this->actingAs($user);
+
+        $branches = Location::factory()->count(2)->create(['business_code'=>$user->business_code])->pluck('code')->toArray();
+        $roleCode = BusinessRole::factory()->create(['business_code'=>$user->business_code])->code;
+
+        $data = [
+            'users_id' => $user->id,
+            'fname' => 'edit'.fake()->firstName,
+            'lname' => 'edit'.fake()->lastName,
+            'email' => 'edit'.fake()->email,
+            'phone' => fake()->numerify("25576#######"),
+            'password' => Hash::make('12345678'),
+            'branches' => $branches,
+            'roles' => $roleCode,
+        ];
+
+        $response = $this->post(route('business.users.edit.submit', $data));
+
+        $response->assertRedirect(route('business.users'));
+        $testData = [
+            'business_code' => $user->business_code,
+            'email' => $data['email'],
+            'phone' => $data['phone']
+        ];
+        $this->assertDatabaseHas('users', $testData);
+        foreach ($branches as $branch) {
+            $this->assertDatabaseHas('location_users', [
+                'user_code' => $user->code,
+                'location_code' => $branch,
+            ]);
+        }
+        $this->assertDatabaseHas('user_roles', [
+            'user_code' => $user->code,
+            'user_role' => $roleCode,
+        ]);
+
+
+        //Only authorized
+        $unauthorizedUser = User::factory()->create(['business_code'=>Business::factory()->create()->code]);
+        $this->actingAs($unauthorizedUser);
+        $response = $this->post(route('business.users.edit.submit', $data));
+        $this->assertTrue(session('errors')->first() == 'Not authorized to perform business action');
+
+    }
+
+    /** @test */
+    public function agent_can_successfully_delete_business_user(): void
+    {
+        $business = Business::factory()->create();
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0,'business_code'=>$business->code]);
+
+        $this->actingAs($user);
+
+        $userToDelete = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0,'business_code'=>$business->code]);
+
+        $response = $this->get(route('business.users.delete', $userToDelete->id));
+        $response->assertRedirect(route('business.users'));
+        $this->assertDatabaseHas('users',['id'=>$userToDelete->id]);
+        $usersTable = DB::table('users')->where('id', $userToDelete->id)->first();
+        $this->assertNotNull($usersTable->deleted_at);
+        $this->assertNotContains(['id'=>$userToDelete->id], User::get()->toArray());
+
+        //Cannot self delete
+        $response = $this->get(route('business.users.delete', $user->id));
+        $this->assertTrue(session('errors')->first() == 'You can not delete you own account');
+
+        //Only authorized
+        $unauthorizedUser = User::factory()->create(['business_code'=>Business::factory()->create()->code]);
+        $this->actingAs($unauthorizedUser);
+        $userToDelete = User::factory()->create(['business_code'=> $business->code]);
+        $response = $this->get(route('business.users.delete', $userToDelete->id));
+        $this->assertTrue(session('errors')->first() == 'Not authorized to perform business action');
+        $locationsTable = DB::table('users')->where('id', $userToDelete->id)->first();
+        $this->assertNull($locationsTable->deleted_at);
     }
 
 }
