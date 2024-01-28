@@ -27,13 +27,6 @@ class BusinessRoleFactory extends Factory
             $selectedBusiness = fake()->randomElement($businesses);
         }
 
-
-        $locationsModels = Location::where('business_code',$selectedBusiness['code'])->get('code');
-        if($locationsModels->isEmpty()){
-            $locationsModels = Location::factory()->count(1)->create();
-        }
-        $locations = $locationsModels->toArray();
-
         return [
             'business_code' => $selectedBusiness['code'],
             'code' => Str::random(10),
