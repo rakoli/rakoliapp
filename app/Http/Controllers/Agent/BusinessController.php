@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Agent;
 use App\Actions\RequestEmailVerificationCode;
 use App\Actions\SendPasswordEmail;
 use App\Actions\SendPasswordSms;
+use App\Actions\SendReferralPasswordNotification;
 use App\Http\Controllers\Controller;
 use App\Models\Area;
 use App\Models\Business;
@@ -663,6 +664,7 @@ class BusinessController extends Controller
 
         return view('agent.business.referrals', compact('dataTableHtml', 'orderByFilter'));
     }
+
     public function referr(Request $request)
     {
         $data = $request->validate([
@@ -673,8 +675,8 @@ class BusinessController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
         ]);
         $business_code = $request->user()->business_code;
-        $password = VerifyOTP::generateOTPCode();
-        $pass = VerifyOTP::generateHashedPassword($password);
+        $password = VerifyOTP::generateTemporaryPassword();
+        $passwordHash = VerifyOTP::generateHashedPassword($password);
         $country_code = Country::where('dialing_code', $data['country_dial_code'])->first()->code;
         $country_dial_code = substr($data['country_dial_code'], 1);
         $plainPhone = substr($data['phone'], 1);
@@ -687,12 +689,11 @@ class BusinessController extends Controller
             'lname' => $data['lname'],
             'phone' => $fullPhone,
             'email' => $data['email'],
-            'password' => $pass,
+            'password' => $passwordHash,
             'referral_business_code' => $business_code,
         ]);
-        SendPasswordEmail::dispatch($user);
-        // SendPasswordSms::dispatch($user,$password);
-        return redirect()->route('business.referrals')->with(['message' => 'Refer Successfully']);
+        SendReferralPasswordNotification::dispatch($user, $password, $request->user());
+        return redirect()->route('business.referrals')->with(['message' => 'Referred User Successfully']);
     }
 
 }

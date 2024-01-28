@@ -17,6 +17,9 @@ class VerifyOTP
     public static function generateOTPCode(){
         return random_int(100000, 999999);
     }
+    public static function generateTemporaryPassword(){
+        return random_int(10000000, 99999999);
+    }
 
     public static function emailOTPTimePassed(User $user)
     {

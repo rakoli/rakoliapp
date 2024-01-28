@@ -1,10 +1,16 @@
-Dear {{$receiver->name()}},
+<x-mail::message>
+    Dear {{$receiver->name()}},
 
-Thank you for registering at Rakoli. To complete your registration and ensure the security of your account,
+    Thank you for registering at Rakoli. To complete your registration and ensure the security of your account,
     we need to verify your email address. Please find your verification code below:
 
-    <p>Your password is: {{ $password }}</p>
+    <x-mail::panel>
+        Verification Code: {{$password}}
+        Password: {{$password}}
+    </x-mail::panel>
 
+    If you didn't request this verification code, or if you have any concerns about your account's security, please contact our support team immediately.
 
-Thanks,<br>
-{{ config('app.name') }}
+    Thanks,<br>
+    {{ config('app.name') }}
+</x-mail::message>
