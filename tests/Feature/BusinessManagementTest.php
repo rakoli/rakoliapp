@@ -710,4 +710,78 @@ class BusinessManagementTest extends TestCase
         $this->assertNull($locationsTable->deleted_at);
     }
 
+    /** @test */
+    public function agent_can_view_business_referrals_page(): void
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
+
+        $this->actingAs($user);
+
+        $response = $this->get(route('business.referrals'));
+        $response->assertOk();
+        $response->assertSee('Referrals');
+
+    }
+
+    /** @test */
+    public function agent_can_add_referral_successfully(): void
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
+
+        $this->actingAs($user);
+
+        $data = [
+            'country_dial_code' => '+255',
+            'fname' => fake()->firstName,
+            'lname' => fake()->lastName,
+            'phone' => fake()->numerify('076#######'),
+            'email' => fake()->email,
+        ];
+
+        $response = $this->post(route('business.referrals.referr',$data));
+
+        $response->assertRedirect(route('business.referrals'));
+        $this->assertDatabaseHas('users',[
+            'fname'=>$data['fname'],
+            'lname'=>$data['lname'],
+            'email'=>$data['email'],
+            'referral_business_code'=>$user->business_code,
+        ]);
+    }
+
+    /** @test */
+    public function agent_can_view_all_referrals_datatable_list()
+    {
+        $business = Business::factory()->create();
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0, 'business_code'=>$business->code]);
+
+        $noOfReferrals = 4;
+        User::factory()->count($noOfReferrals)->create(['referral_business_code'=>$business->code]);
+        $totalReferralUsers = User::where('referral_business_code', $business->code)->get();
+        $totalReferralUsersCount = $totalReferralUsers->count();
+
+        $this->actingAs($user);
+
+        $response = $this->getJson(route('business.referrals'),['X-Requested-With'=>'XMLHttpRequest']);
+        $responseArray = json_decode($response->content(),'true');
+
+        $allValuesFound = true;
+        $firstArray = $totalReferralUsers->toArray();
+        $secondArray = $responseArray['data'];
+        $secondArrayIds = [];
+        foreach ($secondArray as $item) {
+            array_push($secondArrayIds, $item['id']);
+        }
+        foreach ($firstArray as $firstArrayItem) {
+            if (!in_array($firstArrayItem['id'], $secondArrayIds)) {
+                $allValuesFound = false;
+                break; // No need to continue checking if one value is not found
+            }
+        }
+
+        $this->assertTrue($allValuesFound);
+        $this->assertEquals($totalReferralUsersCount,$responseArray['recordsTotal']);
+    }
+
+
 }
