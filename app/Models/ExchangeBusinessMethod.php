@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Utils\Traits\BusinessAuthorization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ExchangeBusinessMethod extends Model
 {
-    use HasFactory;
+    use HasFactory, BusinessAuthorization;
 
     protected $fillable = [
         'business_code',
@@ -23,12 +24,4 @@ class ExchangeBusinessMethod extends Model
         return $this->belongsTo(Business::class, 'business_code', 'code');
     }
 
-    public function isUserAllowed(User $user)
-    {
-        if($user->business_code == $this->business_code){
-            return true;
-        }
-        return false;
-
-    }
 }

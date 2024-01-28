@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Scopes\BusinessScoped;
 use App\Models\Scopes\LocationScoped;
+use App\Utils\Traits\BusinessAuthorization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Location extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, BusinessAuthorization;
 
     protected $fillable = [
         'business_code',
@@ -99,14 +100,5 @@ class Location extends Model
     public function transactions() : HasMany
     {
         return $this->hasMany(Transaction::class, 'location_code', 'code');
-    }
-
-    public function isUserAllowed(User $user)
-    {
-        if($user->business_code == $this->business_code){
-            return true;
-        }
-        return false;
-
     }
 }

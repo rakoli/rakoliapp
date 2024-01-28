@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use App\Utils\Traits\BusinessAuthorization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BusinessRole extends Model
 {
-    use HasFactory;
+    use HasFactory, BusinessAuthorization, SoftDeletes;
 
     protected $fillable = [
         'business_code',
@@ -21,4 +23,5 @@ class BusinessRole extends Model
     {
         return $this->belongsTo(Business::class, 'Business_Code', 'Business_Code');
     }
+
 }
