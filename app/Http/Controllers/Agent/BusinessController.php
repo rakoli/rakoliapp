@@ -74,43 +74,26 @@ class BusinessController extends Controller
             ->lengthMenu([[25, 50, 100, -1], [25, 50, 100, "All"]]);
 
         $methodsJson = $roles->get()->toJson();
-        return view('agent.business.ads', compact('dataTableHtml', 'orderByFilter', 'methodsJson'));
-    }
-
-    public function rolesCreate()
-    {
-        return view('agent.business.roles_create');
+        return view('agent.business.roles', compact('dataTableHtml', 'orderByFilter', 'methodsJson'));
     }
 
     public function rolesAdd(Request $request)
     {
         $request->validate([
-            'name' => 'required|string',
+            'name' => 'required|string|unique:roles,name|min:3',
             'description' => 'required|string'
         ]);
 
         BusinessRole::create([
             'business_code' => $request->user()->business_code,
-            // 'code' => $request->user()->code,
             'code' => generateCode($request->name, $request->user()->business_code),
             'name' => $request->name,
             'description' => $request->description,
         ]);
 
-        return redirect()->back()->with(['message' => __('Business Role') . ' ' . __('Added Successfully')]);
+        return redirect()->route('business.role')->with(['message' => __('Business Role') . ' ' . __('Added Successfully')]);
     }
 
-    public function rolesCreateSubmit(Request $request)
-    {
-        $request->validate([
-            'name' => ['required', 'min:3', 'unique:roles,name']
-        ]);
-        $roles = new Role();
-        $roles->name = $request->name;
-        $roles->guard_name = "web";
-        $roles->save();
-        return redirect()->route('business.role')->with(['message' => 'Role create successfully.']);
-    }
     public function rolesEdit(Request $request)
     {
         $request->validate([
@@ -119,27 +102,18 @@ class BusinessController extends Controller
             'edit_description' => 'required|string',
         ]);
 
-        $BusinessRole = BusinessRole::where('id', $request->edit_id)->first();
+        $businessRole = BusinessRole::where('id', $request->edit_id)->first();
 
-        $BusinessRole->name = $request->edit_name;
-        $BusinessRole->description = $request->edit_description;
-        $BusinessRole->save();
+        $isAllowed = $businessRole->isUserAllowed($request->user());
+        if($isAllowed == false){
+            return redirect()->route('business.role')->withErrors(['Not authorized to perform business action']);
+        }
 
-        return redirect()->back()->with(['message' => __('Business Role') . ' ' . __('Edited Successfully')]);
-    }
+        $businessRole->name = $request->edit_name;
+        $businessRole->description = $request->edit_description;
+        $businessRole->save();
 
-    public function rolesEditSubmit(Request $request)
-    {
-        $request->validate([
-            'role_id' => 'required|exists:roles,id',
-            'name' => ['required', 'min:3', Rule::unique('roles', 'name')->ignore($request->get('role_id'))]
-        ]);
-
-        $role = Role::where('id', $request->get('role_id'))->first();
-        $role->name = $request->get('name');
-        $role->save();
-
-        return redirect()->route('business.role')->with(['message' => 'Role Edited Successfully']);
+        return redirect()->route('business.role')->with(['message' => __('Business Role') . ' ' . __('Edited Successfully')]);
     }
 
     public function rolesDelete(Request $request)
@@ -148,11 +122,16 @@ class BusinessController extends Controller
             'delete_id' => 'required|exists:business_roles,id',
         ]);
 
-        $BusinessRole = BusinessRole::where('id', $request->delete_id)->first();
+        $businessRole = BusinessRole::where('id', $request->delete_id)->first();
 
-        $BusinessRole->delete();
+        $isAllowed = $businessRole->isUserAllowed($request->user());
+        if($isAllowed == false){
+            return redirect()->route('business.role')->withErrors(['Not authorized to perform business action']);
+        }
 
-        return redirect()->back()->with(['message' => __('Business Role') . ' ' . __('Deleted Successfully')]);
+        $businessRole->delete();
+
+        return redirect()->route('business.role')->with(['message' => __('Business Role') . ' ' . __('Deleted Successfully')]);
     }
 
     public function profileCreate(Request $request)

@@ -11,7 +11,7 @@
     <div id="kt_content_container" class="container-xxl">
 
         @include('agent.business._submenu_business')
-        
+
         <div class="card card-flush mt-6 mt-xl-9">
             <!--begin::Card header-->
             <div class="card-header mt-5">
@@ -40,7 +40,7 @@
         <!--end::Card-->
     </div>
     <!--end::Container-->
-    
+
     <!--begin::Modal group-->
     <div class="modal fade" tabindex="-1" id="add_method_modal">
         <div class="modal-dialog">
@@ -60,7 +60,7 @@
                             <div class="row mb-5">
                                 <div class="input-group input-group-lg mb-5">
                                     <span class="input-group-text">{{__("Name")}}</span>
-                                    <input name="name" type="text" class="form-control" value="" placeholder="{{__('enter name')}}"/>
+                                    <input name="name" type="text" class="form-control" value="" placeholder="{{__('Enter name')}}"/>
                                 </div>
                             </div>
                             <!--end::Input group-->
@@ -69,7 +69,7 @@
                                 <div class="input-group input-group-lg mb-5">
                                     <span class="input-group-text">{{__("Description")}}</span>
                                     {{-- <input name="description" type="text" class="form-control" value="" placeholder="{{__('enter description')}}"/> --}}
-                                    <textarea name="description" type="text" class="form-control" value="" placeholder="{{__('enter description')}}"></textarea>
+                                    <textarea name="description" type="text" class="form-control" value="" placeholder="{{__('Enter description')}}"></textarea>
                                 </div>
                             </div>
                             <!--end::Input group-->

@@ -55,6 +55,12 @@ class Business extends Model
                 'account_number' => 'cash',
                 'account_name' => 'cash',
             ]);
+            BusinessRole::create([
+                'business_code'=>$businessInstance->code,
+                'code'=> generateCode('Admin', $businessInstance->code),
+                'name'=>'Admin',
+                'description'=>'Administrator',
+            ]);
             DB::commit();
         }catch (\Exception $exception) {
             DB::rollback();

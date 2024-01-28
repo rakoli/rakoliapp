@@ -235,7 +235,7 @@ class BusinessManagementTest extends TestCase
             'area_code' => $area->code,
             'description' => $editPostData['availability_desc'],
         ];
-        $this->assertDatabaseHas('locations', $data);
+        $this->assertDatabaseHas($location->getTable(), $data);
 
         //Only authorized
         $unauthorizedUser = User::factory()->create(['business_code'=>Business::factory()->create()->code]);
@@ -249,7 +249,7 @@ class BusinessManagementTest extends TestCase
             'code' => $location->code,
             'description' => $location->description,
         ];
-        $this->assertDatabaseHas('locations', $data);
+        $this->assertDatabaseHas($location->getTable(), $data);
 
     }
 
@@ -265,8 +265,8 @@ class BusinessManagementTest extends TestCase
 
         $response = $this->get(route('business.branches.delete',['id'=>$location->id]));
 
-        $this->assertDatabaseHas('locations',['id'=>$location->id]);
-        $locationsTable = DB::table('locations')->where('id', $location->id)->first();
+        $this->assertDatabaseHas($location->getTable(),['id'=>$location->id]);
+        $locationsTable = DB::table($location->getTable())->where('id', $location->id)->first();
         $this->assertNotNull($locationsTable->deleted_at);
         $this->assertNotContains(['id'=>$location->id], Location::get()->toArray());
 
@@ -276,7 +276,7 @@ class BusinessManagementTest extends TestCase
         $location = Location::factory()->create(['business_code'=> $business->code]);
         $response = $this->get(route('business.branches.delete',['id'=>$location->id]));
         $this->assertTrue(session('errors')->first() == 'Not authorized to perform business action');
-        $locationsTable = DB::table('locations')->where('id', $location->id)->first();
+        $locationsTable = DB::table($location->getTable())->where('id', $location->id)->first();
         $this->assertNull($locationsTable->deleted_at);
     }
 
@@ -337,7 +337,7 @@ class BusinessManagementTest extends TestCase
         $response = $this->post(route('business.profile.update.submit',$editPostData));
 
         $response->assertRedirect(route('business.profile.update'));
-//        var_dump($response->getContent());
+
         $data = [
             'id' => $business->id,
             'business_name' => $editPostData['business_name'],
@@ -347,7 +347,7 @@ class BusinessManagementTest extends TestCase
             'business_email' => $editPostData['business_email'],
             'business_location' => $editPostData['business_location_'],
         ];
-        $this->assertDatabaseHas('businesses', $data);
+        $this->assertDatabaseHas($business->getTable(), $data);
 
         //Only authorized
         $unauthorizedUser = User::factory()->create(['business_code'=>Business::factory()->create()->code]);
@@ -355,7 +355,7 @@ class BusinessManagementTest extends TestCase
         $editPostData['business_location_'] = 'new location';
         $response = $this->post(route('business.profile.update.submit',$editPostData));
         $this->assertTrue(session('errors')->first() == 'Not authorized to perform business action');
-        $this->assertDatabaseHas('businesses', $data);
+        $this->assertDatabaseHas($business->getTable(), $data);
 
     }
 
@@ -523,7 +523,7 @@ class BusinessManagementTest extends TestCase
             'email' => $data['email'],
             'phone' => $data['phone']
         ];
-        $this->assertDatabaseHas('users', $testData);
+        $this->assertDatabaseHas($user->getTable(), $testData);
         foreach ($branches as $branch) {
             $this->assertDatabaseHas('location_users', [
                 'user_code' => $user->code,
@@ -545,7 +545,7 @@ class BusinessManagementTest extends TestCase
     }
 
     /** @test */
-    public function agent_can_successfully_delete_business_user(): void
+    public function agent_can_successfully_delete_business_user_with_softdelete(): void
     {
         $business = Business::factory()->create();
         $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0,'business_code'=>$business->code]);
@@ -555,9 +555,10 @@ class BusinessManagementTest extends TestCase
         $userToDelete = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0,'business_code'=>$business->code]);
 
         $response = $this->get(route('business.users.delete', $userToDelete->id));
+
         $response->assertRedirect(route('business.users'));
-        $this->assertDatabaseHas('users',['id'=>$userToDelete->id]);
-        $usersTable = DB::table('users')->where('id', $userToDelete->id)->first();
+        $this->assertDatabaseHas($user->getTable(),['id'=>$userToDelete->id]);
+        $usersTable = DB::table($user->getTable())->where('id', $userToDelete->id)->first();
         $this->assertNotNull($usersTable->deleted_at);
         $this->assertNotContains(['id'=>$userToDelete->id], User::get()->toArray());
 
@@ -571,7 +572,141 @@ class BusinessManagementTest extends TestCase
         $userToDelete = User::factory()->create(['business_code'=> $business->code]);
         $response = $this->get(route('business.users.delete', $userToDelete->id));
         $this->assertTrue(session('errors')->first() == 'Not authorized to perform business action');
-        $locationsTable = DB::table('users')->where('id', $userToDelete->id)->first();
+        $locationsTable = DB::table($user->getTable())->where('id', $userToDelete->id)->first();
+        $this->assertNull($locationsTable->deleted_at);
+    }
+
+    /** @test */
+    public function agent_can_view_business_roles_page(): void
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
+
+        $this->actingAs($user);
+
+        $response = $this->get(route('business.role'));
+        $response->assertOk();
+        $response->assertSee('Business Roles');
+
+    }
+
+    /** @test */
+    public function agent_can_view_all_business_role_datatable_list()
+    {
+        $business = Business::factory()->create();
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0, 'business_code'=>$business->code]);
+
+        $noOfNewRoles = 5;
+        BusinessRole::factory()->count($noOfNewRoles)->create(['business_code'=>$user->business_code]);
+        $totalRoles = BusinessRole::where('business_code', $user->business_code)->get();
+        $totalRolesCount = $totalRoles->count();
+
+        $this->actingAs($user);
+
+        $response = $this->getJson(route('business.role'),['X-Requested-With'=>'XMLHttpRequest']);
+        $responseArray = json_decode($response->content(),'true');
+
+        $allValuesFound = true;
+        $firstArray = $totalRoles->toArray();
+        $secondArray = $responseArray['data'];
+        $secondArrayIds = [];
+        foreach ($secondArray as $item) {
+            array_push($secondArrayIds, $item['id']);
+        }
+        foreach ($firstArray as $firstArrayItem) {
+            if (!in_array($firstArrayItem['id'], $secondArrayIds)) {
+                $allValuesFound = false;
+                break; // No need to continue checking if one value is not found
+            }
+        }
+
+        $this->assertTrue($allValuesFound);
+        $this->assertEquals($totalRolesCount,$responseArray['recordsTotal']);
+    }
+
+    /** @test */
+    public function agent_can_add_business_roles_successfully(): void
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
+
+        $this->actingAs($user);
+
+        $data = [
+            'name' => 'sample role',
+            'description' => 'role description here'
+        ];
+
+        $response = $this->post(route('business.roles.add',$data));
+
+        $response->assertRedirect(route('business.role'));
+        $this->assertDatabaseHas('business_roles',[
+            'business_code'=>$user->business_code,
+            'name'=>$data['name'],
+            'description'=>$data['description'],
+        ]);
+    }
+
+    /** @test */
+    public function agent_can_edit_business_role_data_successfully()
+    {
+        $business = Business::factory()->create();
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0,'business_code'=>$business->code]);
+
+        $this->actingAs($user);
+
+        $editBusinessRole = BusinessRole::factory()->create(['business_code'=>$user->business_code]);
+
+        $editPostData = [
+            'edit_id' => $editBusinessRole->id,
+            'edit_name' => 'edited name',
+            'edit_description' => 'edited description',
+        ];
+
+        $response = $this->post(route('business.roles.edit',$editPostData));
+
+        $response->assertRedirect(route('business.role'));
+
+        $data = [
+            'id' => $editBusinessRole->id,
+            'name' => $editPostData['edit_name'],
+            'description' => $editPostData['edit_description'],
+        ];
+        $this->assertDatabaseHas($editBusinessRole->getTable(), $data);
+
+        //Only authorized
+        $unauthorizedUser = User::factory()->create(['business_code'=>Business::factory()->create()->code]);
+        $this->actingAs($unauthorizedUser);
+        $editPostData['edit_name'] = 'new edit name';
+        $response = $this->post(route('business.roles.edit',$editPostData));
+        $this->assertTrue(session('errors')->first() == 'Not authorized to perform business action');
+        $this->assertDatabaseHas($editBusinessRole->getTable(), $data);
+
+    }
+
+    /** @test */
+    public function agent_can_successfully_delete_business_role_with_softdelete(): void
+    {
+        $business = Business::factory()->create();
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0,'business_code'=>$business->code]);
+
+        $this->actingAs($user);
+
+        $roleToDelete = BusinessRole::factory()->create(['business_code'=>$business->code]);
+
+        $response = $this->post(route('business.roles.delete', ['delete_id'=>$roleToDelete->id]));
+
+        $response->assertRedirect(route('business.role'));
+        $this->assertDatabaseHas($roleToDelete->getTable(),['id'=>$roleToDelete->id]);
+        $usersTable = DB::table($roleToDelete->getTable())->where('id', $roleToDelete->id)->first();
+        $this->assertNotNull($usersTable->deleted_at);
+        $this->assertNotContains(['id'=>$roleToDelete->id], BusinessRole::get()->toArray());
+
+        //Only authorized
+        $unauthorizedUser = User::factory()->create(['business_code'=>Business::factory()->create()->code]);
+        $this->actingAs($unauthorizedUser);
+        $roleToDelete = BusinessRole::factory()->create(['business_code'=>$business->code]);
+        $response = $this->post(route('business.roles.delete', ['delete_id'=>$roleToDelete->id]));
+        $this->assertTrue(session('errors')->first() == 'Not authorized to perform business action');
+        $locationsTable = DB::table($roleToDelete->getTable())->where('id', $roleToDelete->id)->first();
         $this->assertNull($locationsTable->deleted_at);
     }
 
