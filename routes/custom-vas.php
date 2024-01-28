@@ -25,6 +25,11 @@ Route::name('vas.')->prefix('vas')->middleware(['auth','should_complete_registra
 
     //Contracts
     Route::resource('contracts',App\Http\Controllers\Vas\ContractsController::class);
+    Route::get('contracts/receive/message', [App\Http\Controllers\Agent\ContractsController::class, 'contractsReceiveMessage'])->name('contracts.receive.message');
+
+    //Contract Submission
+    Route::resource('contracts.submissions',App\Http\Controllers\Vas\ContractSubmissionsController::class);
+
 
 
 });

@@ -13,9 +13,14 @@ class VasSubmission extends Model
     protected $guarded = ['id'];
 
 
-    public function user() : BelongsTo
+    public function submitter() : BelongsTo
     {
-        return $this->belongsTo(User::class, 'submitter_code', 'code');
+        return $this->belongsTo(User::class, 'submitter_user_code', 'code');
+    }
+
+    public function reviewer() : BelongsTo
+    {
+        return $this->belongsTo(User::class, 'reviewer_user_code', 'code');
     }
 
     public function vas_contract() : BelongsTo

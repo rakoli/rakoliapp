@@ -2,6 +2,10 @@
 
 @section('title', __("Contract Detail"))
 
+@section('header_js')
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+@endsections
+
 @section('content')
     <!--begin::Container-->
     <div id="kt_content_container" class="container-xxl">
@@ -60,7 +64,7 @@
                         <div class="card-title">
                             <!--begin::User-->
                             <div class="d-flex justify-content-center flex-column me-3">
-                                <a href="#" class="fs-4 fw-bold text-gray-900 text-hover-primary me-1 mb-2 mt-5 lh-1">{{__("Trade Chat")}}</a>
+                                <a href="#" class="fs-4 fw-bold text-gray-900 text-hover-primary me-1 mb-2 mt-5 lh-1">{{__("Contract Chat")}}</a>
                                 <!--begin::Info-->
                                 <div class="mb-5 lh-1">
                                     <span class="fs-7 fw-semibold text-muted">
@@ -79,7 +83,6 @@
                     <div class="card-body" id="kt_chat_messenger_body">
                         <!--begin::Messages-->
                         <div class="scroll-y me-n5 pe-5 h-400px h-lg-auto" id="messageScroll" data-kt-element="messages" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_header, #kt_app_header, #kt_app_toolbar, #kt_toolbar, #kt_footer, #kt_app_footer, #kt_chat_messenger_header, #kt_chat_messenger_footer" data-kt-scroll-wrappers="#kt_content, #kt_app_content, #kt_chat_messenger_body" data-kt-scroll-offset="5px">
-
 
                             @foreach($chatMessages as $chatMessage)
 
@@ -255,7 +258,7 @@
             cluster: "{{env('PUSHER_APP_CLUSTER')}}"
         });
 
-        var channel = pusher.subscribe('exchange-chat-{{$exchangeTransaction->id}}');
+        var channel = pusher.subscribe('contract-chat-{{$contract->id}}');
         channel.bind('message-sent', function(data) {
             if(currentUserId !== data.sendUserId){
                 var sender = data.usersName + ' ('+data.businesssName+')';
@@ -325,8 +328,8 @@
             var xhr = new XMLHttpRequest();
 
             // Configure the GET request
-            var url = "{{route('exchange.transactions.receive.message')}}";
-            url = url + "?ex_trans_id="+{{$exchangeTransaction->id}}+"&message="+message;
+            var url = "{{route('vas.contracts.receive.message')}}";
+            url = url + "?contract_id="+{{$contract->id}}+"&message="+message;
             xhr.open("GET", url, true);
 
             xhr.setRequestHeader("Accept", "application/json");

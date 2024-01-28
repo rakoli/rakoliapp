@@ -1,8 +1,6 @@
 <!--begin::Form-->
 <form id="kt_form" class="form d-flex flex-column flex-lg-row" data-kt-redirect="{{route('vas.tasks.index')}}" action="{{$submitUrl}}" method="post">
-
     @csrf
-
     @if($isEdit)
         @method('patch')
         <input type="hidden" name="task_id" value="{{$task->id}}">

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Agent;
 
+use App\Events\VasChatEvent;
 use App\Http\Controllers\Controller;
+use App\Models\VasChat;
 use App\Models\VasContract;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
@@ -28,8 +30,8 @@ class ContractsController extends Controller
 
             return \Yajra\DataTables\Facades\DataTables::eloquent($contracts)
                 ->addColumn('action', function(VasContract $contract) {
-                    $content = '<a class="btn btn-secondary btn-sm me-2" href="'.route('vas.tasks.show', $contract->id).'">'.__("View Task").'</a>
-                                <a class="btn btn-secondary btn-sm me-2" href="'.route('vas.tasks.edit', $contract->id).'">'.__("Edit").'</a>';
+                    $content = '<a class="btn btn-secondary btn-sm me-2" href="'.route('contracts.show', $contract->id).'">'.__("View").'</a>
+                                <a class="btn btn-secondary btn-sm me-2" href="'.route('contracts.submissions.index', $contract->id).'">'.__("Submission").'</a>';
                     return $content;
                 })
                 ->addIndexColumn()
@@ -61,50 +63,44 @@ class ContractsController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        //
+        $contract = VasContract::find($id);
+        $chatMessages = $contract->vas_chats->sortBy('id');
+        return view('agent.contracts.show',compact('contract','chatMessages'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function contractsReceiveMessage(Request $request)
     {
-        //
-    }
+        $request->validate([
+            'contract_id' => 'required|exists:vas_contracts,id',
+            'message' => 'required|string|min:1|max:200',
+        ]);
+        $chatId = $request->get('contract_id');
+        $user = $request->user();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+        $contractId = $request->get('contract_id');
+        $contract = VasContract::where('id',$contractId)->first();
+        $isAllowed = $contract->isUserAllowed($user);
+        if($isAllowed == false){
+            return redirect()->route('contracts.index')->withErrors(['Not authorized to access transaction']);
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        VasChat::create([
+            'vas_contract_code' => $contract->code,
+            'sender_code' => $user->code,
+            'message' => $request->get('message'),
+        ]);
+
+        if(env('APP_ENV') != 'testing'){
+            event(new VasChatEvent($chatId,$request->get('message'),$user->name(),$user->business->business_name,now()->toDateTimeString('minute'),$user->id));
+        }
+
+        return [
+            'status' => 200,
+            'message' => "successful"
+        ];
     }
 }

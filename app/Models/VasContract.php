@@ -56,4 +56,18 @@ class VasContract extends Model
         return $this->hasMany(VasSubmission::class, 'vas_contract_code', 'code');
     }
 
+    public function isUserAllowed(User $user)
+    {
+        $isRelated = false;
+
+        if($this->business->code == $user->business_code){
+            $isRelated = true;
+        }
+        if($this->agent->code == $user->business_code){
+            $isRelated = true;
+        }
+
+        return $isRelated;
+    }
+
 }

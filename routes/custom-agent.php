@@ -53,12 +53,17 @@ Route::middleware(['auth','should_complete_registration','onlyagent'])->group(fu
     });
     //END: EXCHANGE MODULE
 
-    //Opportunity
+    //Task
     Route::get('tasks/{type?}',[App\Http\Controllers\Agent\TasksController::class, 'index'])->name('agent.tasks');
     Route::get('task/view/{id}',[App\Http\Controllers\Agent\TasksController::class, 'show'])->name('agent.task.show');
     Route::post('task/apply',[App\Http\Controllers\Agent\TasksController::class, 'apply'])->name('agent.task.apply');
 
     //Contracts
     Route::resource('contracts',App\Http\Controllers\Agent\ContractsController::class);
+    Route::get('contracts/receive/message', [App\Http\Controllers\Agent\ContractsController::class, 'contractsReceiveMessage'])->name('contracts.receive.message');
+
+    //Contract Submission
+    Route::resource('contracts.submissions',App\Http\Controllers\Agent\ContractSubmissionsController::class);
+    Route::post('contracts/{contract}/submissions/upload',[App\Http\Controllers\Agent\ContractSubmissionsController::class, 'fileUpload'])->name('contracts.submissions.upload');
 
 });
