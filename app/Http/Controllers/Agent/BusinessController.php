@@ -586,14 +586,60 @@ class BusinessController extends Controller
             $orderBy = ['order_by' => $request->get('order_by')];
             $orderByFilter = $request->get('order_by');
         }
-        // $roles = Business::where('referral_business_code', $user->business_code)->with('package')->orderBy('id', 'desc');
+
         $users = User::where('referral_business_code',$user->business_code)->with('business.package')->orderBy('id', 'desc');
         if (request()->ajax()) {
             return \Yajra\DataTables\Facades\DataTables::eloquent($users)
                 ->addColumn('actions', function (User $users) {
-                    // $content = '<button class="btn btn-secondary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#edit_method_modal" onclick="editClicked(' . $role->id . ')">' . __("Edit") . '</button>';
-                    // $content .= '<button class="btn btn-secondary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#delete_method_modal" onclick="deleteClicked(' . $role->id . ')">' . __("Delete") . '</button>';
-                    // return $content;
+                     $content = '<button class="btn btn-secondary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#edit_method_modal" onclick="editClicked()">' . __("Edit") . '</button>';
+                     $content .= '<button class="btn btn-secondary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#delete_method_modal" onclick="deleteClicked()">' . __("Delete") . '</button>';
+                     return $content;
+                })
+                ->addColumn('name', function (User $user) {
+                    return "$user->fname $user->lname";
+                })
+                ->addColumn('registration_status', function (User $user) {
+                    $business = $user->business;
+                    if($business == null){
+                        return 'Not Registered';
+                    }
+                    $package = $business->package_code;
+                    if($package == null){
+                        return 'Not Active Package';
+                    }
+                    $package = $user->business->package->name;
+                    return $package;
+                })
+                ->addColumn('package_status', function (User $user) {
+                    $business = $user->business;
+                    if($business == null){
+                        return 'None';
+                    }
+                    $package = $business->package_code;
+                    if($package == null){
+                        return 'None';
+                    }
+                    $package = $user->business->package->name;
+                    return $package;
+                })
+                ->addColumn('business_name', function (User $user) {
+                    $business = $user->business;
+                    if($business == null){
+                        return 'Not Registered';
+                    }
+                    return $business->business_name;
+                })
+                ->addColumn('package_commission', function (User $user) {
+                    $business = $user->business;
+                    if($business == null){
+                        return number_format(0,2);
+                    }
+                    $package = $business->package_code;
+                    if($package == null){
+                        return number_format(0,2);
+                    }
+                    $packageCommission = $user->business->package->price_commission;
+                    return number_format($packageCommission,2);
                 })
                 ->rawColumns(['actions'])
                 ->addIndexColumn()
@@ -601,20 +647,21 @@ class BusinessController extends Controller
         }
         // DataTable
         $dataTableHtml = $builder->columns([
-            ['data' => 'business.id', 'title' => __('ID')],
-            ['data' => 'business.business_name', 'title' => __('Business name')],
-            ['data' => 'business.business_phone_number', 'title' => __('Business phone number')],
-            ['data' => 'business.status', 'title' => __('Package status')],
-            ['data' => 'business.package.name', 'title' => __('Package name')],
-            ['data' => 'business.package.price', 'title' => __('Amount')],
+            ['data' => 'id', 'title' => __('ID')],
+            ['data' => 'name', 'title' => __('Name')],
+            ['data' => 'phone', 'title' => __('Phone')],
+            ['data' => 'registration_status', 'title' => __('Registration Status')],
+            ['data' => 'business_name', 'title' => __('Business Name')],
+            ['data' => 'package_status', 'title' => __('Package Status')],
+            ['data' => 'package_commission', 'title' => __('Commission')],
         ])->responsive(true)
             ->ordering(false)
             ->ajax(route('business.referrals', $orderBy))
             ->paging(true)
             ->dom('frtilp')
             ->lengthMenu([[25, 50, 100, -1], [25, 50, 100, "All"]]);
-        $methodsJson = $users->get()->toJson();
-        return view('agent.business.referrals', compact('dataTableHtml', 'orderByFilter', 'methodsJson'));
+
+        return view('agent.business.referrals', compact('dataTableHtml', 'orderByFilter'));
     }
     public function referr(Request $request)
     {
@@ -625,7 +672,7 @@ class BusinessController extends Controller
             'phone' => ['required', 'numeric'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
         ]);
-        $business_code = \auth()->user()->business_code;
+        $business_code = $request->user()->business_code;
         $password = VerifyOTP::generateOTPCode();
         $pass = VerifyOTP::generateHashedPassword($password);
         $country_code = Country::where('dialing_code', $data['country_dial_code'])->first()->code;

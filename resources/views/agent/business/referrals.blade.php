@@ -121,9 +121,19 @@
 @endsection
 
 @section('footer_js')
-    <script></script>
-    <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}" type="text/javascript"></script>
+    <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}" type="text/javascript"></script>
     {!! $dataTableHtml->scripts() !!}
-    {{-- {!!  GoogleReCaptchaV3::init() !!} --}}
-    <script src="{{ asset('assets/js/custom/authentication/sign-up/general.js') }}"></script>
+    <script>
+        const countrySelect = document.getElementById('countrySelect');
+        const codeInput = document.getElementById('codeInput');
+
+        // Add an event listener to the select element
+        countrySelect.addEventListener('change', function () {
+            // Get the selected option's value
+            const selectedCountry = countrySelect.value;
+
+            // Update the code input field with the selected country's value
+            codeInput.value = selectedCountry;
+        });
+    </script>
 @endsection
