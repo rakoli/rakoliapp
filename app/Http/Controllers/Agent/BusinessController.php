@@ -588,9 +588,9 @@ class BusinessController extends Controller
             $orderByFilter = $request->get('order_by');
         }
 
-        $users = User::where('referral_business_code',$user->business_code)->with('business.package')->orderBy('id', 'desc');
+        $downlines = User::where('referral_business_code',$user->business_code)->with('business.package')->orderBy('id', 'desc');
         if (request()->ajax()) {
-            return \Yajra\DataTables\Facades\DataTables::eloquent($users)
+            return \Yajra\DataTables\Facades\DataTables::eloquent($downlines)
                 ->addColumn('actions', function (User $users) {
                      $content = '<button class="btn btn-secondary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#edit_method_modal" onclick="editClicked()">' . __("Edit") . '</button>';
                      $content .= '<button class="btn btn-secondary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#delete_method_modal" onclick="deleteClicked()">' . __("Delete") . '</button>';
@@ -606,10 +606,9 @@ class BusinessController extends Controller
                     }
                     $package = $business->package_code;
                     if($package == null){
-                        return 'Not Active Package';
+                        return 'No Active Package';
                     }
-                    $package = $user->business->package->name;
-                    return $package;
+                    return 'complete';
                 })
                 ->addColumn('package_status', function (User $user) {
                     $business = $user->business;
@@ -662,7 +661,20 @@ class BusinessController extends Controller
             ->dom('frtilp')
             ->lengthMenu([[25, 50, 100, -1], [25, 50, 100, "All"]]);
 
-        return view('agent.business.referrals', compact('dataTableHtml', 'orderByFilter'));
+        $stats['total_referrals'] = $downlines->count();
+        $stats['annual_commission'] = 0;
+        $stats['inactive_referrals'] = 0;
+        foreach ($downlines->get() as $downline) {
+            if($downline->business != null ){
+                if($downline->business->package != null){
+                    $stats['annual_commission'] = $stats['annual_commission'] + $downline->business->package->price_commission;
+                }else{
+                    $stats['inactive_referrals'] = $stats['inactive_referrals'] + 1;
+                }
+            }
+        }
+
+        return view('agent.business.referrals', compact('dataTableHtml', 'orderByFilter', 'stats'));
     }
 
     public function referr(Request $request)

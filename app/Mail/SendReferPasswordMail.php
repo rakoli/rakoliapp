@@ -16,15 +16,18 @@ class SendReferPasswordMail extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
 
     public User $receiver;
+    public User $upline;
     public $password;
+
     /**
      * Create a new message instance.
      */
-    public function __construct(User $receiver, $password)
-{
-    $this->receiver = $receiver;
-    $this->password = $password;
-}
+    public function __construct(User $user, $password, $upline)
+    {
+        $this->receiver = $user;
+        $this->upline = $upline;
+        $this->password = $password;
+    }
 
     /**
      * Get the message envelope.
@@ -42,8 +45,7 @@ class SendReferPasswordMail extends Mailable implements ShouldQueue
     public function content()
     {
         return new Content(
-            view: 'emails.sendpasswordemail',
-
+            markdown: 'emails.sendpasswordemail',
         );
     }
 
