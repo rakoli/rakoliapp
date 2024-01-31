@@ -4,14 +4,17 @@ namespace App\Http\Controllers\Auth;
 
 use App\Actions\SendTelegramNotification;
 use App\Http\Controllers\Controller;
+use App\Models\Business;
 use App\Models\Country;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use App\Utils\Enums\UserTypeEnum;
 use App\Utils\TelegramCommunication;
+use BitFinera\Db\Package;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -57,7 +60,33 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm()
     {
-        return view('auth.register');
+        $hasReferral = false;
+        $referrer = '';
+
+        $referralBusinessCodeCookie = Cookie::get((env('APP_NAME').'_referral_business_code'));
+        if ($referralBusinessCodeCookie != null) {
+            $business = Business::where('code', $referralBusinessCodeCookie)->first();
+            if ($business != null) {
+                $hasReferral = true;
+                $referrer = $referralBusinessCodeCookie;
+                $referrerName = $business->business_name;
+            }
+        }
+
+        return view('auth.register', compact('hasReferral','referrer', 'referrerName'));
+    }
+
+    public function referral(Request $request, $businessCode)
+    {
+        $business = Business::where('code', $businessCode)->first();
+
+        if ($business == null) {
+            return redirect(route('register'))->withErrors([__('Invalid Referral Link')]);
+        }
+
+        $cookie = cookie(env('APP_NAME').'_referral_business_code', $businessCode);
+
+        return redirect(route('register'))->cookie($cookie)->with('message', __("You have been referred by").' '.$business->business_name);
     }
 
     /**

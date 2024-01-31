@@ -77,6 +77,8 @@
     "Account locked! Reached trial limit" : "Akaunti Imefungwa! Umefika ukomo wa majaribio",
     "Registration Step" : "Hatua za Usajili",
     "Complete current step before proceeding" : "Kamilisha hatua ya sasa kabla ya kuendelea",
+    "You have been referred by" : "Umetambulishwa na",
+    "Invalid Referral Link" : "Kiungo cha rufaa batili",
     "###########" : "END OF AUTH AND REGISTRATION",
 
     "###########" : "MENU ITEMS",
