@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Business;
+use App\Models\Country;
 use App\Models\Package;
 use App\Models\User;
 use App\Utils\Enums\UserTypeEnum;
@@ -323,10 +324,11 @@ class RegistrationStepsTest extends TestCase
         $user = User::factory()->create([
             'type'=>UserTypeEnum::AGENT->value,
             'registration_step'=>3,
-            'business_code'=> $business->code
+            'business_code'=> $business->code,
+            'country_code'=>$business->country_code
         ]);
         $this->actingAs($user);
-        $packages = Package::factory()->count(3)->create();
+        $packages = Package::factory()->count(3)->create(['country_code'=>$business->country_code]);
 
         $response = $this->get(route('registration.agent'));
         $response->assertStatus(200);
