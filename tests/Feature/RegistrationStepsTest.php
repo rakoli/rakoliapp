@@ -298,6 +298,29 @@ class RegistrationStepsTest extends TestCase
     }
 
     /** @test */
+    public function user_referral_is_updated_on_submit_business_details_update()
+    {
+        $upline = Business::factory()->create();
+        $user = User::factory()->create([
+            'type'=>UserTypeEnum::AGENT->value,
+            'registration_step'=>1,
+            'business_code'=>null,
+            'referral_business_code'=>$upline->code,
+        ]);
+        $this->actingAs($user);
+
+        $business = Business::factory()->make();
+
+        $response = $this->get(route('update.business.details', [
+            'business_name'=> $business->business_name,
+        ]));
+
+        $usersBusiness = User::where('id', $user->id)->first()->business->referral_business_code;
+
+        $this->assertEquals($upline->code,$usersBusiness);
+    }
+
+    /** @test */
     public function user_can_move_from_step_02_to_03_after_entering_business_details()
     {
         $user = User::factory()->create([

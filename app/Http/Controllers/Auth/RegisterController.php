@@ -62,6 +62,7 @@ class RegisterController extends Controller
     {
         $hasReferral = false;
         $referrer = '';
+        $referrerName = '';
 
         $referralBusinessCodeCookie = Cookie::get((env('APP_NAME').'_referral_business_code'));
         if ($referralBusinessCodeCookie != null) {
@@ -104,6 +105,7 @@ class RegisterController extends Controller
             'phone' => ['required','numeric'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'referral_business_code' => ['nullable', 'string', 'exists:businesses,code'],
         ];
         if (env('APP_ENV') == 'production'){
             $validators['g-recaptcha-response'] = [new GoogleReCaptchaV3ValidationRule('register')];
@@ -123,6 +125,10 @@ class RegisterController extends Controller
         $country_dial_code = substr($data['country_dial_code'], 1);
         $plainPhone = substr($data['phone'], 1);
         $fullPhone = $country_dial_code . $plainPhone;
+        $referralBusinessCode = null;
+        if(array_key_exists('referral_business_code', $data)){
+            $referralBusinessCode = $data['referral_business_code'];
+        }
         return User::create([
             'country_code' => $country_code,
             'code' => generateCode($data['fname'].' '.$data['lname'],$country_code),
@@ -132,6 +138,7 @@ class RegisterController extends Controller
             'phone' => $fullPhone,
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'referral_business_code' => $referralBusinessCode,
         ]);
     }
 

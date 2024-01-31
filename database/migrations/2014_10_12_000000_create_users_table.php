@@ -53,6 +53,10 @@ return new class extends Migration
             $table->boolean('iddoc_verified')->default(0);
 
             $table->string('referral_business_code')->nullable();
+            $table->foreign('referral_business_code')->references('code')
+                ->on('businesses')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
 
             $table->string('password');
             $table->rememberToken();

@@ -28,6 +28,7 @@ class Business extends Model
         'business_phone_number',
         'business_email',
         'business_location',
+        'referral_business_code',
     ];
 
     public static function addBusiness($data)
