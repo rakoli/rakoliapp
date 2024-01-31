@@ -311,15 +311,21 @@ class RegistrationStepController extends Controller
             $regDate = Carbon::create($regDate);
         }
 
-        $response = Business::addBusiness([
-                'country_code' => $user->country_code,
-                'code' => generateCode($request->get('business_name'),$user->country_code),
-                'type' => $user->type,
-                'business_name' => $request->get('business_name'),
-                'business_regno' => $request->get('reg_id',null),
-                'tax_id' => $request->get('tax_id',null),
-                'business_reg_date' => $regDate,
-            ]);
+        $addBusinessData = [
+            'country_code' => $user->country_code,
+            'code' => generateCode($request->get('business_name'),$user->country_code),
+            'type' => $user->type,
+            'business_name' => $request->get('business_name'),
+            'business_regno' => $request->get('reg_id',null),
+            'tax_id' => $request->get('tax_id',null),
+            'business_reg_date' => $regDate,
+        ];
+
+        if($user->referral_business_code != null){
+            $addBusinessData['referral_business_code'] = $user->referral_business_code;
+        }
+
+        $response = Business::addBusiness($addBusinessData);
 
         if($response === false){
             return [
