@@ -217,5 +217,22 @@ function runDatabaseTransaction(\Closure $closure)
         Bugsnag::notifyException($exception);
 
         return false; // Return false or handle the error as needed
+
+        // Example usage:
+//    $result = runDatabaseTransaction(function () {
+//        // Database actions here
+//
+//        return true; // Return any result if needed
+//    });
+//
+//    if ($result !== false) {
+//        // Transaction was successful
+//        // Handle the result if needed
+//    } else {
+//        // Transaction failed
+//        // Handle the failure or error
+//    }
     }
+
+
 }
