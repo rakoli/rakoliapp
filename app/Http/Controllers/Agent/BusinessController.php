@@ -16,6 +16,7 @@ use App\Models\ExchangeBusinessMethod;
 use App\Models\ExchangePaymentMethod;
 use App\Models\Location;
 use App\Models\LocationUser;
+use App\Utils\StatisticsService;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Models\Region;
@@ -661,18 +662,11 @@ class BusinessController extends Controller
             ->dom('frtilp')
             ->lengthMenu([[25, 50, 100, -1], [25, 50, 100, "All"]]);
 
-        $stats['total_referrals'] = $downlines->count();
-        $stats['annual_commission'] = 0;
-        $stats['inactive_referrals'] = 0;
-        foreach ($downlines->get() as $downline) {
-            if($downline->business != null ){
-                if($downline->business->package != null){
-                    $stats['annual_commission'] = $stats['annual_commission'] + $downline->business->package->price_commission;
-                }else{
-                    $stats['inactive_referrals'] = $stats['inactive_referrals'] + 1;
-                }
-            }
-        }
+        $statisticsService = new StatisticsService($user);
+
+        $stats['total_referrals'] = $statisticsService->agent_total_number_of_referrals();
+        $stats['annual_commission'] = $statisticsService->agent_total_annual_referral_commission();
+        $stats['inactive_referrals'] = $statisticsService->agent_total_no_of_inactive_referrals();
 
         return view('agent.business.referrals', compact('dataTableHtml', 'orderByFilter', 'stats'));
     }

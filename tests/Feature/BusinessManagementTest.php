@@ -8,17 +8,21 @@ use App\Models\BusinessRole;
 use App\Models\ExchangeAds;
 use App\Models\ExchangeBusinessMethod;
 use App\Models\Location;
+use App\Models\Package;
 use App\Models\Region;
 use App\Models\Towns;
 use App\Models\User;
+use App\Utils\Enums\BusinessStatusEnum;
 use App\Utils\Enums\ExchangeStatusEnum;
 use App\Utils\Enums\UserTypeEnum;
+use App\Utils\StatisticsService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Tests\TestCase;
+use function PHPUnit\Framework\assertEquals;
 
 class BusinessManagementTest extends TestCase
 {
@@ -711,7 +715,7 @@ class BusinessManagementTest extends TestCase
     }
 
     /** @test */
-    public function agent_can_view_business_referrals_page(): void
+    public function agent_can_view_business_referrals_page_with_referral_link(): void
     {
         $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
 
@@ -720,6 +724,7 @@ class BusinessManagementTest extends TestCase
         $response = $this->get(route('business.referrals'));
         $response->assertOk();
         $response->assertSee('Referrals');
+        $response->assertSee(route('referral.link', $user->business_code));
 
     }
 
@@ -782,6 +787,53 @@ class BusinessManagementTest extends TestCase
         $this->assertTrue($allValuesFound);
         $this->assertEquals($totalReferralUsersCount,$responseArray['recordsTotal']);
     }
+
+    /** @test */
+    public function agent_can_view_business_correct_referrals_statistics(): void
+    {
+        $business = Business::factory()->create();
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0, 'business_code'=>$business->code]);
+
+        $this->actingAs($user);
+
+        //Active Refer
+        $noOfActive = 4;
+        $activePackage = Package::where(['name'=>'prosperity','country_code'=>'TZ'])->first();
+        for ($counter = 0;  $counter < $noOfActive ; $counter++) {
+            $activeOne = Business::factory()->create([
+                'package_code' => $activePackage->code,
+                'package_expiry_at' => now()->addDays(random_int(30,300)),
+                'referral_business_code' => $user->business_code
+            ]);
+            User::factory()->create([
+                'business_code' => $activeOne->code,
+                'referral_business_code' => $user->business_code,
+            ]);
+        }
+
+        //InActive Refer
+        $noOfInActive = 2;
+        for ($counter = 0;  $counter < $noOfInActive ; $counter++) {
+            $inActiveOne = Business::factory()->create([
+                'package_code' => null,
+                'package_expiry_at' => null,
+                'referral_business_code' => $user->business_code
+            ]);
+            User::factory()->create([
+                'business_code' => $inActiveOne->code,
+                'referral_business_code' => $user->business_code,
+            ]);
+
+        }
+
+        $statisticsService = new StatisticsService($user);
+
+        $this->assertEquals($statisticsService->agent_total_number_of_referrals(),($noOfActive + $noOfInActive));
+        $this->assertEquals($statisticsService->agent_total_annual_referral_commission(),($activePackage->price_commission * $noOfActive));
+        $this->assertEquals($statisticsService->agent_total_no_of_inactive_referrals(),$noOfInActive);
+
+    }
+
 
 
 }
