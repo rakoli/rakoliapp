@@ -11,6 +11,8 @@ class VasContract extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['id'];
+
     public function business() : BelongsTo
     {
         return $this->belongsTo(Business::class, 'vas_business_code', 'code');

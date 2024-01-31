@@ -28,7 +28,6 @@ class TasksController extends Controller
         $user = \auth()->user();
         $dataTable = new DataTables();
         $builder = $dataTable->getHtmlBuilder();
-
         if (request()->ajax()) {
 
             $tasks = VasTask::where('status',VasTaskStatusEnum::ACTIVE->value)
@@ -39,6 +38,8 @@ class TasksController extends Controller
                 $tasks = $tasks->where('is_public',"0")->whereHas('vas_task_availabilities',function($query) use($user){
                     $query->where('agent_business_code',$user->business_code);
                 });
+            } else {
+                $tasks = $tasks->where('is_public',1);
             }
 
             return \Yajra\DataTables\Facades\DataTables::eloquent($tasks)
@@ -73,7 +74,7 @@ class TasksController extends Controller
             ['data' => 'action' , 'title' => __("Action")],
         ])->responsive(true)
             ->ordering(false)
-            ->ajax(route('agent.tasks'))
+            ->ajax(route('agent.tasks',array($type)))
             ->paging(true)
             ->dom('frtilp')
             ->lengthMenu([[25, 50, 100, -1], [25, 50, 100, "All"]]);

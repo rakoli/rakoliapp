@@ -71,9 +71,6 @@ class ContractsController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'region_code' => 'sometimes',
-            'town_code' => 'sometimes',
-            'area_code' => 'sometimes',
             'vas_task_code' => 'required',
             'agent_business_code' => 'required',
             'title' => 'required',

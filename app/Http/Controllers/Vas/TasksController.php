@@ -144,7 +144,7 @@ class TasksController extends Controller
     public function show(String $id)
     {
         $task = VasTask::find($id);
-        $agents = User::whereIn('code',$task->vas_task_applications->pluck('agent_business_code')->toArray())->select('code','fname','lname')->get();
+        $agents = User::whereIn('business_code',$task->vas_task_applications->pluck('agent_business_code')->toArray())->select('business_code','fname','lname')->get();
         return view('vas.tasks.show',compact('task','agents'));
     }
 
