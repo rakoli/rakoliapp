@@ -97,6 +97,22 @@ class AuthenticationTest extends TestCase
     }
 
     /** @test */
+    public function public_user_can_open_agent_referral_link(): void
+    {
+        $business = Business::factory()->create();
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0,'business_code'=>$business->code]);
+
+        $response = $this->get(route('referral.link', $business->code));
+        $response->assertRedirect(route('register'));
+        $response->assertCookie(env('APP_NAME').'_referral_business_code');
+
+
+        $response = $this->get(route('referral.link', 'invalid_business_code'));
+        $response->assertRedirect(route('register'));
+        $this->assertEquals('Invalid Referral Link',session('errors')->first());
+    }
+
+    /** @test */
     public function guest_user_can_submit_agent_registration_form_without_errors()
     {
         //Added Country to get dialing code
