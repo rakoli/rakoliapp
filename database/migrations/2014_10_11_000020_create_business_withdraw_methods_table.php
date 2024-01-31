@@ -18,21 +18,11 @@ return new class extends Migration
                 ->on('businesses')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-
-            $table->string('requesting_user_code');
-            $table->foreign('requesting_user_code')->references('code')
-                ->on('users')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-
             $table->string('amount_currency');
             $table->string('method_name');
             $table->string('method_ac_name');
             $table->string('method_ac_number');
-            $table->string('status')->default(\App\Utils\Enums\BusinessWithdrawMethodStatusEnum::REQUESTED->value);//requested,approved,complete
             $table->timestamps();
-
-            $table->unique(['requesting_user_code']);
         });
     }
 

@@ -41,6 +41,7 @@ class PackageFactory extends Factory
             'code' => Str::random(7),
             'price' => fake()->numberBetween(50000, 100000),
             'price_currency' => fake()->randomElement(['kes','tzs']),
+            'price_commission' => fake()->numberBetween(500, 1000),
             'package_interval_days' => 365,
             'description' => fake()->sentence
         ];

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Utils\Enums\BusinessStatusEnum;
+use App\Utils\Enums\TransactionTypeEnum;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -163,6 +164,11 @@ class Business extends Model
         return $this->hasMany(Short::class, 'business_code', 'code');
     }
 
+    public function business_account_transactions(): HasMany
+    {
+        return $this->hasMany(BusinessAccountTransaction::class, 'business_code', 'code');
+    }
+
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class, 'business_code', 'code');
@@ -234,7 +240,39 @@ class Business extends Model
             return true;
         }
         return false;
+    }
 
+    public function addBusinessAccountTransaction($type,$category,$amount,$description)
+    {
+        $result = runDatabaseTransaction(function() use ($type,$category,$amount,$description) {
+
+            $balanceOld = $this->balance;
+            $balanceNew = $this->balance;
+            if($type == TransactionTypeEnum::MONEY_IN->value){
+                $balanceNew = $this->balance + $amount;
+                $this->balance = $balanceNew;
+            }
+            if($type == TransactionTypeEnum::MONEY_OUT->value){
+                $balanceNew = $this->balance - $amount;
+                $this->balance = $balanceNew;
+            }
+            $this->save();
+
+            BusinessAccountTransaction::create([
+                'business_code'=> $this->code,
+                'type'=>$type,
+                'category'=>$category,
+                'amount'=>$amount,
+                'amount_currency'=>$this->country->currency,
+                'balance_old'=>$balanceOld,
+                'balance_new'=>$balanceNew,
+                'description'=>$description,
+            ]);
+
+            return true;
+        });
+
+        return $result;
     }
 
 }
