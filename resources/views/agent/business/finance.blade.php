@@ -22,11 +22,28 @@
                 <!--begin::Card-->
                 <div class="card mb-5 mb-xl-8">
 
-                    <div class="card-body pt-5">
-                        <h1 class="text-center fw-bold">{{ __('Balance') }}</h1>
-                        <h2 class="mb-5 text-gray-600 text-center">
+                    <div class="card-body pt-5 pb-5">
+                        <div class="fw-bold text-center">{{__("Balance")}}</div>
+                        <div class="text-gray-600 text-center fw-bold">
                             {{ number_format($balance[0]->balance) }}
-                        </h2>
+                        </div>
+                    </div>
+
+                    <!--end::Details toggle-->
+                    <div class="separator separator-dashed"></div>
+                    <!--begin::Details content-->
+
+                    <div class="card-body pt-5 pb-5">
+
+                        <button type="button" class="btn btn-primary m-1" data-bs-toggle="modal"
+                                data-bs-target="#update_method_modal">
+                            {{ __('Update Method') }}
+                        </button>
+
+                        <button type="button" class="btn btn-primary m-1" id="withdrawButton">
+                            {{ __('Withdraw') }}
+                        </button>
+
                     </div>
 
                     <!--end::Details toggle-->
@@ -37,41 +54,28 @@
                     <div class="card-body pt-1">
                         <!--begin::Details content-->
                         <div class="collapse show">
-                            @if (isset($existingData[0]->method_name) && $existingData[0]->method_name)
-                            @else
-                                <span style="color: red;">Click on update button for update below info.</span>
-                            @endif
 
-                            <div class="py-5 fs-6 text-center">
-                                <button type="button" class="btn btn-primary m-2" data-bs-toggle="modal"
-                                    data-bs-target="#update_method_modal">
-                                    {{ __('Update') }}
-                                </button>
-                            </div>
-                            <div class=" fs-6">
-                                <div class="fw-bold mt-5">{{ __('Method Name') }}
-                                    <div class="text-gray-600">
-                                        {{ old('method_name', $existingData[0]->method_name ?? 'Not mention') }}
-                                    </div>
+                            <div class="py-5 fs-6">
+                                <div class="fw-bold mt-5">{{ __('Method Name') }}</div>
+                                <div class="text-gray-600">
+                                    {{ old('method_name', $existingData[0]->method_name ?? 'Not mention') }}
                                 </div>
 
-                                <div class="fw-bold mt-5">{{ __('Method AC Name') }}
-                                    <div class="text-gray-600">
-                                        {{ old('method_ac_name', $existingData[0]->method_ac_name ?? 'Not mention') }}
-                                    </div>
+                                <div class="fw-bold mt-5">{{ __('Method AC Name') }}</div>
+                                <div class="text-gray-600">
+                                    {{ old('method_ac_name', $existingData[0]->method_ac_name ?? 'Not mention') }}
                                 </div>
 
-                                <div class="fw-bold mt-5">{{ __('Method AC Number') }}
-                                    <div class="text-gray-600">
-                                        {{ old('method_ac_number', $existingData[0]->method_ac_number ?? 'Not mention') }}
-                                    </div>
+                                <div class="fw-bold mt-5">{{ __('Method AC Number') }}</div>
+                                <div class="text-gray-600">
+                                    {{ old('method_ac_number', $existingData[0]->method_ac_number ?? 'Not mention') }}
                                 </div>
 
-                                <div class="fw-bold mt-5">{{ __('Amount Currency') }}
-                                    <div class="text-gray-600">
-                                        {{ old('amount_currency', $existingData[0]->amount_currency ?? 'Not mention') }}
-                                    </div>
+                                <div class="fw-bold mt-5">{{ __('Amount Currency') }}</div>
+                                <div class="text-gray-600">
+                                    {{ old('amount_currency', $existingData[0]->amount_currency ?? 'Not mention') }}
                                 </div>
+
                             </div>
                         </div>
                         <!--end::Details content-->
@@ -85,69 +89,26 @@
             <!--begin::Content-->
             <div class="flex-lg-row-fluid ms-lg-15">
 
-                <!--begin::Messenger-->
-                <div class="card" id="kt_chat_messenger">
-                    <!--begin::Card header-->
-                    <div class="card-header" id="kt_chat_messenger_header">
-                        <!--begin::Title-->
-                        <div class="card-title">
-                            <!--begin::User-->
-                            <div class="d-flex justify-content-center flex-column me-3">
-                                {{-- <a href="#" class="fs-1 fw-bold text-gray-900 text-hover-primary me-1 mb-2 mt-5 lh-1">{{__("Transactions")}}</a> --}}
-                                {{-- <a href="#" class="fs-1 fw-bold text-gray-900 text-hover-primary me-1 mb-2 mt-5 lh-1 text-center">{{__("Transactions")}}</a> --}}
+                <!--begin::Table-->
+                <div class="card card-flush">
 
-                                <!--begin::Info-->
-                                <div class="card-body pt-0">
-                                    {{-- <button type="button" class="btn btn-primary me-1 mb-2 mt-5 lh-1" id="withdrawButton" data-bs-toggle="modal" data-bs-target="#withdraw_method_modal">
-                                        {{__('Withdraw Fund')}}
-                                    </button> --}}
-                                    <button type="button" class="btn btn-primary me-1 mb-2 mt-5 lh-1" id="withdrawButton">
-                                        {{ __('Withdraw Fund') }}
-                                    </button>
+                    <!--begin::Card body-->
+                    <div class="card-body pt-0">
+                        <!--begin::Table container-->
+                        <div class="table-responsive">
 
-                                    <!--begin::Table container-->
-                                    <div class="table-responsive">
+                            {!! $dataTableHtml->table(['class' => 'table table-row-bordered table-row-dashed gy-4'], true) !!}
 
-                                        {!! $dataTableHtml->table(
-                                            ['class' => 'table table-row-bordered table-row-dashed gy-4', 'style="font-size: 1.1rem;"'],
-                                            true,
-                                        ) !!}
-
-                                    </div>
-                                    <!--end::Table container-->
-                                </div>
-                                <!--end::Info-->
-
-                            </div>
-                            <!--end::User-->
                         </div>
-                        <!--end::Title-->
+                        <!--end::Table container-->
                     </div>
-                    <!--end::Card header-->
-
-                    {{-- <div class="separator separator-content border-dark my-5"><span class="w-250px fw-bold">{{__("Payment Method")}}</span></div>
-
-                    <div class="card-body">
-                        <div class="input-group input-group-solid input-group-sm mb-5">
-                            <span class="input-group-text">{{__('Financial Institution')}}</span>
-                            <input type="text" class="form-control" value="{{str_camelcase($exchangeTransaction->paymentMethod->method_name)}}" disabled/>
-                        </div>
-                        <div class="input-group input-group-solid input-group-sm mb-5">
-                            <span class="input-group-text">{{__("Account Name")}}</span>
-                            <input id="kt_clipboard_acname" type="text" class="form-control" value="{{str_camelcase($exchangeTransaction->paymentMethod->account_name)}}" readonly/>
-                            <button class="btn btn-primary" data-clipboard-target="#kt_clipboard_acname">Copy</button>
-                        </div>
-                        <div class="input-group input-group-solid input-group-sm mb-5">
-                            <span class="input-group-text">{{__("Account Number")}}</span>
-                            <input id="kt_clipboard_acnumber" type="text" class="form-control" value="{{str_camelcase($exchangeTransaction->paymentMethod->account_number)}}" readonly/>
-                            <button class="btn btn-primary" data-clipboard-target="#kt_clipboard_acnumber">Copy</button>
-                        </div>
-                    </div> --}}
-
+                    <!--end::Card body-->
                 </div>
-                <!--end::Messenger-->
+                <!--end::Card-->
+
             </div>
             <!--end::Content-->
+
         </div>
         <!--end::Layout-->
 
@@ -239,16 +200,6 @@
                                     placeholder="{{ __('enter amount') }}" />
                             </div>
                         </div>
-                        {{-- <div class="row mb-5">
-                            <div class="input-group input-group-lg mb-5">
-                                <span class="input-group-text">{{__("Category")}}</span>
-                                <select name="category" class="form-select">
-                                    <option value="general">General</option>
-                                    <option value="income">Income</option>
-                                    <option value="expense">Expense</option>
-                                </select>
-                            </div>
-                        </div> --}}
                         <!--end::Input group-->
                         <!--begin::Input group-->
                         <div class="row mb-5">
@@ -355,47 +306,6 @@
         //     $('#withdraw_method_modal').modal('show');
         // });
 
-        //ACCOUNT NAME - CLIPBOARD
-        const targetAcName = document.getElementById('kt_clipboard_acname');
-        const acNameButton = targetAcName.nextElementSibling;
-        var acNameClipboard = new ClipboardJS(acNameButton, {
-            target: targetAcName,
-            text: function() {
-                return targetAcName.value;
-            }
-        });
-        acNameClipboard.on('success', function(e) {
-            const currentLabel = acNameButton.innerHTML;
-            if (acNameButton.innerHTML === 'Copied!') {
-                return;
-            }
-            acNameButton.innerHTML = 'Copied!';
-            setTimeout(function() {
-                acNameButton.innerHTML = currentLabel;
-            }, 3000)
-        });
-        //END:: ACCOUNT NAME - CLIPBOARD
-
-        //ACCOUNT NUMBER - CLIPBOARD
-        const targetAcNumber = document.getElementById('kt_clipboard_acnumber');
-        const acNumberButton = targetAcNumber.nextElementSibling;
-        var acNumberClipboard = new ClipboardJS(acNumberButton, {
-            target: targetAcNumber,
-            text: function() {
-                return targetAcNumber.value;
-            }
-        });
-        acNumberClipboard.on('success', function(e) {
-            const currentLabel = acNumberButton.innerHTML;
-            if (acNumberButton.innerHTML === 'Copied!') {
-                return;
-            }
-            acNumberButton.innerHTML = 'Copied!';
-            setTimeout(function() {
-                acNumberButton.innerHTML = currentLabel;
-            }, 3000)
-        });
-        //END:: ACCOUNT NUMBER - CLIPBOARD
     </script>
 
 @endsection

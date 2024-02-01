@@ -65,7 +65,7 @@ class PaymentController extends Controller
             ->lengthMenu([[25, 50, 100, -1], [25, 50, 100, "All"]]);
 
         $methodsJson = $roles->get()->toJson();
-        return view('agent.business.payments_new', compact('dataTableHtml', 'orderByFilter', 'methodsJson', 'balance', 'existingData'));
+        return view('agent.business.finance', compact('dataTableHtml', 'orderByFilter', 'methodsJson', 'balance', 'existingData'));
     }
 
     public function financeUpdate(Request $request)
@@ -88,7 +88,6 @@ class PaymentController extends Controller
                 'business_code' => $request->user()->business_code,
             ],
             [
-                'requesting_user_code' => $request->user()->code,
                 'amount_currency' => $currency,
                 'method_name' => $request->method_name,
                 'method_ac_name' => $request->method_ac_name,
