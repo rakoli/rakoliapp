@@ -23,9 +23,9 @@
                 <div class="card mb-5 mb-xl-8">
 
                     <div class="card-body pt-5 pb-5">
-                        <div class="fw-bold text-center">{{__("Balance")}}</div>
-                        <div class="text-gray-600 text-center fw-bold">
-                            {{ number_format($balance) }}
+                        <div class="d-flex flex-center flex-column">
+                            <div class="fs-3 text-gray-800 text-hover-primary fw-bold mb-1">{{__("Balance")}}</div>
+                            <div class="fs-5 text-gray-600 fw-bold">{{ number_format($balance) }} {{auth()->user()->business->country->currency}}</div>
                         </div>
                     </div>
 

@@ -71,7 +71,7 @@ class PaymentController extends Controller
             ->ordering(false)
             ->ajax(route('business.finance',['table'=>'withdraw_requests']))
             ->paging(true)
-            ->dom('frtilp')
+            ->dom('rtil')
             ->lengthMenu([[5, 10, 20, -1], [5, 10, 20, "All"]])->setTableId('withdraw_requests');
 
         $transactionsDataTableHtml = $builder2->columns([
@@ -92,7 +92,7 @@ class PaymentController extends Controller
             ->ordering(false)
             ->ajax(route('business.finance',['table'=>'account_transactions']))
             ->paging(true)
-            ->dom('frtilp')
+            ->dom('rtil')
             ->lengthMenu([[5, 10, 20, -1], [5, 10, 20, "All"]])->setTableId('account_transactions');
 
         return view('agent.business.finance', compact('dataTableHtml', 'transactionsDataTableHtml', 'balance', 'withdrawMethod'));
