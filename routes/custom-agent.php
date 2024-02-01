@@ -62,7 +62,7 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
         Route::get('finance', [App\Http\Controllers\Agent\PaymentController::class, 'finance'])->name('finance');
         Route::post('finance/update', [App\Http\Controllers\Agent\PaymentController::class, 'financeUpdate'])->name('finance.update');
         Route::post('finance/withdraw', [App\Http\Controllers\Agent\PaymentController::class, 'financeWithdraw'])->name('finance.withdraw');
-        Route::post('finance/check_methord', [App\Http\Controllers\Agent\PaymentController::class, 'checkMethord'])->name('finance.check_methord');
+        Route::post('finance/check_method', [App\Http\Controllers\Agent\PaymentController::class, 'checkMethod'])->name('finance.check_method');
 
         Route::get('profile/update', [App\Http\Controllers\Agent\BusinessController::class, 'profileCreate'])->name('profile.update');
         Route::post('profile/update', [App\Http\Controllers\Agent\BusinessController::class, 'profileUpdate'])->name('profile.update.submit');

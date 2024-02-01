@@ -134,7 +134,7 @@ class PaymentController extends Controller
         return redirect()->back()->with(['message' => __('Withdraw Fund') . ' ' . __('Added Successfully')]);
     }
 
-    public function checkMethord(Request $request)
+    public function checkMethod(Request $request)
     {
         $get_withdraw_method = BusinessWithdrawMethod::where('business_code', $request->user()->business_code)->first();
         if (!$get_withdraw_method) {

@@ -269,7 +269,7 @@
             $('#withdrawButton').on('click', function() {
                 $.ajax({
                     type: 'POST',
-                    url: '{{ route('business.finance.check_methord') }}',
+                    url: '{{ route('business.finance.check_method') }}',
                     data: {
                         _token: '{{ csrf_token() }}'
                     },
