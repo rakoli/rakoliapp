@@ -23,8 +23,8 @@ return new class extends Migration
             $table->string('category');// enum <TransactionCategoryEnum<Income, Expense, General>>
             $table->decimal('amount' , 12, 2);
             $table->string('amount_currency');
-            $table->decimal('balance_old' , 12, 2);
-            $table->decimal('balance_new' , 12, 2);
+            $table->decimal('balance_old' , 12, 2)->default(0);
+            $table->decimal('balance_new' , 12, 2)->default(0);
             $table->string('description');
             $table->text('note')->nullable();
 

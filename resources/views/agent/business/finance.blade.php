@@ -25,7 +25,7 @@
                     <div class="card-body pt-5 pb-5">
                         <div class="fw-bold text-center">{{__("Balance")}}</div>
                         <div class="text-gray-600 text-center fw-bold">
-                            {{ number_format($balance[0]->balance) }}
+                            {{ number_format($balance) }}
                         </div>
                     </div>
 
@@ -58,22 +58,22 @@
                             <div class="py-5 fs-6">
                                 <div class="fw-bold mt-5">{{ __('Method Name') }}</div>
                                 <div class="text-gray-600">
-                                    {{ old('method_name', $existingData[0]->method_name ?? 'Not mention') }}
+                                    {{ old('method_name', $withdrawMethod->method_name ?? 'Not mention') }}
                                 </div>
 
                                 <div class="fw-bold mt-5">{{ __('Method AC Name') }}</div>
                                 <div class="text-gray-600">
-                                    {{ old('method_ac_name', $existingData[0]->method_ac_name ?? 'Not mention') }}
+                                    {{ old('method_ac_name', $withdrawMethod->method_ac_name ?? 'Not mention') }}
                                 </div>
 
                                 <div class="fw-bold mt-5">{{ __('Method AC Number') }}</div>
                                 <div class="text-gray-600">
-                                    {{ old('method_ac_number', $existingData[0]->method_ac_number ?? 'Not mention') }}
+                                    {{ old('method_ac_number', $withdrawMethod->method_ac_number ?? 'Not mention') }}
                                 </div>
 
                                 <div class="fw-bold mt-5">{{ __('Amount Currency') }}</div>
                                 <div class="text-gray-600">
-                                    {{ old('amount_currency', $existingData[0]->amount_currency ?? 'Not mention') }}
+                                    {{ old('amount_currency', $withdrawMethod->amount_currency ?? 'Not mention') }}
                                 </div>
 
                             </div>
@@ -90,7 +90,44 @@
             <div class="flex-lg-row-fluid ms-lg-15">
 
                 <!--begin::Table-->
-                <div class="card card-flush">
+                <div class="card card-flush pt-4 mb-6 mb-xl-9">
+
+                    <!--begin::Card header-->
+                    <div class="card-header border-0">
+                        <!--begin::Card title-->
+                        <div class="card-title">
+                            <h2 class="fw-bold mb-0">Account Transactions Methods</h2>
+                        </div>
+                        <!--end::Card title-->
+                    </div>
+                    <!--end::Card header-->
+
+                    <!--begin::Card body-->
+                    <div class="card-body pt-0">
+                        <!--begin::Table container-->
+                        <div class="table-responsive">
+
+                            {!! $transactionsDataTableHtml->table(['class' => 'table table-row-bordered table-row-dashed gy-4'], true) !!}
+
+                        </div>
+                        <!--end::Table container-->
+                    </div>
+                    <!--end::Card body-->
+                </div>
+                <!--end::Card-->
+
+                <!--begin::Table-->
+                <div class="card card-flush pt-4 mb-6 mb-xl-9">
+
+                    <!--begin::Card header-->
+                    <div class="card-header border-0">
+                        <!--begin::Card title-->
+                        <div class="card-title">
+                            <h2 class="fw-bold mb-0">Withdraw Requests</h2>
+                        </div>
+                        <!--end::Card title-->
+                    </div>
+                    <!--end::Card header-->
 
                     <!--begin::Card body-->
                     <div class="card-body pt-0">
@@ -135,7 +172,7 @@
                             <div class="input-group input-group-lg mb-5">
                                 <span class="input-group-text">{{ __('Name') }}</span>
                                 <input name="method_name" type="text" class="form-control"
-                                    value="{{ old('method_name', $existingData[0]->method_name ?? '') }}" value=""
+                                    value="{{ old('method_name', $withdrawMethod->method_name ?? '') }}" value=""
                                     placeholder="{{ __('enter method name') }}" />
                             </div>
                         </div>
@@ -145,7 +182,7 @@
                             <div class="input-group input-group-lg mb-5">
                                 <span class="input-group-text">{{ __('AC Name') }}</span>
                                 <input name="method_ac_name" type="text" class="form-control"
-                                    value="{{ old('method_ac_name', $existingData[0]->method_ac_name ?? '') }}"
+                                    value="{{ old('method_ac_name', $withdrawMethod->method_ac_name ?? '') }}"
                                     value="" placeholder="{{ __('enter method ac name') }}" />
                                 {{-- <textarea name="description" type="text" class="form-control" value="" placeholder="{{__('enter description')}}"></textarea> --}}
                             </div>
@@ -156,7 +193,7 @@
                             <div class="input-group input-group-lg mb-5">
                                 <span class="input-group-text">{{ __('AC Number') }}</span>
                                 <input name="method_ac_number" type="text" class="form-control"
-                                    value="{{ old('method_ac_number', $existingData[0]->method_ac_number ?? '') }}"
+                                    value="{{ old('method_ac_number', $withdrawMethod->method_ac_number ?? '') }}"
                                     value="" placeholder="{{ __('enter method ac number') }}" />
                                 {{-- <textarea name="description" type="text" class="form-control" value="" placeholder="{{__('enter description')}}"></textarea> --}}
                             </div>
@@ -262,6 +299,7 @@
     <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}" type="text/javascript"></script>
 
     {!! $dataTableHtml->scripts() !!}
+    {!! $transactionsDataTableHtml->scripts() !!}
 
     <script>
         // Message modal //
