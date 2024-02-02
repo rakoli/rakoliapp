@@ -5,7 +5,7 @@
         <div class="modal-body">
 
             <div class="row fv-row py-2">
-                <div class="col-6">
+                <div class="col-12">
                     <x-label class="" label="{{ __('Closing Balance') }}" for="closing_balance"/>
                     <x-input
                         type="number"
@@ -21,7 +21,10 @@
                     </div>
                     @enderror
                 </div>
-                <div class="col-6">
+            </div>
+            <div class="row fv-row py-2">
+
+                <div class="col-12">
                     <x-label class="" label="{{ __('location') }}" for="location"/>
                     <x-select2
                         name="location_code"
@@ -49,7 +52,7 @@
 
 
                 @foreach($tills as $till)
-                    <div class="col-6 py-3">
+                    <div class="col-12 py-3">
                         <x-label class="" label="{{ __($till->network?->agency?->name) }}" :for="$till->id"/>
                         <x-input class="form-control-solid"
                                  name="tills[{{ $till->network_code }}]"

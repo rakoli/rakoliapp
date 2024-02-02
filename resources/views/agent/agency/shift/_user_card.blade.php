@@ -1,45 +1,80 @@
+@use(Illuminate\Support\Number)
 <div class="card mb-5 mb-xl-8">
 
-    <h3 class="card-title align-items-start flex-column px-6 py-6">
 
+    <div class="flex-grow-1 px-lg-4 px-sm-3 py-sm-4 ">
+        <!--begin::Title-->
+        <div class="d-flex justify-content-between align-items-start flex-wrap mb-2">
+            <!--begin::User-->
+            <div class="d-flex flex-column">
+                <!--begin::Name-->
+                <div class="d-flex align-items-center mb-2">
+                    <a href="#"
+                       class="text-gray-900 text-hover-primary fs-2 fw-bold me-1">{{ $shift->user->full_name }}</a>
+                    <a href="#"><i class="ki-duotone ki-verify fs-1 text-primary"><span class="path1"></span><span
+                                class="path2"></span></i></a>
+                </div>
+                <!--end::Name-->
+            </div>
+            <!--end::User-->
 
-        <!--begin::Statistics-->
-        <div class="d-flex align-items-center mb-2">
-            <!--begin::Currency-->
-            <span
-                class="fs-3 fw-semibold text-gray-500 align-self-start me-1">{{ __('Cash at Hand') }}{{ currencyCode() }}</span>
-            <!--end::Currency-->
-
-            <!--begin::Value-->
-            <span
-                class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2">{{ number_format($shift->cash_end, 2) }}</span>
-            <!--end::Value-->
-
-
-            <!--end::Label-->
-        </div><!--begin::Statistics-->
-        <div class="d-flex align-items-center mb-2 mt-lg-6">
-            <!--begin::Currency-->
-            <span
-                class="fs-1 fw-semibold text-gray-500 align-self-start me-1">{{ currencyCode() }}</span>
-            <!--end::Currency-->
-
-            <!--begin::Value-->
-            <span
-                class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2">{{ number_format($totalBalance, 2) }}</span>
-            <!--end::Value-->
-
-
-            <!--end::Label-->
         </div>
-        <!--end::Statistics-->
+        <!--end::Title-->
 
-        <!--begin::Description-->
-        <span class="fs-6 fw-semibold text-gray-500">Total Balance</span>
-        <!--end::Description-->
-    </h3>
+        <!--begin::Stats-->
+        <div class="d-flex flex-wrap flex-stack">
+            <!--begin::Wrapper-->
+            <div class="d-flex flex-column flex-grow-1 pe-8">
+                <!--begin::Stats-->
+                <div class="d-flex flex-wrap">
+
+
+                    <!--begin::Stat-->
+                    <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                        <!--begin::Number-->
+                        <div class="d-flex align-items-center">
+
+                            <div class="fs-2 fw-bold counted" data-kt-countup="true" data-kt-countup-value="{{ number_format($shift->cash_end , 2) }}"
+                                 data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">
+                                 {{ Illuminate\Support\Number::abbreviate($shift->cash_end , 3) }}
+                            </div>
+                        </div>
+                        <!--end::Number-->
+
+                        <!--begin::Label-->
+                        <div class="fw-semibold fs-6 text-gray-500">{{ __('Cash at Hand') }}</div>
+                        <!--end::Label-->
+                    </div>
+                    <!--end::Stat-->
+                    <!--begin::Stat-->
+                    <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                        <!--begin::Number-->
+                        <div class="d-flex align-items-center">
+
+                            <div class="fs-2 fw-bold counted" data-kt-countup="true" data-kt-countup-value="{{ number_format($totalBalance , 2) }}"
+                                 data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">
+                                 {{ Illuminate\Support\Number::abbreviate($totalBalance ,3) }}
+                            </div>
+                        </div>
+                        <!--end::Number-->
+
+                        <!--begin::Label-->
+                        <div class="fw-semibold fs-6 text-gray-500">{{ __('Total Balances') }}</div>
+                        <!--end::Label-->
+                    </div>
+                    <!--end::Stat-->
+
+                </div>
+                <!--end::Stats-->
+            </div>
+            <!--end::Wrapper-->
+        </div>
+        <!--end::Stats-->
+    </div>
+
+
     <!--begin::Card body-->
-    <div class="card-body pt-15">
+    <div class="card-body">
 
 
         <!--begin::Details toggle-->
@@ -74,19 +109,20 @@
                 <!--begin::Details item-->
 
                 <!--begin::Details item-->
-                <div class="fw-bold mt-5 d-flex between gap-14 justify-content-lg-between">Date :  <span> {{ $shift->created_at->format('Y-m-d')  }} </span>
+                <div class="fw-bold mt-5 d-flex between gap-14 justify-content-lg-between">Date :
+                    <span> {{ $shift->created_at->format('Y-m-d')  }} </span>
 
                 </div>
 
 
-                <div class="fw-bold mt-5 d-flex between gap-14 justify-content-lg-between">Shift's No: <span>   {{ $shift->no  }}  </span></div>
-
+                <div class="fw-bold mt-5 d-flex between gap-14 justify-content-lg-between">Shift's No:
+                    <span>   {{ $shift->no  }}  </span></div>
 
 
                 <div class="pb-5 fs-6">
                     <!--begin::Details item-->
                     <div class="d-flex flex-row gap-14 mt-5 justify-content-lg-between">
-                        <div class="fw-bold">User:  </div>
+                        <div class="fw-bold">User:</div>
                         <div class="text-gray-600">{{ $shift->user->full_name }}</div>
                     </div>
                 </div>
@@ -124,7 +160,6 @@
             <div class="py-5 fs-6">
 
 
-
                 @foreach($tills as $network)
                     <!--begin::Details item-->
 
@@ -136,9 +171,10 @@
                     </div>
                     <!--begin::Details item-->
                 @endforeach
-                    <div class="text-gray-600 mt-15 fw-bold text-lg-end  border-bottom-3 border-dashed py-lg-2 px-lg-3 border-primary">
-                        <span>{{ money(amount: $tills->sum('balance_new') , convert: true, currency: currencyCode()) }}</span>
-                    </div>
+                <div
+                    class="text-gray-600 mt-15 fw-bold text-lg-end  border-bottom-3 border-dashed py-lg-2 px-lg-3 border-primary">
+                    <span>{{ money(amount: $tills->sum('balance_new') , convert: true, currency: currencyCode()) }}</span>
+                </div>
             </div>
         </div>
         <!--end::Details content-->

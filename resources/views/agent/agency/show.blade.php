@@ -131,6 +131,8 @@
                         <!--begin::Table-->
                         <div id="kt_table_customers_payment_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
                             <div class="table-responsive">
+
+
                                 <table class="table align-middle table-row-dashed gy-5 dataTable no-footer"
                                        id="shift-loan-table">
                                     <thead>

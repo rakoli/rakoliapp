@@ -34,32 +34,6 @@
                                      class="fform-control-solid w-250px ps-15" placeholder="Search Shits"/>--}}
                         </div>
                         <!--end::Search-->
-
-
-                        <!--begin::Toolbar-->
-                        <div class="d-flex justify-content-end" data-kt-docs-table-toolbar="base">
-
-
-
-                            @if(! $hasOpenShift)
-                            <x-a-button
-                                route="{{ route('agency.shift.open.index') }}"
-                            >
-
-                                {{ __('Open Shift') }}
-                            </x-a-button>
-                            @else
-
-                            <div class="mx-6">
-                                <x-a-button
-                                        class="btn-danger"
-                                        route="{{ route('agency.shift.close') }}"
-                                        label="{{ __('Close Shift') }}"/>
-                            </div>
-                                @endif
-                        </div>
-                        <!--end::Toolbar-->
-
                     </div>
                     <!--end::Wrapper-->
 

@@ -31,10 +31,11 @@ class ShowShiftController extends Controller
         $dataTableHtml = $transactionDatatable->columns(datatableBuilder: $datatableBuilder);
 
 
-        $tills = ShiftNetwork::query()->where('shift_id', $shift->id)->with('network.agency')->cursor();
+        $tills = ShiftNetwork::query()->where('shift_id', $shift->id)->with('network.agency');
 
 
-        $totalBalance = $shift->cash_end ;
+
+        $totalBalance = $shift->cash_end + $tills->sum('balance_new');
 
         $locations = Location::query()->where('code', $shift->location_code)->cursor();
 
@@ -50,7 +51,7 @@ class ShowShiftController extends Controller
             'loans' => $loans,
             'locations' => $locations,
             'totalBalance' => $totalBalance,
-            'tills' => $tills,
+            'tills' => $tills->cursor(),
             'shift' => $shift->loadMissing('user', 'location'),
         ]);
     }
