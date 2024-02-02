@@ -14,6 +14,7 @@ use App\Http\Controllers\Agent\Shift\Loans\PayLoanController;
 use App\Http\Controllers\Agent\Shift\Loans\ShowLoanController;
 use App\Http\Controllers\Agent\Shift\OpenShiftController;
 use App\Http\Controllers\Agent\Shift\ShowShiftController;
+use App\Http\Controllers\Agent\Shift\ShowShiftLoanController;
 use App\Http\Controllers\Agent\Shift\TillController;
 use App\Http\Controllers\Agent\Shift\Transaction\AddExpenseTransactionController;
 use App\Http\Controllers\Agent\Shift\Transaction\AddIncomeTransactionController;
@@ -45,6 +46,7 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
             Route::post('/close/store', [CloseShiftController::class, 'store'])->name('agency.shift.close.store');
             Route::get('/{shift}/show', ShowShiftController::class)->name('agency.shift.show');
             Route::get('{shift}/tills', [TillController::class, 'index'])->name('agency.shift.till');
+            Route::get('{shift}/loans', [ ShowShiftLoanController::class, 'index'])->name('agency.shift.show.loans');
             Route::post('/{shift}/loans/store', AddLoanController::class)->name('agency.loans.store');
         });
 

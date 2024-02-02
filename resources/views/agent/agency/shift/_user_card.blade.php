@@ -7,7 +7,21 @@
         <div class="d-flex align-items-center mb-2">
             <!--begin::Currency-->
             <span
-                class="fs-3 fw-semibold text-gray-500 align-self-start me-1">{{ currencyCode() }}</span>
+                class="fs-3 fw-semibold text-gray-500 align-self-start me-1">{{ __('Cash at Hand') }}{{ currencyCode() }}</span>
+            <!--end::Currency-->
+
+            <!--begin::Value-->
+            <span
+                class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2">{{ number_format($shift->cash_end, 2) }}</span>
+            <!--end::Value-->
+
+
+            <!--end::Label-->
+        </div><!--begin::Statistics-->
+        <div class="d-flex align-items-center mb-2 mt-lg-6">
+            <!--begin::Currency-->
+            <span
+                class="fs-1 fw-semibold text-gray-500 align-self-start me-1">{{ currencyCode() }}</span>
             <!--end::Currency-->
 
             <!--begin::Value-->
