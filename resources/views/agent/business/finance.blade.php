@@ -3,7 +3,6 @@
 @section('title', __('Finance'))
 
 @section('header_js')
-    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <link href="{{ asset('assets/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
 @endsection
 
