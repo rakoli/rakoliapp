@@ -99,7 +99,7 @@ class BusinessController extends Controller
     public function rolesEdit(Request $request)
     {
         $request->validate([
-            'edit_id' => 'required|exists:business_roles,id',
+            'edit_id' => 'required|numeric|exists:business_roles,id',
             'edit_name' => 'required|string',
             'edit_description' => 'required|string',
         ]);
@@ -121,7 +121,7 @@ class BusinessController extends Controller
     public function rolesDelete(Request $request)
     {
         $request->validate([
-            'delete_id' => 'required|exists:business_roles,id',
+            'delete_id' => 'required|numeric|exists:business_roles,id',
         ]);
 
         $businessRole = BusinessRole::where('id', $request->delete_id)->first();
