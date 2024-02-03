@@ -30,7 +30,7 @@
                         @endif
 
                         <button type="button" class="btn btn-primary m-1" onclick="window.location.href = '{{route('business.subscription.buy')}}'">
-                            {{ __('Upgrade') }}
+                            {{ __('Purchase') }}
                         </button>
 
                     </div>

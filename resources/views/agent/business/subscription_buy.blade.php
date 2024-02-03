@@ -1,5 +1,3 @@
-@include('layouts.components.header_auth')
-
 @extends('layouts.users.agent')
 
 @section('title', __("Subsciption"))
@@ -27,9 +25,8 @@
             <!--end::Heading-->
             <!--begin::Plans-->
             <div class="d-flex flex-column">
-
                 <!--begin::Row-->
-                <div class="row">
+                <div class="row m-5">
 
                     @foreach(\App\Models\Package::where('country_code', auth()->user()->country_code)->get() as $package )
 
@@ -94,55 +91,58 @@
                 </div>
                 <!--end::Row-->
             </div>
-            <!--end::Plans-->
-            <!--begin::Input group-->
-            <div class="fv-row">
-    {{--            <label for="selected_plan" class="required form-label">Selected Plan</label>--}}
-                <input type="hidden" name="selected_plan" id="selected_plan" class="form-control form-control-solid-bg " readonly/>
+
+            <div class="m-10">
+                <!--end::Plans-->
+                <!--begin::Input group-->
+                <div class="fv-row">
+                    <label for="selected_plan_view" class="form-label">Selected Plan</label>
+                    <input type="text" name="selected_plan_view" id="selected_plan_view" class="form-control form-control-solid-bg " readonly/>
+                </div>
+                <!--end::Input group-->
+                <!--begin::Notice-->
+                <div class="text-center text-muted fw-semibold fs-6 mb-5 mt-7 mt-5">{{__('Choose payment method below')}}</div>
+                <!--end::Notice-->
+
+                <!--begin::Option-->
+                <input type="radio" class="btn-check" name="selected_payment_method" value="pesapal" id="pesapal" onchange="selectPaymentMethod(this)" checked="checked"/>
+                <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center" for="pesapal">
+                    <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/pesapal.png')}}" class="mw-200px mh-70px"></i>
+                    <span class="d-block fw-semibold text-start">
+                    <span class="text-gray-900 fw-bold d-block fs-3">PesaPal</span>
+                    <span class="text-muted fw-semibold fs-6">Pay with Visa, MasterCard, Bank and Mobile Money like Mpesa, Airtel Money, TigoPesa, MTN MoMo Pay and Orange Money</span>
+                </span>
+                </label>
+                <!--end::Option-->
+
+                <!--begin::Option-->
+                <input type="radio" class="btn-check" name="selected_payment_method" value="dpopay" id="dpopay_method" onchange="selectPaymentMethod(this)"/>
+                <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center mb-5" for="dpopay_method">
+                    <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/DPOPay.webp')}}" class="mw-200px mh-70px"></i>
+                    <span class="d-block fw-semibold text-start">
+                        <span class="text-gray-900 fw-bold d-block fs-3">DPO Pay</span>
+                        <span class="text-muted fw-semibold fs-6">
+                            Pay with Visa, MasterCard, Paypal and Mobile Money like Mpesa (TZ and KE), Airtel Money, TigoPesa, MTN MoMo Pay and Orange Money
+                        </span>
+                    </span>
+                </label>
+                <!--end::Option-->
+
+                @if(env('APP_ENV') != 'production')
+                        <!--begin::Option-->
+                        <input type="radio" class="btn-check" name="selected_payment_method" value="test" id="test_method" onchange="selectPaymentMethod(this)"/>
+                        <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center mb-5" for="test_method">
+                            <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/test_pay.jpg')}}" class="mw-200px mh-70px"></i>
+                            <span class="d-block fw-semibold text-start">
+                        <span class="text-gray-900 fw-bold d-block fs-3">TEST Pay</span>
+                        <span class="text-muted fw-semibold fs-6">
+                            Demo payment for testing. (An auto complete button will be provided).
+                        </span>
+                    </span>
+                        </label>
+                        <!--end::Option-->
+                @endif
             </div>
-            <!--end::Input group-->
-            <!--begin::Notice-->
-            <div class="text-center text-muted fw-semibold fs-6 mb-5 mt-7 mt-5">{{__('Choose payment method below')}}</div>
-            <!--end::Notice-->
-
-            <!--begin::Option-->
-            <input type="radio" class="btn-check" name="selected_payment_method" value="pesapal" id="pesapal" onchange="selectPaymentMethod(this)" checked="checked"/>
-            <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center" for="pesapal">
-                <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/pesapal.png')}}" class="mw-200px mh-70px"></i>
-                <span class="d-block fw-semibold text-start">
-                <span class="text-gray-900 fw-bold d-block fs-3">PesaPal</span>
-                <span class="text-muted fw-semibold fs-6">Pay with Visa, MasterCard, Bank and Mobile Money like Mpesa, Airtel Money, TigoPesa, MTN MoMo Pay and Orange Money</span>
-            </span>
-            </label>
-            <!--end::Option-->
-
-            <!--begin::Option-->
-            <input type="radio" class="btn-check" name="selected_payment_method" value="dpopay" id="dpopay_method" onchange="selectPaymentMethod(this)"/>
-            <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center mb-5" for="dpopay_method">
-                <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/DPOPay.webp')}}" class="mw-200px mh-70px"></i>
-                <span class="d-block fw-semibold text-start">
-                    <span class="text-gray-900 fw-bold d-block fs-3">DPO Pay</span>
-                    <span class="text-muted fw-semibold fs-6">
-                        Pay with Visa, MasterCard, Paypal and Mobile Money like Mpesa (TZ and KE), Airtel Money, TigoPesa, MTN MoMo Pay and Orange Money
-                    </span>
-                </span>
-            </label>
-            <!--end::Option-->
-
-            @if(env('APP_ENV') != 'production')
-                    <!--begin::Option-->
-                    <input type="radio" class="btn-check" name="selected_payment_method" value="test" id="test_method" onchange="selectPaymentMethod(this)"/>
-                    <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center mb-5" for="test_method">
-                        <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/test_pay.jpg')}}" class="mw-200px mh-70px"></i>
-                        <span class="d-block fw-semibold text-start">
-                    <span class="text-gray-900 fw-bold d-block fs-3">TEST Pay</span>
-                    <span class="text-muted fw-semibold fs-6">
-                        Demo payment for testing. (An auto complete button will be provided).
-                    </span>
-                </span>
-                    </label>
-                    <!--end::Option-->
-            @endif
 
             <div class="m-5 fv-row">
                 <button id="verify_phone_button" type="button" class="btn btn-primary" onclick="validateSubscriptionAndOpenModal()">
@@ -239,6 +239,7 @@
         document.getElementById(subscriptionCode).classList.add("bg-gray-400");
         document.getElementById('selected_plan_code').value = subscriptionCode;
         document.getElementById('selected_plan_name').value = subscriptionName;
+        document.getElementById('selected_plan_view').value = subscriptionName;
         document.getElementById('plan_price').value = currency + ' ' +subscriptionPrice;
         document.getElementById('payment_method').value = document.querySelector('input[name="selected_payment_method"]:checked').value;
         selectedpackage = subscriptionCode;

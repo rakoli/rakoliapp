@@ -1076,5 +1076,38 @@ class BusinessManagementTest extends TestCase
         $this->assertEquals($totalPaymentCount,$responseArray['recordsTotal']);
     }
 
+    /** @test */
+    public function agent_can_view_account_subscription_purchase_page(): void
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
+
+        $this->actingAs($user);
+
+        $response = $this->get(route('business.subscription.buy'));
+        $response->assertOk();
+        $response->assertSee('Select Package');
+
+    }
+
+    /** @test */
+    public function user_can_see_all_available_packages_on_registration_step()
+    {
+        $business = Business::factory()->create();//Business with active package (package is required to move to next step)
+        $user = User::factory()->create([
+            'type'=>UserTypeEnum::AGENT->value,
+            'registration_step'=>0,
+            'business_code'=> $business->code,
+        ]);
+        $this->actingAs($user);
+        $packages = Package::factory()->count(3)->create(['country_code'=>$business->country_code]);
+
+        $response = $this->get(route('business.subscription.buy'));
+        $response->assertStatus(200);
+        foreach ($packages as $package) {
+            $response->assertSee(strtoupper($package->name));
+        }
+    }
+
+
 
 }
