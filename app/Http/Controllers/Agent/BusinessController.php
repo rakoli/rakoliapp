@@ -17,6 +17,7 @@ use App\Models\ExchangePaymentMethod;
 use App\Models\Location;
 use App\Models\LocationUser;
 use App\Utils\StatisticsService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Models\Region;
@@ -56,6 +57,9 @@ class BusinessController extends Controller
                     return $content;
                 })
                 ->rawColumns(['actions'])
+                ->editColumn('id', function ($method) {
+                    return idNumberDisplay($method->id);
+                })
                 ->addIndexColumn()
                 ->toJson();
         }
@@ -63,8 +67,6 @@ class BusinessController extends Controller
         // DataTable
         $dataTableHtml = $builder->columns([
             ['data' => 'id', 'title' => __('ID')],
-            ['data' => 'business_code', 'title' => __('Business Code')],
-            // ['data' => 'code', 'title' => __('Code')],
             ['data' => 'name', 'title' => __('Name')],
             ['data' => 'description', 'title' => __('Description')],
             ['data' => 'actions', 'title' => __('Actions')],
@@ -160,15 +162,23 @@ class BusinessController extends Controller
                 })
                 ->rawColumns(['actions'])
                 ->addIndexColumn()
+                ->addColumn('balance_display',function($row){
+                    return number_format($row->balance,2) . ' '.strtoupper($row->balance_currency);
+                })
+                ->editColumn('id', function ($row) {
+                    return idNumberDisplay($row->id);
+                })
+                ->editColumn('created_at', function($row) {
+                    return Carbon::create($row->created_at)->toDateTimeString('minute');
+                })
                 ->toJson();
         }
 
         // Datatable
         $dataTableHtml = $builder->columns([
-            ['data' => 'id', 'title' => __('id')],
+            ['data' => 'id', 'title' => __('ID')],
             ['data' => 'name', 'title' => __("Name")],
-            ['data' => 'balance', 'title' => __("Balance") . ' (' . session('currency') . ')'],
-            ['data' => 'balance_currency', 'title' => __("Balance Currency")], // Removed extra space
+            ['data' => 'balance_display', 'title' => __("Balance")],
             ['data' => 'description', 'title' => __("Description")],
             ['data' => 'actions', 'title' => __("Action")], // Corrected column name
         ])->responsive(true)
@@ -429,8 +439,8 @@ class BusinessController extends Controller
         }
         //Datatable
         $dataTableHtml = $builder->columns([
-            ['data' => 'id', 'title' => __('id')],
-            ['data' => 'fname', 'title' => __("Name")],
+            ['data' => 'id', 'title' => __('ID')],
+            ['data' => 'fname', 'title' => __("First Name")],
             ['data' => 'lname', 'title' => __("Last Name")],
             ['data' => 'phone', 'title' => __("Phone Number")],
             ['data' => 'email', 'title' => __("Email")],
@@ -643,6 +653,9 @@ class BusinessController extends Controller
                     return number_format($packageCommission,2);
                 })
                 ->rawColumns(['actions'])
+                ->editColumn('id', function ($method) {
+                    return idNumberDisplay($method->id);
+                })
                 ->addIndexColumn()
                 ->toJson();
         }

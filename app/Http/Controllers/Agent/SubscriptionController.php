@@ -11,6 +11,7 @@ use App\Models\Package;
 use App\Models\PackageName;
 use App\Models\Region;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
@@ -34,17 +35,25 @@ class SubscriptionController extends Controller
             //     return $content;
             // })
             // ->rawColumns(['actions'])
+                ->addColumn('amount_display',function($row){
+                    return number_format($row->amount,2) . ' '.strtoupper($row->amount_currency);
+                })
+                ->editColumn('created_at', function($trn) {
+                    return Carbon::create($trn->created_at)->toDateTimeString('minute');
+                })
                 ->addIndexColumn()
                 ->toJson();
         }
 
         // DataTable
         $dataTableHtml = $builder->columns([
+            ['data' => 'created_at', 'title' => __('Time')],
             ['data' => 'channel', 'title' => __('Channel')],
             ['data' => 'income_category', 'title' => __('Income Category')],
-            ['data' => 'amount', 'title' => __('Amount')],
+            ['data' => 'amount_display', 'title' => __('Amount')],
             ['data' => 'status', 'title' => __('Status')],
-            ['data' => 'channel_ref_name', 'title' => __('Channel Ref Name')],
+            ['data' => 'channel_ref_name', 'title' => __('Channel')],
+            ['data' => 'channel_ref', 'title' => __('Reference')],
         ])->responsive(true)
             ->ordering(false)
             ->ajax(route('business.subscription')) // Assuming you have a named route for the roles.index endpoint

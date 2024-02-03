@@ -9,6 +9,7 @@ use App\Models\BusinessWithdrawMethod;
 use App\Models\Location;
 use App\Models\Transaction;
 use App\Models\WithdrawRequest;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
@@ -36,6 +37,15 @@ class PaymentController extends Controller
                 // })
                 // ->rawColumns(['actions'])
                 ->addIndexColumn()
+                ->addColumn('amount_display',function($row){
+                        return number_format($row->amount,2) . ' '.strtoupper($row->amount_currency);
+                    })
+                ->editColumn('id', function ($row) {
+                    return idNumberDisplay($row->id);
+                })
+                ->editColumn('created_at', function($row) {
+                    return Carbon::create($row->created_at)->toDateTimeString('minute');
+                })
                 ->toJson();
         }
 
@@ -48,6 +58,15 @@ class PaymentController extends Controller
                 // })
                 // ->rawColumns(['actions'])
                 ->addIndexColumn()
+                ->addColumn('amount_display',function($row){
+                    return number_format($row->amount,2) . ' '.strtoupper($row->amount_currency);
+                })
+                ->editColumn('id', function ($row) {
+                    return idNumberDisplay($row->id);
+                })
+                ->editColumn('created_at', function($row) {
+                    return Carbon::create($row->created_at)->toDateTimeString('minute');
+                })
                 ->toJson();
         }
 
@@ -55,16 +74,12 @@ class PaymentController extends Controller
         $dataTableHtml = $builder->columns([
             ['data' => 'id', 'title' => __('ID')],
             ['data' => 'method_ac_number', 'title' => __('Method AC Number')],
-            ['data' => 'amount', 'title' => __('Amount')],
-            ['data' => 'amount_currency', 'title' => __('Amount Currency')],
+            ['data' => 'amount_display', 'title' => __('Amount')],
             ['data' => 'status', 'title' => __('Status')],
             ['data' => 'completion_note', 'title' => __('Completion Note')],
             [
                 'data' => 'created_at',
                 'title' => __('Created At'),
-                'render' => 'function (data) {
-                    return moment(data).format("DD-MM-YYYY HH:mm:ss");
-                }'
             ],
             // ['data' => 'actions', 'title' => __('Actions')],
         ])->responsive(true)
@@ -77,15 +92,11 @@ class PaymentController extends Controller
         $transactionsDataTableHtml = $builder2->columns([
             ['data' => 'id', 'title' => __('ID')],
             ['data' => 'type', 'title' => __('Type')],
-            ['data' => 'amount', 'title' => __('Amount')],
-            ['data' => 'amount_currency', 'title' => __('Amount Currency')],
+            ['data' => 'amount_display', 'title' => __('Amount')],
             ['data' => 'description', 'title' => __('Description')],
             [
                 'data' => 'created_at',
                 'title' => __('Created At'),
-                'render' => 'function (data) {
-                    return moment(data).format("DD-MM-YYYY HH:mm:ss");
-                }'
             ],
             // ['data' => 'actions', 'title' => __('Actions')],
         ])->responsive(true)
