@@ -650,7 +650,9 @@ class BusinessController extends Controller
                         return number_format(0,2);
                     }
                     $packageCommission = $user->business->package->price_commission;
-                    return number_format($packageCommission,2);
+
+                    return number_format($packageCommission,2) . ' '.strtoupper($user->business->country->currency);
+
                 })
                 ->rawColumns(['actions'])
                 ->editColumn('id', function ($method) {

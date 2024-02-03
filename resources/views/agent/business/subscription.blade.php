@@ -237,9 +237,9 @@
                                                 <i class="ki-outline text-info fs-2x"></i>
                                                 <div class="ms-2">
                                                     @if($business->package == null)
-                                                        No Active
+                                                        {{_('No Active')}}
                                                     @else
-                                                        {{ now()->lt($business->package_expiry_at) ? 'Active' : 'Inactive' }}
+                                                        {{ now()->lt($business->package_expiry_at) ? __('Active') : __('Inactive') }}
                                                     @endif
                                                 </div>
                                             </div>
@@ -261,7 +261,7 @@
                                 <div class="card-header border-0">
                                     <!--begin::Card title-->
                                     <div class="card-title">
-                                        <h2>Transaction History</h2>
+                                        <h2>{{__('Transaction History')}}</h2>
                                     </div>
                                     <!--end::Card title-->
                                 </div>

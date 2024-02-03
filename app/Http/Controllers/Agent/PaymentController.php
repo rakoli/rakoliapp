@@ -73,13 +73,14 @@ class PaymentController extends Controller
         // DataTable
         $dataTableHtml = $builder->columns([
             ['data' => 'id', 'title' => __('ID')],
-            ['data' => 'method_ac_number', 'title' => __('Method AC Number')],
+            ['data' => 'method_name', 'title' => __('Method')],
+            ['data' => 'method_ac_number', 'title' => __('AC Number')],
             ['data' => 'amount_display', 'title' => __('Amount')],
             ['data' => 'status', 'title' => __('Status')],
             ['data' => 'completion_note', 'title' => __('Completion Note')],
             [
                 'data' => 'created_at',
-                'title' => __('Created At'),
+                'title' => __('Time'),
             ],
             // ['data' => 'actions', 'title' => __('Actions')],
         ])->responsive(true)
@@ -96,7 +97,7 @@ class PaymentController extends Controller
             ['data' => 'description', 'title' => __('Description')],
             [
                 'data' => 'created_at',
-                'title' => __('Created At'),
+                'title' => __('Time'),
             ],
             // ['data' => 'actions', 'title' => __('Actions')],
         ])->responsive(true)
@@ -142,6 +143,7 @@ class PaymentController extends Controller
     public function financeWithdraw(Request $request)
     {
         $user = $request->user();
+        $business = $user->business;
         $balance = $user->business->balance;
 
         $request->validate([
@@ -149,6 +151,7 @@ class PaymentController extends Controller
             'description' => 'required|string',
         ]);
 
+        $amount = $request->amount;
         $get_withdraw_method = BusinessWithdrawMethod::where('business_code', $user->business_code)->first();
 
         if (!$get_withdraw_method) {
@@ -165,15 +168,27 @@ class PaymentController extends Controller
             $description = '';
         }
 
-        $withdraw = new WithdrawRequest();
-        $withdraw->business_code = $request->user()->business_code;
-        $withdraw->method_name = $get_withdraw_method->method_name;
-        $withdraw->method_ac_name = $get_withdraw_method->method_ac_name;
-        $withdraw->method_ac_number = $get_withdraw_method->method_ac_number;
-        $withdraw->amount = $request->amount;
-        $withdraw->amount_currency = $currency;
-        $withdraw->description = $description;
-        $withdraw->save();
+        $result = runDatabaseTransaction(function () use ($business, $amount, $get_withdraw_method, $currency, $description) {
+
+            $withdraw = new WithdrawRequest();
+            $withdraw->business_code = $business->code;
+            $withdraw->method_name = $get_withdraw_method->method_name;
+            $withdraw->method_ac_name = $get_withdraw_method->method_ac_name;
+            $withdraw->method_ac_number = $get_withdraw_method->method_ac_number;
+            $withdraw->amount = $amount;
+            $withdraw->amount_currency = $currency;
+            $withdraw->description = $description;
+            $withdraw->save();
+
+            $business->balance = $business->balance - $amount;
+            $business->save();
+
+            return true;
+        });
+
+        if($result == false){
+            return redirect()->route('business.finance')->withErrors([__('Unable to process withdraw request')]);
+        }
 
         return redirect()->route('business.finance')->with(['message' => __('Withdraw Request') . ' ' . __('Added Successfully')]);
     }

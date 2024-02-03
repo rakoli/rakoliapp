@@ -57,22 +57,22 @@
                             <div class="py-5 fs-6">
                                 <div class="fw-bold mt-5">{{ __('Method Name') }}</div>
                                 <div class="text-gray-600">
-                                    {{ old('method_name', $withdrawMethod->method_name ?? 'Not mention') }}
+                                    {{ old('method_name', $withdrawMethod->method_name ?? __('Not set')) }}
                                 </div>
 
                                 <div class="fw-bold mt-5">{{ __('Method AC Name') }}</div>
                                 <div class="text-gray-600">
-                                    {{ old('method_ac_name', $withdrawMethod->method_ac_name ?? 'Not mention') }}
+                                    {{ old('method_ac_name', $withdrawMethod->method_ac_name ?? __('Not set')) }}
                                 </div>
 
                                 <div class="fw-bold mt-5">{{ __('Method AC Number') }}</div>
                                 <div class="text-gray-600">
-                                    {{ old('method_ac_number', $withdrawMethod->method_ac_number ?? 'Not mention') }}
+                                    {{ old('method_ac_number', $withdrawMethod->method_ac_number ?? __('Not set')) }}
                                 </div>
 
                                 <div class="fw-bold mt-5">{{ __('Amount Currency') }}</div>
                                 <div class="text-gray-600">
-                                    {{ old('amount_currency', $withdrawMethod->amount_currency ?? 'Not mention') }}
+                                    {{ old('amount_currency', $withdrawMethod->amount_currency ?? __('Not set')) }}
                                 </div>
 
                             </div>
@@ -95,7 +95,7 @@
                     <div class="card-header border-0">
                         <!--begin::Card title-->
                         <div class="card-title">
-                            <h2 class="fw-bold mb-0">Account Transactions Methods</h2>
+                            <h2 class="fw-bold mb-0">{{__('Account Transactions')}}</h2>
                         </div>
                         <!--end::Card title-->
                     </div>
@@ -122,7 +122,7 @@
                     <div class="card-header border-0">
                         <!--begin::Card title-->
                         <div class="card-title">
-                            <h2 class="fw-bold mb-0">Withdraw Requests</h2>
+                            <h2 class="fw-bold mb-0">{{__('Withdraw Requests')}}</h2>
                         </div>
                         <!--end::Card title-->
                     </div>
@@ -214,7 +214,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title">{{ __('Add Withdraw Fund Details') }}</h3>
+                    <h3 class="modal-title">{{ __('Request Funds Withdraw') }}</h3>
                     <!--begin::Close-->
                     <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
                         aria-label="Close">
@@ -262,15 +262,15 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Confirmation</h5>
+                    <h5 class="modal-title">{{__('Confirmation')}}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Are you sure for processing withdraw request?
+                    {{__('Are you sure for processing withdraw request?')}}
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="confirmWithdraw">Yes</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-primary" id="confirmWithdraw">{{__('Yes')}}</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{__('No')}}</button>
                 </div>
             </div>
         </div>
@@ -281,14 +281,14 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Alert</h5>
+                    <h5 class="modal-title">{{__('Alert')}}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <h4 id="modalMessage">   </h4>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ok</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{__('OK')}}</button>
                 </div>
             </div>
         </div>
