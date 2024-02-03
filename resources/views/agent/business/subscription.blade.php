@@ -200,11 +200,9 @@
                                         <div class="fs-2">
                                             <div class="d-flex">
                                                 <i class="ki-outline text-info fs-2x"></i>
-                                                <div class="ms-2">{{$business->balance}}  {{$currency}}
-                                                {{-- <span class="text-muted fs-4 fw-semibold">Points earned</span> --}}
+                                                <div class="ms-2">{{number_format($business->balance)}}  {{$currency}}
                                                 </div>
                                             </div>
-                                            {{-- <div class="fs-7 fw-normal text-muted">Earn reward points with every purchase.</div> --}}
                                         </div>
                                     </div>
                                     <!--end::Card body-->
