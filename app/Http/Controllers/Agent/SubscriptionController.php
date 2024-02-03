@@ -65,10 +65,11 @@ class SubscriptionController extends Controller
             ->lengthMenu([[25, 50, 100, -1], [25, 50, 100, "All"]]);
 
         $methodsJson = $roles->get()->toJson();
-        return view('agent.business.subsciption', compact('dataTableHtml', 'orderByFilter','currency', 'methodsJson', 'balance','existingData','packages','country_code'));
+        return view('agent.business.subscription', compact('dataTableHtml', 'orderByFilter','currency', 'methodsJson', 'balance','existingData','packages','country_code'));
     }
 
-    public function subscriptionBuy(Request $request){
-        return view('agent.business.buy_subscription');
+    public function subscriptionBuy(Request $request)
+    {
+        return view('agent.business.subscription_buy');
     }
 }
