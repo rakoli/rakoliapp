@@ -28,7 +28,6 @@ class SubscriptionController extends Controller
         }
         $roles = InitiatedPayment::where('business_code', $user->business_code)->orderBy('id', 'desc');
         $balance = Business::where('code', $user->business_code)->with('package')->with('package.featuresAvailable')->with('package.featuresAvailable.feature')->get();
-        // dd($balance[0]->package->featuresAvailable[0]->feature);
         $country_code = session('country_code');
         $currency = session('currency');
         $packages = Package::where('country_code', $country_code)->get();
@@ -53,10 +52,6 @@ class SubscriptionController extends Controller
             ['data' => 'amount', 'title' => __('Amount')],
             ['data' => 'status', 'title' => __('Status')],
             ['data' => 'channel_ref_name', 'title' => __('Channel Ref Name')],
-            // ['data' => 'amount_currency', 'title' => __('Amount Currency')],
-            // ['data' => 'description', 'title' => __('Description')],
-            // ['data' => 'note', 'title' => __('Note')],
-            // ['data' => 'actions', 'title' => __('Actions')],
         ])->responsive(true)
             ->ordering(false)
             ->ajax(route('business.subscription', $orderBy)) // Assuming you have a named route for the roles.index endpoint
