@@ -278,11 +278,11 @@ class ExchangeController extends Controller
                 ->editColumn('trader_action_via_method', function($trn) {
                     return str_camelcase($trn->trader_action_via_method);
                 })
-                ->editColumn('amount', function($trn) {
-                    return number_format($trn->amount,2);
+                ->addColumn('amount_display',function($row){
+                    return number_format($row->amount,2) . ' '.strtoupper($row->amount_currency);
                 })
                 ->addIndexColumn()
-                ->rawColumns(['amount','trade'])
+                ->rawColumns(['trade'])
                 ->editColumn('id',function($exchange) {
                     return idNumberDisplay($exchange->id);
                 })
@@ -298,7 +298,7 @@ class ExchangeController extends Controller
             ['data' => 'trader_action_type' , 'title' => __("Action")],
             ['data' => 'trader_target_method', 'title' => __("Target")],
             ['data' => 'trader_action_via_method', 'title' => __("Via")],
-            ['data' => 'amount', 'title' => __("Amount")],
+            ['data' => 'amount_display', 'title' => __("Amount")],
             ['data' => 'trade', 'title' => __("Trade")],
         ])->responsive(true)
             ->ordering(false)
