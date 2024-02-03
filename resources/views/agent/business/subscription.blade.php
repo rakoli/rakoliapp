@@ -23,13 +23,13 @@
 
                     <div class="card-body pt-5 pb-5">
 
-                        @if($balance[0]->package != null)
-                            <button type="button" class="btn btn-primary" onclick="selectSubscription('{{$balance[0]->package->code}}','{{strtoupper($balance[0]->package->name)}}', '{{number_format($balance[0]->package->price)}}', '{{strtoupper($currency)}}')" data-bs-toggle="modal" data-bs-target="#confirm_subscription_details">
+                        @if($business->package != null)
+                            <button type="button" class="btn btn-primary m-1" onclick="selectSubscription('{{$business->package->code}}','{{strtoupper($business->package->name)}}', '{{number_format($business->package->price)}}', '{{strtoupper($currency)}}')" data-bs-toggle="modal" data-bs-target="#confirm_subscription_details">
                                 {{__('Renew')}}
                             </button>
                         @endif
 
-                        <button type="button" class="btn btn-primary" onclick="window.location.href = '{{route('business.subscription.buy')}}'">
+                        <button type="button" class="btn btn-primary m-1" onclick="window.location.href = '{{route('business.subscription.buy')}}'">
                             {{ __('Upgrade') }}
                         </button>
 
@@ -54,7 +54,7 @@
                     <div class="card-body pt-1">
                         <!--begin::Details content-->
                         <div class="collapse show">
-                            @if($balance[0]->package == null)
+                            @if($business->package == null)
                                 <div class=" fs-6">
                                     <div class="fw-bold mt-5 text-center">{{ __("No Active Package") }}</div>
                                 </div>
@@ -62,23 +62,23 @@
                                 <div class=" fs-6">
                                 <div class="fw-bold mt-5">{{ __("Package Name") }}</div>
                                 <div class="text-gray-600">
-                                    {{ $balance[0]->package->name ?? '' }}
+                                    {{ ucfirst($business->package->name) ?? '' }}
                                 </div>
 
                                 <div class="fw-bold mt-5">{{ __("Package Price") }}</div>
                                 <div class="text-gray-600">
-                                    {{ number_format($balance[0]->package->price) ?? ''}} {{$currency}}
+                                    {{ number_format($business->package->price) ?? ''}} {{$currency}}
                                 </div>
 
 
                                 <div class="fw-bold mt-5">{{ __("Package Expiry At") }}</div>
                                 {{-- Display Package Expiry Date --}}
                                 <div class="text-gray-600">
-                                    {{ $balance[0]->package_expiry_at ?? '' }}
+                                    {{ $business->package_expiry_at ?? '' }}
                                 </div>
                                 {{-- Display Days Left --}}
                                 @php
-                                    $expiryDateTime = $balance[0]->package_expiry_at ?? null;
+                                    $expiryDateTime = $business->package_expiry_at ?? null;
                                     $daysLeft = null;
 
                                     if ($expiryDateTime) {
@@ -104,7 +104,7 @@
 
 
                                 <div class="fw-bold mt-5">{{__("Features List")}}</div>
-                                @foreach(\App\Models\PackageFeature::where("package_code", $balance[0]->package->code)->get() as $packageFeature)
+                                @foreach(\App\Models\PackageFeature::where("package_code", $business->package->code)->get() as $packageFeature)
                                     <!--begin::Item-->
                                     <div class="d-flex align-items-center mb-1">
                                             <span class="text-gray-600 flex-grow-1 pe-3">{{str_camelcase($packageFeature->feature->name)}}
@@ -144,6 +144,41 @@
                     <!--begin::Card header-->
                     <div class="tab-pane fade show active" role="tabpanel">
 
+                        @if($hasPendingPayment == true)
+
+                            <div class="card pt-4 mb-6 mb-xl-9 mt-5">
+                                <h3 class="fw-bold text-dark m-5">{{__('Pending Payments')}}</h3>
+
+                                <div class="table-responsive m-5">
+                                    <table class="table table-rounded table-striped border gy-7 gs-7">
+                                        <thead>
+                                        <tr class="fw-semibold fs-6 text-gray-800 border-bottom border-gray-200">
+                                            <th>{{__('Time Left')}}</th>
+                                            <th>{{__('Payment For')}}</th>
+                                            <th>{{__('Amount Due')}}</th>
+                                            <th>{{__('Payment Method')}}</th>
+                                            <th>{{__('Pay Link')}}</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="table-hover">
+                                        @foreach($initiatedPayments as $initiatedPayment)
+                                            <tr>
+                                                <td>{{\Carbon\Carbon::create($initiatedPayment->expiry_time)->diffForHumans()}}</td>
+                                                <td>{{\App\Models\Package::where('code',$initiatedPayment->description)->first()->name}} - {{__('annual subscription')}}</td>
+                                                <td>{{strtoupper($initiatedPayment->amount_currency)}} {{number_format($initiatedPayment->amount)}}</td>
+                                                <td>{{strtoupper($initiatedPayment->channel)}}</td>
+                                                <td>
+                                                    <a href="{{$initiatedPayment->pay_url}}" class="btn btn-bg-light btn-secondary">{{__('Pay Now')}}</a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        @endif
+
                         <div class="row row-cols-1 row-cols-md-2 mb-6 mb-xl-1">
                             <div class="col">
                                 <!--begin::Card-->
@@ -165,7 +200,7 @@
                                         <div class="fs-2">
                                             <div class="d-flex">
                                                 <i class="ki-outline text-info fs-2x"></i>
-                                                <div class="ms-2">{{$balance[0]->balance}}  {{$currency}}
+                                                <div class="ms-2">{{$business->balance}}  {{$currency}}
                                                 {{-- <span class="text-muted fs-4 fw-semibold">Points earned</span> --}}
                                                 </div>
                                             </div>
@@ -179,10 +214,10 @@
                             <div class="col">
                                 <!--begin::Card-->
                                 <div class="card pt-4 h-md-100 mb-6 mb-md-0"
-                                     @if($balance[0]->package == null)
+                                     @if($business->package == null)
                                          style="background-color: indianred"
                                      @else
-                                         style="background-color: {{ now()->lt($balance[0]->package_expiry_at) ? 'lightgreen' : 'orange' }}"
+                                         style="background-color: {{ now()->lt($business->package_expiry_at) ? 'lightgreen' : 'orange' }}"
                                      @endif
                                 >
                                     <!--begin::Card header-->
@@ -203,10 +238,10 @@
                                             <div class="d-flex">
                                                 <i class="ki-outline text-info fs-2x"></i>
                                                 <div class="ms-2">
-                                                    @if($balance[0]->package == null)
+                                                    @if($business->package == null)
                                                         No Active
                                                     @else
-                                                        {{ now()->lt($balance[0]->package_expiry_at) ? 'Active' : 'Inactive' }}
+                                                        {{ now()->lt($business->package_expiry_at) ? 'Active' : 'Inactive' }}
                                                     @endif
                                                 </div>
                                             </div>
@@ -252,7 +287,7 @@
     </div>
     <!--end::Container-->
 
-    @if($balance[0]->package != null)
+    @if($business->package != null)
         <!--begin::Modal group-->
         <div class="modal fade" tabindex="-1" id="confirm_subscription_details">
             <div class="modal-dialog">
@@ -269,16 +304,16 @@
                         @csrf
                         <div class="modal-body">
 
-                            <input type="hidden" name="selected_plan_code" id="selected_plan_code" value="{{$balance[0]->package->code}}" class="form-control form-control-solid-bg"/>
+                            <input type="hidden" name="selected_plan_code" id="selected_plan_code" value="{{$business->package->code}}" class="form-control form-control-solid-bg"/>
 
                             <div class="fv-row">
                                 <label for="selected_plan_name" class="required form-label">{{__('Selected Plan')}}</label>
-                                <input type="text" name="selected_plan_name" id="selected_plan_name" value="{{strtoupper($balance[0]->package->name)}}" class="form-control form-control-solid-bg" readonly/>
+                                <input type="text" name="selected_plan_name" id="selected_plan_name" value="{{strtoupper($business->package->name)}}" class="form-control form-control-solid-bg" readonly/>
                             </div>
 
                             <div class="fv-row">
                                 <label for="plan_price" class="required form-label">{{__('Price')}}</label>
-                                <input type="text" name="plan_price" id="plan_price" class="form-control form-control-solid-bg" value="{{strtoupper($currency)}} {{number_format($balance[0]->package->price)}}" readonly/>
+                                <input type="text" name="plan_price" id="plan_price" class="form-control form-control-solid-bg" value="{{strtoupper($currency)}} {{number_format($business->package->price)}}" readonly/>
                             </div>
 
                             <div class="fv-row">
