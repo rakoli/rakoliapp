@@ -60,7 +60,7 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
         Route::post('roles/delete', [App\Http\Controllers\Agent\BusinessController::class, 'rolesDelete'])->name('roles.delete');
 
         Route::get('finance', [App\Http\Controllers\Agent\PaymentController::class, 'finance'])->name('finance');
-        Route::post('finance/update', [App\Http\Controllers\Agent\PaymentController::class, 'financeUpdate'])->name('finance.update');
+        Route::post('finance/withdrawmethod/update', [App\Http\Controllers\Agent\PaymentController::class, 'withdrawmethodUpdate'])->name('finance.withdrawmethod.update');
         Route::post('finance/withdraw', [App\Http\Controllers\Agent\PaymentController::class, 'financeWithdraw'])->name('finance.withdraw');
         Route::post('finance/check_method', [App\Http\Controllers\Agent\PaymentController::class, 'checkMethod'])->name('finance.check_method');
 

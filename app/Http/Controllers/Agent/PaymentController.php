@@ -98,12 +98,12 @@ class PaymentController extends Controller
         return view('agent.business.finance', compact('dataTableHtml', 'transactionsDataTableHtml', 'balance', 'withdrawMethod'));
     }
 
-    public function financeUpdate(Request $request)
+    public function withdrawmethodUpdate(Request $request)
     {
         $request->validate([
-            'method_name' => 'required',
-            'method_ac_name' => 'required',
-            'method_ac_number' => 'required'
+            'method_name' => 'required|string',
+            'method_ac_name' => 'required|string',
+            'method_ac_number' => 'required|string'
         ]);
 
         $user = $request->user();
@@ -125,22 +125,25 @@ class PaymentController extends Controller
             ]
         );
 
-        return redirect()->back()->with(['message' => __('Finance') . ' ' . __('Upated Successfully')]);
+        return redirect()->route('business.finance')->with(['message' => __('Withdraw Method') . ' ' . __('Updated Successfully')]);
     }
 
     public function financeWithdraw(Request $request)
     {
+        $user = $request->user();
+        $balance = $user->business->balance;
+
         $request->validate([
-            'amount' => 'required',
+            'amount' => 'required|numeric|max:'.$balance,
+            'description' => 'required|string',
         ]);
 
-        $get_withdraw_method = BusinessWithdrawMethod::where('business_code', $request->user()->business_code)->first();
+        $get_withdraw_method = BusinessWithdrawMethod::where('business_code', $user->business_code)->first();
 
         if (!$get_withdraw_method) {
-            return redirect()->back()->with(['message' => __('Please add withdrawal method')]);
+            return redirect()->route('business.finance')->withErrors([__('Please add withdrawal method first')]);
         }
 
-        $user = $request->user();
         $currency = session('currency');
         if ($currency == null) {
             $currency = $user->business->country->currency;
@@ -158,10 +161,10 @@ class PaymentController extends Controller
         $withdraw->method_ac_number = $get_withdraw_method->method_ac_number;
         $withdraw->amount = $request->amount;
         $withdraw->amount_currency = $currency;
-        $withdraw->completion_note = $description;
+        $withdraw->description = $description;
         $withdraw->save();
 
-        return redirect()->back()->with(['message' => __('Withdraw Fund') . ' ' . __('Added Successfully')]);
+        return redirect()->route('business.finance')->with(['message' => __('Withdraw Request') . ' ' . __('Added Successfully')]);
     }
 
     public function checkMethod(Request $request)

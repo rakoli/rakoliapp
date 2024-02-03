@@ -89,7 +89,7 @@
             <!--begin::Content-->
             <div class="flex-lg-row-fluid ms-lg-15">
 
-                <!--begin::Table-->
+                <!--begin::Card-->
                 <div class="card card-flush pt-4 mb-6 mb-xl-9">
 
                     <!--begin::Card header-->
@@ -116,7 +116,7 @@
                 </div>
                 <!--end::Card-->
 
-                <!--begin::Table-->
+                <!--begin::Card-->
                 <div class="card card-flush pt-4 mb-6 mb-xl-9">
 
                     <!--begin::Card header-->
@@ -156,7 +156,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title">{{ __('Update Withdraw Details') }}</h3>
+                    <h3 class="modal-title">{{ __('Update Withdraw Method') }}</h3>
                     <!--begin::Close-->
                     <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
                         aria-label="Close">
@@ -164,7 +164,7 @@
                     </div>
                     <!--end::Close-->
                 </div>
-                <form class="my-auto pb-5" action="{{ route('business.finance.update') }}" method="POST">
+                <form class="my-auto pb-5" action="{{ route('business.finance.withdrawmethod.update') }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <!--begin::Input group-->
@@ -184,7 +184,6 @@
                                 <input name="method_ac_name" type="text" class="form-control"
                                     value="{{ old('method_ac_name', $withdrawMethod->method_ac_name ?? '') }}"
                                     value="" placeholder="{{ __('enter method ac name') }}" />
-                                {{-- <textarea name="description" type="text" class="form-control" value="" placeholder="{{__('enter description')}}"></textarea> --}}
                             </div>
                         </div>
                         <!--end::Input group-->
@@ -195,7 +194,6 @@
                                 <input name="method_ac_number" type="text" class="form-control"
                                     value="{{ old('method_ac_number', $withdrawMethod->method_ac_number ?? '') }}"
                                     value="" placeholder="{{ __('enter method ac number') }}" />
-                                {{-- <textarea name="description" type="text" class="form-control" value="" placeholder="{{__('enter description')}}"></textarea> --}}
                             </div>
                         </div>
                         <!--end::Input group-->
@@ -212,7 +210,7 @@
     <!--end::Modal group-->
 
 
-    <!--begin::Modal group-->
+    <!--begin::Request Withdraw Modal group-->
     <div class="modal fade" tabindex="-1" id="withdraw_method_modal">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -258,8 +256,9 @@
             </div>
         </div>
     </div>
-    <!--end::Modal group-->
-    <!-- Confirmation Modal -->
+    <!--end::Request Withdraw Modal group-->
+
+    <!-- Request Withdraw Confirmation Modal -->
     <div class="modal fade" tabindex="-1" id="confirmation_modal">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -277,6 +276,8 @@
             </div>
         </div>
     </div>
+    <!-- Request Withdraw Confirmation Modal -->
+
     <div class="modal fade" tabindex="-1" id="Messages">
         <div class="modal-dialog">
             <div class="modal-content">

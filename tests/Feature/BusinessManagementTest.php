@@ -4,7 +4,9 @@ namespace Tests\Feature;
 
 use App\Models\Area;
 use App\Models\Business;
+use App\Models\BusinessAccountTransaction;
 use App\Models\BusinessRole;
+use App\Models\BusinessWithdrawMethod;
 use App\Models\ExchangeAds;
 use App\Models\ExchangeBusinessMethod;
 use App\Models\Location;
@@ -12,6 +14,7 @@ use App\Models\Package;
 use App\Models\Region;
 use App\Models\Towns;
 use App\Models\User;
+use App\Models\WithdrawRequest;
 use App\Utils\Enums\BusinessStatusEnum;
 use App\Utils\Enums\ExchangeStatusEnum;
 use App\Utils\Enums\UserTypeEnum;
@@ -834,6 +837,166 @@ class BusinessManagementTest extends TestCase
 
     }
 
+
+    /** @test */
+    public function agent_can_view_finance_page(): void
+    {
+        $balance = 800000;
+        $business = Business::factory()->create(['balance'=>$balance]);
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0, 'business_code'=>$business->code]);
+
+        $this->actingAs($user);
+
+        $response = $this->get(route('business.finance'));
+        $response->assertOk();
+        $response->assertSee('Account Transactions Methods');
+        $response->assertSee(number_format($balance));
+
+    }
+
+    /** @test */
+    public function agent_can_view_all_account_transactions_on_datatable_on_finance_page()
+    {
+        $business = Business::factory()->create();
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0, 'business_code'=>$business->code]);
+
+        $noOfTransactions = 4;
+        BusinessAccountTransaction::factory()->count($noOfTransactions)->create(['business_code'=>$business->code]);
+        $totalBusinessAccountTransactions = BusinessAccountTransaction::where('business_code', $business->code)->get();
+        $totalBusinessAccountTransactionCount = $totalBusinessAccountTransactions->count();
+
+        $this->actingAs($user);
+
+        $response = $this->getJson(route('business.finance', ['table'=>'account_transactions']),['X-Requested-With'=>'XMLHttpRequest']);
+        $responseArray = json_decode($response->content(),'true');
+
+        $allValuesFound = true;
+        $firstArray = $totalBusinessAccountTransactions->toArray();
+        $secondArray = $responseArray['data'];
+        $secondArrayIds = [];
+        foreach ($secondArray as $item) {
+            array_push($secondArrayIds, $item['id']);
+        }
+        foreach ($firstArray as $firstArrayItem) {
+            if (!in_array($firstArrayItem['id'], $secondArrayIds)) {
+                $allValuesFound = false;
+                break; // No need to continue checking if one value is not found
+            }
+        }
+
+        $this->assertTrue($allValuesFound);
+        $this->assertEquals($totalBusinessAccountTransactionCount,$responseArray['recordsTotal']);
+    }
+
+    /** @test */
+    public function agent_can_view_all_wtihdraw_requests_on_datatable_on_finance_page()
+    {
+        $business = Business::factory()->create();
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0, 'business_code'=>$business->code]);
+
+        $noOfWithdrawRequests = 4;
+        WithdrawRequest::factory()->count($noOfWithdrawRequests)->create(['business_code'=>$business->code]);
+        $totalWithdrawRequest = WithdrawRequest::where('business_code', $business->code)->get();
+        $totalBusinessAccountTransactionCount = $totalWithdrawRequest->count();
+
+        $this->actingAs($user);
+
+        $response = $this->getJson(route('business.finance', ['table'=>'withdraw_requests']),['X-Requested-With'=>'XMLHttpRequest']);
+        $responseArray = json_decode($response->content(),'true');
+
+        $allValuesFound = true;
+        $firstArray = $totalWithdrawRequest->toArray();
+        $secondArray = $responseArray['data'];
+        $secondArrayIds = [];
+        foreach ($secondArray as $item) {
+            array_push($secondArrayIds, $item['id']);
+        }
+        foreach ($firstArray as $firstArrayItem) {
+            if (!in_array($firstArrayItem['id'], $secondArrayIds)) {
+                $allValuesFound = false;
+                break; // No need to continue checking if one value is not found
+            }
+        }
+
+        $this->assertTrue($allValuesFound);
+        $this->assertEquals($totalBusinessAccountTransactionCount,$responseArray['recordsTotal']);
+    }
+
+    /** @test */
+    public function agent_can_update_withdraw_method_details_successfully(): void
+    {
+        $business = Business::factory()->create(['country_code'=>'TZ']);
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0, 'business_code'=>$business->code, 'country_code'=>$business->country_code]);
+
+        $this->actingAs($user);
+
+        $data = [
+            'method_name' => fake()->randomElement(['crdb','nmb']),
+            'method_ac_name' => fake()->name(),
+            'method_ac_number' => fake()->numerify('############'),
+        ];
+
+        $response = $this->post(route('business.finance.withdrawmethod.update',$data));
+
+        $response->assertRedirect(route('business.finance'));
+        $this->assertDatabaseHas('business_withdraw_methods',[
+            'business_code' => $business->code,
+            'amount_currency' => $business->country->currency,
+            'method_name' => $data['method_name'],
+            'method_ac_name' => $data['method_ac_name'],
+            'method_ac_number' => $data['method_ac_number'],
+        ]);
+    }
+
+    /** @test */
+    public function agent_can_post_a_withdraw_request_successfully(): void
+    {
+        $changer = 1000;
+        $balance = random_int(100000,10000000);
+        $business = Business::factory()->create(['balance'=>$balance]);
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0, 'business_code'=>$business->code]);
+
+        $this->actingAs($user);
+
+        //Should fail cause no withdraw method set
+        $data = [
+            'amount' => $balance - $changer,
+            'description' => fake()->sentence(3),
+        ];
+        $response = $this->post(route('business.finance.withdraw',$data));
+        $response->assertRedirect(route('business.finance'));
+        $this->assertTrue(session('errors')->first() == 'Please add withdrawal method first');
+
+        //Should fail cause amount is larger than balance
+        $data = [
+            'amount' => $balance + $changer,
+            'description' => fake()->sentence(3),
+        ];
+        $response = $this->post(route('business.finance.withdraw',$data));
+        $response->assertSessionHasErrors(['amount']);
+
+        //Should pass cause has withdraw method
+        BusinessWithdrawMethod::create([
+            'business_code'=> $business->code,
+            'amount_currency'=> $business->country->currency,
+            'method_name' => fake()->randomElement(['crdb','nmb']),
+            'method_ac_name' => fake()->name(),
+            'method_ac_number' => fake()->numerify('############'),
+        ]);
+        $data = [
+            'amount' => $balance - $changer,
+            'description' => fake()->sentence(3),
+        ];
+        $response = $this->post(route('business.finance.withdraw',$data));
+        $response->assertRedirect(route('business.finance'));
+        $this->assertDatabaseHas('withdraw_requests',[
+            'business_code' => $business->code,
+            'amount' => $data['amount'],
+            'amount_currency' => $business->country->currency,
+            'description' => $data['description'],
+        ]);
+
+    }
 
 
 }
