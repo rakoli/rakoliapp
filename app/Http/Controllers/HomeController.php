@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Business;
+use App\Models\BusinessWithdrawMethod;
 use App\Models\ExchangeAds;
 use App\Models\ExchangeTransaction;
 use App\Models\Location;
@@ -23,6 +24,7 @@ use App\Utils\StatisticsService;
 use Carbon\Carbon;
 use DebugBar\DebugBar;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\DataTables;
 use Yajra\DataTables\Html\Builder;
 
@@ -185,6 +187,25 @@ class HomeController extends Controller
         }
 
         return 'INVALID DASHBOARD REQUEST';
+    }
+
+    public function changepassword(Request $request)
+    {
+        return view('auth.changepassword');
+    }
+
+    public function changepasswordSubmit(Request $request)
+    {
+        $this->validate($request, [
+            'current_password' => 'required|current_password',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user = auth()->user();
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        return redirect()->route('home')->with('message', 'Password changed successfully');
     }
 
 }

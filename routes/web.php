@@ -12,6 +12,9 @@ Route::get('testing', [\App\Http\Controllers\TestController::class, 'testing']);
 Auth::routes();
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard')->middleware(['should_complete_registration']);
 Route::get('home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware(['should_complete_registration']);
+Route::get('profile', [App\Http\Controllers\HomeController::class, 'profile'])->name('profile')->middleware(['should_complete_registration']);
+Route::get('changepassword', [App\Http\Controllers\HomeController::class, 'changepassword'])->name('changepassword');
+Route::post('changepassword/submit', [App\Http\Controllers\HomeController::class, 'changepasswordSubmit'])->name('changepassword.submit');
 Route::get('logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
 //REGISTRATION ROUTES

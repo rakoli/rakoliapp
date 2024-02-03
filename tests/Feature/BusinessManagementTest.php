@@ -1108,6 +1108,42 @@ class BusinessManagementTest extends TestCase
         }
     }
 
+    /** @test */
+    public function agent_can_view_changepassword_page(): void
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
+
+        $this->actingAs($user);
+
+        $response = $this->get(route('changepassword'));
+        $response->assertOk();
+        $response->assertSee('Change Password');
+
+    }
+
+    /** @test */
+    public function agent_can_change_password_successfully(): void
+    {
+        $currentPassword = '12345678';
+        $newPassword = 'abcdefghi';
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0, 'password'=> Hash::make($currentPassword)]);
+
+        $this->actingAs($user);
+
+        $data = [
+            'current_password' => $currentPassword,
+            'password' => $newPassword,
+            'password_confirmation' => $newPassword,
+        ];
+
+        $response = $this->post(route('changepassword.submit', $data));
+
+        $this->assertEquals('Password changed successfully',session('message'));
+
+        $user = $user->fresh();
+        $this->assertTrue(Hash::check($newPassword, $user->password));
+
+    }
 
 
 }
