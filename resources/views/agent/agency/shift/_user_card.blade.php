@@ -28,17 +28,17 @@
         <!--begin::Stats-->
         <div class="d-flex flex-wrap flex-stack">
             <!--begin::Wrapper-->
-            <div class="d-flex flex-column flex-grow-1 pe-8">
+            <div class="d-flex flex-column flex-grow-1 pe-12">
                 <!--begin::Stats-->
                 <div class="d-flex flex-wrap">
 
 
                     <!--begin::Stat-->
-                    <div class="border border-gray-300 border-dashed rounded min-w-xl-125px py-3 px-4 me-6 mb-3">
+                    <div class="min-w-xl-125px py-3 px-4 me-6 mb-3">
                         <!--begin::Number-->
                         <div class="d-flex align-items-center  ">
 
-                            <div class="fs-2 fw-bolder counted  fs-2hx text-primary" data-kt-countup="true"
+                            <div class="fw-bolder counted fs-2qx text-primary" data-kt-countup="true"
                                  data-kt-countup-value="{{ number_format($totalBalance , 2) }}"
                                  data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">
                                 {{ Illuminate\Support\Number::currency($totalBalance, currencyCode()) }}
@@ -57,7 +57,7 @@
                         <!--begin::Number-->
                         <div class="d-flex align-items-center  ">
 
-                            <div class="fw-semibold counted  fs-2x text-primary" data-kt-countup="true"
+                            <div class="fw-semibold counted  fs-xl-1 text-primary" data-kt-countup="true"
                                  data-kt-countup-value="{{ number_format($totalBalance  - $shift->cash_end , 2) }}"
                                  data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">
                                 {{ Illuminate\Support\Number::currency($totalBalance - $shift->cash_end, currencyCode()) }}

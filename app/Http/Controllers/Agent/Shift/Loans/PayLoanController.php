@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Agent\Shift\Loans;
 use App\Actions\Agent\Shift\PayLoanAction;
 use App\Http\Controllers\Controller;
 use App\Models\Loan;
+use App\Models\Shift;
 use Illuminate\Http\Request;
 
 class PayLoanController extends Controller
@@ -12,7 +13,7 @@ class PayLoanController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(Request $request, Loan $loan)
+    public function __invoke(Request $request, Shift $shift , Loan $loan)
     {
         $validated = $request->validate([
             'amount' => 'required',

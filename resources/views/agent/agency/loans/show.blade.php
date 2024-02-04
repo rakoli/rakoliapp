@@ -43,48 +43,56 @@
 
                     <div class="px-lg-4">
 
-                        @if($shift->status == \App\Utils\Enums\ShiftStatusEnum::OPEN)
+
                             <div class="d-flex flex-lg-row gap-4 py-md-6">
-
-
-                                <x-modal_with_button
-                                    btnClass="btn btn-instagram"
-                                    targetId="add-loan"
-                                    label="{{ __('Add Loans') }}"
-                                    modalTitle="{{ __('Fill the form below record a Loan') }}"
-
-                                >
-
-                                    @include('agent.agency.loans.add-loan')
-
-
-                                </x-modal_with_button>
+                                @if($shift->status == \App\Utils\Enums\ShiftStatusEnum::OPEN)
 
                                 <x-a-button class="btn btn-outline-danger btn-google text-white" route="{{ route('agency.shift.close', $shift) }}">Close Shift</x-a-button>
+                                @endif
 
-                            </div>
-                        @endif
+
+                                <x-a-button
+                                    route="#"
+                                    class="btn-light-success btn-active-color-dark"
+                                    label="Loan Amount: {{ money($loan->amount , currencyCode(), true)  }}">
+
+                                </x-a-button>
+                                <x-a-button
+                                    route="#"
+                                    class="btn-light-primary btn-active-color-dark"
+                                    label="Loan Balance: {{ money($loan->balance , currencyCode(), true)  }}">
+
+                                </x-a-button>
+
+
+                            <x-modal_with_button
+                                btnClass="btn btn-light-facebook"
+                                targetId="receive-loan-payment"
+                                label="Receive Payment"
+                                modalTitle="Fill the form below record Loan payment"
+                                isStacked="true"
+                            >
+
+                                @include('agent.agency.shift.pay-loan')
+
+
+                            </x-modal_with_button>
 
 
                     </div>
 
-
-                    <!--begin::Card body-->
-                    <div class="card-body pt-0 pb-5">
-                        <!--begin::Table-->
-                        <div id="kt_table_customers_payment_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
-                            <div class="table-responsive">
-
-
-                                {!! $datatableHtml->table(['class' => 'table table-row-bordered table-row-dashed gy-4 align-middle fw-bold' , 'id' => 'loans-payment-table']) !!}
+                        <div class="card-body fs-6 py-15 px-10 py-lg-15 px-lg-8 text-gray-700">
+                            <div class="d-flex flex-lg-row gap-lg-4 pb-md-8 pb-sm-6">
 
 
                             </div>
+
+
+                            {!! $datatableHtml->table(['class' => 'table table-row-bordered table-row-dashed gy-4 align-middle fw-bold' , 'id' => 'loans-payment-table']) !!}
+
 
                         </div>
-                        <!--end::Table-->
                     </div>
-                    <!--end::Card body-->
                 </div>
                 <!--end::Card-->
 
@@ -93,56 +101,6 @@
     </div>
 
 
-
-    <div class="docs-content d-flex flex-column flex-column-fluid" id="kt_docs_content">
-
-        <!--begin::Container-->
-        <div class="container d-flex flex-column flex-lg-row" id="kt_docs_content_container">
-
-
-            <!--begin::Card-->
-            <div class="card card-docs flex-row-fluid mb-2" id="kt_docs_content_card">
-                <!--begin::Card Body-->
-                <div class="card-body fs-6 py-15 px-10 py-lg-15 px-lg-8 text-gray-700">
-                    <div class="d-flex flex-lg-row gap-lg-4 pb-md-8 pb-sm-6">
-                        <div class=" d-flex flex-column flex-lg-row gap-lg-3" >
-                            <x-a-button
-                                    route="#"
-                                    class="btn-light-success btn-active-color-dark"
-                                    label="Loan Amount: {{ money($loan->amount , currencyCode(), true)  }}">
-
-                            </x-a-button>
-                            <x-a-button
-                                    route="#"
-                                    class="btn-light-primary btn-active-color-dark"
-                                    label="Loan Balance: {{ money($loan->balance , currencyCode(), true)  }}">
-
-                            </x-a-button>
-                        </div>
-
-                        <x-modal_with_button
-                            btnClass="btn btn-light-facebook"
-                                targetId="receive-loan-payment"
-                                label="Receive Payment"
-                                modalTitle="Fill the form below record Loan payment"
-                                isStacked="true"
-                        >
-
-                            @include('agent.agency.shift.pay-loan')
-
-
-                        </x-modal_with_button>
-
-                    </div>
-
-
-                    {!! $datatableHtml->table(['class' => 'table table-row-bordered table-row-dashed gy-4 align-middle fw-bold' , 'id' => 'loans-payment-table']) !!}
-
-
-                </div>
-            </div>
-        </div>
-    </div>
 
 
     @push('js')

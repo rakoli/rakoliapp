@@ -34,7 +34,7 @@ class ShowShiftLoanController extends Controller
         $tills = ShiftNetwork::query()->where('shift_id', $shift->id)->with('network.agency')->cursor();
 
 
-        $totalBalance = $shift->cash_end ;
+        $totalBalance = $shift->cash_end + $tills->sum('balance_new');
 
         $locations = Location::query()->where('code', $shift->location_code)->cursor();
 
