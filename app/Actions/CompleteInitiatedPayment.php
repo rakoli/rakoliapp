@@ -2,6 +2,7 @@
 
 namespace App\Actions;
 
+use App\Models\Business;
 use App\Models\InitiatedPayment;
 use App\Models\Package;
 use App\Models\SystemIncome;
@@ -9,6 +10,8 @@ use App\Models\User;
 use App\Utils\Enums\InitiatedPaymentStatusEnum;
 use App\Utils\Enums\SystemIncomeCategoryEnum;
 use App\Utils\Enums\SystemIncomeStatusEnum;
+use App\Utils\Enums\TransactionCategoryEnum;
+use App\Utils\Enums\TransactionTypeEnum;
 use Illuminate\Support\Str;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -33,6 +36,12 @@ class CompleteInitiatedPayment
             if($userToComplete != null){
                 $userToComplete->registration_step = $userToComplete->registration_step + 1;
                 $userToComplete->save();
+
+                if($userToComplete->referral_business_code != null){
+                    $uplineBusiness = Business::where('code',$userToComplete->referral_business_code)->first();
+                    $description = $userToComplete->name()." referral commission";
+                    $uplineBusiness->addBusinessAccountTransaction(TransactionTypeEnum::MONEY_IN->value,TransactionCategoryEnum::INCOME->value,$package->price_commission,$description);
+                }
             }
 
             $description = "$initiatedPayment->description for $business->business_name $package->package_interval_days days";

@@ -4,14 +4,17 @@ namespace App\Http\Controllers\Auth;
 
 use App\Actions\SendTelegramNotification;
 use App\Http\Controllers\Controller;
+use App\Models\Business;
 use App\Models\Country;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use App\Utils\Enums\UserTypeEnum;
 use App\Utils\TelegramCommunication;
+use BitFinera\Db\Package;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -57,7 +60,34 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm()
     {
-        return view('auth.register');
+        $hasReferral = false;
+        $referrer = '';
+        $referrerName = '';
+
+        $referralBusinessCodeCookie = Cookie::get((env('APP_NAME').'_referral_business_code'));
+        if ($referralBusinessCodeCookie != null) {
+            $business = Business::where('code', $referralBusinessCodeCookie)->first();
+            if ($business != null) {
+                $hasReferral = true;
+                $referrer = $referralBusinessCodeCookie;
+                $referrerName = $business->business_name;
+            }
+        }
+
+        return view('auth.register', compact('hasReferral','referrer', 'referrerName'));
+    }
+
+    public function referral(Request $request, $businessCode)
+    {
+        $business = Business::where('code', $businessCode)->first();
+
+        if ($business == null) {
+            return redirect(route('register'))->withErrors([__('Invalid Referral Link')]);
+        }
+
+        $cookie = cookie(env('APP_NAME').'_referral_business_code', $businessCode);
+
+        return redirect(route('register'))->cookie($cookie)->with('message', __("You have been referred by").' '.$business->business_name);
     }
 
     /**
@@ -75,6 +105,7 @@ class RegisterController extends Controller
             'phone' => ['required','numeric'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'referral_business_code' => ['nullable', 'string', 'exists:businesses,code'],
         ];
         if (env('APP_ENV') == 'production'){
             $validators['g-recaptcha-response'] = [new GoogleReCaptchaV3ValidationRule('register')];
@@ -94,6 +125,10 @@ class RegisterController extends Controller
         $country_dial_code = substr($data['country_dial_code'], 1);
         $plainPhone = substr($data['phone'], 1);
         $fullPhone = $country_dial_code . $plainPhone;
+        $referralBusinessCode = null;
+        if(array_key_exists('referral_business_code', $data)){
+            $referralBusinessCode = $data['referral_business_code'];
+        }
         return User::create([
             'country_code' => $country_code,
             'code' => generateCode($data['fname'].' '.$data['lname'],$country_code),
@@ -103,6 +138,7 @@ class RegisterController extends Controller
             'phone' => $fullPhone,
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'referral_business_code' => $referralBusinessCode,
         ]);
     }
 

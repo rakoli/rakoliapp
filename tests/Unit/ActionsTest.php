@@ -9,6 +9,9 @@ use App\Models\InitiatedPayment;
 use App\Models\Package;
 use App\Models\User;
 use App\Utils\Enums\InitiatedPaymentStatusEnum;
+use App\Utils\Enums\SystemIncomeCategoryEnum;
+use App\Utils\Enums\TransactionCategoryEnum;
+use App\Utils\Enums\TransactionTypeEnum;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PhpOffice\PhpSpreadsheet\Calculation\Engineering\Complex;
 use Tests\TestCase;
@@ -49,6 +52,38 @@ class ActionsTest extends TestCase
         $this->assertDatabaseHas('system_incomes', [
             'channel_reference' => $initiedPayment->code,
         ]);
+
+    }
+
+    /** @test */
+    public function can_complete_initiated_subscription_payment_and_pay_referral_commission()
+    {
+        $uplineBusiness = Business::factory()->create();
+        User::factory()->create(['business_code'=>$uplineBusiness->code,'registration_step'=>2]);//For complete payment to work
+
+        $business = Business::factory()->create();
+        $user = User::factory()->create(['referral_business_code'=>$uplineBusiness->code, 'business_code'=>$business->code]);
+
+        $package = Package::factory()->create();
+        $initiedPayment = InitiatedPayment::factory()->create([
+            'business_code'=>$user->business_code,
+            'description'=>$package->code,
+            'income_category'=>SystemIncomeCategoryEnum::SUBSCRIPTION->value
+        ]);
+
+        CompleteInitiatedPayment::run($initiedPayment);
+
+        $this->assertDatabaseHas('business_account_transactions', [
+            'business_code' => $uplineBusiness->code,
+            'type' => TransactionTypeEnum::MONEY_IN->value,
+            'category' => TransactionCategoryEnum::INCOME->value,
+            'amount' => $package->price_commission,
+            'balance_old' => 0,
+            'balance_new' => $package->price_commission,
+        ]);
+
+        $businessAfter = Business::where('id',$uplineBusiness->id)->first();
+        $this->assertEquals($package->price_commission,$businessAfter->balance);
 
     }
 

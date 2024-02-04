@@ -5,10 +5,13 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Actions\InitiateSubscriptionPayment;
 use App\Utils\Enums\InitiatedPaymentStatusEnum;
+use App\Utils\Traits\BusinessAuthorization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -17,7 +20,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, AuthenticationLoggable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, AuthenticationLoggable, SoftDeletes,BusinessAuthorization;
 
     protected $fillable = [
         'type',
@@ -29,6 +32,7 @@ class User extends Authenticatable
         'country_code',
         'phone',
         'code', // Add the 'code' attribute for user registration
+        'referral_business_code',
     ];
 
     protected $hidden = [
@@ -157,6 +161,16 @@ class User extends Authenticatable
             $busines->last_seen = now();
             $busines->save();
         }
+    }
+
+    // public function userRoles(): HasMany
+    // {
+    //     return $this->hasMany(UserRole::class, 'user_code', 'code');
+    // }
+
+    public function businessRoles(): HasManyThrough
+    {
+        return $this->hasManyThrough( BusinessRole::class,UserRole::class,'user_code','code','code','user_role');
     }
 
 }

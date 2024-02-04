@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Utils\Enums\ExchangeStatusEnum;
+use App\Utils\Traits\BusinessAuthorization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,7 +15,7 @@ use Illuminate\Support\Str;
 
 class ExchangeAds extends Model
 {
-    use HasFactory;
+    use HasFactory, BusinessAuthorization;
 
     protected $appends = ['completion','feedback','trades'];
 
@@ -117,15 +118,6 @@ class ExchangeAds extends Model
             return null;
         }
         return $this->business->exchange_stats->no_of_trades_completed;
-    }
-
-    public function isUserAllowed(User $user)
-    {
-        if($user->business_code == $this->business_code){
-            return true;
-        }
-        return false;
-
     }
 
 }

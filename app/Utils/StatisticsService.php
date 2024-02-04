@@ -136,4 +136,40 @@ class StatisticsService
         return User::count();
     }
 
+    public function agent_referrals_list()
+    {
+        return User::where('referral_business_code',$this->user->business_code)->get();
+    }
+
+    public function agent_total_number_of_referrals()
+    {
+        return $this->agent_referrals_list()->count();
+    }
+
+    public function agent_total_annual_referral_commission()
+    {
+        $totalCommission = 0;
+        foreach ($this->agent_referrals_list() as $downline) {
+            if($downline->business != null ){
+                if($downline->business->package != null){
+                    $totalCommission = $totalCommission + $downline->business->package->price_commission;
+                }
+            }
+        }
+        return $totalCommission;
+    }
+
+    public function agent_total_no_of_inactive_referrals()
+    {
+        $totalInactive = 0;
+        foreach ($this->agent_referrals_list() as $downline) {
+            if($downline->business != null ){
+                if($downline->business->package == null){
+                    $totalInactive = $totalInactive + 1;
+                }
+            }
+        }
+        return $totalInactive;
+    }
+
 }
