@@ -12,7 +12,11 @@
                     <a href="#"
                        class="text-gray-900 text-hover-primary fs-2 fw-bold me-1">{{ $shift->user->full_name }}</a>
                     <a href="#"><i class="ki-duotone ki-verify fs-1 text-primary"><span class="path1"></span><span
-                                class="path2"></span></i></a>
+                                class="path2">
+
+                            </span>
+                        </i>
+                    </a>
                 </div>
                 <!--end::Name-->
             </div>
@@ -28,32 +32,15 @@
                 <!--begin::Stats-->
                 <div class="d-flex flex-wrap">
 
-
                     <!--begin::Stat-->
-                    <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                    <div class="border border-gray-300 border-dashed rounded min-w-xl-125px py-3 px-4 me-6 mb-3">
                         <!--begin::Number-->
-                        <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center  ">
 
-                            <div class="fs-2 fw-bold counted" data-kt-countup="true" data-kt-countup-value="{{ number_format($shift->cash_end , 2) }}"
+                            <div class="fs-2 fw-bolder counted  fs-4hx text-primary" data-kt-countup="true"
+                                 data-kt-countup-value="{{ number_format($totalBalance , 2) }}"
                                  data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">
-                                 {{ Illuminate\Support\Number::abbreviate($shift->cash_end , 3) }}
-                            </div>
-                        </div>
-                        <!--end::Number-->
-
-                        <!--begin::Label-->
-                        <div class="fw-semibold fs-6 text-gray-500">{{ __('Cash at Hand') }}</div>
-                        <!--end::Label-->
-                    </div>
-                    <!--end::Stat-->
-                    <!--begin::Stat-->
-                    <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
-                        <!--begin::Number-->
-                        <div class="d-flex align-items-center">
-
-                            <div class="fs-2 fw-bold counted" data-kt-countup="true" data-kt-countup-value="{{ number_format($totalBalance , 2) }}"
-                                 data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">
-                                 {{ Illuminate\Support\Number::abbreviate($totalBalance ,3) }}
+                                {{ Illuminate\Support\Number::abbreviate($totalBalance ,3) }}
                             </div>
                         </div>
                         <!--end::Number-->
@@ -63,6 +50,26 @@
                         <!--end::Label-->
                     </div>
                     <!--end::Stat-->
+
+                    <!--begin::Stat-->
+                    <div class="border border-gray-300 border-dashed rounded min-w-225px py-3 px-4 me-6 mb-3">
+                        <!--begin::Number-->
+                        <div class="d-flex align-items-center">
+
+                            <div class="fs-2 fw-semibold fs-2hx counted" data-kt-countup="true"
+                                 data-kt-countup-value="{{ number_format($shift->cash_end , 2) }}"
+                                 data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">
+                                {{ Illuminate\Support\Number::abbreviate($shift->cash_end , 3) }}
+                            </div>
+                        </div>
+                        <!--end::Number-->
+
+                        <!--begin::Label-->
+                        <div class="fw-semibold fs-6 text-gray-500">{{ __('Cash at Hand') }}</div>
+                        <!--end::Label-->
+                    </div>
+                    <!--end::Stat-->
+
 
                 </div>
                 <!--end::Stats-->

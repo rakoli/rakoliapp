@@ -33,56 +33,61 @@
             <div class="flex-lg-row-fluid ms-lg-15">
 
 
-                <div class="d-flex flex-lg-row gap-4 py-md-6">
-                    <x-modal_with_button
-                        targetId="add-transaction"
-                        label="Add Transaction"
-                        modalTitle="Fill the form below record a transaction"
-                        btnClass="btn btn-facebook"
-                    >
+                @if($shift->status == \App\Utils\Enums\ShiftStatusEnum::OPEN)
+                    <div class="d-flex flex-lg-row gap-4 py-md-6">
+                        <x-modal_with_button
+                            targetId="add-transaction"
+                            label="Add Transaction"
+                            modalTitle="Fill the form below record a transaction"
+                            btnClass="btn btn-facebook"
+                        >
 
-                        @include('agent.agency.transaction.add-transaction')
-
-
-                    </x-modal_with_button>
-
-                    <x-modal_with_button
-                        targetId="add-expenses"
-                        label="Add Expenses"
-                        modalTitle="Fill the form below record a Expenses"
-                        btnClass="btn btn-youtube"
-                    >
-
-                        @include('agent.agency.transaction.add-expense')
+                            @include('agent.agency.transaction.add-transaction')
 
 
-                    </x-modal_with_button>
+                        </x-modal_with_button>
 
-                    <x-modal_with_button
-                        targetId="add-income"
-                        label="Add Income"
-                        modalTitle="Fill the form below record a income"
-                    >
+                        <x-modal_with_button
+                            targetId="add-expenses"
+                            label="Add Expenses"
+                            modalTitle="Fill the form below record a Expenses"
+                            btnClass="btn btn-youtube"
+                        >
 
-                        @include('agent.agency.transaction.add-income')
-
-
-                    </x-modal_with_button>
-
-                    <x-modal_with_button
-                        btnClass="btn btn-instagram"
-                        targetId="add-loan"
-                        label="Add Loan"
-                        modalTitle="Fill the form below record a Loan"
-
-                    >
-
-                        @include('agent.agency.loans.add-loan')
+                            @include('agent.agency.transaction.add-expense')
 
 
-                    </x-modal_with_button>
+                        </x-modal_with_button>
 
-                </div>
+                        <x-modal_with_button
+                            targetId="add-income"
+                            label="Add Income"
+                            modalTitle="Fill the form below record a income"
+                        >
+
+                            @include('agent.agency.transaction.add-income')
+
+
+                        </x-modal_with_button>
+
+                        <x-modal_with_button
+                            btnClass="btn btn-instagram"
+                            targetId="add-loan"
+                            label="Add Loan"
+                            modalTitle="Fill the form below record a Loan"
+
+                        >
+
+                            @include('agent.agency.loans.add-loan')
+
+
+                        </x-modal_with_button>
+
+                        <x-a-button class="btn btn-outline-danger btn-google text-white" route="{{ route('agency.shift.close', $shift) }}">Close Shift</x-a-button>
+
+                    </div>
+                @endif
+
 
                 <!--begin::Card-->
                 <div class="card pt-4 mb-6 mb-xl-9">

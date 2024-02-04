@@ -18,9 +18,7 @@ class OpenShiftController extends Controller
 
 
         if (Shift::query()->where('status', ShiftStatusEnum::OPEN)->exists()) {
-            return to_route('agency.shift')->withErrors([
-                'error' => "cannot Open another shift"
-            ]);
+            return to_route('agency.shift');
         }
         $tills = Network::query()->with('agency')->cursor();
 

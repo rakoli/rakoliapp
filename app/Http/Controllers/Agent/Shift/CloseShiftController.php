@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Agent\Shift;
 
 use App\Http\Controllers\Controller;
+use App\Models\Loan;
 use App\Models\Location;
 use App\Models\Shift;
 use App\Models\ShiftNetwork;
@@ -26,12 +27,19 @@ class CloseShiftController extends Controller
         $shift = Shift::query()->where('status', ShiftStatusEnum::OPEN)->first();
 
         $tills = ShiftNetwork::query()->where('shift_id', $shift->id)
-            ->where('balance_new', '>', 0)->with('network.agency')->cursor();
+            ->where('balance_new', '>', 0)->with('network.agency');
+
+        $totalBalance = $shift->cash_end + $tills->sum('balance_new');
+
+
+        $loans = Loan::query()->whereBelongsTo($shift,'shift')->get()->groupBy(fn(Loan $loan) => $loan->type->label() );
 
         return view('agent.agency.close-shift')->with([
-            'tills' => $tills,
+            'tills' => $tills->cursor(),
             'locations' => $locations,
             'shift' => $shift,
+            'loans' => $loans,
+            'totalBalance' => $totalBalance
         ]);
     }
 

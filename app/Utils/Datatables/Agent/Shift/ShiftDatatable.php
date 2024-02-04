@@ -77,10 +77,6 @@ class ShiftDatatable implements HasDatatable
             Column::make('status')->title(__('Status'))->searchable()->orderable(),
             Column::make('action')->title(__('Actions'))->searchable()->orderable(),
         ])
-            ->search([
-                "regex" =>  true
-            ])
-            ->ordering(false)
             ->dom('frtilp');
     }
 }

@@ -1,11 +1,11 @@
-<div>
+<div class="d-flex flex-column gap-10">
     <form method="post" id="close-shift" action="{{ route('agency.shift.close.store') }}">
         @csrf
 
-        <div class="modal-body">
+
 
             <div class="row fv-row py-2">
-                <div class="col-12">
+                <div class="">
                     <x-label class="" label="{{ __('Closing Balance') }}" for="closing_balance"/>
                     <x-input
                         type="number"
@@ -24,7 +24,7 @@
             </div>
             <div class="row fv-row py-2">
 
-                <div class="col-12">
+                <div class="">
                     <x-label class="" label="{{ __('location') }}" for="location"/>
                     <x-select2
                         name="location_code"
@@ -52,7 +52,7 @@
 
 
                 @foreach($tills as $till)
-                    <div class="col-12 py-3">
+                    <div class=" py-3">
                         <x-label class="" label="{{ __($till->network?->agency?->name) }}" :for="$till->id"/>
                         <x-input class="form-control-solid"
                                  name="tills[{{ $till->network_code }}]"
@@ -67,7 +67,7 @@
             </div>
 
             <div class="row fv-row py-3">
-                <div class="col-12">
+                <div class="">
                     <x-label label="description" class="" for="description"/>
                     <textarea name="description" class="form-control form-control form-control-solid" rows="3"  data-kt-autosize="false"></textarea>
                     @error('description')
@@ -79,7 +79,7 @@
             </div>
 
             <div class="row fv-row py-3">
-                <div class="col-12">
+                <div class="">
                     <x-label label="notes" required="" for="notes"/>
                     <textarea name="notes" class="form-control form-control form-control-solid" rows="3"  data-kt-autosize="false"></textarea>
                     @error('notes')
@@ -90,12 +90,9 @@
                 </div>
             </div>
 
-        </div>
 
+            <x-submit-button type="button" id="close-shift-button" class="btn btn-primary mt-sm-4 mt-md-6" label="Close Shift"/>
 
-        <div class="modal-footer my-4">
-            <x-submit-button type="button" id="close-shift-button" class="btn btn-primary" label="Close Shift"/>
-        </div>
 
     </form>
 

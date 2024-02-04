@@ -17,11 +17,9 @@ class ShiftTransactionDatatable implements HasDatatable
 
     public function index(Shift $shift, bool $isToday = false): \Illuminate\Http\JsonResponse
     {
-
         $transactions = ShiftTransaction::query()
             ->whereBelongsTo($shift, 'shift')
-            ->with('location', 'user', 'network.agency')
-            ->when($isToday, fn ($query) => $query->whereDate('created_at', Carbon::today()));
+            ->with('location', 'user', 'network.agency');
 
         return Datatables::eloquent($transactions)
             ->filter(function ($query) {
@@ -68,6 +66,7 @@ class ShiftTransactionDatatable implements HasDatatable
                 Column::make('network_name')->title(__('network')),
                 Column::make('transaction_type')->title(__('Type'))->orderable(),
             ])
+           // ->lengthMenu([[5, 10, 25, -1], [5, 10, 25, "All"]])
             ->orderBy(0);
     }
 }
