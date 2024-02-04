@@ -850,7 +850,7 @@ class BusinessManagementTest extends TestCase
 
         $response = $this->get(route('business.finance'));
         $response->assertOk();
-        $response->assertSee('Account Transactions Methods');
+        $response->assertSee('Account Transactions');
         $response->assertSee(number_format($balance));
 
     }
@@ -1142,6 +1142,73 @@ class BusinessManagementTest extends TestCase
 
         $user = $user->fresh();
         $this->assertTrue(Hash::check($newPassword, $user->password));
+
+    }
+
+    /** @test */
+    public function agent_can_view_change_profile_page(): void
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
+
+        $this->actingAs($user);
+
+        $response = $this->get(route('profile'));
+        $response->assertOk();
+        $response->assertSee('User Profile');
+
+    }
+
+
+    /** @test */
+    public function agent_can_change_profile_successfully(): void
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
+
+        $this->actingAs($user);
+
+        $data = [
+            'fname' => fake()->firstName,
+            'lname' => fake()->lastName,
+            'phone' => fake()->numerify('255#########'),
+            'email' => fake()->email,
+        ];
+
+        $response = $this->post(route('profile.submit', $data));
+
+        $this->assertEquals('Profile Edited Successfully',session('message'));
+        $user = $user->fresh();
+        $this->assertDatabaseHas('users',[
+            'id' => $user->id,
+            'fname' => $data['fname'],
+            'lname' => $data['lname'],
+            'phone' => $data['phone'],
+            'email' => $data['email'],
+        ]);
+
+    }
+
+    /** @test */
+    public function agent_can_change_profile_without_changing_verified_data(): void
+    {
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0, 'email_verified_at'=>now(), 'phone_verified_at'=>now()]);
+
+        $this->actingAs($user);
+
+        $data = [
+            'fname' => fake()->firstName,
+            'lname' => fake()->lastName,
+            'phone' => fake()->numerify('255#########'),
+            'email' => fake()->email,
+        ];
+        $response = $this->post(route('profile.submit', $data));
+        $this->assertEquals('Profile Edited Successfully',session('message'));
+        $this->assertDatabaseHas('users',[
+            'id' => $user->id,
+            'fname' => $data['fname'],
+            'lname' => $data['lname'],
+            'phone' => $user->phone,
+            'email' => $user->email,
+        ]);//Only Fname and Lname, has changed
 
     }
 

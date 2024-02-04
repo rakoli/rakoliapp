@@ -19,6 +19,7 @@ use App\Models\LocationUser;
 use App\Utils\StatisticsService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Yajra\DataTables\DataTables;
 use App\Models\Region;
 use App\Models\Role;
@@ -396,6 +397,7 @@ class BusinessController extends Controller
         }
 
         $business->business_name = $request->get('business_name');
+        Session::put('business_name', $business->business_name);
         $business->tax_id = $request->get('tax_id');
         $business->business_regno = $request->get('business_regno');
         $business->business_reg_date = $request->get('business_reg_date');
