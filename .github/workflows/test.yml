@@ -1,0 +1,42 @@
+name: Test before Merge
+on:
+  pull_request:
+    branches: [ main ]
+jobs:
+  test:
+    name: Deploy
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:latest
+        env:
+          MYSQL_ROOT_PASSWORD: test_root_password
+          MYSQL_DATABASE: test_database
+          MYSQL_USER: test_user
+          MYSQL_PASSWORD: test_password
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+
+      - name: Install dependencies
+        run: composer install
+
+      - name: Create .env file
+        run: cp .env.ci .env
+
+      - name: Generate application key
+        run: php artisan key:generate
+
+      - name: Migrate and seed database
+        run: php artisan migrate:fresh --seed
+
+      - name: Run PHPUnit
+        run: vendor/bin/phpunit
