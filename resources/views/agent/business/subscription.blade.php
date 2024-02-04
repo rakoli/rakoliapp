@@ -237,7 +237,7 @@
                                                 <i class="ki-outline text-info fs-2x"></i>
                                                 <div class="ms-2">
                                                     @if($business->package == null)
-                                                        {{_('No Active')}}
+                                                        {{__('No Active')}}
                                                     @else
                                                         {{ now()->lt($business->package_expiry_at) ? __('Active') : __('Inactive') }}
                                                     @endif
