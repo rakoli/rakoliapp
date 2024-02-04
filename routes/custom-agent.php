@@ -30,11 +30,6 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
 
         Route::get('transactions', TransactionsController::class)->name('agency.transactions');
 
-        Route::prefix('transactions/{shift}')->group(function () {
-            Route::post('add-transaction', AddTransactionController::class)->name('agency.transactions.add.transaction');
-            Route::post('add-expense', AddExpenseTransactionController::class)->name('agency.transactions.add.expense');
-            Route::post('add-income', AddIncomeTransactionController::class)->name('agency.transactions.add.income');
-        });
 
         // shift groups
 
@@ -46,15 +41,22 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
             Route::post('/close/store', [CloseShiftController::class, 'store'])->name('agency.shift.close.store');
             Route::get('/{shift}/show', ShowShiftController::class)->name('agency.shift.show');
             Route::get('{shift}/tills', [TillController::class, 'index'])->name('agency.shift.till');
-            Route::get('{shift}/loans', [ ShowShiftLoanController::class, 'index'])->name('agency.shift.show.loans');
+            Route::get('{shift}/loans', ShowShiftLoanController::class)->name('agency.shift.show.loans');
             Route::post('/{shift}/loans/store', AddLoanController::class)->name('agency.loans.store');
+            Route::prefix('/{shift}/loans')->group(function () {
+                Route::get('/{loan}/', ShowLoanController::class)->name('agency.loans.show');
+                Route::post('/{loan}/', PayLoanController::class)->name('agency.loans.pay');
+            });
+            Route::prefix('transactions/{shift}')->group(function () {
+                Route::post('add-transaction', AddTransactionController::class)->name('agency.transactions.add.transaction');
+                Route::post('add-expense', AddExpenseTransactionController::class)->name('agency.transactions.add.expense');
+                Route::post('add-income', AddIncomeTransactionController::class)->name('agency.transactions.add.income');
+            });
+
+
         });
 
-        Route::prefix('loans')->group(function () {
-            Route::get('/', [LoanController::class, 'index'])->name('agency.loans');
-            Route::get('/{loan}/', ShowLoanController::class)->name('agency.loans.show');
-            Route::post('/{loan}/', PayLoanController::class)->name('agency.loans.pay');
-        });
+
 
         Route::prefix('networks')->group(function () {
             Route::get('/', NetworkController::class)->name('agency.networks');

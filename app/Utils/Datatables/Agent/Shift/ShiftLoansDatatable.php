@@ -58,13 +58,16 @@ class ShiftLoansDatatable implements HasDatatable
             ->addColumn('action', fn (Loan $loan) => (new self())->buttons([
 
                 'pay' => [
-                    'route' => route('agency.loans.show', $loan),
+                    'route' => route('agency.loans.show', [
+                        "shift" => $shift,
+                        "loan" => $loan
+                    ]),
                     'attributes' => '',
                 ],
             ]))
             ->addColumn('amount', fn (Loan $record) => money($record->amount, currencyCode(), true))
             ->addColumn('balance', fn (Loan $record) => money($record->balance, currencyCode(), true))
-            ->rawColumns(['balance'])
+            ->rawColumns(['balance','status','type','action'])
             ->toJson();
     }
 

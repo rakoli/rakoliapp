@@ -46,7 +46,7 @@ class ShowShiftLoanController extends Controller
             ->get();
 
         return view('agent.agency.loans', [
-            'dataTableHtml' => $dataTableHtml,
+            'datatableHtml' => $dataTableHtml,
             'loans' => $loans,
             'locations' => $locations,
             'totalBalance' => $totalBalance,

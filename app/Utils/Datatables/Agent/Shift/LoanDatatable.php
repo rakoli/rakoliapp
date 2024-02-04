@@ -49,10 +49,13 @@ class LoanDatatable implements HasDatatable
                     badgeClass: $record->type->color()
                 );
             })
-            ->addColumn('action', fn (Loan $record) => (new self())->buttons([
+            ->addColumn('action', fn (Loan $loan) => (new self())->buttons([
 
                 'pay' => [
-                    'route' => route('agency.loans.show', $record),
+                    'route' => route('agency.loans.show', [
+                        "shift" => $loan->shift ,
+                        "loan" => $loan
+                    ]),
                     'attributes' => '',
                 ],
             ]))

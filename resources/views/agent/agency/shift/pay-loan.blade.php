@@ -147,7 +147,7 @@
                     const submitLoanButton = document.getElementById('pay-loan-button');
 
 
-                    lakoriValidation(loanValidations, loanForm, submitLoanButton, 'post', '{{  route('agency.loans.pay', $loan) }}');
+                    lakoriValidation(loanValidations, loanForm, submitLoanButton, 'post', '{{  route('agency.loans.pay', ["shift" => $shift , "loan" => $loan]) }}');
                 })
 
 

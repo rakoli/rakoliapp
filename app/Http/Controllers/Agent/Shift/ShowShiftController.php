@@ -7,14 +7,9 @@ use App\Models\Loan;
 use App\Models\Location;
 use App\Models\Shift;
 use App\Models\ShiftNetwork;
-use App\Utils\Datatables\Agent\Shift\ShiftLoansDatatable;
+
 use App\Utils\Datatables\Agent\Shift\ShiftTransactionDatatable;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
-use Illuminate\Foundation\Application;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Yajra\DataTables\DataTables;
 use Yajra\DataTables\Html\Builder;
 
 class ShowShiftController extends Controller
@@ -22,7 +17,10 @@ class ShowShiftController extends Controller
     public function __invoke(Request $request, Shift $shift, Builder $datatableBuilder, ShiftTransactionDatatable $transactionDatatable)
     {
 
+
         if ($request->ajax()) {
+
+
 
            return $transactionDatatable->index($shift);
 
@@ -33,9 +31,8 @@ class ShowShiftController extends Controller
 
         $tills = ShiftNetwork::query()->where('shift_id', $shift->id)->with('network.agency');
 
+        $totalBalance =  $shift->cash_end +    ($tills->pluck('balance_new')->first());
 
-
-        $totalBalance = $shift->cash_end + $tills->sum('balance_new');
 
         $locations = Location::query()->where('code', $shift->location_code)->cursor();
 

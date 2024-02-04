@@ -43,6 +43,8 @@ trait InteractsWithShift
     public static function moneyIn(array $data, bool $isLoan = false): array
     {
 
+
+
         // till for the opened shift
 
         $tillCheck = ShiftNetwork::query()
@@ -68,13 +70,15 @@ trait InteractsWithShift
         {
             /** @var Shift $shift */
 
-
             $shift->updateQuietly([
                 'cash_start' => $cash,
                 'cash_end' => $cash + floatval($data['amount']),
             ]);
         }
+
         $newBalance = $till->balance_new;
+
+        //dd($till->balance_new - floatval($data['amount']) ,   $cash + floatval($data['amount']));
 
         $till->updateQuietly([
             'balance_new' => $newBalance - floatval($data['amount']),
@@ -93,6 +97,8 @@ trait InteractsWithShift
 
     public static function moneyOut(array $data, bool $isLoan = false): array
     {
+
+
 
         // till for the opened shift
 

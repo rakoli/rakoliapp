@@ -205,7 +205,7 @@
                                             </td>
                                             <td>
                                                 <a
-                                                    href="{{ route('agency.loans.show', $loan), }}"
+                                                    href="{{ route('agency.loans.show', ['shift' => $shift , 'loan' => $loan]), }}"
                                                     class="btn btn-sm btn-primary"
                                                 >Statement</a>
                                             </td>
@@ -237,6 +237,7 @@
         <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}"
                 type="text/javascript"></script>
         {{ $dataTableHtml->scripts()  }}
+
 
 
         <script src="{{ asset('assets/js/rakoli_ajax.js') }}"></script>
