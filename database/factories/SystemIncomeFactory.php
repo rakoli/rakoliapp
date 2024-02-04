@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Country;
 use App\Models\SystemIncome;
 use App\Utils\Enums\SystemIncomeCategoryEnum;
 use App\Utils\Enums\SystemIncomeStatusEnum;
@@ -27,8 +28,15 @@ class SystemIncomeFactory extends Factory
      */
     public function definition(): array
     {
+        $countries = Country::get('code')->toArray();
+        $countryCode = null;
+        if(empty($countries)){
+            $countryCode = Country::factory()->create()->code;
+        }else{
+            $countryCode = fake()->randomElement($countries)['code'];
+        }
         return [
-            'country_code' => fake()->randomElement(['TZ', 'KE']),
+            'country_code' => $countryCode,
             'category' => fake()->randomElement(SystemIncomeCategoryEnum::class),
             'amount' => fake()->numberBetween(40000, 100000),
             'amount_currency' => fake()->randomElement(['tzs', 'kes']),

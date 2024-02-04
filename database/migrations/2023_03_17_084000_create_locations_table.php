@@ -44,6 +44,7 @@ return new class extends Migration
             $table->string('pic')->nullable();
             $table->string('description')->nullable();
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }

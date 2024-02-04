@@ -30,11 +30,12 @@ return new class extends Migration
             $table->string('phone')->index();
             $table->string('email')->nullable()->unique();
             $table->boolean('is_super_agent')->default(false);
-            $table->integer('status')->default(\App\Utils\Enums\UserStatusEnum::active);
+            $table->integer('status')->default(\App\Utils\Enums\UserStatusEnum::ACTIVE);
             $table->integer('registration_step')->default(1);
             $table->timestamp('last_login')->nullable();
             $table->timestamp('phone_verified_at')->nullable();
             $table->timestamp('email_verified_at')->nullable();
+            $table->timestamp('id_verified_at')->nullable();
             $table->boolean('should_change_password')->default(false);
 
             $table->string('phone_otp')->nullable();
@@ -45,14 +46,23 @@ return new class extends Migration
             $table->timestamp('email_otp_time')->nullable();
             $table->integer('email_otp_count')->nullable();
 
+
             $table->string('iddoc_type')->nullable();
             $table->string('iddoc_id')->nullable()->unique();
             $table->string('iddoc_path')->nullable();
             $table->boolean('iddoc_verified')->default(0);
 
+            $table->string('referral_business_code')->nullable();
+            $table->foreign('referral_business_code')->references('code')
+                ->on('businesses')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 

@@ -1,6 +1,6 @@
 @extends('layouts.users.admin')
 
-@section('title', "Dashboard")
+@section('title', __("Dashboard"))
 
 @section('header_js')
     <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css" />

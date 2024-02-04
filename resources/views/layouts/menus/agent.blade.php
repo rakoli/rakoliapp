@@ -1,7 +1,7 @@
 <!-- Home -->
-<div class="menu-item py-2">
+<div class="menu-item py-2 {{returnActiveMenuStyle('')}}">
     <!--begin:Menu link-->
-    <a class="menu-link menu-center"   href ="{{route('home')}}" target="_self">
+    <a class="menu-link menu-center" href="{{route('home')}}" target="_self">
         <span class="menu-icon me-0">
             <i class="ki-outline ki-home-2 fs-2x"></i>
         </span>
@@ -13,7 +13,7 @@
 </div>
 
 <!-- Agency -->
-<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2">
+<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('agency')}}">
     <!--begin:Menu link-->
     <span class="menu-link menu-center">
         <span class="menu-icon me-0">
@@ -42,35 +42,35 @@
 
             <!--begin:Menu sub-->
             <div class="menu-sub menu-sub-accordion">
-                <a class="menu-link"  href ="{{route('agency.transactions')}}">
+                <a class="menu-link" href="{{route('agency.transactions')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Transactions') }}</span>
                 </a>
 
-                <a class="menu-link"  href ="{{route('agency.shift')}}">
+                <a class="menu-link" href="{{route('agency.shift')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Shift') }}</span>
                 </a>
 
-                <a class="menu-link"  href ="{{route('agency.tills')}}">
+                <a class="menu-link" href="{{route('agency.tills')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Tills') }}</span>
                 </a>
 
-                <a class="menu-link"   href ="{{route('agency.networks')}}">
+                <a class="menu-link" href="{{route('agency.networks')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Networks') }}</span>
                 </a>
 
-                <a class="menu-link" href ="{{route('agency.loans')}}">
+                <a class="menu-link" href="{{route('agency.loans')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
@@ -86,9 +86,9 @@
 </div>
 
 <!-- Exchange Management -->
-<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2">
+<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('exchange')}}" >
     <!--begin:Menu link-->
-    <span class="menu-link menu-center">
+    <span class="menu-link menu-center" >
         <span class="menu-icon me-0">
             <i class="ki-outline ki-share fs-2x"></i>
         </span>
@@ -115,39 +115,40 @@
 
             <!--begin:Menu sub-->
             <div class="menu-sub menu-sub-accordion">
-                <a class="menu-link"   href ="/dashboard/agent/requests">
-                    <span class="menu-bullet">
-                        <span class="bullet bullet-dot"></span>
-                    </span>
-                    <span class="menu-title">{{ __('Requests') }}</span>
-                </a>
 
-                <a class="menu-link"  href ="/dashboard/agent/pending">
-                    <span class="menu-bullet">
-                        <span class="bullet bullet-dot"></span>
-                    </span>
-                    <span class="menu-title">{{ __('Pending') }}</span>
-                </a>
-
-                <a class="menu-link"  href ="/dashboard/agent/transaction">
-                    <span class="menu-bullet">
-                        <span class="bullet bullet-dot"></span>
-                    </span>
-                    <span class="menu-title">{{ __('Transaction') }}</span>
-                </a>
-
-                <a class="menu-link"  href ="/dashboard/agent/ads">
+                <a class="menu-link" href="{{route('exchange.ads')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Ads') }}</span>
                 </a>
 
-                <a class="menu-link"  href ="/dashboard/agent/security">
+                <a class="menu-link" href="{{route('exchange.transactions')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ __('Security') }}</span>
+                    <span class="menu-title">{{ __('Transactions') }}</span>
+                </a>
+
+                <a class="menu-link" href="{{route('exchange.posts')}}">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ __('Posts') }}</span>
+                </a>
+
+                <a class="menu-link" href="{{route('exchange.methods')}}">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ __('Payment Methods') }}</span>
+                </a>
+
+                <a class="menu-link" href="{{route('exchange.posts.create')}}">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{__('Create Ad')}}</span>
                 </a>
 
             </div>
@@ -159,7 +160,7 @@
 </div>
 
 <!-- VAS -->
-<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2">
+<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('vas')}}">
     <!--begin:Menu link-->
     <span class="menu-link menu-center">
         <span class="menu-icon me-0">
@@ -188,21 +189,21 @@
 
             <!--begin:Menu sub-->
             <div class="menu-sub menu-sub-accordion">
-                <a class="menu-link"  href ="/dashboard/agent/requests">
+                <a class="menu-link" href="/dashboard/agent/requests">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Available') }}
                     </span>
                 </a>
-                <a class="menu-link"  href ="/dashboard/agent/pending">
+                <a class="menu-link" href="/dashboard/agent/pending">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Tasks') }} <!--Ongoing-->
                     </span>
                 </a>
-                <a class="menu-link"  href ="/dashboard/agent/transaction">
+                <a class="menu-link" href="/dashboard/agent/transaction">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
@@ -218,7 +219,7 @@
 </div>
 
 <!-- Business Management -->
-<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2">
+<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('business')}}">
     <!--begin:Menu link-->
     <span class="menu-link menu-center">
         <span class="menu-icon me-0">
@@ -247,37 +248,37 @@
 
             <!--begin:Menu sub-->
             <div class="menu-sub menu-sub-accordion">
-                <a class="menu-link"  href ="/dashboard/vas/permission"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('business.subscription')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Account Subscription') }}</span>
                 </a>
-                <a class="menu-link"  href ="/dashboard/vas/permission"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('business.referrals')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Referrals',) }}</span>
                 </a>
-                <a class="menu-link"  href ="/dashboard/vas/permission"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('business.role')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Roles') }}</span>
                 </a>
-                <a class="menu-link"  href ="/dashboard/vas/users"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('business.users')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Users') }}</span>
                 </a>
-                <a class="menu-link"  href ="/dashboard/vas/payments"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('business.finance')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ __('Payments') }}</span>
+                    <span class="menu-title">{{ __('Finance') }}</span>
                 </a>
-                <a class="menu-link"  href ="/dashboard/vas/profile"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('business.profile.update')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Business Profile') }}</span>
                 </a>
-                <a class="menu-link"  href ="/dashboard/vas/profile"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('business.branches')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Branches') }}</span>
@@ -291,7 +292,7 @@
 </div>
 
 <!-- Reports -->
-<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2">
+<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('reports')}}">
     <!--begin:Menu link-->
     <span class="menu-link menu-center">
         <span class="menu-icon me-0">
@@ -320,35 +321,35 @@
 
             <!--begin:Menu sub-->
             <div class="menu-sub menu-sub-accordion">
-                <a class="menu-link"  href ="/dashboard/agent/requests">
+                <a class="menu-link" href="/dashboard/agent/requests">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Income') }}
                     </span>
                 </a>
-                <a class="menu-link"  href ="/dashboard/agent/pending">
+                <a class="menu-link" href="/dashboard/agent/pending">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Expenses') }}
                     </span>
                 </a>
-                <a class="menu-link"  href ="/dashboard/agent/transaction">
+                <a class="menu-link" href="/dashboard/agent/transaction">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Loans Analysis') }}
                     </span>
                 </a>
-                <a class="menu-link"  href ="/dashboard/agent/transaction">
+                <a class="menu-link" href="/dashboard/agent/transaction">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Tills Report') }}
                     </span>
                 </a>
-                <a class="menu-link"  href ="/dashboard/agent/transaction">
+                <a class="menu-link" href="/dashboard/agent/transaction">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>

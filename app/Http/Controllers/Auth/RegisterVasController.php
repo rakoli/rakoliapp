@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Actions\SendTelegramNotification;
 use App\Http\Controllers\Controller;
 use App\Models\Country;
-use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use App\Models\User;
 use App\Utils\Enums\UserTypeEnum;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
@@ -46,6 +46,7 @@ class RegisterVasController extends Controller
         $this->middleware('guest');
     }
 
+
     /**
      * Show the application registration form.
      *
@@ -59,6 +60,7 @@ class RegisterVasController extends Controller
     /**
      * Get a validator for an incoming registration request.
      *
+     * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
@@ -67,32 +69,31 @@ class RegisterVasController extends Controller
             'country_dial_code' => ['exists:countries,dialing_code'],
             'fname' => ['required', 'string', 'max:20'],
             'lname' => ['required', 'string', 'max:20'],
-            'phone' => ['required', 'numeric'],
+            'phone' => ['required','numeric'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            //   'g-recaptcha-response' => [new GoogleReCaptchaV3ValidationRule('register')],
         ];
-
-        return Validator::make($data, $validators);
+        if (env('APP_ENV') == 'production'){
+            $validators['g-recaptcha-response'] = [new GoogleReCaptchaV3ValidationRule('register')];
+        }
+        return Validator::make($data,$validators);
     }
 
     /**
      * Create a new user instance after a valid registration.
      *
+     * @param  array  $data
      * @return \App\Models\User
      */
     protected function create(array $data)
     {
-
-        $country_code = Country::where('dialing_code', $data['country_dial_code'])->first()->code;
-
+        $country_code = Country::where('dialing_code',$data['country_dial_code'])->first()->code;
         $country_dial_code = substr($data['country_dial_code'], 1);
         $plainPhone = substr($data['phone'], 1);
-        $fullPhone = $country_dial_code.$plainPhone;
-
+        $fullPhone = $country_dial_code . $plainPhone;
         return User::create([
             'country_code' => $country_code,
-            'code' => generateCode($data['fname'].' '.$data['lname'], $country_code),
+            'code' => generateCode($data['fname'].' '.$data['lname'],$country_code),
             'type' => UserTypeEnum::VAS->value,
             'fname' => $data['fname'],
             'lname' => $data['lname'],
@@ -104,11 +105,12 @@ class RegisterVasController extends Controller
 
     protected function registered(Request $request, $user)
     {
-        $message = "User Registration: A new $user->type user $user->fname $user->lname from $user->country_code. Registration process ongoing.";
+        setupSession($user,true);
 
-        SendTelegramNotification::dispatch($message);
-
-        setupSession($user, true);
+        if(env('APP_ENV') == 'production'){
+            $message = "User Registration: A new $user->type user $user->fname $user->lname from $user->country_code. Registration process ongoing.";
+            SendTelegramNotification::dispatch($message);
+        }
 
     }
 }

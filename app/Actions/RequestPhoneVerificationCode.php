@@ -2,10 +2,12 @@
 
 namespace App\Actions;
 
+use App\Mail\SendCodeMail;
 use App\Models\User;
 use App\Utils\SMS;
 use App\Utils\VerifyOTP;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class RequestPhoneVerificationCode
@@ -14,17 +16,17 @@ class RequestPhoneVerificationCode
 
     public function handle(User $user)
     {
-        if (VerifyOTP::shouldLockPhoneOTP($user)) {
+        if(VerifyOTP::shouldLockPhoneOTP($user)){
             return false;
         }
 
         $otp = VerifyOTP::generateOTPCode();
-        $minutes = (VerifyOTP::$validtime / 60);
-        $text = config('app.name').' verification code: '.$otp."\nValid for ".$minutes.' min.';
+        $minutes = (VerifyOTP::$validtime/60);
+        $text = config('app.name') . " verification code: ".$otp ."\nValid for ".$minutes." min." ;
 
-        if (env('APP_ENV') != 'local') {
+        if(env('APP_ENV') == 'production'){
             SMS::sendToUser($user, $text);
-        } else {
+        }else{
             Log::debug("SMS: $text");
         }
 

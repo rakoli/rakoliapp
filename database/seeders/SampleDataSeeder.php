@@ -11,18 +11,22 @@ class SampleDataSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([
-            SampleBusinessSeeder::class,
-            SampleSystemIncomeSeeder::class,
-            SampleExchangeAdsSeeder::class,
-            SampleVasTaskSeeder::class,
-            SampleVasContractSeeder::class,
-            SampleVasPaymentSeeder::class,
-            SampleVasSubmissionSeeder::class,
-            SampleTransactionSeeder::class,
-            SampleNetworkSeeder::class,
-            SampleShiftSeeder::class,
-            SampleExchangeTransactionSeeder::class,
-        ]);
+        if (env('APP_ENV') != 'production'){
+            $this->call([
+                SampleBusinessSeeder::class,
+                SampleReferralBusinessSeeder::class,
+                SampleSystemIncomeSeeder::class,
+//            SampleExchangeAdsSeeder::class, //In Business Seeder, PUT OF FOR OTHER TESTINGS
+                SampleVasTaskSeeder::class,
+                SampleVasContractSeeder::class,
+                SampleVasPaymentSeeder::class,
+                SampleVasSubmissionSeeder::class,
+                SampleTransactionSeeder::class,
+                SampleNetworkSeeder::class,
+                SampleShiftSeeder::class,
+//            SampleExchangeTransactionSeeder::class, //In Business Seeder
+            ]);
+        }
+
     }
 }

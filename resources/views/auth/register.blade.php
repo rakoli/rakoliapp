@@ -98,6 +98,14 @@
             <!--end::Repeat Password-->
         </div>
         <!--end::Input group=-->
+        @if($hasReferral)
+            <div class="fv-row mb-8">
+                <!--begin::Hint-->
+                <div class="text-muted">{{ __("You have been referred by")." \"$referrerName\"" }}</div>
+                <!--end::Hint-->
+            </div>
+            <input name="referral_business_code" type="hidden" value="{{$referrer}}" />
+        @endif
         <!--begin::Accept-->
         <div class="fv-row mb-8">
             <label class="form-check form-check-inline">
