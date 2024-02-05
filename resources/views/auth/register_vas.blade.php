@@ -56,7 +56,7 @@
                 </div>
                 <div class="fv-row flex-row-fluid">
                     <!--begin::Input-->
-                    <input class="form-control bg-transparent" name="phone" placeholder="07XX..." value="" />
+                    <input class="form-control bg-transparent" name="phone" placeholder="07XX..." value="" maxlength="10"/>
                     <!--end::Input-->
                 </div>
             </div>
