@@ -203,7 +203,7 @@ function currencyCode(): ?string
     return env('DEFAULT_CURRENCY');
 }
 
-function runDatabaseTransaction(\Closure $closure)
+function runDatabaseTransaction(\Closure $closure) : mixed
 {
     DB::beginTransaction();
 

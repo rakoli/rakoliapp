@@ -20,52 +20,36 @@ class AddExpenseTransaction
      *
      * @throws \Throwable
      */
-    public function handle(Shift $shift, array $data): void
+    public function handle(Shift $shift, array $data): mixed
     {
 
-        try {
+       return runDatabaseTransaction(function () use ($shift, $data) {
+               $location = Location::query()->where('code', $shift->location_code)->first();
 
-            DB::beginTransaction();
+               $balance =  $location->balance;
 
+               Transaction::create([
+                   'business_code' => $shift->business_code,
+                   'location_code' => $shift->location_code,
+                   'user_code' => auth()->user()->code,
+                   'amount' => $data['amount'],
+                   'amount_currency' => currencyCode(),
+                   'type' => $data['type'],
+                   'category' => $data['category'],
+                   'balance_old' => $balance,
+                   'balance_new' => $balance - $data['amount'],
+                   'description' => $data['description'] ?? null,
+                   'note' => $data['notes'] ?? null,
+               ]);
+               $location->updateQuietly([
+                   'balance' => $balance - $data['amount'],
+               ]);
+               $shift->updateQuietly([
+                   'cash_end' => $shift->cash_end - $data['amount']
+               ]);
 
-            $location = Location::query()->where('code', $shift->location_code)->first();
-
-            $balance =  $location->balance;
-
-            Transaction::create([
-                'business_code' => $shift->business_code,
-                'location_code' => $shift->location_code,
-                'user_code' => auth()->user()->code,
-                'amount' => $data['amount'],
-                'amount_currency' => currencyCode(),
-                'type' => $data['type'],
-                'category' => $data['category'],
-                'balance_old' => $balance,
-                'balance_new' => $balance - $data['amount'],
-                'description' => $data['description'] ?? null,
-                'note' => $data['notes'] ?? null,
-            ]);
-
-
-            $location->updateQuietly([
-                'balance' => $balance - $data['amount'],
-            ]);
-
-
-            $shift->updateQuietly([
-                'cash_end' => $shift->cash_end - $data['amount']
-            ]);
-
-
-
-            event(new LocationBalanceUpdate(location: $location , amount: $data['amount']));
-
-
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            throw new \Exception($e->getMessage());
-        }
+               event(new LocationBalanceUpdate(location: $location , amount: $data['amount']));
+       });
 
     }
 }
