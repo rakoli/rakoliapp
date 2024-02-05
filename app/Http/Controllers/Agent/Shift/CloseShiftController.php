@@ -50,14 +50,18 @@ class CloseShiftController extends Controller
             'location_code' => 'required',
             'notes' => 'nullable',
             'description' => 'required',
+            'tills' => 'required',
         ]);
 
         try {
 
             \App\Actions\Agent\Shift\CloseShift::run(
-                closingBalance: $validated['closing_balance'],
+                closingCash: $validated['closing_balance'],
                 locationCode: $validated['location_code'],
+                description: $validated['description'],
                 notes: $validated['notes'],
+                tills: $validated['tills'],
+
             );
 
             return response()

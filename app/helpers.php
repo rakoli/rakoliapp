@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Models\ShiftTransaction;
 use App\Models\User;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Illuminate\Support\Facades\DB;
@@ -211,6 +212,36 @@ function currencyCode(): ?string
     return env('DEFAULT_CURRENCY');
 }
 
+
+function shiftBalances(\App\Models\Shift $shift)
+{
+    $cash =  $shift->loadMissing('location')->location->balance;
+
+    $tillBalances = ShiftTransaction::select(
+        'st.*',
+        DB::raw('(SELECT ROW_NUMBER() OVER (PARTITION BY network_code ORDER BY created_at DESC) FROM shift_transactions WHERE network_code = st.network_code) AS RowNum')
+    )
+        ->from('shift_transactions as st')
+        ->where('st.shift_id', $shift->id)
+        ->whereRaw('(SELECT ROW_NUMBER() OVER (PARTITION BY network_code ORDER BY created_at DESC) FROM shift_transactions WHERE network_code = st.network_code) = 1')
+        ->sum('balance_new');
+
+    $expenses = \App\Models\Transaction::query()
+        ->where([
+            'location_code' => $shift->location_code,
+            'user_code' => $shift->user_code,
+            'category' => \App\Utils\Enums\TransactionCategoryEnum::EXPENSE,
+        ])
+        ->whereDate('created_at', $shift->created_at)
+        ->sum('amount');
+
+
+    return [
+        'totalBalance' =>  $cash + $expenses + $tillBalances,
+        'cashAtHand'  =>   $cash,
+        'tillBalances' => $tillBalances
+    ];
+}
 function runDatabaseTransaction(\Closure $closure): mixed
 {
     DB::beginTransaction();
@@ -224,6 +255,9 @@ function runDatabaseTransaction(\Closure $closure): mixed
 
         return $result; // Return the result of the closure if needed
     } catch (\Exception $exception) {
+
+
+
         // If an exception occurs, rollback the transaction
         DB::rollback();
 

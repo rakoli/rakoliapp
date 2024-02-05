@@ -58,9 +58,9 @@
                         <div class="d-flex align-items-center  ">
 
                             <div class="fw-semibold counted  fs-xl-1 text-primary" data-kt-countup="true"
-                                 data-kt-countup-value="{{ number_format($totalBalance  - $shift->cash_end , 2) }}"
+                                 data-kt-countup-value="{{ number_format($tillBalances , 2) }}"
                                  data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">
-                                {{ Illuminate\Support\Number::currency($totalBalance - $shift->cash_end, currencyCode()) }}
+                                {{ Illuminate\Support\Number::currency($tillBalances, currencyCode()) }}
                             </div>
                         </div>
                         <!--end::Number-->
@@ -77,9 +77,9 @@
                         <div class="d-flex align-items-center">
 
                             <div class="fs-2 fw-semibold fs-10 counted" data-kt-countup="true"
-                                 data-kt-countup-value="{{ number_format($shift->cash_end , 2) }}"
+                                 data-kt-countup-value="{{ number_format($cashAtHand , 2) }}"
                                  data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">
-                                {{ Illuminate\Support\Number::currency($shift->cash_end , currencyCode()) }}
+                                {{ Illuminate\Support\Number::currency($cashAtHand , currencyCode()) }}
                             </div>
                         </div>
                         <!--end::Number-->

@@ -24,7 +24,7 @@ class ShiftDatatable implements HasDatatable
                 $query->skip(request('start'))->take(request('length'));
             })
             ->order(function ($query) {
-                return $query->orderBy('status', 'desc');
+                return $query->orderBy('no', 'desc');
             })
             ->addIndexColumn()
             ->addColumn('created_at', fn (Shift $shift) => $shift->created_at->format('Y-F-d'))
