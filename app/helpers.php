@@ -193,6 +193,15 @@ function idNumberDisplay($number)
     return str_pad("$number", 5,'0',STR_PAD_LEFT);
 }
 
+function currencyCode(): ?string
+{
+
+    if (\session()->has('currency')) {
+        return \session('currency');
+    }
+
+    return env('DEFAULT_CURRENCY');
+}
 
 function runDatabaseTransaction(\Closure $closure)
 {
