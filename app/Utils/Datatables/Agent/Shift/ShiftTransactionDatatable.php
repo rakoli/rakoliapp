@@ -66,7 +66,7 @@ class ShiftTransactionDatatable implements HasDatatable
                 Column::make('network_name')->title(__('network')),
                 Column::make('transaction_type')->title(__('Type'))->orderable(),
             ])
-           // ->lengthMenu([[5, 10, 25, -1], [5, 10, 25, "All"]])
+            ->lengthMenu([[5, 10, 20, -1], [5, 10, 20, "All"]])
             ->orderBy(0);
     }
 }
