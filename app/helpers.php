@@ -3,6 +3,9 @@
 declare(strict_types=1);
 
 use App\Models\User;
+use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
 if (!function_exists('settings')) {
@@ -188,4 +191,59 @@ function tradeOrderInvence($type) : string
 function idNumberDisplay($number)
 {
     return str_pad("$number", 5,'0',STR_PAD_LEFT);
+}
+
+
+function runDatabaseTransaction(\Closure $closure)
+{
+    DB::beginTransaction();
+
+    try {
+        // Execute the provided closure
+        $result = $closure();
+
+        // If the closure execution is successful, commit the transaction
+        DB::commit();
+
+        return $result; // Return the result of the closure if needed
+    } catch (\Exception $exception) {
+        // If an exception occurs, rollback the transaction
+        DB::rollback();
+
+        // Log the exception
+        Log::debug("ERROR: " . $exception->getMessage());
+
+        // Notify Bugsnag about the exception
+        Bugsnag::notifyException($exception);
+
+        return false; // Return false or handle the error as needed
+
+        // Example usage with variables
+//        $userId = 1;
+//        $newEmail = 'newemail@example.com';
+//
+//        $result = runDatabaseTransaction(function () use ($userId, $newEmail) {
+//            // Access variables passed to the closure
+//            // Perform database actions using $userId and $newEmail
+//
+//            // Example: Update user email
+//            $user = User::find($userId);
+//            $user->email = $newEmail;
+//            $user->save();
+//
+//            return true; // Return any result if needed
+//        });
+//
+//        if ($result !== false) {
+//            // Transaction was successful
+//            // Handle the result if needed
+//            echo "Transaction successful!";
+//        } else {
+//            // Transaction failed
+//            // Handle the failure or error
+//            echo "Transaction failed!";
+//        }
+    }
+
+
 }

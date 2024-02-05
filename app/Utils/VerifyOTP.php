@@ -4,6 +4,7 @@ namespace App\Utils;
 
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
 use function Laravel\Prompts\select;
 
 class VerifyOTP
@@ -15,6 +16,9 @@ class VerifyOTP
 
     public static function generateOTPCode(){
         return random_int(100000, 999999);
+    }
+    public static function generateTemporaryPassword(){
+        return random_int(10000000, 99999999);
     }
 
     public static function emailOTPTimePassed(User $user)
@@ -87,4 +91,8 @@ class VerifyOTP
         return false;
     }
 
+    public static function generateHashedPassword($password)
+    {
+        return Hash::make($password);
+    }
 }

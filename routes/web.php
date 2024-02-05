@@ -12,6 +12,10 @@ Route::get('testing', [\App\Http\Controllers\TestController::class, 'testing']);
 Auth::routes();
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard')->middleware(['should_complete_registration']);
 Route::get('home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware(['should_complete_registration']);
+Route::get('profile', [App\Http\Controllers\HomeController::class, 'profile'])->name('profile')->middleware(['should_complete_registration']);
+Route::post('profile/submit', [App\Http\Controllers\HomeController::class, 'profileSubmit'])->name('profile.submit')->middleware(['should_complete_registration']);
+Route::get('changepassword', [App\Http\Controllers\HomeController::class, 'changepassword'])->name('changepassword');
+Route::post('changepassword/submit', [App\Http\Controllers\HomeController::class, 'changepasswordSubmit'])->name('changepassword.submit');
 Route::get('logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
 //REGISTRATION ROUTES
@@ -29,6 +33,8 @@ Route::get('pay/test/{reference}', [App\Http\Controllers\PaymentProcessingContro
 Route::get('register/vas', [App\Http\Controllers\Auth\RegisterVasController::class, 'showRegistrationForm'])->name('register.vas');
 Route::post('register/vas/submit', [App\Http\Controllers\Auth\RegisterVasController::class, 'register'])->name('register.vas.submit');
 Route::get('registration/vas', [App\Http\Controllers\RegistrationStepController::class, 'registrationVas'])->name('registration.vas');
+
+Route::get('r/{businessCode}', [App\Http\Controllers\Auth\RegisterController::class, 'referral'])->name('referral.link');
 
 //LANGUAGE SWITCHER
 Route::get('lang/switch', [LanguageController::class, 'languageSwitch'])->name('languageSwitch');

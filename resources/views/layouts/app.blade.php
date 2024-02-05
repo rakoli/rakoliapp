@@ -657,10 +657,10 @@
                                         </div>
                                         <div class="separator my-2"></div>
                                         <div class="menu-item px-5">
-                                            <a href="account/overview.html" class="menu-link px-5">{{ __('Profile') }}</a>
+                                            <a href="{{route('profile')}}" class="menu-link px-5">{{ __('Profile') }}</a>
                                         </div>
                                         <div class="menu-item px-5">
-                                            <a href="account/overview.html" class="menu-link px-5">{{ __('Change Password') }}</a>
+                                            <a href="{{route('changepassword')}}" class="menu-link px-5">{{ __('Change Password') }}</a>
                                         </div>
                                         <div class="separator my-2"></div>
                                             <div class="menu-item px-5"

@@ -248,37 +248,37 @@
 
             <!--begin:Menu sub-->
             <div class="menu-sub menu-sub-accordion">
-                <a class="menu-link" href="/dashboard/vas/permission"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('business.subscription')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Account Subscription') }}</span>
                 </a>
-                <a class="menu-link" href="/dashboard/vas/permission"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('business.referrals')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Referrals',) }}</span>
                 </a>
-                <a class="menu-link" href="/dashboard/vas/permission"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('business.role')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Roles') }}</span>
                 </a>
-                <a class="menu-link" href="/dashboard/vas/users"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('business.users')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Users') }}</span>
                 </a>
-                <a class="menu-link" href="/dashboard/vas/payments"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('business.finance')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ __('Payments') }}</span>
+                    <span class="menu-title">{{ __('Finance') }}</span>
                 </a>
-                <a class="menu-link" href="/dashboard/vas/profile"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('business.profile.update')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Business Profile') }}</span>
                 </a>
-                <a class="menu-link" href="/dashboard/vas/profile"><span class="menu-bullet">
+                <a class="menu-link" href="{{route('business.branches')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Branches') }}</span>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Business;
+use App\Models\BusinessWithdrawMethod;
 use App\Models\ExchangeAds;
 use App\Models\ExchangeTransaction;
 use App\Models\Location;
@@ -23,6 +24,8 @@ use App\Utils\StatisticsService;
 use Carbon\Carbon;
 use DebugBar\DebugBar;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 use Yajra\DataTables\DataTables;
 use Yajra\DataTables\Html\Builder;
 
@@ -185,6 +188,65 @@ class HomeController extends Controller
         }
 
         return 'INVALID DASHBOARD REQUEST';
+    }
+
+    public function changepassword(Request $request)
+    {
+        return view('auth.changepassword');
+    }
+
+    public function changepasswordSubmit(Request $request)
+    {
+        $this->validate($request, [
+            'current_password' => 'required|current_password',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user = auth()->user();
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        return redirect()->route('home')->with('message', 'Password changed successfully');
+    }
+
+    public function profile(Request $request)
+    {
+        $user = auth()->user();
+
+        return view('auth.profile', compact('user'));
+    }
+
+    public function profileSubmit(Request $request)
+    {
+        $user = auth()->user();
+        $validationRules = [
+            'fname' => 'required|string',
+            'lname' => 'required|string',
+        ];
+        if($user->email_verified_at == null){
+            $validationRules['email'] = 'required|email|unique:users,email';
+        }
+        if($user->phone_verified_at == null){
+            $validationRules['phone'] = 'required|numeric';
+        }
+
+        $this->validate($request, $validationRules);
+
+        $user->fname = $request->fname;
+        $user->lname = $request->lname;
+        Session::put('name', $user->name());
+        if($user->email_verified_at == null){
+            $user->email = $request->email;
+            Session::put('email', $user->email);
+        }
+        if($user->phone_verified_at === null){
+            $user->phone = $request->phone;
+            Session::put('phone', $user->phone);
+        }
+        $user->save();
+
+
+        return redirect()->route('home')->with('message', 'Profile Edited Successfully');
     }
 
 }
