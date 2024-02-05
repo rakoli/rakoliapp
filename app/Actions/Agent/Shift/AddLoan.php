@@ -29,9 +29,6 @@ class AddLoan
 
         return  runDatabaseTransaction(function () use ($shift , $data) {
 
-
-
-
                 throw_if(condition: $shift->status  != ShiftStatusEnum::OPEN,
                     exception: new \Exception('You cannot transact without an open shift')
                 );
