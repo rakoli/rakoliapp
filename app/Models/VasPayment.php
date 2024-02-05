@@ -10,19 +10,18 @@ class VasPayment extends Model
 {
     use HasFactory;
 
-    public function contract() : BelongsTo
+    public function contract(): BelongsTo
     {
-        return $this->belongsTo(VasContract::class,'vas_contract_code','code');
+        return $this->belongsTo(VasContract::class, 'vas_contract_code', 'code');
     }
 
-    public function payee() : BelongsTo
+    public function payee(): BelongsTo
     {
-        return $this->belongsTo(Business::class,'payee_business_code','code');
+        return $this->belongsTo(Business::class, 'payee_business_code', 'code');
     }
 
-    public function user() : BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'initiator_code', 'code');
     }
-
 }

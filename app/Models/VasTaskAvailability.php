@@ -10,14 +10,13 @@ class VasTaskAvailability extends Model
 {
     use HasFactory;
 
-    public function business() : BelongsTo
+    public function business(): BelongsTo
     {
         return $this->belongsTo(Business::class, 'agent_code', 'code');
     }
 
-    public function vas_task() : BelongsTo
+    public function vas_task(): BelongsTo
     {
         return $this->belongsTo(VasTask::class, 'vas_task_code', 'code');
     }
-
 }

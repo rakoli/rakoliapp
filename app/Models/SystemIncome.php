@@ -33,5 +33,4 @@ class SystemIncome extends Model
     {
         return $this->belongsTo(Country::class, 'country_code', 'code');
     }
-
 }

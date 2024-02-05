@@ -22,6 +22,9 @@
     <script>
         // Frame-busting to prevent site from being loaded within a frame without permission (click-jacking) if (window.top != window.self) { window.top.location.replace(window.self.location.href); }
     </script>
+
+
+    @stack('styles')
 </head>
 
 <body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed toolbar-enabled toolbar-fixed aside-enabled aside-fixed">
@@ -832,7 +835,64 @@
     <script src="{{ asset('assets/js/scripts.bundle.js') }}"></script>
     <script src="{{ asset('assets/js/language.js') }}"></script>
 
+    <script>
+        const SwalModal = (icon, title, html) => {
+            Swal.fire({
+                icon,
+                title,
+                html,
+                showClass: {
+                    popup: 'animate__animated animate__fadeInDown'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOutUp'
+                }
+            })
+        }
+        const SwalConfirm = (icon, title, html, confirmButtonText) => {
+            Swal.fire({
+                icon,
+                title,
+                html,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText,
+                reverseButtons: true,
+                showClass: {
+                    popup: 'animate__animated animate__fadeInDown'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOutUp'
+                }
+            })
+        }
+
+        const SwalInput = (title,input,inputLabel,inputPlaceholder) => {
+
+            Swal.fire({
+                title: title,
+                input: input,
+                inputLabel:  inputLabel,
+                inputPlaceholder: inputPlaceholder
+            })
+
+        }
+
+        const SwalAlert = (icon, title, timeout = 7000) => {
+            Swal.fire({
+                text: title,
+                icon: icon,
+                buttonsStyling: false,
+                timeout: title
+            });
+        }
+
+    </script>
+
     @yield('footer_js')
+    @stack('js')
+
 </body>
 
 </html>

@@ -16,7 +16,9 @@ class SendCodeMail extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
 
     public User $receiver;
+
     public $minutes;
+
     public $code;
 
     /**
@@ -25,10 +27,10 @@ class SendCodeMail extends Mailable implements ShouldQueue
     public function __construct(User $user, $code = null)
     {
         $this->receiver = $user;
-        $this->minutes = VerifyOTP::$validtime/60;
+        $this->minutes = VerifyOTP::$validtime / 60;
         if ($code != null) {
             $this->code = $code;
-        }else{
+        } else {
             $this->code = $user->getEmailOTPCode();
         }
     }

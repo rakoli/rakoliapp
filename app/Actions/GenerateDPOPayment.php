@@ -24,14 +24,15 @@ class GenerateDPOPayment
             'customerDialCode' => $tokenRequest->customerDialCode,
             'customerPhone' => $tokenRequest->customerPhone,
             'customerEmail' => $tokenRequest->customerEmail,
-            'companyRef' => $tokenRequest->companyRef
+            'companyRef' => $tokenRequest->companyRef,
         ];
         $token = $dpo->createToken($data, $serviceType); // return array of response with transaction code
-        if($token['success'] == false){
+        if ($token['success'] == false) {
             return $token;
         }
-//        Log::debug($token);
+        //        Log::debug($token);
         $urlResult = $dpo->getPaymentUrlWithoutVerifyToken($token);
+
         return $urlResult;
     }
 }

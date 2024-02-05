@@ -34,7 +34,7 @@ return new class extends Migration
 
             $table->timestamps();
 
-            $table->unique(['user_code','location_code'],'u_user_lo');
+            $table->unique(['user_code', 'location_code'], 'u_user_lo');
         });
     }
 

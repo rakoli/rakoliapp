@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Utils\Enums\InitiatedPaymentStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,6 +10,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class InitiatedPayment extends Model
 {
     use HasFactory;
+
+    protected $casts = [
+        'status' => InitiatedPaymentStatusEnum::class,
+    ];
 
     protected $fillable = [
         'country_code',
@@ -26,13 +31,13 @@ class InitiatedPayment extends Model
         'channel_ref',
     ];
 
-    public function country() : BelongsTo
+    public function country(): BelongsTo
     {
-        return $this->belongsTo(Country::class,'country_code','code');
+        return $this->belongsTo(Country::class, 'country_code', 'code');
     }
 
-    public function business() : BelongsTo
+    public function business(): BelongsTo
     {
-        return $this->belongsTo(Business::class,'business_code','code');
+        return $this->belongsTo(Business::class, 'business_code', 'code');
     }
 }

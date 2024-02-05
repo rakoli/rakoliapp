@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('vas_tasks', function (Blueprint $table) {
             $table->id();
 
-
             $table->string('country_code');
             $table->foreign('country_code')->references('code')
                 ->on('countries')
@@ -34,7 +33,6 @@ return new class extends Migration
 
             $table->string('description');
             $table->text('note')->nullable()->invisible();
-
 
             $table->string('task_type')->default(\App\Utils\Enums\TaskTypeEnum::DATA->value);
 

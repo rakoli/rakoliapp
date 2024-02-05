@@ -4,20 +4,19 @@
         <!--begin::Heading-->
         <div class="pb-8 pb-lg-10">
             <!--begin::Title-->
-            <h2 class="fw-bold text-dark">Your Are Done!</h2>
+            <h2 class="fw-bold text-dark">{{ __('Your Are Done!') }}</h2>
             <!--end::Title-->
-            <!--begin::Notice-->
-            <div class="text-muted fw-semibold fs-6">If you need more info, please
-                <a href="../../demo6/dist/.html" class="link-primary fw-bold">Sign In</a>.</div>
-            <!--end::Notice-->
+
         </div>
         <!--end::Heading-->
         <!--begin::Body-->
         <div class="mb-0">
             <!--begin::Text-->
-            <div class="fs-6 text-gray-600 mb-5">Writing headlines for blog posts is as much an art as it is a science and probably warrants its own post, but for all advise is with what works for your great & amazing audience.</div>
+            <div class="fs-6 text-gray-600 mb-5">
+                {{ __("Welcome to Rakoli, your strategic ally in advancing your business! We're excited to join forces. Kindly note that your account is pending approval, and upon successful verification of your legal documents, you'll gain full access. Post-approval, you can seamlessly advertise your services on Rakoli and even hire from our registered agent network. Your success journey begins here!") }}
+            </div>
             <!--end::Text-->
-            <!--begin::Alert-->
+           {{-- <!--begin::Alert-->
             <!--begin::Notice-->
             <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6">
                 <!--begin::Icon-->
@@ -36,7 +35,7 @@
                 <!--end::Wrapper-->
             </div>
             <!--end::Notice-->
-            <!--end::Alert-->
+            <!--end::Alert-->--}}
         </div>
         <!--end::Body-->
     </div>

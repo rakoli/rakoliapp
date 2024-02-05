@@ -2,11 +2,10 @@
 
 namespace App\Utils\Enums;
 
-enum TaskTypeEnum : string
+enum TaskTypeEnum: string
 {
-
-    case DATA = "data";
-    case SALES = "sales";
-    case VERIFICATION = "verification";
+    case DATA = 'data';
+    case SALES = 'sales';
+    case VERIFICATION = 'verification';
 
 }

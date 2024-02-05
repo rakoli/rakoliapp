@@ -19,7 +19,7 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->string('category');
-            $table->decimal('amount', 12,2)->default('0.00');
+            $table->decimal('amount', 12, 2)->default('0.00');
             $table->string('amount_currency');
             $table->string('channel');
             $table->string('channel_reference');

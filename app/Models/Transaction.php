@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use App\Models\Scopes\BusinessScoped;
-use App\Models\Scopes\LocationScoped;
-use Database\Factories\SystemIncomeFactory;
+use App\Utils\Enums\TransactionCategoryEnum;
+use App\Utils\Enums\TransactionTypeEnum;
 use Database\Factories\TransactionsFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,6 +13,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Transaction extends Model
 {
     use HasFactory;
+
+    protected $guarded = [
+        'id',
+    ];
+
+    protected $casts = [
+        'type' => TransactionTypeEnum::class,
+        'category' => TransactionCategoryEnum::class,
+    ];
 
     protected static function newFactory(): Factory
     {
@@ -30,9 +38,8 @@ class Transaction extends Model
         return $this->belongsTo(User::class, 'user_code', 'code');
     }
 
-    public function business() :BelongsTo
+    public function business(): BelongsTo
     {
         return $this->belongsTo(Business::class, 'business_code', 'code');
     }
-
 }

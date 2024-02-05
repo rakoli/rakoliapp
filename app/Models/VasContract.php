@@ -11,44 +11,43 @@ class VasContract extends Model
 {
     use HasFactory;
 
-    public function business() : BelongsTo
+    public function business(): BelongsTo
     {
         return $this->belongsTo(Business::class, 'vas_business_code', 'code');
     }
 
-    public function country() : BelongsTo
+    public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class, 'country_code', 'code');
     }
 
-    public function vas_task() : BelongsTo
+    public function vas_task(): BelongsTo
     {
         return $this->belongsTo(VasTask::class, 'vas_task_code', 'code');
     }
 
-    public function vas_chats() : HasMany
+    public function vas_chats(): HasMany
     {
         return $this->hasMany(VasChat::class, 'vas_contract_code', 'code');
     }
 
-    public function vas_contract_resources() : HasMany
+    public function vas_contract_resources(): HasMany
     {
         return $this->hasMany(VasContractResource::class, 'vas_contract_code', 'code');
     }
 
-    public function vas_feedbacks() : HasMany
+    public function vas_feedbacks(): HasMany
     {
         return $this->hasMany(VasFeedback::class, 'vas_contract_code', 'code');
     }
 
-    public function vas_payments() : HasMany
+    public function vas_payments(): HasMany
     {
         return $this->hasMany(VasPayment::class, 'vas_contract_code', 'code');
     }
 
-    public function vas_submissions() : HasMany
+    public function vas_submissions(): HasMany
     {
         return $this->hasMany(VasSubmission::class, 'vas_contract_code', 'code');
     }
-
 }

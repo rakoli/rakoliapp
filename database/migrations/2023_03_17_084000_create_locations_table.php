@@ -20,7 +20,7 @@ return new class extends Migration
                 ->onUpdate('cascade');
             $table->string('code')->unique();
             $table->string('name')->index();
-            $table->decimal('balance',12,2)->default(0);
+            $table->decimal('balance', 12, 2)->default(0);
             $table->string('balance_currency');
 
             $table->string('region_code')->nullable();

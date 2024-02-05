@@ -31,7 +31,6 @@ return new class extends Migration
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
-
             $table->string('network_code');
             $table->foreign('network_code')->references('code')
                 ->on('networks')
@@ -47,7 +46,7 @@ return new class extends Migration
             $table->string('code')->unique();
             $table->string('type'); // enum <in, out>
             $table->string('status'); // enum  <un paid, partial, full paid>;
-            $table->decimal('amount' , 12, 2);
+            $table->decimal('amount', 12, 2);
             $table->string('description')->nullable();
             $table->text('note')->invisible()->nullable();
             $table->timestamps();

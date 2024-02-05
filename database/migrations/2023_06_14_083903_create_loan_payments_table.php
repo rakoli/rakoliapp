@@ -25,7 +25,7 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->decimal('amount', 12 , 2);
+            $table->decimal('amount', 12, 2);
 
             $table->string('description')->nullable();
 
@@ -34,7 +34,6 @@ return new class extends Migration
             $table->string('payment_method')->nullable();
 
             $table->date('deposited_at')->nullable();
-
 
             $table->timestamps();
         });

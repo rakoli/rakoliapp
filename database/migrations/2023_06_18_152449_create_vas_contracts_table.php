@@ -43,7 +43,6 @@ return new class extends Migration
             $table->dateTime('time_start');
             $table->dateTime('time_end')->nullable();
 
-
             $table->text('title');
             $table->text('notes')->nullable()->invisible();
 
