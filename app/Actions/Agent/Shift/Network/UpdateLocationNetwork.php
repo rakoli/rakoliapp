@@ -16,23 +16,22 @@ class UpdateLocationNetwork
      */
     public function handle(Network $network, array $data): Network
     {
-        try {
 
-            $network->updateQuietly([
-                'location_code' => $data['location_code'],
-                'fsp_code' => $data['fsp_code'],
-                'agent_no' => $data['agent_no'],
-                'balance' => $data['balance'],
-                'balance_currency' => currencyCode(),
-                'name' => $data['name'],
-                'description' => $data['description'] ?? null,
-            ]);
+        return runDatabaseTransaction(function () use ($network, $data){
 
-            return $network;
+                $network->updateQuietly([
+                    'location_code' => $data['location_code'],
+                    'fsp_code' => $data['fsp_code'],
+                    'agent_no' => $data['agent_no'],
+                    'balance' => $data['balance'],
+                    'balance_currency' => currencyCode(),
+                    'name' => $data['name'],
+                    'description' => $data['description'] ?? null,
+                ]);
+                return $network;
 
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
-        }
+        });
+
 
     }
 }

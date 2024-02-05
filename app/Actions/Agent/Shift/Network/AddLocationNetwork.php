@@ -11,13 +11,14 @@ class AddLocationNetwork
     use AsAction;
 
     /**
-     * @param  array{location_code:string , fsp_code:string,name:string , agent_no: string , balance:float , description: ?string }  $data
+     * @param array{location_code:string , fsp_code:string,name:string , agent_no: string , balance:float , description: ?string } $data
      *
      * @throws \Throwable
      */
-    public function handle(array $data): void
+    public function handle(array $data): mixed
     {
-        try {
+
+        return runDatabaseTransaction(function () use ($data) {
 
             $networkCheck = Network::query()
                 ->where([
@@ -42,10 +43,8 @@ class AddLocationNetwork
             ]);
 
             event(new NetworkCreatedEvent(network: $network));
+        });
 
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
-        }
 
     }
 }
