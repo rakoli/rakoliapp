@@ -4,10 +4,8 @@ namespace App\Utils\Datatables\Agent\Shift;
 
 use App\Models\Loan;
 use App\Models\Shift;
-use App\Models\ShiftTransaction;
 use App\Utils\Datatables\LakoriDatatable;
 use App\Utils\HasDatatable;
-use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 use Yajra\DataTables\Html\Column;
@@ -18,7 +16,6 @@ class ShiftLoansDatatable implements HasDatatable
 
     public function index(Shift $shift, bool $isToday = false): \Illuminate\Http\JsonResponse
     {
-
 
         $loans = Loan::query()
             ->whereBelongsTo($shift, 'shift')
@@ -59,15 +56,15 @@ class ShiftLoansDatatable implements HasDatatable
 
                 'pay' => [
                     'route' => route('agency.loans.show', [
-                        "shift" => $shift,
-                        "loan" => $loan
+                        'shift' => $shift,
+                        'loan' => $loan,
                     ]),
                     'attributes' => '',
                 ],
             ]))
             ->addColumn('amount', fn (Loan $record) => money($record->amount, currencyCode(), true))
             ->addColumn('balance', fn (Loan $record) => money($record->balance, currencyCode(), true))
-            ->rawColumns(['balance','status','type','action'])
+            ->rawColumns(['balance', 'status', 'type', 'action'])
             ->toJson();
     }
 

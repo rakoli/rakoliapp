@@ -18,16 +18,17 @@ class ExchangeBusinessMethod extends Model
         'account_name',
     ];
 
-    public function business() : BelongsTo
+    public function business(): BelongsTo
     {
         return $this->belongsTo(Business::class, 'business_code', 'code');
     }
 
     public function isUserAllowed(User $user)
     {
-        if($user->business_code == $this->business_code){
+        if ($user->business_code == $this->business_code) {
             return true;
         }
+
         return false;
 
     }

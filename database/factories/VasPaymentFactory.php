@@ -6,7 +6,6 @@ use App\Models\Business;
 use App\Models\User;
 use App\Models\VasContract;
 use App\Models\VasPayment;
-use App\Utils\Enums\BusinessTypeEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -24,36 +23,35 @@ class VasPaymentFactory extends Factory
      */
     public function definition(): array
     {
-        $businesses = Business::where('type',\App\Utils\Enums\BusinessTypeEnum::VAS->value)->get('code')->toArray();
+        $businesses = Business::where('type', \App\Utils\Enums\BusinessTypeEnum::VAS->value)->get('code')->toArray();
         $businessCode = null;
-        if(empty($businesses)){
-            $businessCode = Business::factory()->create(['type'=>\App\Utils\Enums\BusinessTypeEnum::VAS->value])->code;
-        }else{
+        if (empty($businesses)) {
+            $businessCode = Business::factory()->create(['type' => \App\Utils\Enums\BusinessTypeEnum::VAS->value])->code;
+        } else {
             $businessCode = fake()->randomElement($businesses)['code'];
         }
 
-        $contracts = VasContract::where('vas_business_code',$businessCode)->get('code')->toArray();
+        $contracts = VasContract::where('vas_business_code', $businessCode)->get('code')->toArray();
         $contractCode = null;
-        if(empty($contracts)){
-            $contractCode = VasContract::factory()->create(['vas_business_code'=>$businessCode])->code;
-        }else{
+        if (empty($contracts)) {
+            $contractCode = VasContract::factory()->create(['vas_business_code' => $businessCode])->code;
+        } else {
             $contractCode = fake()->randomElement($contracts)['code'];
         }
 
-        $initiatorUsers = User::where('business_code',$businessCode)->get()->toArray();
+        $initiatorUsers = User::where('business_code', $businessCode)->get()->toArray();
         $initiatorUserCode = null;
-        if(empty($initiatorUsers)){
-            $initiatorUserCode = User::factory()->create(['business_code'=>$businessCode])->code;
-        }else{
+        if (empty($initiatorUsers)) {
+            $initiatorUserCode = User::factory()->create(['business_code' => $businessCode])->code;
+        } else {
             $initiatorUserCode = fake()->randomElement($initiatorUsers)['code'];
         }
 
-
-        $payeeBusinessArray = Business::where('code','!=',$businessCode)->where('type',\App\Utils\Enums\BusinessTypeEnum::AGENCY->value)->get(['code']);
+        $payeeBusinessArray = Business::where('code', '!=', $businessCode)->where('type', \App\Utils\Enums\BusinessTypeEnum::AGENCY->value)->get(['code']);
         $payeeBusinessCode = null;
-        if(empty($payeeBusinessArray)){
-            $payeeBusinessCode = Business::factory(['type'=>\App\Utils\Enums\BusinessTypeEnum::AGENCY->value])->create()->code;
-        }else{
+        if (empty($payeeBusinessArray)) {
+            $payeeBusinessCode = Business::factory(['type' => \App\Utils\Enums\BusinessTypeEnum::AGENCY->value])->create()->code;
+        } else {
             $payeeBusinessCode = fake()->randomElement($payeeBusinessArray->toArray())['code'];
         }
 
@@ -65,7 +63,7 @@ class VasPaymentFactory extends Factory
             'code' => Str::random(10),
             'amount' => fake()->numberBetween(4000, 10000),
             'amount_currency' => fake()->randomElement(['tzs', 'kes']),
-            'payment_method' => fake()->randomElement(['mpesa', 'visa','bank']),
+            'payment_method' => fake()->randomElement(['mpesa', 'visa', 'bank']),
         ];
     }
 }

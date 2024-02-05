@@ -20,16 +20,16 @@ class RegionFactory extends Factory
     {
         $countries = Country::get('code')->toArray();
         $countryCode = null;
-        if(empty($countries)){
+        if (empty($countries)) {
             $countryCode = Country::factory()->create()->code;
-        }else{
+        } else {
             $countryCode = fake()->randomElement($countries)['code'];
         }
 
         return [
             'country_code' => $countryCode,
             'code' => Str::random(5),
-            'name' => "$countryCode Region ".random_int(1,100)
+            'name' => "$countryCode Region ".random_int(1, 100),
         ];
     }
 }

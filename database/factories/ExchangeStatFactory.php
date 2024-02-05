@@ -19,9 +19,9 @@ class ExchangeStatFactory extends Factory
     {
         $businesses = Business::get('code')->toArray();
         $businessCode = null;
-        if(empty($businesses)){
+        if (empty($businesses)) {
             $businessCode = Business::factory()->create()->code;
-        }else{
+        } else {
             $businessCode = fake()->randomElement($businesses)['code'];
         }
 

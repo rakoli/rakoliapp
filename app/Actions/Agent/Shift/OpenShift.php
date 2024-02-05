@@ -7,7 +7,6 @@ use App\Models\Network;
 use App\Models\Shift;
 use App\Utils\Enums\ShiftStatusEnum;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class OpenShift
@@ -17,8 +16,7 @@ class OpenShift
     public function handle(float $cashAtHand, string $locationCode, ?string $notes = null, ?string $description = null)
     {
 
-        return runDatabaseTransaction(function () use ($cashAtHand, $locationCode, $notes, $description) {
-
+        return runDatabaseTransaction(function () use ($cashAtHand, $locationCode, $notes) {
 
             if (Shift::query()->where('status', ShiftStatusEnum::OPEN)->exists()) {
                 throw new \Exception('Close opened shift to continue');

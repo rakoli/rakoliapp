@@ -9,7 +9,6 @@ use App\Http\Controllers\Agent\Networks\ShowNetworkController;
 use App\Http\Controllers\Agent\Networks\UpdateNetworkController;
 use App\Http\Controllers\Agent\Shift\CloseShiftController;
 use App\Http\Controllers\Agent\Shift\Loans\AddLoanController;
-use App\Http\Controllers\Agent\Shift\Loans\LoanController;
 use App\Http\Controllers\Agent\Shift\Loans\PayLoanController;
 use App\Http\Controllers\Agent\Shift\Loans\ShowLoanController;
 use App\Http\Controllers\Agent\Shift\OpenShiftController;
@@ -30,13 +29,12 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
 
         Route::get('transactions', TransactionsController::class)->name('agency.transactions');
 
-
         // shift groups
 
         Route::prefix('shift')->group(function () {
             Route::get('/', [\App\Http\Controllers\Agent\Shift\AgencyController::class, 'shift'])->name('agency.shift');
-            Route::get('/open', [OpenShiftController::class , 'index'])->name('agency.shift.open.index');
-            Route::post('/open', [OpenShiftController::class , 'store'])->name('agency.shift.open.store');
+            Route::get('/open', [OpenShiftController::class, 'index'])->name('agency.shift.open.index');
+            Route::post('/open', [OpenShiftController::class, 'store'])->name('agency.shift.open.store');
             Route::get('/{shift}/close', [CloseShiftController::class, 'index'])->name('agency.shift.close');
             Route::post('/close/store', [CloseShiftController::class, 'store'])->name('agency.shift.close.store');
             Route::get('/{shift}/show', ShowShiftController::class)->name('agency.shift.show');
@@ -53,10 +51,7 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
                 Route::post('add-income', AddIncomeTransactionController::class)->name('agency.transactions.add.income');
             });
 
-
         });
-
-
 
         Route::prefix('networks')->group(function () {
             Route::get('/', NetworkController::class)->name('agency.networks');

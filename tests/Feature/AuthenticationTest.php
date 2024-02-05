@@ -4,10 +4,8 @@ namespace Tests\Feature;
 
 use App\Models\Country;
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
 use App\Utils\Enums\UserTypeEnum;
 use Database\Seeders\CountrySeeder;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
@@ -85,7 +83,6 @@ class AuthenticationTest extends TestCase
         $response->assertSee('Email Reset Password');
     }
 
-
     /** @test */
     public function guest_user_can_access_agent_register_page()
     {
@@ -101,9 +98,9 @@ class AuthenticationTest extends TestCase
         //Added Country to get dialing code
         $countries = Country::get('dialing_code')->toArray();
         $countryDialCode = null;
-        if(empty($countries)){
+        if (empty($countries)) {
             $countryDialCode = Country::factory()->create()->dialing_code;
-        }else{
+        } else {
             $countryDialCode = fake()->randomElement($countries)['dialing_code'];
         }
 
@@ -124,7 +121,7 @@ class AuthenticationTest extends TestCase
             'email' => $user->email,
             'type' => UserTypeEnum::AGENT->value,
         ]);
-        $loginInUser = User::where('email',$user->email)->first();
+        $loginInUser = User::where('email', $user->email)->first();
         $this->assertAuthenticatedAs($loginInUser);
     }
 
@@ -143,9 +140,9 @@ class AuthenticationTest extends TestCase
         //Added Country to get dialing code
         $countries = Country::get('dialing_code')->toArray();
         $countryDialCode = null;
-        if(empty($countries)){
+        if (empty($countries)) {
             $countryDialCode = Country::factory()->create()->dialing_code;
-        }else{
+        } else {
             $countryDialCode = fake()->randomElement($countries)['dialing_code'];
         }
 
@@ -166,14 +163,14 @@ class AuthenticationTest extends TestCase
             'email' => $user->email,
             'type' => UserTypeEnum::VAS->value,
         ]);
-        $loginInUser = User::where('email',$user->email)->first();
+        $loginInUser = User::where('email', $user->email)->first();
         $this->assertAuthenticatedAs($loginInUser);
     }
 
     /** @test */
     public function logged_agent_user_with_pending_registration_is_redirected_to_registration_steps()
     {
-        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>1]);
+        $user = User::factory()->create(['type' => UserTypeEnum::AGENT->value, 'registration_step' => 1]);
 
         $this->actingAs($user);
 
@@ -186,7 +183,7 @@ class AuthenticationTest extends TestCase
     /** @test */
     public function logged_agent_user_with_complete_registration_is_not_redirected_to_registration_steps()
     {
-        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
+        $user = User::factory()->create(['type' => UserTypeEnum::AGENT->value, 'registration_step' => 0]);
 
         $this->actingAs($user);
 
@@ -200,7 +197,7 @@ class AuthenticationTest extends TestCase
     /** @test */
     public function logged_vas_user_with_pending_registration_is_redirected_to_registration_steps()
     {
-        $user = User::factory()->create(['type'=>UserTypeEnum::VAS->value, 'registration_step'=>1]);
+        $user = User::factory()->create(['type' => UserTypeEnum::VAS->value, 'registration_step' => 1]);
 
         $this->actingAs($user);
 
@@ -213,7 +210,7 @@ class AuthenticationTest extends TestCase
     /** @test */
     public function logged_vas_user_with_complete_registration_is_not_redirected_to_registration_steps()
     {
-        $user = User::factory()->create(['type'=>UserTypeEnum::VAS->value, 'registration_step'=>0]);
+        $user = User::factory()->create(['type' => UserTypeEnum::VAS->value, 'registration_step' => 0]);
 
         $this->actingAs($user);
 
@@ -227,7 +224,7 @@ class AuthenticationTest extends TestCase
     /** @test */
     public function agent_user_can_only_access_its_own_dashboard_and_routes()
     {
-        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0]);
+        $user = User::factory()->create(['type' => UserTypeEnum::AGENT->value, 'registration_step' => 0]);
 
         $this->actingAs($user);
 
@@ -246,7 +243,7 @@ class AuthenticationTest extends TestCase
     /** @test */
     public function vas_user_can_only_access_its_own_dashboard_and_routes()
     {
-        $user = User::factory()->create(['type'=>UserTypeEnum::VAS->value, 'registration_step'=>0]);
+        $user = User::factory()->create(['type' => UserTypeEnum::VAS->value, 'registration_step' => 0]);
 
         $this->actingAs($user);
 
@@ -265,7 +262,7 @@ class AuthenticationTest extends TestCase
     /** @test */
     public function admin_user_can_only_access_its_own_dashboard_and_routes()
     {
-        $user = User::factory()->create(['type'=>UserTypeEnum::ADMIN->value, 'registration_step'=>0]);
+        $user = User::factory()->create(['type' => UserTypeEnum::ADMIN->value, 'registration_step' => 0]);
 
         $this->actingAs($user);
 
@@ -280,8 +277,4 @@ class AuthenticationTest extends TestCase
         $response->assertSee('Dashboard');
 
     }
-
-
-
-
 }

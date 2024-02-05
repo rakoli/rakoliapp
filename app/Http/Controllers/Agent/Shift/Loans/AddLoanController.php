@@ -26,13 +26,10 @@ class AddLoanController extends Controller
             'network_code.required' => 'Network is Required',
         ]);
 
-
-
-
         try {
             $validated['category'] = TransactionCategoryEnum::GENERAL;
 
-            \App\Actions\Agent\Shift\AddLoan::run(shift: $shift , data:$validated);
+            \App\Actions\Agent\Shift\AddLoan::run(shift: $shift, data: $validated);
 
             return response()
                 ->json([
@@ -42,7 +39,7 @@ class AddLoanController extends Controller
         } catch (\Exception $e) {
             return response()
                 ->json([
-                    'message' => 'Something went wrong' . $e->getMessage(),
+                    'message' => 'Something went wrong'.$e->getMessage(),
                 ], 422);
 
         }

@@ -45,7 +45,7 @@ class Business extends Model
                 'balance_currency' => $country->currency,
             ]);
             ExchangeStat::create([
-                "business_code"=>"$businessInstance->code"
+                'business_code' => "$businessInstance->code",
             ]);
             ExchangeBusinessMethod::create([
                 'business_code' => $businessInstance->code,
@@ -171,9 +171,9 @@ class Business extends Model
         return $this->hasMany(ExchangeAds::class, 'business_code', 'code');
     }
 
-    public function exchange_stats() : HasOne
+    public function exchange_stats(): HasOne
     {
-        return $this->hasOne(ExchangeStat::class,'business_code','code');
+        return $this->hasOne(ExchangeStat::class, 'business_code', 'code');
     }
 
     public function exchange_transactions_owned(): HasMany

@@ -15,7 +15,7 @@ class ShowLoanController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(Request $request, Shift $shift , Loan $loan, LoanPaymentDatatable $paymentDatatable, Builder $datatableBuilder)
+    public function __invoke(Request $request, Shift $shift, Loan $loan, LoanPaymentDatatable $paymentDatatable, Builder $datatableBuilder)
     {
 
         if ($request->ajax()) {

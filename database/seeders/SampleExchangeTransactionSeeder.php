@@ -14,7 +14,7 @@ class SampleExchangeTransactionSeeder extends Seeder
     public function run(): void
     {
         ExchangeTransaction::factory()
-            ->has(ExchangeChat::factory()->count(2),'exchange_chats')
+            ->has(ExchangeChat::factory()->count(2), 'exchange_chats')
             ->count(7)->create();
 
     }

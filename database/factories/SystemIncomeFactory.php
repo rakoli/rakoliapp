@@ -30,11 +30,12 @@ class SystemIncomeFactory extends Factory
     {
         $countries = Country::get('code')->toArray();
         $countryCode = null;
-        if(empty($countries)){
+        if (empty($countries)) {
             $countryCode = Country::factory()->create()->code;
-        }else{
+        } else {
             $countryCode = fake()->randomElement($countries)['code'];
         }
+
         return [
             'country_code' => $countryCode,
             'category' => fake()->randomElement(SystemIncomeCategoryEnum::class),

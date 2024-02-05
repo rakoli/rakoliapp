@@ -6,7 +6,6 @@ use App\Models\Shift;
 use App\Models\ShiftTransaction;
 use App\Utils\Datatables\LakoriDatatable;
 use App\Utils\HasDatatable;
-use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 use Yajra\DataTables\Html\Column;
@@ -66,7 +65,7 @@ class ShiftTransactionDatatable implements HasDatatable
                 Column::make('network_name')->title(__('network')),
                 Column::make('transaction_type')->title(__('Type'))->orderable(),
             ])
-            ->lengthMenu([[5, 10, 20, -1], [5, 10, 20, "All"]])
+            ->lengthMenu([[5, 10, 20, -1], [5, 10, 20, 'All']])
             ->orderBy(0);
     }
 }

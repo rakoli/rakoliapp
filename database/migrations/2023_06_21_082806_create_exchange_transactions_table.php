@@ -33,7 +33,7 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->string('trader_action_type');//\App\Utils\Enums\ExchangeTransactionTypeEnum::class
+            $table->string('trader_action_type'); //\App\Utils\Enums\ExchangeTransactionTypeEnum::class
             $table->string('trader_target_method');
             $table->string('trader_action_via_method');
             $table->bigInteger('trader_action_via_method_id')->unsigned();

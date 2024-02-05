@@ -12,10 +12,8 @@ use Illuminate\Http\Request;
 
 class OpenShiftController extends Controller
 {
-
     public function index()
     {
-
 
         if (Shift::query()->where('status', ShiftStatusEnum::OPEN)->exists()) {
             return to_route('agency.shift');
@@ -25,7 +23,6 @@ class OpenShiftController extends Controller
         $locations = Location::query()
             // ->whereHas('users', fn($query) => $query->where('user_code', auth()->user()->code)) //@todo Remove this when implemented
             ->cursor();
-
 
         return view('agent.agency.shift.open-shift', [
             'tills' => $tills,

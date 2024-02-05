@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\PackageName>
@@ -18,7 +17,7 @@ class PackageNameFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->randomElement(['growth', 'prosperity', 'elite'])
+            'name' => fake()->randomElement(['growth', 'prosperity', 'elite']),
         ];
     }
 }

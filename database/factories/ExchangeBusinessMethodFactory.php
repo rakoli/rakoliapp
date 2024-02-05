@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\Business;
 use App\Models\FinancialServiceProvider;
-use App\Utils\Enums\ExchangePaymentMethodTypeEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,14 +20,14 @@ class ExchangeBusinessMethodFactory extends Factory
     {
         $businesses = Business::get('code')->toArray();
         $businessCode = null;
-        if(empty($businesses)){
+        if (empty($businesses)) {
             $businessCode = Business::factory()->create()->code;
-        }else{
+        } else {
             $businessCode = fake()->randomElement($businesses)['code'];
         }
 
         $fsps = FinancialServiceProvider::get('name')->toArray();
-        array_push($fsps, ["name"=>"cash"]);
+        array_push($fsps, ['name' => 'cash']);
         $name = fake()->randomElement($fsps)['name'];
 
         return [

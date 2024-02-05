@@ -13,7 +13,7 @@ class PayLoanController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(Request $request, Shift $shift , Loan $loan)
+    public function __invoke(Request $request, Shift $shift, Loan $loan)
     {
         $validated = $request->validate([
             'amount' => 'required',
@@ -24,7 +24,7 @@ class PayLoanController extends Controller
         ]);
 
         try {
-            throw_if($loan->shift_id != $shift->id, new \Exception("Loan does not belong to this Shift"));
+            throw_if($loan->shift_id != $shift->id, new \Exception('Loan does not belong to this Shift'));
 
             PayLoanAction::run(
                 loan: $loan,
@@ -36,8 +36,7 @@ class PayLoanController extends Controller
                     'message' => 'Loan Paid successfully',
                 ], 201);
 
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return response()
                 ->json([
                     'message' => $e->getMessage(),

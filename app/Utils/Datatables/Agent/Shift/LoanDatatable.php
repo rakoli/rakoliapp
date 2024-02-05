@@ -53,8 +53,8 @@ class LoanDatatable implements HasDatatable
 
                 'pay' => [
                     'route' => route('agency.loans.show', [
-                        "shift" => $loan->shift ,
-                        "loan" => $loan
+                        'shift' => $loan->shift,
+                        'loan' => $loan,
                     ]),
                     'attributes' => '',
                 ],

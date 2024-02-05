@@ -13,10 +13,10 @@ class AddShiftTransactionAction
     use InteractsWithShift;
 
     /**
-     * @param array{till_code: string,  amount: float , type: string, notes: ?string, description: ?string} $data
-     * @return void
+     * @param  array{till_code: string,  amount: float , type: string, notes: ?string, description: ?string}  $data
+     * @return mixed
      */
-    public function handle(Shift $shift, array $data)
+    public function handle(Shift $shift, array $data): mixed
     {
 
         return runDatabaseTransaction(function () use ($shift, $data) {
@@ -25,7 +25,7 @@ class AddShiftTransactionAction
                 throw new \Exception('Shift is closed, and cannot accept a transaction');
             }
 
-            [$newBalance, $oldBalance, $till] = match ($data['type']) {
+            [$newBalance, $oldBalance] = match ($data['type']) {
                 TransactionTypeEnum::MONEY_IN->value => AddShiftTransactionAction::moneyIn($data),
                 TransactionTypeEnum::MONEY_OUT->value => AddShiftTransactionAction::moneyOut($data),
                 default => [0, 0],
@@ -40,10 +40,9 @@ class AddShiftTransactionAction
                     'description' => $data['description'] ?? null,
                     'amount_currency' => currencyCode(),
                     'amount' => $data['amount'],
-                    'balance_old' => $till->balance_old,
-                    'balance_new' => $till->balance_new,
+                    'balance_old' => $oldBalance,
+                    'balance_new' => $newBalance,
                 ]);
-
 
         });
     }

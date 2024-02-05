@@ -11,7 +11,7 @@ class AddLocationNetwork
     use AsAction;
 
     /**
-     * @param array{location_code:string , fsp_code:string,name:string , agent_no: string , balance:float , description: ?string } $data
+     * @param  array{location_code:string , fsp_code:string,name:string , agent_no: string , balance:float , description: ?string }  $data
      *
      * @throws \Throwable
      */
@@ -44,7 +44,6 @@ class AddLocationNetwork
 
             event(new NetworkCreatedEvent(network: $network));
         });
-
 
     }
 }

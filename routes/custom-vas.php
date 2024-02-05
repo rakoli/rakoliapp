@@ -5,7 +5,7 @@
 use Illuminate\Support\Facades\Route;
 
 // All get methods will be loaded with this route
-Route::name('vas.')->prefix('vas')->middleware(['auth','should_complete_registration','onlyvas'])->group(function () {
+Route::name('vas.')->prefix('vas')->middleware(['auth', 'should_complete_registration', 'onlyvas'])->group(function () {
 
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard'); //For Middleware testing and having a special user type dashboard route
 

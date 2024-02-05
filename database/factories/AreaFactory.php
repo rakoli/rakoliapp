@@ -22,25 +22,25 @@ class AreaFactory extends Factory
     {
         $countries = Country::get('code')->toArray();
         $countryCode = null;
-        if(empty($countries)){
+        if (empty($countries)) {
             $countryCode = Country::factory()->create()->code;
-        }else{
+        } else {
             $countryCode = fake()->randomElement($countries)['code'];
         }
 
         $regions = Region::get('code')->toArray();
         $regionCode = null;
-        if(empty($regions)){
+        if (empty($regions)) {
             $regionCode = Region::factory()->create()->code;
-        }else{
+        } else {
             $regionCode = fake()->randomElement($regions)['code'];
         }
 
         $towns = Towns::get('code')->toArray();
         $townCode = null;
-        if(empty($towns)){
+        if (empty($towns)) {
             $townCode = Towns::factory()->create()->code;
-        }else{
+        } else {
             $townCode = fake()->randomElement($towns)['code'];
         }
 
@@ -49,7 +49,7 @@ class AreaFactory extends Factory
             'region_code' => $regionCode,
             'town_code' => $townCode,
             'code' => Str::random(5),
-            'name' => "$countryCode $regionCode $townCode Area ".random_int(1,100)
+            'name' => "$countryCode $regionCode $townCode Area ".random_int(1, 100),
         ];
     }
 }

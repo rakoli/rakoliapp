@@ -17,13 +17,10 @@ class ShiftDatatable implements HasDatatable
     public function index()
     {
 
-
-
-
-        return Datatables::eloquent(Shift::query()->with(['user','location']))
+        return Datatables::eloquent(Shift::query()->with(['user', 'location']))
             ->smart()
             ->startsWithSearch()
-            ->filter(function ($query){
+            ->filter(function ($query) {
                 $query->skip(request('start'))->take(request('length'));
             })
             ->order(function ($query) {
@@ -34,9 +31,9 @@ class ShiftDatatable implements HasDatatable
             ->addColumn('user_name', fn (Shift $shift) => $shift->user->full_name)
             ->addColumn('cash_start', fn (Shift $shift) => money($shift->cash_start, currencyCode(), true))
             ->addColumn('cash_end', fn (Shift $shift) => money($shift->cash_end, currencyCode(), true))
-            ->addColumn('branch', fn (Shift $shift) =>  $shift->location->name)
+            ->addColumn('branch', fn (Shift $shift) => $shift->location->name)
             ->addColumn('action', function (Shift $shift) {
-               return ShiftDatatable::make()->buttons([
+                return ShiftDatatable::make()->buttons([
 
                     'Details' => [
                         'route' => route('agency.shift.show', $shift),

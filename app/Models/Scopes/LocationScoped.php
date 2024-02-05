@@ -10,7 +10,7 @@ class LocationScoped implements Scope
 {
     public function apply(Builder $builder, Model $model): Builder
     {
-        return  $builder;
+        return $builder;
 
     }
 }

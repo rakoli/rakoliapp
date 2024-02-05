@@ -17,21 +17,21 @@ class UpdateLocationNetwork
     public function handle(Network $network, array $data): Network
     {
 
-        return runDatabaseTransaction(function () use ($network, $data){
+        return runDatabaseTransaction(function () use ($network, $data) {
 
-                $network->updateQuietly([
-                    'location_code' => $data['location_code'],
-                    'fsp_code' => $data['fsp_code'],
-                    'agent_no' => $data['agent_no'],
-                    'balance' => $data['balance'],
-                    'balance_currency' => currencyCode(),
-                    'name' => $data['name'],
-                    'description' => $data['description'] ?? null,
-                ]);
-                return $network;
+            $network->updateQuietly([
+                'location_code' => $data['location_code'],
+                'fsp_code' => $data['fsp_code'],
+                'agent_no' => $data['agent_no'],
+                'balance' => $data['balance'],
+                'balance_currency' => currencyCode(),
+                'name' => $data['name'],
+                'description' => $data['description'] ?? null,
+            ]);
+
+            return $network;
 
         });
-
 
     }
 }

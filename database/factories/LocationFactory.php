@@ -18,20 +18,20 @@ class LocationFactory extends Factory
      */
     public function definition(): array
     {
-        $businesses = Business::get(['code','business_name'])->toArray();
+        $businesses = Business::get(['code', 'business_name'])->toArray();
         $selectedBusiness = null;
-        if(empty($businesses)){
+        if (empty($businesses)) {
             $selectedBusiness = Business::factory()->create()->toArray();
-        }else{
+        } else {
             $selectedBusiness = fake()->randomElement($businesses);
         }
 
         return [
             'business_code' => $selectedBusiness['code'],
             'code' => Str::random(10),
-            'name' => $selectedBusiness['business_name'] . ' branch '.fake()->numberBetween(1, 5),
+            'name' => $selectedBusiness['business_name'].' branch '.fake()->numberBetween(1, 5),
             'balance' => fake()->numberBetween(500000, 5000000),
-            'balance_currency' => fake()->randomElement(['kes','tzs']),
+            'balance_currency' => fake()->randomElement(['kes', 'tzs']),
         ];
     }
 }

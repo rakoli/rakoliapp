@@ -19,7 +19,6 @@ use Laravel\Scout\Searchable;
 class Loan extends Model
 {
     use HasFactory;
-
     use Searchable;
 
     protected $casts = [
@@ -70,7 +69,7 @@ class Loan extends Model
     public function paid(): Attribute
     {
         return new Attribute(
-            get: fn (): float =>  $this->payments()->sum('amount')
+            get: fn (): float => $this->payments()->sum('amount')
         );
     }
 

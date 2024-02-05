@@ -11,20 +11,20 @@ class ExchangeFeedback extends Model
     use HasFactory;
 
     protected $fillable = [
-        'exchange_trnx_id' ,
+        'exchange_trnx_id',
         'reviewed_business_code',
         'review',
         'review_comment',
-        'reviewer_user_code'
+        'reviewer_user_code',
     ];
 
-    public function reviewer() : BelongsTo
+    public function reviewer(): BelongsTo
     {
-        return $this->belongsTo(User::class,'reviewer_user_code','code');
+        return $this->belongsTo(User::class, 'reviewer_user_code', 'code');
     }
 
-    public function reviewed_business() : BelongsTo
+    public function reviewed_business(): BelongsTo
     {
-        return $this->belongsTo(Business::class,'reviewed_business_code','code');
+        return $this->belongsTo(Business::class, 'reviewed_business_code', 'code');
     }
 }

@@ -6,8 +6,6 @@ use App\Events\Shift\LocationBalanceUpdate;
 use App\Models\Location;
 use App\Models\Shift;
 use App\Models\Transaction;
-use App\Utils\Enums\TransactionTypeEnum;
-use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class AddExpenseTransaction
@@ -23,33 +21,32 @@ class AddExpenseTransaction
     public function handle(Shift $shift, array $data): mixed
     {
 
-       return runDatabaseTransaction(function () use ($shift, $data) {
-               $location = Location::query()->where('code', $shift->location_code)->first();
+        return runDatabaseTransaction(function () use ($shift, $data) {
+            $location = Location::query()->where('code', $shift->location_code)->first();
 
-               $balance =  $location->balance;
+            $balance = $location->balance;
 
-               Transaction::create([
-                   'business_code' => $shift->business_code,
-                   'location_code' => $shift->location_code,
-                   'user_code' => auth()->user()->code,
-                   'amount' => $data['amount'],
-                   'amount_currency' => currencyCode(),
-                   'type' => $data['type'],
-                   'category' => $data['category'],
-                   'balance_old' => $balance,
-                   'balance_new' => $balance - $data['amount'],
-                   'description' => $data['description'] ?? null,
-                   'note' => $data['notes'] ?? null,
-               ]);
-               $location->updateQuietly([
-                   'balance' => $balance - $data['amount'],
-               ]);
-               $shift->updateQuietly([
-                   'cash_end' => $shift->cash_end - $data['amount']
-               ]);
+            Transaction::create([
+                'business_code' => $shift->business_code,
+                'location_code' => $shift->location_code,
+                'user_code' => auth()->user()->code,
+                'amount' => $data['amount'],
+                'amount_currency' => currencyCode(),
+                'type' => $data['type'],
+                'category' => $data['category'],
+                'balance_old' => $balance,
+                'balance_new' => $balance - $data['amount'],
+                'description' => $data['description'] ?? null,
+                'note' => $data['notes'] ?? null,
+            ]);
+            $location->updateQuietly([
+                'balance' => $balance - $data['amount'],
+            ]);
 
-               event(new LocationBalanceUpdate(location: $location , amount: $data['amount']));
-       });
+
+
+            event(new LocationBalanceUpdate(location: $location, amount: $data['amount']));
+        });
 
     }
 }

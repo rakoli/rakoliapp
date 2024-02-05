@@ -8,28 +8,22 @@ enum ShiftStatusEnum: string
     case CLOSED = 'closed';
     case INREVIEW = 'inreview';
 
-
-    /**
-     * @return string
-     */
-    public function label() : string
+    public function label(): string
     {
-        return  match ($this){
-            static::OPEN  => "Open",
-            static::CLOSED  => "Closed",
-            static::INREVIEW  => "In Review",
+        return match ($this) {
+            self::OPEN => 'Open',
+            self::CLOSED => 'Closed',
+            self::INREVIEW => 'In Review',
         };
 
     }
-    /**
-     * @return string
-     */
-    public function color() : string
+
+    public function color(): string
     {
-        return  match ($this){
-            static::OPEN  => "badge badge-primary",
-            static::CLOSED  =>"badge badge-closed",
-            static::INREVIEW  => "badge badge-warning",
+        return match ($this) {
+            self::OPEN => 'badge badge-primary',
+            self::CLOSED => 'badge badge-closed',
+            self::INREVIEW => 'badge badge-warning',
         };
 
     }

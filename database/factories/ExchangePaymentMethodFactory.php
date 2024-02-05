@@ -2,14 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Models\Business;
 use App\Models\ExchangeAds;
-use App\Models\ExchangePaymentMethod;
 use App\Models\FinancialServiceProvider;
-use App\Utils\Enums\BusinessTypeEnum;
 use App\Utils\Enums\ExchangePaymentMethodTypeEnum;
-use App\Utils\Enums\ExchangeTransactionStatusEnum;
-use App\Utils\Enums\ExchangeTransactionTypeEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -25,14 +20,14 @@ class ExchangePaymentMethodFactory extends Factory
     public function definition(): array
     {
         $exchangeAds = ExchangeAds::get('code')->toArray();
-        if(empty($exchangeAds)){
+        if (empty($exchangeAds)) {
             $exchangeAdCode = ExchangeAds::factory()->create()->code;
-        }else{
+        } else {
             $exchangeAdCode = fake()->randomElement($exchangeAds)['code'];
         }
 
         $fsps = FinancialServiceProvider::get('name')->toArray();
-        array_push($fsps, ["name"=>"cash"]);
+        array_push($fsps, ['name' => 'cash']);
 
         return [
             'exchange_ads_code' => $exchangeAdCode,

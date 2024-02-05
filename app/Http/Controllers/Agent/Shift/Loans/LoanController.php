@@ -19,7 +19,6 @@ class LoanController extends Controller
     public function index(Request $request, LoanDatatable $loanDatatable, Builder $datatableBuilder)
     {
 
-
         if ($request->ajax()) {
             return $loanDatatable->index();
         }

@@ -16,8 +16,8 @@ use Laravel\Scout\Searchable;
 class Shift extends Model
 {
     use HasFactory;
-
     use Searchable;
+
     protected $guarded = ['id'];
 
     protected $casts = [
@@ -76,7 +76,6 @@ class Shift extends Model
     {
         return $this->hasMany(Short::class);
     }
-
 
     public function scopeOpen(Builder $query)
     {

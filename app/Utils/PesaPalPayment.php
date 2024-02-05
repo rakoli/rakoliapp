@@ -4,37 +4,43 @@ namespace App\Utils;
 
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Log;
 
 class PesaPalPayment
 {
     const PESAPAL_URL_TEST = 'https://cybqa.pesapal.com/pesapalv3';
+
     const PESAPAL_URL_LIVE = 'https://pay.pesapal.com/v3';
 
     protected string $key;
-    protected string $secret;
-    protected string $baseURL;
-    protected ?string $token=null;
-    protected string $expires;
-    protected Client $client;
-    protected array $headers;
-    private $testMode = false;
 
+    protected string $secret;
+
+    protected string $baseURL;
+
+    protected ?string $token = null;
+
+    protected string $expires;
+
+    protected Client $client;
+
+    protected array $headers;
+
+    private $testMode = false;
 
     /*
      * Let's bootstrap our class.
      * */
     public function __construct()
     {
-        $this->testMode = config("payments.pesapal_istest");
+        $this->testMode = config('payments.pesapal_istest');
         $verify = false;
-        if ($this->testMode == false){
+        if ($this->testMode == false) {
             $verify = true;
         }
 
-        $this->key = config("payments.pesapal_key");
-        $this->secret = config("payments.pesapal_secret");
+        $this->key = config('payments.pesapal_key');
+        $this->secret = config('payments.pesapal_secret');
 
         if ($this->testMode == true) {
             $this->baseURL = self::PESAPAL_URL_TEST;
@@ -45,14 +51,14 @@ class PesaPalPayment
         $this->headers = [
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
-            'debug' => true
+            'debug' => true,
         ];
 
         // Init client
         $this->client = new Client([
             'base_uri' => $this->baseURL,
             'headers' => $this->headers,
-            'verify' => $verify
+            'verify' => $verify,
         ]);
     }
 
@@ -75,7 +81,7 @@ class PesaPalPayment
         try {
             $response = $this->client->request('POST', $url, ['json' => $params, 'headers' => $this->headers]);
             $results = json_decode($response->getBody()->getContents());
-            if (!empty($results)){
+            if (! empty($results)) {
                 $authRes = $results;
                 $this->token = $authRes->token ?? '';
                 $this->expires = $authRes->expiryDate ?? '';
@@ -84,16 +90,17 @@ class PesaPalPayment
         } catch (\Exception $exception) {
             Log::error($exception);
             Bugsnag::notifyException($exception);
+
             return [
-                'success'           => false,
-                'result'            => $response,
+                'success' => false,
+                'result' => $response,
                 'resultExplanation' => $exception->getMessage(),
             ];
         }
 
         return [
-            'success'           => true,
-            'result'            => $results,
+            'success' => true,
+            'result' => $results,
             'resultExplanation' => 'Authentication Completed Successfully',
         ];
     }
@@ -109,19 +116,20 @@ class PesaPalPayment
         try {
             $response = $this->client->request('POST', $url, ['json' => $params, 'headers' => $this->headers]);
             $results = json_decode($response->getBody()->getContents());
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
             Log::error($exception);
             Bugsnag::notifyException($exception);
+
             return [
-                'success'           => false,
-                'result'            => $response,
+                'success' => false,
+                'result' => $response,
                 'resultExplanation' => $exception->getMessage(),
             ];
         }
 
         return [
-            'success'           => true,
-            'result'            => $results,
+            'success' => true,
+            'result' => $results,
             'resultExplanation' => 'Payment Request Sent Successfully',
         ];
     }
@@ -141,16 +149,17 @@ class PesaPalPayment
         } catch (\Exception $exception) {
             Log::error($exception);
             Bugsnag::notifyException($exception);
+
             return [
-                'success'           => false,
-                'result'            => $response,
+                'success' => false,
+                'result' => $response,
                 'resultExplanation' => $exception->getMessage(),
             ];
         }
 
         return [
-            'success'           => true,
-            'result'            => $results,
+            'success' => true,
+            'result' => $results,
             'resultExplanation' => 'Transaction Status Retrieved Successfully',
         ];
     }
@@ -160,21 +169,20 @@ class PesaPalPayment
         $response = $this->transactionStatus($id);
         $result = $response['result'];
 
-        if($result->status == 200 && $result->payment_status_description == "Completed" ){
+        if ($result->status == 200 && $result->payment_status_description == 'Completed') {
             return [
-                'success'           => true,
-                'result'            => $result->payment_status_description,
+                'success' => true,
+                'result' => $result->payment_status_description,
                 'resultExplanation' => 'Transaction Paid',
             ];
         }
 
         return [
-            'success'           => false,
-            'result'            => $result->payment_status_description,
+            'success' => false,
+            'result' => $result->payment_status_description,
             'resultExplanation' => 'Transaction Not Paid',
         ];
     }
-
 
     public function IPNList()
     {
@@ -187,29 +195,30 @@ class PesaPalPayment
         } catch (\Exception $exception) {
             Log::error($exception);
             Bugsnag::notifyException($exception);
+
             return [
-                'success'           => false,
-                'result'            => $response,
+                'success' => false,
+                'result' => $response,
                 'resultExplanation' => $exception->getMessage(),
             ];
         }
 
         return [
-            'success'           => true,
-            'result'            => $results,
+            'success' => true,
+            'result' => $results,
             'resultExplanation' => 'IPN List Fetched Successfully',
         ];
     }
 
-    public function IPNRegister($ipnURL="", $method="GET")
+    public function IPNRegister($ipnURL = '', $method = 'GET')
     {
         $this->authenticate();
         $url = $this->getEndPointUrl(config('pesapal.pesapal-endpoint')['ipn-register']);
         $ipn_url = route('pesapal.callback');
-        $params = array(
+        $params = [
             'url' => $ipn_url,
             'ipn_notification_type' => $method,
-        );
+        ];
         $results = [];
         try {
             $response = $this->client->request('POST', $url, ['json' => $params, 'headers' => $this->headers]);
@@ -217,18 +226,18 @@ class PesaPalPayment
         } catch (\Exception $exception) {
             Log::error($exception);
             Bugsnag::notifyException($exception);
+
             return [
-                'success'           => false,
-                'result'            => $response,
+                'success' => false,
+                'result' => $response,
                 'resultExplanation' => $exception->getMessage(),
             ];
         }
 
         return [
-            'success'           => true,
-            'result'            => $results,
+            'success' => true,
+            'result' => $results,
             'resultExplanation' => 'IPN Registered Successfully',
         ];
     }
-
 }

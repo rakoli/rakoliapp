@@ -6,7 +6,6 @@ use App\Events\Shift\ShiftClosedEvent;
 use App\Models\Network;
 use App\Models\Shift;
 use App\Utils\Enums\ShiftStatusEnum;
-use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class CloseShift

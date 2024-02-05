@@ -31,15 +31,14 @@ class CloseShiftController extends Controller
 
         $totalBalance = $shift->cash_end + $tills->sum('balance_new');
 
-
-        $loans = Loan::query()->whereBelongsTo($shift,'shift')->get()->groupBy(fn(Loan $loan) => $loan->type->label() );
+        $loans = Loan::query()->whereBelongsTo($shift, 'shift')->get()->groupBy(fn (Loan $loan) => $loan->type->label());
 
         return view('agent.agency.close-shift')->with([
             'tills' => $tills->cursor(),
             'locations' => $locations,
             'shift' => $shift,
             'loans' => $loans,
-            'totalBalance' => $totalBalance
+            'totalBalance' => $totalBalance,
         ]);
     }
 
@@ -54,7 +53,6 @@ class CloseShiftController extends Controller
         ]);
 
         try {
-
 
             \App\Actions\Agent\Shift\CloseShift::run(
                 closingBalance: $validated['closing_balance'],

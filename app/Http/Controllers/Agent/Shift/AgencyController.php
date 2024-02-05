@@ -3,11 +3,8 @@
 namespace App\Http\Controllers\Agent\Shift;
 
 use App\Http\Controllers\Controller;
-use App\Models\Location;
-use App\Models\Network;
 use App\Models\Shift;
 use App\Utils\Datatables\Agent\Shift\ShiftDatatable;
-use App\Utils\Enums\ShiftStatusEnum;
 use Yajra\DataTables\Html\Builder;
 
 class AgencyController extends Controller
@@ -17,8 +14,6 @@ class AgencyController extends Controller
         if (\request()->ajax()) {
             return $shiftDatatable->index();
         }
-
-
 
         return view('agent.agency.shift.index', [
             'hasOpenShift' => Shift::query()->open()->exists(),
