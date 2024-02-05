@@ -13,7 +13,7 @@
                          @error('closing_balance') form-control-feedback @enderror"
 
                         name="closing_balance"
-                        value="{{ $shift->cash_end }}"
+                        value="{{ $cashAtHand }}"
                         placeholder="{{ __('Closing Balance') }}" id="closing_balance"/>
                     @error('closing_balance')
                     <div class="help-block text-danger">
@@ -51,14 +51,14 @@
 
 
 
-                @foreach($tills as $till)
+                @foreach($networks as $name => $network)
                     <div class=" py-3">
-                        <x-label class="" label="{{ __($till->network?->agency?->name) }}" :for="$till->id"/>
+                        <x-label class="" label="{{ __($name) }}" :for="$network['code']"/>
                         <x-input class="form-control-solid"
-                                 name="tills[{{ $till->network_code }}]"
-                                 value="{{ $till->balance_new }}"
-                                 placeholder="{{ __($till->balance_new) }}"
-                                 id="{{ $till->id }}
+                                 name="tills[{{ $network['code'] }}]"
+                                 value="{{ $network['balance'] }}"
+                                 placeholder="{{ $network['balance'] }}"
+                                 id="{{ $network['code'] }}
                                                          "/>
                     </div>
 
@@ -90,8 +90,17 @@
                 </div>
             </div>
 
+        <x-modal_with_button
+            modalTitle="Shift Summary"
+            targetId="summary"
+            label="Close"
+            size="modal-lg"
+            >
 
-            <x-submit-button type="button" id="close-shift-button" class="btn btn-primary mt-sm-4 mt-md-6" label="Close Shift"/>
+
+          <x-submit-button type="button" id="close-shift-button" class="btn btn-primary mt-sm-4 mt-md-6" label="Close Shift"/>
+
+        </x-modal_with_button>
 
 
     </form>

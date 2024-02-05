@@ -99,7 +99,7 @@ trait InteractsWithShift
             ->first();
 
 
-        $location->balance = $location->balance + $data['amount'];
+        $location->balance = $location->balance -  $data['amount'];
 
         $location->saveQuietly();
 
@@ -129,14 +129,14 @@ trait InteractsWithShift
                 ->first();
 
             return [
-                $shiftNetwork->balance_old +  $data['amount'],
-                $shiftNetwork->balance_old,
+                $shiftNetwork->balance_old +  $data['amount'], // new balance
+                $shiftNetwork->balance_old, // old balance
             ];
         }
 
         return [
-            $lastTransaction->balance_old + $data['amount'],
-            $lastTransaction->balance_old,
+            $lastTransaction->balance_old + $data['amount'], // new balance
+            $lastTransaction->balance_old, // old balance
 
         ];
     }

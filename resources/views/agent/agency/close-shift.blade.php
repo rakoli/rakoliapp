@@ -35,21 +35,8 @@
             <div class="flex-lg-row-fluid ms-lg-15">
 
 
-                <!--begin::Card-->
-                <div class="card pt-4 mb-6 mb-xl-9">
-                    <!--begin::Card header-->
-                    <div class="card-header border-0">
-                        <!--begin::Card title-->
-                        <div class="card-title">
-                            <h2>{{ __('Tills Transaction Summary') }}</h2>
-                        </div>
-                        <!--end::Card title-->
-                    </div>
-                    <!--end::Card header-->
-
-                    <!--begin::Card body-->
-                    <div class="card-body pt-0 pb-5">
-
+                <div class="card my-md-4 my-sm-8">
+                    <div class="card-body">
                         <!--begin::Stats-->
                         <div class="d-flex flex-wrap flex-stack">
                             <!--begin::Wrapper-->
@@ -81,9 +68,9 @@
                                         <div class="d-flex align-items-center">
 
                                             <div class="fs-2 fw-bolder counted fs-3qx " data-kt-countup="true"
-                                                 data-kt-countup-value="{{ number_format($shift->cash_end , 2) }}"
+                                                 data-kt-countup-value="{{ number_format($cashAtHand , 2) }}"
                                                  data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">
-                                                {{ Illuminate\Support\Number::abbreviate($shift->cash_end , 3) }}
+                                                {{ Illuminate\Support\Number::currency($cashAtHand , currencyCode()) }}
                                             </div>
                                         </div>
                                         <!--end::Number-->
@@ -100,9 +87,9 @@
                                         <div class="d-flex align-items-center">
 
                                             <div class="fs-2 fw-bolder counted fs-3qx text-gray-800" data-kt-countup="true"
-                                                 data-kt-countup-value="{{ number_format($totalBalance - $shift->cash_end , 2) }}"
+                                                 data-kt-countup-value="{{ number_format($tillBalances , 2) }}"
                                                  data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">
-                                                {{ Illuminate\Support\Number::abbreviate($totalBalance - $shift->cash_end , 3) }}
+                                                {{ Illuminate\Support\Number::currency($tillBalances , currencyCode()) }}
                                             </div>
                                         </div>
                                         <!--end::Number-->
@@ -120,6 +107,24 @@
                             <!--end::Wrapper-->
                         </div>
                         <!--end::Stats-->
+                    </div>
+                </div>
+
+
+                <!--begin::Card-->
+                <div class="card pt-4 mb-6 mb-xl-9">
+                    <!--begin::Card header-->
+                    <div class="card-header border-0">
+                        <!--begin::Card title-->
+                        <div class="card-title">
+                            <h2>{{ __('Tills Transaction Summary') }}</h2>
+                        </div>
+                        <!--end::Card title-->
+                    </div>
+                    <!--end::Card header-->
+
+                    <!--begin::Card body-->
+                    <div class="card-body pt-0 pb-5">
 
                         <!--begin::Table-->
                         <div id="kt_table_customers_payment_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
@@ -128,17 +133,28 @@
                                 <table class="table table-borderless" id="shift-loans-summary">
                                     <thead>
                                     <tr>
-                                        <th>Till</th>
-                                        <th>{{ __('End Balance') }}</th>
-                                        <th>{{ __('') }}</th>
+                                        <th class="fw-bolder">Till</th>
+                                        <th class="fw-bolder">{{ __('Starting Balance') }}</th>
+                                        <th class="fw-bolder">{{ __('End Balance') }}</th>
+                                        <th class="fw-bolder">{{ __('Transacted Amount') }}</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach($tills as $till)
-                                        <tr>
-                                            <td>{{  __($till->network?->agency?->name) }}</td>
+                                    <tr>
+                                        <td>{{  __("Starting Cash") }}</td>
 
-                                            <td>{{  Number::currency($till->balance_new,  currencyCode())}}</td>
+                                        <td>{{  Number::currency($shift->cash_start,  currencyCode())}}</td>
+                                        <td>{{  Number::currency($cashAtHand,  currencyCode())}}</td>
+                                        <td>{{  Number::currency( abs($shift->cash_start - $cashAtHand),  currencyCode())}}</td>
+                                    </tr>
+
+                                    @foreach($networks as  $name  => $network)
+                                        <tr>
+                                            <td>{{  __($name) }}</td>
+
+                                            <td>{{  Number::currency($network['balance_old'],  currencyCode())}}</td>
+                                            <td>{{  Number::currency($network['balance'],  currencyCode())}}</td>
+                                            <td>{{  Number::currency(abs($network['balance_old'] - $network['balance']),  currencyCode())}}</td>
                                         </tr>
                                     @endforeach
                                     </tbody>

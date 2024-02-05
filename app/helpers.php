@@ -213,18 +213,40 @@ function currencyCode(): ?string
 }
 
 
-function shiftBalances(\App\Models\Shift $shift)
+function shiftBalances(\App\Models\Shift $shift) :array
 {
     $cash =  $shift->loadMissing('location')->location->balance;
 
-    $tillBalances = ShiftTransaction::select(
-        'st.*',
-        DB::raw('(SELECT ROW_NUMBER() OVER (PARTITION BY network_code ORDER BY created_at DESC) FROM shift_transactions WHERE network_code = st.network_code) AS RowNum')
-    )
-        ->from('shift_transactions as st')
-        ->where('st.shift_id', $shift->id)
-        ->whereRaw('(SELECT ROW_NUMBER() OVER (PARTITION BY network_code ORDER BY created_at DESC) FROM shift_transactions WHERE network_code = st.network_code) = 1')
-        ->sum('balance_new');
+
+
+    $tills = [];
+
+
+
+    foreach ($shift->loadMissing('shiftNetworks.network.agency')->shiftNetworks as $shiftNetworks) {
+
+
+
+        $tills[$shiftNetworks->network->agency->name]  =   [
+             'balance' => $shift->transactions()
+                ->where('network_code', $shiftNetworks->network_code)
+                ->count() ? ShiftTransaction::query()->whereBelongsTo($shift,'shift')
+                ->where('network_code', $shiftNetworks->network_code)
+                ->latest('created_at')
+                ->sum('balance_new')
+                :
+                $shiftNetworks->balance_old,
+            'code' => $shiftNetworks->network_code,
+            'balance_old' => $shiftNetworks->balance_old
+        ]
+        ;
+
+    }
+
+
+    $tillBalances =  collect($tills)->sum(function ($item) {
+        return floatval($item['balance']);
+    });
 
     $expenses = \App\Models\Transaction::query()
         ->where([
@@ -235,11 +257,23 @@ function shiftBalances(\App\Models\Shift $shift)
         ->whereDate('created_at', $shift->created_at)
         ->sum('amount');
 
+    $income = \App\Models\Transaction::query()
+        ->where([
+            'location_code' => $shift->location_code,
+            'user_code' => $shift->user_code,
+            'category' => \App\Utils\Enums\TransactionCategoryEnum::INCOME,
+        ])
+        ->whereDate('created_at', $shift->created_at)
+        ->sum('amount');
+
+
 
     return [
-        'totalBalance' =>  $cash + $expenses + $tillBalances,
-        'cashAtHand'  =>   $cash,
-        'tillBalances' => $tillBalances
+        'totalBalance' =>  ($cash + $expenses + $tillBalances) - 0,
+        'cashAtHand'  =>   $cash - 0,
+        'tillBalances' => $tillBalances,
+        'expenses' => $expenses,
+        'networks' => $tills,
     ];
 }
 function runDatabaseTransaction(\Closure $closure): mixed

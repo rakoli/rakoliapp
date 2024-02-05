@@ -34,11 +34,11 @@
 
 
                     <!--begin::Stat-->
-                    <div class="min-w-xl-125px py-3 px-4 me-6 mb-3">
+                    <div class="min-w-xl-250px">
                         <!--begin::Number-->
                         <div class="d-flex align-items-center  ">
 
-                            <div class="fw-bolder counted fs-2qx text-primary" data-kt-countup="true"
+                            <div class="fw-bolder counted fs-2tx text-primary" data-kt-countup="true"
                                  data-kt-countup-value="{{ number_format($totalBalance , 2) }}"
                                  data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">
                                 {{ Illuminate\Support\Number::currency($totalBalance, currencyCode()) }}
@@ -52,6 +52,25 @@
                     </div>
                     <!--end::Stat-->
 
+
+                    <!--begin::cash-->
+                    <div class="border border-gray-300 border-dashed rounded min-w-225px py-3 px-4 me-6 mb-3">
+                        <!--begin::Number-->
+                        <div class="d-flex align-items-center">
+
+                            <div class="fs-2 fw-semibold fs-2hx counted" data-kt-countup="true"
+                                 data-kt-countup-value="{{ number_format($cashAtHand , 2) }}"
+                                 data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">
+                                {{ Illuminate\Support\Number::currency($cashAtHand , currencyCode()) }}
+                            </div>
+                        </div>
+                        <!--end::Number-->
+
+                        <!--begin::Label-->
+                        <div class="fw-semibold fs-6 text-gray-500">{{ __('Cash at Hand') }}</div>
+                        <!--end::Label-->
+                    </div>
+                    <!--end::cash-->
                     <!--begin::Stat-->
                     <div class="border border-gray-300 border-dashed rounded min-w-xl-125px py-3 px-4 me-6 mb-3">
                         <!--begin::Number-->
@@ -71,21 +90,22 @@
                     </div>
                     <!--end::Stat-->
 
-                    <!--begin::Stat-->
+
+   <!--begin::Stat-->
                     <div class="border border-gray-300 border-dashed rounded min-w-225px py-3 px-4 me-6 mb-3">
                         <!--begin::Number-->
                         <div class="d-flex align-items-center">
 
-                            <div class="fs-2 fw-semibold fs-10 counted" data-kt-countup="true"
-                                 data-kt-countup-value="{{ number_format($cashAtHand , 2) }}"
+                            <div class="fs-2 fw-semibold fs-xl-3 counted" data-kt-countup="true"
+                                 data-kt-countup-value="{{ number_format($expenses , 2) }}"
                                  data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">
-                                {{ Illuminate\Support\Number::currency($cashAtHand , currencyCode()) }}
+                                {{ Illuminate\Support\Number::currency($expenses , currencyCode()) }}
                             </div>
                         </div>
                         <!--end::Number-->
 
                         <!--begin::Label-->
-                        <div class="fw-semibold fs-6 text-gray-500">{{ __('Cash at Hand') }}</div>
+                        <div class="fw-semibold fs-6 text-gray-500">{{ __('Expenses') }}</div>
                         <!--end::Label-->
                     </div>
                     <!--end::Stat-->
@@ -187,20 +207,20 @@
             <div class="py-5 fs-6">
 
 
-                @foreach($tills as $network)
+                @foreach($networks as $name =>  $network )
                     <!--begin::Details item-->
 
                     <div class="d-flex flex-row mt-5 border-bottom-2 gap-14 justify-content-lg-between">
-                        <div class="fw-bold border-primary">{{ $network->network ->agency->name}}</div>
+                        <div class="fw-bold border-primary">{{ $name  }}</div>
                         <div class="text-gray-600">
-                            <span>{{  money(amount: $network->balance_new , convert: true, currency: currencyCode()) }}</span>
+                            <span>{{  money(amount: $network['balance'] , convert: true, currency: currencyCode()) }}</span>
                         </div>
                     </div>
                     <!--begin::Details item-->
                 @endforeach
                 <div
                     class="text-gray-600 mt-15 fw-bold text-lg-end  border-bottom-3 border-dashed py-lg-2 px-lg-3 border-primary">
-                    <span>{{ money(amount: $tills->sum('balance_new') , convert: true, currency: currencyCode()) }}</span>
+                    <span>{{ money(amount: $tillBalances , convert: true, currency: currencyCode()) }}</span>
                 </div>
             </div>
         </div>

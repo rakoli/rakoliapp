@@ -22,6 +22,7 @@ class AddExpenseTransaction
     {
 
         return runDatabaseTransaction(function () use ($shift, $data) {
+
             $location = Location::query()->where('code', $shift->location_code)->first();
 
             $balance = $location->balance;
@@ -42,8 +43,6 @@ class AddExpenseTransaction
             $location->updateQuietly([
                 'balance' => $balance - $data['amount'],
             ]);
-
-
 
             event(new LocationBalanceUpdate(location: $location, amount: $data['amount']));
         });

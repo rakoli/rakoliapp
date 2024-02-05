@@ -29,7 +29,6 @@ class CloseShiftController extends Controller
         $tills = ShiftNetwork::query()->where('shift_id', $shift->id)
             ->where('balance_new', '>', 0)->with('network.agency');
 
-        $totalBalance = $shift->cash_end + $tills->sum('balance_new');
 
         $loans = Loan::query()->whereBelongsTo($shift, 'shift')->get()->groupBy(fn (Loan $loan) => $loan->type->label());
 
@@ -38,7 +37,7 @@ class CloseShiftController extends Controller
             'locations' => $locations,
             'shift' => $shift,
             'loans' => $loans,
-            'totalBalance' => $totalBalance,
+            ...shiftBalances($shift)
         ]);
     }
 
