@@ -14,11 +14,11 @@ class OpenShift
 {
     use AsAction;
 
-    public function handle(float $cashAtHand, string $locationCode, ?string $notes = null , ?string $description = null)
+    public function handle(float $cashAtHand, string $locationCode, ?string $notes = null, ?string $description = null)
     {
 
-        try {
-            DB::beginTransaction();
+        return runDatabaseTransaction(function () use ($cashAtHand, $locationCode, $notes, $description) {
+
 
             if (Shift::query()->where('status', ShiftStatusEnum::OPEN)->exists()) {
                 throw new \Exception('Close opened shift to continue');
@@ -57,14 +57,7 @@ class OpenShift
                 event(new ShiftOpened(shift: $shift));
             });
 
-            DB::commit();
-
-        } catch (\Exception $e) {
-
-            DB::rollBack();
-
-            throw new \Exception($e->getMessage());
-        }
+        });
 
     }
 }
