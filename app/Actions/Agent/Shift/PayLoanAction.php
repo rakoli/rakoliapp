@@ -21,45 +21,42 @@ class PayLoanAction
      */
     public function handle(Loan $loan, array $data)
     {
+        return runDatabaseTransaction(function () use ($loan, $data){
 
-        try {
 
-            throw_if(condition: ($loan->payments()->sum('amount') + $data['amount']) > $loan->amount,
-                exception: new \Exception(__('You cannot receive more than loan balance'))
-            );
+                throw_if(condition: ($loan->payments()->sum('amount') + $data['amount']) > $loan->amount,
+                    exception: new \Exception(__('You cannot receive more than loan balance'))
+                );
 
-            DB::beginTransaction();
+                DB::beginTransaction();
 
-            /** @var LoanPayment $payment */
+                /** @var LoanPayment $payment */
 
-            $payment = LoanPayment::create([
-                'loan_code' => $loan->code,
-                'user_code' => auth()->user()->code,
-                'amount' => $data['amount'],
-                'description' => $data['description'] ?? null,
-                'notes' => $data['notes'] ?? null,
-                'payment_method' => $data['payment_method'] ?? null,
-                'deposited_at' => Carbon::parse($data['deposited_at']),
-            ]);
-
-            $loan->refresh();
-
-            if ($loan->paid != $loan->amount) {
-                $loan->updateQuietly([
-                    'status' => LoanPaymentStatusEnum::PARTIALLY,
+                $payment = LoanPayment::create([
+                    'loan_code' => $loan->code,
+                    'user_code' => auth()->user()->code,
+                    'amount' => $data['amount'],
+                    'description' => $data['description'] ?? null,
+                    'notes' => $data['notes'] ?? null,
+                    'payment_method' => $data['payment_method'] ?? null,
+                    'deposited_at' => Carbon::parse($data['deposited_at']),
                 ]);
-            } else {
-                $loan->updateQuietly([
-                    'status' => LoanPaymentStatusEnum::FULL_PAID,
-                ]);
-            }
 
-            event(new LoanPaidEvent(payment: $payment));
+                $loan->refresh();
 
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            throw new \Exception($e->getMessage());
-        }
+                if ($loan->paid != $loan->amount) {
+                    $loan->updateQuietly([
+                        'status' => LoanPaymentStatusEnum::PARTIALLY,
+                    ]);
+                } else {
+                    $loan->updateQuietly([
+                        'status' => LoanPaymentStatusEnum::FULL_PAID,
+                    ]);
+                }
+
+                event(new LoanPaidEvent(payment: $payment));
+
+
+        });
     }
 }

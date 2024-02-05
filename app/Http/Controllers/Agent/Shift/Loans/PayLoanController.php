@@ -24,6 +24,7 @@ class PayLoanController extends Controller
         ]);
 
         try {
+            throw_if($loan->shift_id != $shift->id, new \Exception("Loan does not belong to this Shift"));
 
             PayLoanAction::run(
                 loan: $loan,
