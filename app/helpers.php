@@ -268,8 +268,8 @@ function shiftBalances(\App\Models\Shift $shift) :array
 
 
     return [
-        'totalBalance' =>  ($cash + $expenses + $tillBalances) - 0,
-        'cashAtHand'  =>   $cash - 0,
+        'totalBalance' =>  ($cash + $expenses + $tillBalances),
+        'cashAtHand'  =>   $cash ,
         'tillBalances' => $tillBalances,
         'expenses' => $expenses,
         'networks' => $tills,

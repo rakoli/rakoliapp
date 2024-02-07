@@ -18,13 +18,11 @@ class ShiftDatatable implements HasDatatable
     {
 
         return Datatables::eloquent(Shift::query()->with(['user', 'location']))
-            ->smart()
-            ->startsWithSearch()
             ->filter(function ($query) {
                 $query->skip(request('start'))->take(request('length'));
             })
             ->order(function ($query) {
-                return $query->orderBy('no', 'desc');
+                return $query->orderBy('created_at', 'desc');
             })
             ->addIndexColumn()
             ->addColumn('created_at', fn (Shift $shift) => $shift->created_at->format('Y-F-d'))
@@ -57,7 +55,7 @@ class ShiftDatatable implements HasDatatable
 
                 $table = ShiftDatatable::make();
 
-                return $shift->status == ShiftStatusEnum::OPEN ? $table->active() : $table->notActive();
+                return $shift->status == ShiftStatusEnum::OPEN ? $table->active($shift->status->value) : $table->notActive($shift->status->value);
             })
             ->rawColumns(['created_at', 'action', 'status'])
             ->toJson();

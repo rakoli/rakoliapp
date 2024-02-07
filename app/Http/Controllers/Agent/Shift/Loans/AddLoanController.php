@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Agent\Shift\Loans;
 
+use App\Actions\Agent\Shift\AddLoan;
 use App\Http\Controllers\Controller;
 use App\Models\Shift;
 use App\Utils\Enums\TransactionCategoryEnum;
@@ -28,12 +29,14 @@ class AddLoanController extends Controller
 
         try {
 
-            throw_if(! $shift->created_at->isToday(), new \Exception("You must close previous Day shift to make this Transaction"));
-
+            throw_if(
+                ! $shift->created_at->isToday(),
+                new \Exception("You must close previous Day shift to make this Transaction")
+            );
 
             $validated['category'] = TransactionCategoryEnum::GENERAL;
 
-            \App\Actions\Agent\Shift\AddLoan::run(shift: $shift, data: $validated);
+            AddLoan::run(shift: $shift, data: $validated);
 
             return response()
                 ->json([
