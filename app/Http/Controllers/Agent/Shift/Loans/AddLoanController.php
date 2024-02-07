@@ -27,6 +27,10 @@ class AddLoanController extends Controller
         ]);
 
         try {
+
+            throw_if(! $shift->created_at->isToday(), new \Exception("You must close previous Day shift to make this Transaction"));
+
+
             $validated['category'] = TransactionCategoryEnum::GENERAL;
 
             \App\Actions\Agent\Shift\AddLoan::run(shift: $shift, data: $validated);

@@ -110,6 +110,25 @@
                     </div>
                     <!--end::Stat-->
 
+                    <!--begin::Stat-->
+                    <div class="border border-gray-300 border-dashed rounded min-w-225px py-3 px-4 me-6 mb-3">
+                        <!--begin::Number-->
+                        <div class="d-flex align-items-center">
+
+                            <div class="fs-2 fw-semibold fs-xl-3 counted" data-kt-countup="true"
+                                 data-kt-countup-value="{{ number_format($income , 2) }}"
+                                 data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">
+                                {{ Illuminate\Support\Number::currency($income , currencyCode()) }}
+                            </div>
+                        </div>
+                        <!--end::Number-->
+
+                        <!--begin::Label-->
+                        <div class="fw-semibold fs-6 text-gray-500">{{ __('Incomes') }}</div>
+                        <!--end::Label-->
+                    </div>
+                    <!--end::Stat-->
+
 
                 </div>
                 <!--end::Stats-->

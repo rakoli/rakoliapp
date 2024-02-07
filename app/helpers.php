@@ -230,7 +230,7 @@ function shiftBalances(\App\Models\Shift $shift) :array
         $tills[$shiftNetworks->network->agency->name]  =   [
              'balance' => $shift->transactions()
                 ->where('network_code', $shiftNetworks->network_code)
-                ->count() ? ShiftTransaction::query()->whereBelongsTo($shift,'shift')
+                ->exists() ? ShiftTransaction::query()->whereBelongsTo($shift,'shift')
                 ->where('network_code', $shiftNetworks->network_code)
                 ->latest('created_at')
                 ->sum('balance_new')
@@ -238,8 +238,7 @@ function shiftBalances(\App\Models\Shift $shift) :array
                 $shiftNetworks->balance_old,
             'code' => $shiftNetworks->network_code,
             'balance_old' => $shiftNetworks->balance_old
-        ]
-        ;
+        ];
 
     }
 
@@ -274,6 +273,7 @@ function shiftBalances(\App\Models\Shift $shift) :array
         'tillBalances' => $tillBalances,
         'expenses' => $expenses,
         'networks' => $tills,
+        'income' => $income
     ];
 }
 function runDatabaseTransaction(\Closure $closure): mixed

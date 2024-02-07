@@ -21,6 +21,7 @@ class AddTransaction
 
         return runDatabaseTransaction(function () use ($shift, $data) {
 
+
             [$newBalance, $oldBalance] = match ($data['type']) {
                 TransactionTypeEnum::MONEY_IN->value => AddTransaction::moneyIn(shift:  $shift, data: $data),
                 TransactionTypeEnum::MONEY_OUT->value => AddTransaction::moneyOut(shift:  $shift, data: $data),

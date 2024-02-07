@@ -19,6 +19,11 @@ class AddIncomeTransactionController extends Controller
         ]);
 
         try {
+
+            throw_if(! $shift->created_at->isToday(), new \Exception("You must close previous Day shift to make this Transaction"));
+
+
+
             $validated['category'] = TransactionCategoryEnum::INCOME;
             $validated['type'] = TransactionTypeEnum::MONEY_IN->value;
 
