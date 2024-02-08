@@ -18,13 +18,54 @@
                     @enderror
                 </div>
 
+                <div class="col-6">
+                    <x-label class="" label="{{ __('Income Type') }}" for="income_type"/>
+                    <x-select2
+                        name="income_type"
+                        placeholder="{{ __('source: e.g Cash ') }}"
+                        id="income_type">
+                        @foreach(\App\Utils\Enums\FundSourceEnums::cases() as $source)
+                            <option
+                                value="{{ $source->value }}"
+                                data-income="{{ $source->value }}"
+                            >{{ str($source->name)->title()->value()  }}</option>
+                        @endforeach
+                    </x-select2>
+                    @error('income_type')
+                    <div class="help-block text-danger">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </div>
 
             </div>
+            <div class="row fv-row py-3 hidden" id="till-income-type">
+                <div class="col-6">
+                    <x-label class="" label="{{ __('Till') }}" for="till_code"/>
+                    <x-select2
+                        name="network_code"
+                        placeholder="{{ __('source: e.g Mpesa ') }}"
+                        id="network_code">
+                        @foreach($tills as $till)
+                            <option
+                                value="{{ $till->network_code }}"
+
+                            >{{ str($till->network?->agency?->name )->title()->value()  }}</option>
+                        @endforeach
+                    </x-select2>
+                    @error('amount')
+                    <div class="help-block text-danger">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </div>
+            </div>
+
 
 
             <div class="row fv-row py-3">
                 <div class="col-12">
-                    <x-label label="description" class="" for="notes"/>
+                    <x-label label="description" class="" for="description"/>
                     <textarea    name="description" class="form-control form-control form-control-solid" rows="3"  data-kt-autosize="false"></textarea>
                     @error('description')
                     <div class="help-block text-danger">
@@ -62,9 +103,36 @@
 
 
             $(document).ready(() => {
+                $("div#till-income-type").hide()
+
+                $("select#income_type").on("change", function () {
+
+                    var selectedOption = $(this).find(":selected");
+
+                    var incomeType = selectedOption.data('income');
+
+                    if ("TILL" === incomeType)
+                    {
+                        $("div#till-income-type").show()
+
+                    } else {
+
+                        $("div#till-income-type").hide()
+                    }
+
+
+                });
+
+
+
                 const incomeValidations = [
                     {
                         "name": "amount",
+                        "error": "Amount is Required",
+                        "validators" : {}
+                    },
+                    {
+                        "name": "income_type",
                         "error": "Amount is Required",
                         "validators" : {}
                     },

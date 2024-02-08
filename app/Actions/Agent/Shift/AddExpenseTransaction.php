@@ -26,7 +26,6 @@ class AddExpenseTransaction
     public function handle(Shift $shift, array $data): mixed
     {
 
-
         return runDatabaseTransaction(function () use ($shift, $data) {
 
             $source = FundSourceEnums::tryFrom( $data['source']);
@@ -43,13 +42,8 @@ class AddExpenseTransaction
             {
                 $this->cashTransaction(shift:  $shift, data: $data);
             }
-
-
         });
-
     }
-
-
 
 
     private  function tillTransaction(Shift $shift, array $data)
@@ -88,15 +82,15 @@ class AddExpenseTransaction
                     ])
                     ->first();
 
-                $newBalance =  $shiftNetwork->balance_old - $data['amount'];
-                $oldBalance =   floatval( $shiftNetwork->balance_old);
+                $newBalance =  $shiftNetwork->balance_new - $data['amount'];
+                $oldBalance =   floatval( $shiftNetwork->balance_new);
 
             }
             else
             {
-                $newBalance =  $lastTransaction->balance_old - $data['amount'];
+                $newBalance =  $lastTransaction->balance_new - $data['amount'];
 
-                $oldBalance =  floatval( $lastTransaction->balance_old );  // old balance
+                $oldBalance =  floatval( $lastTransaction->balance_new );  // old balance
             }
 
             return $this->createShiftTransaction(

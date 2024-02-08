@@ -15,14 +15,15 @@ class AddIncomeTransactionController extends Controller
     {
         $validated = $request->validate([
             'amount' => 'required',
-            'description' => 'required|string|max:255',
+            'income_type' => 'required',
+            'network_code' => 'nullable',
+            'description' => 'required|string',
+            'notes' => 'nullable|string',
         ]);
 
         try {
 
             throw_if(! $shift->created_at->isToday(), new \Exception("You must close previous Day shift to make this Transaction"));
-
-
 
             $validated['category'] = TransactionCategoryEnum::INCOME;
             $validated['type'] = TransactionTypeEnum::MONEY_IN->value;

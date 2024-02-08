@@ -225,22 +225,24 @@ function shiftBalances(\App\Models\Shift $shift) :array
 
     foreach ($shift->loadMissing('shiftNetworks.network.agency')->shiftNetworks as $shiftNetworks) {
 
-
-
         $tills[$shiftNetworks->network->agency->name]  =   [
              'balance' => $shift->transactions()
                 ->where('network_code', $shiftNetworks->network_code)
                 ->exists() ? ShiftTransaction::query()->whereBelongsTo($shift,'shift')
                 ->where('network_code', $shiftNetworks->network_code)
                 ->latest('created_at')
-                ->sum('balance_new')
+                 ->limit(1)
+                ->pluck('balance_new')
+                 ->first()
                 :
-                $shiftNetworks->balance_old,
+                $shiftNetworks->balance_new,
             'code' => $shiftNetworks->network_code,
+            'balance_new' => $shiftNetworks->balance_new,
             'balance_old' => $shiftNetworks->balance_old
         ];
 
     }
+
 
 
     $tillBalances =  collect($tills)->sum(function ($item) {

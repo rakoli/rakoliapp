@@ -65,7 +65,7 @@
             </div>
             <div class="row fv-row py-3">
                 <div class="col-12">
-                    <x-label label="description" class="" for="notes"/>
+                    <x-label label="description" class="" for="description"/>
                     <textarea name="description" class="form-control form-control form-control-solid" rows="3"
                               data-kt-autosize="false"></textarea>
                     @error('description')
