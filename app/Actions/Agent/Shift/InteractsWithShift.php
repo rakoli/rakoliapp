@@ -6,19 +6,20 @@ use App\Models\Location;
 use App\Models\Shift;
 use App\Models\ShiftNetwork;
 use App\Models\ShiftTransaction;
+use App\Models\Transaction;
 use App\Utils\Enums\ShiftStatusEnum;
 
 trait InteractsWithShift
 {
     /**
      * @param array{network_code: string, amount: float, type: string , category: string , notes: ?string , description: ?string } $data
-     *
+     * @return \Illuminate\Database\Eloquent\Model
      * @throws \Exception
      */
-    public function createShiftTransaction(Shift $shift, array $data, float $oldBalance, $newBalance): void
+    public function createShiftTransaction(Shift $shift, array $data, float $oldBalance, $newBalance)
     {
 
-        $shift->transactions()->create([
+        return $shift->transactions()->create([
             'business_code' => $shift->business_code,
             'location_code' => $shift->location_code,
             'network_code' => $data['network_code'],
@@ -33,6 +34,24 @@ trait InteractsWithShift
             'description' => $data['description'] ?? null,
             'note' => $data['notes'] ?? null,
         ]);
+    }
+
+    private function createLocationTransaction(array $data, Location $location)
+    {
+        return Transaction::create([
+            'business_code' => $data['business_code'],
+            'location_code' => $data['location_code'] ,
+            'user_code' => auth()->user()->code,
+            'amount' => $data['amount'],
+            'amount_currency' => currencyCode(),
+            'type' => $data['type'],
+            'category' => $data['category'],
+            'balance_old' => $location->balance,
+            'balance_new' =>  $data['location_new_balance'],
+            'description' => $data['description'] ?? null,
+            'note' => $data['notes'] ?? null,
+        ]);
+
     }
 
 

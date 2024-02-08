@@ -15,15 +15,18 @@ class AddExpenseTransactionController extends Controller
     {
         $validated = $request->validate([
             'amount' => 'required',
+            'source' => 'required',
+            'network_code' => 'nullable',
             'description' => 'required|string',
+            'notes' => 'nullable|string',
         ]);
 
         try {
 
             throw_if(! $shift->created_at->isToday(), new \Exception("You must close previous Day shift to make this Transaction"));
 
-
             $validated['category'] = TransactionCategoryEnum::EXPENSE;
+
             $validated['type'] = TransactionTypeEnum::MONEY_OUT->value;
 
             AddExpenseTransaction::run(shift: $shift, data: $validated);
