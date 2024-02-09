@@ -138,12 +138,13 @@ function xmlToArrayConvert($xmlContent)
 function currencyCode(): ?string
 {
 
-    if (auth()->check()) {
-        return auth()->user()->country->currency;
+    if (\session()->has('currency')) {
+        return \session('currency');
     }
 
     return env('DEFAULT_CURRENCY');
 }
+
 
 function setupSession(User $user, $isRegisteringUser = false)
 {
@@ -210,15 +211,6 @@ function idNumberDisplay($number)
     return str_pad("$number", 5,'0',STR_PAD_LEFT);
 }
 
-function currencyCode(): ?string
-{
-
-    if (\session()->has('currency')) {
-        return \session('currency');
-    }
-
-    return env('DEFAULT_CURRENCY');
-}
 
 
 function shiftBalances(\App\Models\Shift $shift) :array
