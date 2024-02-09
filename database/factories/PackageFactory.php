@@ -21,17 +21,17 @@ class PackageFactory extends Factory
     {
         $countries = Country::get('code')->toArray();
         $countryCode = null;
-        if (empty($countries)) {
+        if(empty($countries)){
             $countryCode = Country::factory()->create()->code;
-        } else {
+        }else{
             $countryCode = fake()->randomElement($countries)['code'];
         }
 
         $packageNames = PackageName::get()->toArray();
         $packageName = null;
-        if (empty($packageNames)) {
+        if(empty($packageNames)){
             $packageName = PackageName::factory()->create()->name;
-        } else {
+        }else{
             $packageName = fake()->randomElement($packageNames)['name'];
         }
 
@@ -40,9 +40,10 @@ class PackageFactory extends Factory
             'name' => $packageName,
             'code' => Str::random(7),
             'price' => fake()->numberBetween(50000, 100000),
-            'price_currency' => fake()->randomElement(['kes', 'tzs']),
+            'price_currency' => fake()->randomElement(['kes','tzs']),
+            'price_commission' => fake()->numberBetween(500, 1000),
             'package_interval_days' => 365,
-            'description' => fake()->sentence,
+            'description' => fake()->sentence
         ];
     }
 }

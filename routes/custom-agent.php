@@ -99,4 +99,46 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
     });
     //END: EXCHANGE MODULE
 
+    //BUSINESS MANAGEMENT MODULE
+    Route::name('business.')->prefix('business')->middleware('lastseen_update')->group(function () {
+        Route::get('role', [App\Http\Controllers\Agent\BusinessController::class, 'roles'])->name('role');
+        Route::post('roles/add', [App\Http\Controllers\Agent\BusinessController::class, 'rolesAdd'])->name('roles.add');
+        Route::post('roles/edit', [App\Http\Controllers\Agent\BusinessController::class, 'rolesEdit'])->name('roles.edit');
+        Route::post('roles/delete', [App\Http\Controllers\Agent\BusinessController::class, 'rolesDelete'])->name('roles.delete');
+
+        Route::get('finance', [App\Http\Controllers\Agent\PaymentController::class, 'finance'])->name('finance');
+        Route::post('finance/withdrawmethod/update', [App\Http\Controllers\Agent\PaymentController::class, 'withdrawmethodUpdate'])->name('finance.withdrawmethod.update');
+        Route::post('finance/withdraw', [App\Http\Controllers\Agent\PaymentController::class, 'financeWithdraw'])->name('finance.withdraw');
+        Route::post('finance/check_method', [App\Http\Controllers\Agent\PaymentController::class, 'checkMethod'])->name('finance.check_method');
+
+        Route::get('profile/update', [App\Http\Controllers\Agent\BusinessController::class, 'profileCreate'])->name('profile.update');
+        Route::post('profile/update', [App\Http\Controllers\Agent\BusinessController::class, 'profileUpdate'])->name('profile.update.submit');
+
+        Route::get('subscription', [App\Http\Controllers\Agent\SubscriptionController::class, 'subscription'])->name('subscription');
+        Route::get('subscription_buy', [App\Http\Controllers\Agent\SubscriptionController::class, 'subscriptionBuy'])->name('subscription.buy');
+
+
+        Route::get('branches', [App\Http\Controllers\Agent\BusinessController::class, 'branches'])->name('branches');
+        Route::get('branches/create', [App\Http\Controllers\Agent\BusinessController::class, 'branchesCreate'])->name('branches.create');
+        Route::get('branches/edit/{id}', [App\Http\Controllers\Agent\BusinessController::class, 'branchesEdit'])->name('branches.edit');
+        Route::get('branches/delete/{id}', [App\Http\Controllers\Agent\BusinessController::class, 'branchesDelete'])->name('branches.delete');
+        Route::post('branches/create/submit', [App\Http\Controllers\Agent\BusinessController::class, 'branchesCreateSubmit'])->name('branches.create.submit');
+        Route::post('branches/edit/submit', [App\Http\Controllers\Agent\BusinessController::class, 'branchesEditSubmit'])->name('branches.edit.submit');
+        Route::get('branches/create/townlist', [App\Http\Controllers\Agent\BusinessController::class, 'branchesCreateTownlistAjax'])->name('branches.townlistAjax');
+        Route::get('branches/create/arealist', [App\Http\Controllers\Agent\BusinessController::class, 'branchesCreateArealistAjax'])->name('branches.arealistAjax');
+
+
+
+        Route::get('users', [App\Http\Controllers\Agent\BusinessController::class, 'users'])->name('users');
+        Route::get('users/create', [App\Http\Controllers\Agent\BusinessController::class, 'usersCreate'])->name('users.create');
+        Route::post('users/create/submit', [App\Http\Controllers\Agent\BusinessController::class, 'usersCreateSubmit'])->name('users.create.submit');
+        Route::get('users/edit/{id}', [App\Http\Controllers\Agent\BusinessController::class, 'usersEdit'])->name('users.edit');
+        Route::post('users/edit/submit', [App\Http\Controllers\Agent\BusinessController::class, 'usersEditSubmit'])->name('users.edit.submit');
+        Route::get('users/delete/{id}', [App\Http\Controllers\Agent\BusinessController::class, 'usersDelete'])->name('users.delete');
+
+        Route::get('referrals',[App\Http\Controllers\Agent\BusinessController::class,'referrals'])->name('referrals');
+        Route::post('referrals.referr', [App\Http\Controllers\Agent\BusinessController::class, 'referr'])->name('referrals.referr');
+    });
+    //END: BUSINESS MANAGEMENT MODULE
+
 });

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Utils\Enums\BusinessStatusEnum;
+use App\Utils\Enums\TransactionTypeEnum;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -27,6 +29,7 @@ class Business extends Model
         'business_phone_number',
         'business_email',
         'business_location',
+        'referral_business_code',
     ];
 
     public static function addBusiness($data)
@@ -35,17 +38,17 @@ class Business extends Model
 
         try {
             $businessInstance = self::create($data);
-            $country = Country::where('code', $businessInstance->country_code)->first();
-            $locationName = $businessInstance->business_name.' HQ';
+            $country = Country::where('code',$businessInstance->country_code)->first();
+            $locationName = $businessInstance->business_name . " HQ";
             Location::create([
                 'business_code' => $businessInstance->code,
-                'code' => generateCode($locationName, $country->code),
+                'code' => generateCode($locationName,$country->code) ,
                 'name' => $locationName,
                 'balance' => 0,
                 'balance_currency' => $country->currency,
             ]);
             ExchangeStat::create([
-                'business_code' => "$businessInstance->code",
+                "business_code"=>"$businessInstance->code"
             ]);
             ExchangeBusinessMethod::create([
                 'business_code' => $businessInstance->code,
@@ -54,21 +57,26 @@ class Business extends Model
                 'account_number' => 'cash',
                 'account_name' => 'cash',
             ]);
+            BusinessRole::create([
+                'business_code'=>$businessInstance->code,
+                'code'=> generateCode('Admin', $businessInstance->code),
+                'name'=>'Admin',
+                'description'=>'Administrator',
+            ]);
             DB::commit();
-        } catch (\Exception $exception) {
+        }catch (\Exception $exception) {
             DB::rollback();
-            Log::debug('ADD BUSINESS ERROR: '.$exception->getMessage());
+            Log::debug("ADD BUSINESS ERROR: ".$exception->getMessage());
             Bugsnag::notifyException($exception);
-
             return false;
         }
 
         return $businessInstance;
     }
 
-    public function country(): BelongsTo
+    public function country() : BelongsTo
     {
-        return $this->belongsTo(Country::class, 'country_code', 'code');
+        return $this->belongsTo(Country::class,'country_code','code');
     }
 
     public function user(): HasMany
@@ -81,6 +89,11 @@ class Business extends Model
         return $this->HasMany(User::class, 'business_code', 'code');
     }
 
+    public function roles(): HasMany
+    {
+        return $this->HasMany(BusinessRole::class, 'business_code', 'code');
+    }
+
     public function package(): BelongsTo
     {
         return $this->belongsTo(Package::class, 'package_code', 'code');
@@ -88,17 +101,17 @@ class Business extends Model
 
     public function taskSubmissions(): HasManyThrough
     {
-        return $this->hasManyThrough(VasSubmission::class, VasContract::class, 'agent_code', 'vas_contract_code', 'code', 'code');
+        return $this->hasManyThrough(VasSubmission::class, VasContract::class,'agent_code','vas_contract_code','code','code');
     }
 
     public function agentsSubmissions(): HasManyThrough
     {
-        return $this->hasManyThrough(VasSubmission::class, VasContract::class, 'vas_business_code', 'vas_contract_code', 'code', 'code');
+        return $this->hasManyThrough(VasSubmission::class, VasContract::class,'vas_business_code','vas_contract_code','code','code');
     }
 
     public function vasPaymentsDone(): HasManyThrough
     {
-        return $this->hasManyThrough(VasPayment::class, VasContract::class, 'vas_business_code', 'vas_contract_code', 'code', 'code');
+        return $this->hasManyThrough(VasPayment::class, VasContract::class,'vas_business_code','vas_contract_code','code','code');
     }
 
     public function parent_referral(): BelongsTo
@@ -156,6 +169,11 @@ class Business extends Model
         return $this->hasMany(Short::class, 'business_code', 'code');
     }
 
+    public function business_account_transactions(): HasMany
+    {
+        return $this->hasMany(BusinessAccountTransaction::class, 'business_code', 'code');
+    }
+
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class, 'business_code', 'code');
@@ -171,9 +189,14 @@ class Business extends Model
         return $this->hasMany(ExchangeAds::class, 'business_code', 'code');
     }
 
-    public function exchange_stats(): HasOne
+    public function exchange_stats() : HasOne
     {
-        return $this->hasOne(ExchangeStat::class, 'business_code', 'code');
+        return $this->hasOne(ExchangeStat::class,'business_code','code');
+    }
+
+    public function withdraw_method() : HasOne
+    {
+        return $this->hasOne(BusinessWithdrawMethod::class,'business_code','code');
     }
 
     public function exchange_transactions_owned(): HasMany
@@ -215,4 +238,46 @@ class Business extends Model
     {
         return $this->hasMany(VasTaskAvailability::class, 'agent_business_code', 'code');
     }
+
+    public function isUserAllowed(User $user)
+    {
+        if($user->business_code == $this->code){
+            return true;
+        }
+        return false;
+    }
+
+    public function addBusinessAccountTransaction($type,$category,$amount,$description)
+    {
+        $result = runDatabaseTransaction(function() use ($type,$category,$amount,$description) {
+
+            $balanceOld = $this->balance;
+            $balanceNew = $this->balance;
+            if($type == TransactionTypeEnum::MONEY_IN->value){
+                $balanceNew = $this->balance + $amount;
+                $this->balance = $balanceNew;
+            }
+            if($type == TransactionTypeEnum::MONEY_OUT->value){
+                $balanceNew = $this->balance - $amount;
+                $this->balance = $balanceNew;
+            }
+            $this->save();
+
+            BusinessAccountTransaction::create([
+                'business_code'=> $this->code,
+                'type'=>$type,
+                'category'=>$category,
+                'amount'=>$amount,
+                'amount_currency'=>$this->country->currency,
+                'balance_old'=>$balanceOld,
+                'balance_new'=>$balanceNew,
+                'description'=>$description,
+            ]);
+
+            return true;
+        });
+
+        return $result;
+    }
+
 }

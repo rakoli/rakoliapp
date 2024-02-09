@@ -135,6 +135,16 @@ function xmlToArrayConvert($xmlContent)
     return $newArr;
 }
 
+function currencyCode(): ?string
+{
+
+    if (auth()->check()) {
+        return auth()->user()->country->currency;
+    }
+
+    return env('DEFAULT_CURRENCY');
+}
+
 function setupSession(User $user, $isRegisteringUser = false)
 {
 
@@ -151,47 +161,45 @@ function setupSession(User $user, $isRegisteringUser = false)
     Session::put('registration_step', $user->registration_step);
     Session::put('status', $user->status);
 
-    if ($user->type != 'admin' && $user->registration_step == 0 && $isRegisteringUser == false) {
+    if($user->type != 'admin' && $user->registration_step == 0 && $isRegisteringUser == false){
         Session::put('currency', $user->business->country->currency);
         Session::put('business_name', $user->business->business_name);
-    } else {
+    }else{
         Session::put('business_name', 'ADMIN - RAKOLI SYSTEMS');
     }
 
     $user->lastSeenUpdate();
 }
 
-function returnActiveMenuStyle($menuSection): string
+function returnActiveMenuStyle($menuSection) : string
 {
-    if ($menuSection == cleanText(Request()->route()->getPrefix())) {
+    if($menuSection == cleanText(Request()->route()->getPrefix())){
         return 'hover';
     }
-
     return '';
 }
 
-function returnActiveSubMenuStyle($subSection): string
+function returnActiveSubMenuStyle($subSection) : string
 {
-    if ($subSection == cleanText(strstr(Request()->route()->getName(), '.'))) {
+    if($subSection == cleanText(strstr(Request()->route()->getName(), '.'))){
         return 'active';
     }
-
     return '';
 }
 
-function str_camelcase($string): string
+function str_camelcase($string) : string
 {
     return ucwords(strtolower($string));
 }
 
-function tradeOrderInvence($type): string
+function tradeOrderInvence($type) : string
 {
-    if ($type == 'sell') {
-        return 'buy';
+    if($type == "sell"){
+        return "buy";
     }
 
-    if ($type == 'buy') {
-        return 'sell';
+    if($type == "buy"){
+        return "sell";
     }
 
     return $type;
@@ -199,7 +207,7 @@ function tradeOrderInvence($type): string
 
 function idNumberDisplay($number)
 {
-    return str_pad("$number", 5, '0', STR_PAD_LEFT);
+    return str_pad("$number", 5,'0',STR_PAD_LEFT);
 }
 
 function currencyCode(): ?string

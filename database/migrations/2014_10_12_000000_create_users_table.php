@@ -46,14 +46,23 @@ return new class extends Migration
             $table->timestamp('email_otp_time')->nullable();
             $table->integer('email_otp_count')->nullable();
 
+
             $table->string('iddoc_type')->nullable();
             $table->string('iddoc_id')->nullable()->unique();
             $table->string('iddoc_path')->nullable();
             $table->boolean('iddoc_verified')->default(0);
 
+            $table->string('referral_business_code')->nullable();
+            $table->foreign('referral_business_code')->references('code')
+                ->on('businesses')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 

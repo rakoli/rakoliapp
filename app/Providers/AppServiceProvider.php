@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Schema;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,5 +23,7 @@ class AppServiceProvider extends ServiceProvider
     {
 
         Model::preventLazyLoading(! $this->app->isProduction());
+        Schema::defaultStringLength(191);
+//        Model::preventLazyLoading(! $this->app->isProduction());
     }
 }

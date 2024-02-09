@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Business;
 use App\Models\Country;
 use App\Models\User;
 use App\Utils\Enums\UserTypeEnum;
@@ -93,6 +94,22 @@ class AuthenticationTest extends TestCase
     }
 
     /** @test */
+    public function public_user_can_open_agent_referral_link(): void
+    {
+        $business = Business::factory()->create();
+        $user = User::factory()->create(['type'=>UserTypeEnum::AGENT->value, 'registration_step'=>0,'business_code'=>$business->code]);
+
+        $response = $this->get(route('referral.link', $business->code));
+        $response->assertRedirect(route('register'));
+        $response->assertCookie(env('APP_NAME').'_referral_business_code');
+
+
+        $response = $this->get(route('referral.link', 'invalid_business_code'));
+        $response->assertRedirect(route('register'));
+        $this->assertEquals('Invalid Referral Link',session('errors')->first());
+    }
+
+    /** @test */
     public function guest_user_can_submit_agent_registration_form_without_errors()
     {
         //Added Country to get dialing code
@@ -122,6 +139,42 @@ class AuthenticationTest extends TestCase
             'type' => UserTypeEnum::AGENT->value,
         ]);
         $loginInUser = User::where('email', $user->email)->first();
+        $this->assertAuthenticatedAs($loginInUser);
+    }
+
+    /** @test */
+    public function guest_user_can_submit_agent_registration_form__including_referral_code_without_errors()
+    {
+        //Added Country to get dialing code
+        $countries = Country::get('dialing_code')->toArray();
+        $countryDialCode = null;
+        if(empty($countries)){
+            $countryDialCode = Country::factory()->create()->dialing_code;
+        }else{
+            $countryDialCode = fake()->randomElement($countries)['dialing_code'];
+        }
+
+        $user = User::factory()->make(); // Create a fake user for form submission
+        $parentBusiness = Business::factory()->create();
+
+        $response = $this->post(route('register'), [
+            'country_dial_code' => $countryDialCode,
+            'fname' => $user->fname,
+            'lname' => $user->lname,
+            'phone' => $user->phone,
+            'email' => $user->email,
+            'password' => '12345678',
+            'password_confirmation' => '12345678',
+            'referral_business_code' => $parentBusiness->code,
+        ]);
+
+        $response->assertRedirect(route('home')); // Replace with the actual home route
+        $this->assertDatabaseHas('users', [
+            'email' => $user->email,
+            'type' => UserTypeEnum::AGENT->value,
+            'referral_business_code' => $parentBusiness->code,
+        ]);
+        $loginInUser = User::where('email',$user->email)->first();
         $this->assertAuthenticatedAs($loginInUser);
     }
 

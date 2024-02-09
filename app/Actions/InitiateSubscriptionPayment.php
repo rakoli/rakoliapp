@@ -6,6 +6,7 @@ use App\Models\InitiatedPayment;
 use App\Models\Package;
 use App\Models\User;
 use App\Utils\DPORequestTokenFormat;
+use App\Utils\Enums\InitiatedPaymentStatusEnum;
 use App\Utils\Enums\SystemIncomeCategoryEnum;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Illuminate\Support\Facades\Log;
@@ -133,6 +134,19 @@ class InitiateSubscriptionPayment
                     'result' => 'Recording Request Error',
                     'resultExplanation' => 'Unable to record the payment request',
                 ];
+            }
+
+            $similarPendingPayments = InitiatedPayment::where('business_code',$user->business_code)
+                ->where('expiry_time','>',now())
+                ->where('description',$package->code)
+                ->where('status',InitiatedPaymentStatusEnum::INITIATED)->get();
+
+            if(!$similarPendingPayments->isEmpty()){
+                foreach ($similarPendingPayments as $similarPendingPayment) {
+                    $similarPendingPayment->expiry_time = now();
+                    $similarPendingPayment->status = InitiatedPaymentStatusEnum::COMPLETED;
+                    $similarPendingPayment->save();
+                }
             }
 
         }

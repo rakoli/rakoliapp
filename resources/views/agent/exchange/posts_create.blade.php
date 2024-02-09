@@ -1,3 +1,4 @@
+
 @extends('layouts.users.agent')
 
 @section('title', __("Create Post"))

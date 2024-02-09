@@ -33,6 +33,7 @@ class PackagesTableSeeder extends Seeder
                 'code' => generateCode($growthPackage->name, 'tz'),
                 'price' => 60000,
                 'price_currency' => 'tzs',
+                'price_commission' => 1800,//3%
                 'package_interval_days' => 365,
                 'description' => 'Start growing agents business',
             ],
@@ -42,6 +43,7 @@ class PackagesTableSeeder extends Seeder
                 'code' => generateCode($prosperityPackage->name, 'tz'),
                 'price' => 100000,
                 'price_currency' => 'tzs',
+                'price_commission' => 3000,//3%
                 'package_interval_days' => 365,
                 'description' => 'Expand and prosper agency business',
             ],
@@ -51,6 +53,7 @@ class PackagesTableSeeder extends Seeder
                 'code' => generateCode($elitePackage->name, 'tz'),
                 'price' => 150000,
                 'price_currency' => 'tzs',
+                'price_commission' => 4500,//3%
                 'package_interval_days' => 365,
                 'description' => 'Full control of agency business',
             ],
@@ -63,6 +66,7 @@ class PackagesTableSeeder extends Seeder
                 'code' => generateCode($growthPackage->name, 'ke'),
                 'price' => 3000,
                 'price_currency' => 'kes',
+                'price_commission' => 90,//3%
                 'package_interval_days' => 365,
                 'description' => 'Start growing agents business',
             ],
@@ -72,6 +76,7 @@ class PackagesTableSeeder extends Seeder
                 'code' => generateCode($prosperityPackage->name, 'ke'),
                 'price' => 5000,
                 'price_currency' => 'kes',
+                'price_commission' => 150,//3%
                 'package_interval_days' => 365,
                 'description' => 'Expand and prosper agency business',
             ],
@@ -81,6 +86,7 @@ class PackagesTableSeeder extends Seeder
                 'code' => generateCode($elitePackage->name, 'ke'),
                 'price' => 7500,
                 'price_currency' => 'kes',
+                'price_commission' => 225,//3%
                 'package_interval_days' => 365,
                 'description' => 'Full control of agency business',
             ],

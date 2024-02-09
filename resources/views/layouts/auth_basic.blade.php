@@ -14,6 +14,32 @@
 
         <!--begin::Body-->
         <div class="d-flex flex-column flex-lg-row-fluid w-lg-50 p-10 order-2 order-lg-1">
+
+            @if ($errors->any())
+                <!--begin::Container-->
+                <div class="container-xxl mb-5">
+                    <div class="card card-flush mb-0">
+                        <div class="alert alert-danger mb-0">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            @if(session('message'))
+                <div class="container-xxl mb-5">
+                    <div class="card card-flush mb-0">
+                        <div class="alert alert-success mb-0">
+                            {{ session('message') }}
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             <!--begin::Form-->
             <div class="d-flex flex-center flex-column flex-lg-row-fluid">
                 <!--begin::Wrapper-->
