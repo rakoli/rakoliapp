@@ -31,22 +31,22 @@ class StatisticsService
 
     public function noOfBusinessNetworks()
     {
-        return Network::where('business_code',$this->user->business_code)->get()->count();
+        return Network::where('business_code', $this->user->business_code)->get()->count();
     }
 
     public function noOfBusinessOpenShifts()
     {
-        return Shift::where(['status'=>ShiftStatusEnum::OPEN,'business_code'=>$this->user->business_code])->get()->count();
+        return Shift::where(['status' => ShiftStatusEnum::OPEN, 'business_code' => $this->user->business_code])->get()->count();
     }
 
     public function businessTotalCashBalance()
     {
-        return Location::where('business_code',$this->user->business_code)->get()->sum('balance');
+        return Location::where('business_code', $this->user->business_code)->get()->sum('balance');
     }
 
     public function businessTotalTillBalance()
     {
-        return Network::where('business_code',$this->user->business_code)->get()->sum('balance');
+        return Network::where('business_code', $this->user->business_code)->get()->sum('balance');
     }
 
     public function agentNoOfAwardedVasContract()
@@ -58,7 +58,7 @@ class StatisticsService
     {
         return ExchangeTransaction::where([
             'trader_business_code' => $this->user->business_code,
-            'status' => ExchangeTransactionStatusEnum::OPEN
+            'status' => ExchangeTransactionStatusEnum::OPEN,
         ])->orWhere(function (\Illuminate\Database\Eloquent\Builder $query) {
             $query->where('owner_business_code', auth()->user()->business_code)
                 ->where('status', ExchangeTransactionStatusEnum::OPEN);
@@ -70,7 +70,7 @@ class StatisticsService
         return Transaction::where([
             'business_code' => $this->user->business_code,
             'category' => TransactionCategoryEnum::INCOME,
-        ])->where('created_at','>=',now()->subDays(30))->get()->sum('amount');
+        ])->where('created_at', '>=', now()->subDays(30))->get()->sum('amount');
     }
 
     public function businessExpenseTotalof30days()
@@ -78,7 +78,7 @@ class StatisticsService
         return Transaction::where([
             'business_code' => $this->user->business_code,
             'category' => TransactionCategoryEnum::EXPENSE,
-        ])->where('created_at','>=',now()->subDays(30))->get()->sum('amount');
+        ])->where('created_at', '>=', now()->subDays(30))->get()->sum('amount');
     }
 
     public function businessNoOfReferrals()
@@ -88,22 +88,22 @@ class StatisticsService
 
     public function vas_total_services_posted()
     {
-        return VasTask::where('vas_business_code',$this->user->business_code)->count();
+        return VasTask::where('vas_business_code', $this->user->business_code)->count();
     }
 
     public function vas_total_received_submissions()
     {
-        return Business::where('code',$this->user->business_code)->first()->agentsSubmissions()->count();
+        return Business::where('code', $this->user->business_code)->first()->agentsSubmissions()->count();
     }
 
     public function vas_no_of_users_in_business()
     {
-        return User::where('business_code',$this->user->business_code)->count();
+        return User::where('business_code', $this->user->business_code)->count();
     }
 
     public function vas_total_payments_made()
     {
-        return VasPayment::where('business_code',$this->user->business_code)->get()->sum('amount');
+        return VasPayment::where('business_code', $this->user->business_code)->get()->sum('amount');
     }
 
     public function admin_total_no_of_businesses()
@@ -118,12 +118,12 @@ class StatisticsService
 
     public function admin_no_of_exchange_listing()
     {
-        return ExchangeAds::where('status',ExchangeStatusEnum::ACTIVE->value)->count();
+        return ExchangeAds::where('status', ExchangeStatusEnum::ACTIVE->value)->count();
     }
 
     public function admin_no_of_vas_listing()
     {
-        return VasTask::where('status',VasTaskStatusEnum::ACTIVE->value)->count();
+        return VasTask::where('status', VasTaskStatusEnum::ACTIVE->value)->count();
     }
 
     public function admin_no_business_with_active_subscription()
@@ -138,7 +138,7 @@ class StatisticsService
 
     public function agent_referrals_list()
     {
-        return User::where('referral_business_code',$this->user->business_code)->get();
+        return User::where('referral_business_code', $this->user->business_code)->get();
     }
 
     public function agent_total_number_of_referrals()
@@ -150,12 +150,13 @@ class StatisticsService
     {
         $totalCommission = 0;
         foreach ($this->agent_referrals_list() as $downline) {
-            if($downline->business != null ){
-                if($downline->business->package != null){
+            if ($downline->business != null) {
+                if ($downline->business->package != null) {
                     $totalCommission = $totalCommission + $downline->business->package->price_commission;
                 }
             }
         }
+
         return $totalCommission;
     }
 
@@ -163,13 +164,13 @@ class StatisticsService
     {
         $totalInactive = 0;
         foreach ($this->agent_referrals_list() as $downline) {
-            if($downline->business != null ){
-                if($downline->business->package == null){
+            if ($downline->business != null) {
+                if ($downline->business->package == null) {
                     $totalInactive = $totalInactive + 1;
                 }
             }
         }
+
         return $totalInactive;
     }
-
 }

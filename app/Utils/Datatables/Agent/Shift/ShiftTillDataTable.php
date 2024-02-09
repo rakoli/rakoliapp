@@ -25,8 +25,8 @@ class ShiftTillDataTable
                 return $query->orderBy('id', 'desc');
             })
             ->addIndexColumn()
-            ->addColumn('balance_old', fn (ShiftNetwork $shiftNetwork) => money(amount: $shiftNetwork->balance_old, currency: currencyCode() , convert:  true))
-            ->addColumn('balance_new', fn (ShiftNetwork $shiftNetwork) => money(amount: $shiftNetwork->balance_new, currency: currencyCode() , convert:  true))
+            ->addColumn('balance_old', fn (ShiftNetwork $shiftNetwork) => money(amount: $shiftNetwork->balance_old, currency: currencyCode(), convert: true))
+            ->addColumn('balance_new', fn (ShiftNetwork $shiftNetwork) => money(amount: $shiftNetwork->balance_new, currency: currencyCode(), convert: true))
             ->addColumn('till_name', fn (ShiftNetwork $shiftNetwork) => $shiftNetwork->network?->agency->name)
             ->addColumn('created_at', fn (ShiftNetwork $shiftNetwork) => $shiftNetwork->created_at->format('Y-F-d'))
             ->addColumn('action', function (ShiftNetwork $shiftNetwork) {

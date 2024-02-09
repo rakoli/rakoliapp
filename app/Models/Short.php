@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Utils\Enums\ShortTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,6 +12,11 @@ class Short extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'type' => ShortTypeEnum::class
+    ];
+
+    protected $guarded = ['id'];
     public function business(): BelongsTo
     {
         return $this->belongsTo(Business::class, 'business_code', 'code');

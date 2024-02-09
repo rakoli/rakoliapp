@@ -2,9 +2,9 @@
 
 namespace App\Utils\Enums;
 
-enum WithdrawMethodStatusEnum : string
+enum WithdrawMethodStatusEnum: string
 {
-    case REQUESTED = "requested";
-    case PROCESSING = "processing";
-    case COMPLETED = "completed";
+    case REQUESTED = 'requested';
+    case PROCESSING = 'processing';
+    case COMPLETED = 'completed';
 }

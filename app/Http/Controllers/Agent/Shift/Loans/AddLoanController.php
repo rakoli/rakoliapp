@@ -31,7 +31,7 @@ class AddLoanController extends Controller
 
             throw_if(
                 ! $shift->created_at->isToday(),
-                new \Exception("You must close previous Day shift to make this Transaction")
+                new \Exception('You must close previous Day shift to make this Transaction')
             );
 
             $validated['category'] = TransactionCategoryEnum::GENERAL;

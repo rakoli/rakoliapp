@@ -145,7 +145,6 @@ function currencyCode(): ?string
     return env('DEFAULT_CURRENCY');
 }
 
-
 function setupSession(User $user, $isRegisteringUser = false)
 {
 
@@ -162,45 +161,47 @@ function setupSession(User $user, $isRegisteringUser = false)
     Session::put('registration_step', $user->registration_step);
     Session::put('status', $user->status);
 
-    if($user->type != 'admin' && $user->registration_step == 0 && $isRegisteringUser == false){
+    if ($user->type != 'admin' && $user->registration_step == 0 && $isRegisteringUser == false) {
         Session::put('currency', $user->business->country->currency);
         Session::put('business_name', $user->business->business_name);
-    }else{
+    } else {
         Session::put('business_name', 'ADMIN - RAKOLI SYSTEMS');
     }
 
     $user->lastSeenUpdate();
 }
 
-function returnActiveMenuStyle($menuSection) : string
+function returnActiveMenuStyle($menuSection): string
 {
-    if($menuSection == cleanText(Request()->route()->getPrefix())){
+    if ($menuSection == cleanText(Request()->route()->getPrefix())) {
         return 'hover';
     }
+
     return '';
 }
 
-function returnActiveSubMenuStyle($subSection) : string
+function returnActiveSubMenuStyle($subSection): string
 {
-    if($subSection == cleanText(strstr(Request()->route()->getName(), '.'))){
+    if ($subSection == cleanText(strstr(Request()->route()->getName(), '.'))) {
         return 'active';
     }
+
     return '';
 }
 
-function str_camelcase($string) : string
+function str_camelcase($string): string
 {
     return ucwords(strtolower($string));
 }
 
-function tradeOrderInvence($type) : string
+function tradeOrderInvence($type): string
 {
-    if($type == "sell"){
-        return "buy";
+    if ($type == 'sell') {
+        return 'buy';
     }
 
-    if($type == "buy"){
-        return "sell";
+    if ($type == 'buy') {
+        return 'sell';
     }
 
     return $type;
@@ -208,38 +209,36 @@ function tradeOrderInvence($type) : string
 
 function idNumberDisplay($number)
 {
-    return str_pad("$number", 5,'0',STR_PAD_LEFT);
+    return str_pad("$number", 5, '0', STR_PAD_LEFT);
 }
 
-
-
-function shiftBalances(\App\Models\Shift $shift) :array
+function shiftBalances(\App\Models\Shift $shift): array
 {
-    $cash =  $shift->loadMissing('location')->location->balance;
+    $cash = $shift->loadMissing('location')->location->balance;
 
     $tills = [];
 
     foreach ($shift->loadMissing('shiftNetworks.network.agency')->shiftNetworks as $shiftNetworks) {
 
-        $tills[$shiftNetworks->network->agency->name]  =   [
-             'balance' => $shift->transactions()
+        $tills[$shiftNetworks->network->agency->name] = [
+            'balance' => $shift->transactions()
                 ->where('network_code', $shiftNetworks->network_code)
-                ->exists() ? ShiftTransaction::query()->whereBelongsTo($shift,'shift')
+                ->exists() ? ShiftTransaction::query()->whereBelongsTo($shift, 'shift')
                 ->where('network_code', $shiftNetworks->network_code)
                 ->latest('created_at')
-                 ->limit(1)
+                ->limit(1)
                 ->pluck('balance_new')
-                 ->first()
-                :
-                $shiftNetworks->balance_new,
+                ->first()
+               :
+               $shiftNetworks->balance_new,
             'code' => $shiftNetworks->network_code,
             'balance_new' => $shiftNetworks->balance_new,
-            'balance_old' => $shiftNetworks->balance_old
+            'balance_old' => $shiftNetworks->balance_old,
         ];
 
     }
 
-    $tillBalances =  collect($tills)->sum(function ($item) {
+    $tillBalances = collect($tills)->sum(function ($item) {
         return floatval($item['balance']);
     });
 
@@ -252,7 +251,7 @@ function shiftBalances(\App\Models\Shift $shift) :array
         ->whereDate('created_at', $shift->created_at)
         ->whereBetween('created_at', [
             $shift->created_at,
-            now()
+            now(),
         ])
         ->sum('amount');
 
@@ -265,27 +264,26 @@ function shiftBalances(\App\Models\Shift $shift) :array
         ->whereDate('created_at', $shift->created_at)
         ->whereBetween('created_at', [
             $shift->created_at,
-            now()
+            now(),
         ])
         ->sum('amount');
 
     $startCapital = $shift->cash_start + $shift->shiftNetworks->sum('balance_old');
 
-    $endingCapital =  ($cash + $expenses + $tillBalances) - $income;
+    $endingCapital = ($cash + $expenses + $tillBalances) - $income;
 
-    $shorts =   $startCapital - $endingCapital - $income;
+    $shorts = $startCapital - $endingCapital - $income;
 
     return [
-        'totalBalance' =>  ($cash + $expenses + $tillBalances),
-        'cashAtHand'  =>   $cash ,
+        'totalBalance' => ($cash + $expenses + $tillBalances),
+        'cashAtHand' => $cash,
         'tillBalances' => $tillBalances,
         'expenses' => $expenses,
         'networks' => $tills,
         'income' => $income,
-        'startCapital' =>$startCapital,
+        'startCapital' => $startCapital,
         'endCapital' => $endingCapital,
-        'endCapital' => $endingCapital,
-        'new_shorts' =>   $shorts
+        'shorts' => $shorts,
     ];
 }
 function runDatabaseTransaction(\Closure $closure): mixed
@@ -305,9 +303,7 @@ function runDatabaseTransaction(\Closure $closure): mixed
         // If an exception occurs, rollback the transaction
         DB::rollback();
 
-        dd($exception);
-
-        // Log the exception
+          // Log the exception
         Log::debug('ERROR: '.$exception->getMessage());
 
         // Notify Bugsnag about the exception

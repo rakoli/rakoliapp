@@ -18,6 +18,7 @@ use App\Http\Controllers\Agent\Shift\TillController;
 use App\Http\Controllers\Agent\Shift\Transaction\AddExpenseTransactionController;
 use App\Http\Controllers\Agent\Shift\Transaction\AddIncomeTransactionController;
 use App\Http\Controllers\Agent\Shift\Transaction\AddTransactionController;
+use App\Http\Controllers\Agent\Shift\TransferShiftController;
 use App\Http\Controllers\Agent\Transaction\TransactionsController;
 use Illuminate\Support\Facades\Route;
 
@@ -36,6 +37,7 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
             Route::get('/open', [OpenShiftController::class, 'index'])->name('agency.shift.open.index');
             Route::post('/open', [OpenShiftController::class, 'store'])->name('agency.shift.open.store');
             Route::get('/{shift}/close', [CloseShiftController::class, 'index'])->name('agency.shift.close');
+            Route::post('/{shift}/transfer', [TransferShiftController::class, 'store'])->name('agency.shift.transfer');
             Route::post('/close/store', [CloseShiftController::class, 'store'])->name('agency.shift.close.store');
             Route::get('/{shift}/show', ShowShiftController::class)->name('agency.shift.show');
             Route::get('{shift}/tills', [TillController::class, 'index'])->name('agency.shift.till');
@@ -117,7 +119,6 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
         Route::get('subscription', [App\Http\Controllers\Agent\SubscriptionController::class, 'subscription'])->name('subscription');
         Route::get('subscription_buy', [App\Http\Controllers\Agent\SubscriptionController::class, 'subscriptionBuy'])->name('subscription.buy');
 
-
         Route::get('branches', [App\Http\Controllers\Agent\BusinessController::class, 'branches'])->name('branches');
         Route::get('branches/create', [App\Http\Controllers\Agent\BusinessController::class, 'branchesCreate'])->name('branches.create');
         Route::get('branches/edit/{id}', [App\Http\Controllers\Agent\BusinessController::class, 'branchesEdit'])->name('branches.edit');
@@ -127,8 +128,6 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
         Route::get('branches/create/townlist', [App\Http\Controllers\Agent\BusinessController::class, 'branchesCreateTownlistAjax'])->name('branches.townlistAjax');
         Route::get('branches/create/arealist', [App\Http\Controllers\Agent\BusinessController::class, 'branchesCreateArealistAjax'])->name('branches.arealistAjax');
 
-
-
         Route::get('users', [App\Http\Controllers\Agent\BusinessController::class, 'users'])->name('users');
         Route::get('users/create', [App\Http\Controllers\Agent\BusinessController::class, 'usersCreate'])->name('users.create');
         Route::post('users/create/submit', [App\Http\Controllers\Agent\BusinessController::class, 'usersCreateSubmit'])->name('users.create.submit');
@@ -136,7 +135,7 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
         Route::post('users/edit/submit', [App\Http\Controllers\Agent\BusinessController::class, 'usersEditSubmit'])->name('users.edit.submit');
         Route::get('users/delete/{id}', [App\Http\Controllers\Agent\BusinessController::class, 'usersDelete'])->name('users.delete');
 
-        Route::get('referrals',[App\Http\Controllers\Agent\BusinessController::class,'referrals'])->name('referrals');
+        Route::get('referrals', [App\Http\Controllers\Agent\BusinessController::class, 'referrals'])->name('referrals');
         Route::post('referrals.referr', [App\Http\Controllers\Agent\BusinessController::class, 'referr'])->name('referrals.referr');
     });
     //END: BUSINESS MANAGEMENT MODULE

@@ -9,8 +9,6 @@ use App\Models\ShiftNetwork;
 use App\Models\ShiftTransaction;
 use App\Models\Transaction;
 use App\Utils\Enums\FundSourceEnums;
-use App\Utils\Enums\TransactionCategoryEnum;
-use App\Utils\Enums\TransactionTypeEnum;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class AddExpenseTransaction
@@ -28,25 +26,21 @@ class AddExpenseTransaction
 
         return runDatabaseTransaction(function () use ($shift, $data) {
 
-            $source = FundSourceEnums::tryFrom( $data['source']);
+            $source = FundSourceEnums::tryFrom($data['source']);
 
             $data['location_code'] = $shift->location_code;
 
             $data['business_code'] = $shift->business_code;
 
-            if (FundSourceEnums::TILL === $source)
-            {
-                $this->tillTransaction(shift:  $shift,data: $data);
-            }
-            else
-            {
-                $this->cashTransaction(shift:  $shift, data: $data);
+            if ($source === FundSourceEnums::TILL) {
+                $this->tillTransaction(shift: $shift, data: $data);
+            } else {
+                $this->cashTransaction(shift: $shift, data: $data);
             }
         });
     }
 
-
-    private  function tillTransaction(Shift $shift, array $data)
+    private function tillTransaction(Shift $shift, array $data)
     {
         try {
             $location = Location::query()->where('code', $shift->location_code)->first();
@@ -58,7 +52,7 @@ class AddExpenseTransaction
             //record a location balance for this expense transaction
 
             $this->createLocationTransaction(
-                data:  $data,
+                data: $data,
                 location: $location
             );
 
@@ -71,10 +65,9 @@ class AddExpenseTransaction
                 ->latest('created_at')
                 ->first();
 
-            if (! $lastTransaction)
-            {
+            if (! $lastTransaction) {
 
-                $shiftNetwork =  ShiftNetwork::query()
+                $shiftNetwork = ShiftNetwork::query()
                     ->whereBelongsTo($shift, 'shift')
                     ->where([
                         'location_code' => $shift->location_code,
@@ -82,15 +75,13 @@ class AddExpenseTransaction
                     ])
                     ->first();
 
-                $newBalance =  $shiftNetwork->balance_new - $data['amount'];
-                $oldBalance =   floatval( $shiftNetwork->balance_new);
+                $newBalance = $shiftNetwork->balance_new - $data['amount'];
+                $oldBalance = floatval($shiftNetwork->balance_new);
 
-            }
-            else
-            {
-                $newBalance =  $lastTransaction->balance_new - $data['amount'];
+            } else {
+                $newBalance = $lastTransaction->balance_new - $data['amount'];
 
-                $oldBalance =  floatval( $lastTransaction->balance_new );  // old balance
+                $oldBalance = floatval($lastTransaction->balance_new);  // old balance
             }
 
             return $this->createShiftTransaction(
@@ -99,13 +90,10 @@ class AddExpenseTransaction
                 oldBalance: $oldBalance,
                 newBalance: $newBalance,
             );
-        }
-        catch (\Exception $exception)
-        {
+        } catch (\Exception $exception) {
             throw new \Exception($exception);
         }
     }
-
 
     private function cashTransaction(Shift $shift, array $data)
     {
@@ -117,7 +105,7 @@ class AddExpenseTransaction
 
         $this->createLocationTransaction(
             data: $data,
-            location:  $location,
+            location: $location,
         );
 
         $location->updateQuietly([

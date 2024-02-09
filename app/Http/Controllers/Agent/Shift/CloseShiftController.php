@@ -9,58 +9,75 @@ use App\Models\Shift;
 use App\Models\ShiftNetwork;
 use App\Utils\Enums\ShiftStatusEnum;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class CloseShiftController extends Controller
 {
-    public function index()
+    public function index(Request $request, Shift $shift)
     {
 
-        if (! Shift::query()->where('status', ShiftStatusEnum::OPEN)->exists()) {
+        if (! Shift::query()->where('status', ShiftStatusEnum::CLOSED)->exists()) {
             return to_route('agency.shift');
         }
 
-        $locations = Location::query()
-           // ->whereHas('users', fn($query) => $query->where('user_code', auth()->user()->code)) //@todo Remove this when implemented
-            ->cursor();
-
-        $shift = Shift::query()->where('status', ShiftStatusEnum::OPEN)->first();
+        $locations = $shift->load('location')->location()->get();
 
         $tills = ShiftNetwork::query()->where('shift_id', $shift->id)
             ->where('balance_new', '>', 0)->with('network.agency');
-
 
         $loans = Loan::query()->whereBelongsTo($shift, 'shift')->get()->groupBy(fn (Loan $loan) => $loan->type->label());
 
         return view('agent.agency.close-shift')->with([
             'tills' => $tills->cursor(),
             'locations' => $locations,
-            'shift' => $shift,
+            'shift' => $shift->loadMissing('shorts.network.agency'),
             'loans' => $loans,
-            ...shiftBalances($shift)
+            ...shiftBalances($shift),
         ]);
     }
 
-    public function store(Request $request)
+    protected function validateForm(Request $request): array
     {
-        abort_if(! Shift::query()->where('status', ShiftStatusEnum::OPEN)->exists(), 404, 'No open shift to close');
-        $validated = $request->validate(rules: [
+        return $request->validate(rules: [
             'closing_balance' => 'required|numeric',
-            'location_code' => 'required',
+            'location_code' => 'nullable',
             'notes' => 'nullable',
+            'expenses' => 'nullable',
+            'income' => 'nullable',
             'description' => 'required',
             'tills' => 'required',
+            'short_type' =>[
+                'nullable',
+                Rule::requiredIf(fn () => $request->has('total_shorts') && $request->total_shorts > 0),
+            ],
+            'total_shorts' => [
+                'nullable',
+                Rule::requiredIf(fn () => $request->has('short_type') && $request->total_shorts > 0),
+            ],
+            'short_network_code' => [
+                'nullable',
+                Rule::requiredIf(fn () => $request->has('total_shorts') && $request->total_shorts > 0),
+            ],
+            'short_description' => [
+                'nullable',
+                Rule::requiredIf(fn () => $request->has('total_shorts') && $request->total_shorts > 0),
+            ],
         ]);
+    }
+
+    public function store(Shift $shift, Request $request)
+    {
+
+        $validated = $this->validateForm($request);
+
+        $validated['status'] = ShiftStatusEnum::CLOSED;
 
         try {
 
             \App\Actions\Agent\Shift\CloseShift::run(
-                closingCash: $validated['closing_balance'],
-                locationCode: $validated['location_code'],
-                description: $validated['description'],
-                notes: $validated['notes'],
-                tills: $validated['tills'],
-
+                shift: $shift,
+                data: $validated
             );
 
             return response()

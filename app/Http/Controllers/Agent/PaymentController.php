@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\Agent;
 
 use App\Http\Controllers\Controller;
-use App\Models\Business;
 use App\Models\BusinessAccountTransaction;
 use App\Models\BusinessWithdrawMethod;
-use App\Models\Location;
 use App\Models\Transaction;
 use App\Models\WithdrawRequest;
 use Carbon\Carbon;
@@ -37,13 +35,13 @@ class PaymentController extends Controller
                 // })
                 // ->rawColumns(['actions'])
                 ->addIndexColumn()
-                ->addColumn('amount_display',function($row){
-                        return number_format($row->amount,2) . ' '.strtoupper($row->amount_currency);
-                    })
+                ->addColumn('amount_display', function ($row) {
+                    return number_format($row->amount, 2).' '.strtoupper($row->amount_currency);
+                })
                 ->editColumn('id', function ($row) {
                     return idNumberDisplay($row->id);
                 })
-                ->editColumn('created_at', function($row) {
+                ->editColumn('created_at', function ($row) {
                     return Carbon::create($row->created_at)->toDateTimeString('minute');
                 })
                 ->toJson();
@@ -58,13 +56,13 @@ class PaymentController extends Controller
                 // })
                 // ->rawColumns(['actions'])
                 ->addIndexColumn()
-                ->addColumn('amount_display',function($row){
-                    return number_format($row->amount,2) . ' '.strtoupper($row->amount_currency);
+                ->addColumn('amount_display', function ($row) {
+                    return number_format($row->amount, 2).' '.strtoupper($row->amount_currency);
                 })
                 ->editColumn('id', function ($row) {
                     return idNumberDisplay($row->id);
                 })
-                ->editColumn('created_at', function($row) {
+                ->editColumn('created_at', function ($row) {
                     return Carbon::create($row->created_at)->toDateTimeString('minute');
                 })
                 ->toJson();
@@ -85,10 +83,10 @@ class PaymentController extends Controller
             // ['data' => 'actions', 'title' => __('Actions')],
         ])->responsive(true)
             ->ordering(false)
-            ->ajax(route('business.finance',['table'=>'withdraw_requests']))
+            ->ajax(route('business.finance', ['table' => 'withdraw_requests']))
             ->paging(true)
             ->dom('rtil')
-            ->lengthMenu([[5, 10, 20, -1], [5, 10, 20, "All"]])->setTableId('withdraw_requests');
+            ->lengthMenu([[5, 10, 20, -1], [5, 10, 20, 'All']])->setTableId('withdraw_requests');
 
         $transactionsDataTableHtml = $builder2->columns([
             ['data' => 'id', 'title' => __('ID')],
@@ -102,10 +100,10 @@ class PaymentController extends Controller
             // ['data' => 'actions', 'title' => __('Actions')],
         ])->responsive(true)
             ->ordering(false)
-            ->ajax(route('business.finance',['table'=>'account_transactions']))
+            ->ajax(route('business.finance', ['table' => 'account_transactions']))
             ->paging(true)
             ->dom('rtil')
-            ->lengthMenu([[5, 10, 20, -1], [5, 10, 20, "All"]])->setTableId('account_transactions');
+            ->lengthMenu([[5, 10, 20, -1], [5, 10, 20, 'All']])->setTableId('account_transactions');
 
         return view('agent.business.finance', compact('dataTableHtml', 'transactionsDataTableHtml', 'balance', 'withdrawMethod'));
     }
@@ -115,7 +113,7 @@ class PaymentController extends Controller
         $request->validate([
             'method_name' => 'required|string',
             'method_ac_name' => 'required|string',
-            'method_ac_number' => 'required|string'
+            'method_ac_number' => 'required|string',
         ]);
 
         $user = $request->user();
@@ -137,7 +135,7 @@ class PaymentController extends Controller
             ]
         );
 
-        return redirect()->route('business.finance')->with(['message' => __('Withdraw Method') . ' ' . __('Updated Successfully')]);
+        return redirect()->route('business.finance')->with(['message' => __('Withdraw Method').' '.__('Updated Successfully')]);
     }
 
     public function financeWithdraw(Request $request)
@@ -154,7 +152,7 @@ class PaymentController extends Controller
         $amount = $request->amount;
         $get_withdraw_method = BusinessWithdrawMethod::where('business_code', $user->business_code)->first();
 
-        if (!$get_withdraw_method) {
+        if (! $get_withdraw_method) {
             return redirect()->route('business.finance')->withErrors([__('Please add withdrawal method first')]);
         }
 
@@ -186,17 +184,17 @@ class PaymentController extends Controller
             return true;
         });
 
-        if($result == false){
+        if ($result == false) {
             return redirect()->route('business.finance')->withErrors([__('Unable to process withdraw request')]);
         }
 
-        return redirect()->route('business.finance')->with(['message' => __('Withdraw Request') . ' ' . __('Added Successfully')]);
+        return redirect()->route('business.finance')->with(['message' => __('Withdraw Request').' '.__('Added Successfully')]);
     }
 
     public function checkMethod(Request $request)
     {
         $get_withdraw_method = BusinessWithdrawMethod::where('business_code', $request->user()->business_code)->first();
-        if (!$get_withdraw_method) {
+        if (! $get_withdraw_method) {
             return response()->json(['message' => __('Please add withdrawal method')]);
         } else {
             return response()->json(['message' => 'Withdrawal method exists']);

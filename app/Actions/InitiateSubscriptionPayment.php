@@ -136,12 +136,12 @@ class InitiateSubscriptionPayment
                 ];
             }
 
-            $similarPendingPayments = InitiatedPayment::where('business_code',$user->business_code)
-                ->where('expiry_time','>',now())
-                ->where('description',$package->code)
-                ->where('status',InitiatedPaymentStatusEnum::INITIATED)->get();
+            $similarPendingPayments = InitiatedPayment::where('business_code', $user->business_code)
+                ->where('expiry_time', '>', now())
+                ->where('description', $package->code)
+                ->where('status', InitiatedPaymentStatusEnum::INITIATED)->get();
 
-            if(!$similarPendingPayments->isEmpty()){
+            if (! $similarPendingPayments->isEmpty()) {
                 foreach ($similarPendingPayments as $similarPendingPayment) {
                     $similarPendingPayment->expiry_time = now();
                     $similarPendingPayment->status = InitiatedPaymentStatusEnum::COMPLETED;

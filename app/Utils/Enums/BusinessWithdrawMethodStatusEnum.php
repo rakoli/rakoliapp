@@ -2,9 +2,9 @@
 
 namespace App\Utils\Enums;
 
-enum BusinessWithdrawMethodStatusEnum : string
+enum BusinessWithdrawMethodStatusEnum: string
 {
-    case REQUESTED = "requested";
-    case APPROVED = "approved";
-    case COMPLETE = "complete";
+    case REQUESTED = 'requested';
+    case APPROVED = 'approved';
+    case COMPLETE = 'complete';
 }

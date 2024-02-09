@@ -22,9 +22,9 @@ return new class extends Migration
             $table->string('method_name');
             $table->string('method_ac_name');
             $table->string('method_ac_number');
-            $table->decimal('amount', 12,2)->default('0.00');
+            $table->decimal('amount', 12, 2)->default('0.00');
             $table->string('amount_currency');
-            $table->string('status')->default(\App\Utils\Enums\WithdrawMethodStatusEnum::REQUESTED->value);//requested, processing, completed
+            $table->string('status')->default(\App\Utils\Enums\WithdrawMethodStatusEnum::REQUESTED->value); //requested, processing, completed
             $table->string('description')->nullable();
             $table->string('completion_reference')->nullable();
             $table->text('completion_note')->nullable();

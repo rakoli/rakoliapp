@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BusinessRole extends Model
 {
-    use HasFactory, BusinessAuthorization, SoftDeletes;
+    use BusinessAuthorization, HasFactory, SoftDeletes;
 
     protected $fillable = [
         'business_code',
@@ -23,5 +23,4 @@ class BusinessRole extends Model
     {
         return $this->belongsTo(Business::class, 'Business_Code', 'Business_Code');
     }
-
 }

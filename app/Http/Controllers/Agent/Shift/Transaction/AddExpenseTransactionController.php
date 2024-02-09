@@ -23,7 +23,7 @@ class AddExpenseTransactionController extends Controller
 
         try {
 
-            throw_if(! $shift->created_at->isToday(), new \Exception("You must close previous Day shift to make this Transaction"));
+            throw_if(! $shift->created_at->isToday(), new \Exception('You must close previous Day shift to make this Transaction'));
 
             $validated['category'] = TransactionCategoryEnum::EXPENSE;
 

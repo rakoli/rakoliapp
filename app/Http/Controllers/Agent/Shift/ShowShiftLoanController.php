@@ -39,7 +39,7 @@ class ShowShiftLoanController extends Controller
             'datatableHtml' => $dataTableHtml,
             'loans' => $loans,
             'locations' => $locations,
-           ...shiftBalances(shift:  $shift),
+            ...shiftBalances(shift: $shift),
             'tills' => $tills,
             'shift' => $shift->loadMissing('user', 'location'),
         ]);

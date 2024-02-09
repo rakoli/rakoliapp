@@ -9,7 +9,6 @@ use App\Utils\Enums\LoanPaymentStatusEnum;
 use App\Utils\Enums\LoanTypeEnum;
 use App\Utils\Enums\ShiftStatusEnum;
 use App\Utils\Enums\TransactionTypeEnum;
-use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class AddLoan
@@ -44,8 +43,8 @@ class AddLoan
             ]);
 
             [$newBalance, $oldBalance] = match ($data['type']) {
-                LoanTypeEnum::MONEY_IN->value => AddLoan::moneyIn(shift:   $shift , data: $data, isLoan: true),
-                LoanTypeEnum::MONEY_OUT->value => AddLoan::moneyOut(shift:   $shift , data: $data, isLoan: true),
+                LoanTypeEnum::MONEY_IN->value => AddLoan::moneyIn(shift: $shift, data: $data, isLoan: true),
+                LoanTypeEnum::MONEY_OUT->value => AddLoan::moneyOut(shift: $shift, data: $data, isLoan: true),
             };
 
             $data['type'] = match ($data['type']) {

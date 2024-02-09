@@ -6,6 +6,8 @@
     'size' => "modal-lg",
     'isStacked' => false
 ])
+
+
 <button type="button" class="{{ $btnClass }}" data-bs-toggle="modal" data-bs-target="#{{ $targetId }}">
     {{ __($label) }}
 </button>

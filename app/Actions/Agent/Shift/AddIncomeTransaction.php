@@ -25,27 +25,22 @@ class AddIncomeTransaction
     {
         return runDatabaseTransaction(function () use ($shift, $data) {
 
-            $source = FundSourceEnums::tryFrom( $data['income_type']);
+            $source = FundSourceEnums::tryFrom($data['income_type']);
 
             $data['location_code'] = $shift->location_code;
 
             $data['business_code'] = $shift->business_code;
 
-            if (FundSourceEnums::TILL === $source)
-            {
-                $this->tillTransaction(shift:  $shift,data: $data);
-            }
-            else
-            {
-                $this->cashTransaction(shift:  $shift, data: $data);
+            if ($source === FundSourceEnums::TILL) {
+                $this->tillTransaction(shift: $shift, data: $data);
+            } else {
+                $this->cashTransaction(shift: $shift, data: $data);
             }
         });
 
     }
 
-
-
-    private  function tillTransaction(Shift $shift, array $data)
+    private function tillTransaction(Shift $shift, array $data)
     {
         try {
             $location = Location::query()->where('code', $shift->location_code)->first();
@@ -57,7 +52,7 @@ class AddIncomeTransaction
             //record a location balance for this expense transaction
 
             $this->createLocationTransaction(
-                data:  $data,
+                data: $data,
                 location: $location
             );
 
@@ -70,10 +65,9 @@ class AddIncomeTransaction
                 ->latest('created_at')
                 ->first();
 
-            if (! $lastTransaction)
-            {
+            if (! $lastTransaction) {
 
-                $shiftNetwork =  ShiftNetwork::query()
+                $shiftNetwork = ShiftNetwork::query()
                     ->whereBelongsTo($shift, 'shift')
                     ->where([
                         'location_code' => $shift->location_code,
@@ -81,15 +75,13 @@ class AddIncomeTransaction
                     ])
                     ->first();
 
-                $newBalance =  $shiftNetwork->balance_new + $data['amount'];
-                $oldBalance =   floatval( $shiftNetwork->balance_new);
+                $newBalance = $shiftNetwork->balance_new + $data['amount'];
+                $oldBalance = floatval($shiftNetwork->balance_new);
 
-            }
-            else
-            {
-                $newBalance =  $lastTransaction->balance_new + $data['amount'];
+            } else {
+                $newBalance = $lastTransaction->balance_new + $data['amount'];
 
-                $oldBalance =  floatval( $lastTransaction->balance_new );  // old balance
+                $oldBalance = floatval($lastTransaction->balance_new);  // old balance
             }
 
             return $this->createShiftTransaction(
@@ -98,13 +90,10 @@ class AddIncomeTransaction
                 oldBalance: $oldBalance,
                 newBalance: $newBalance,
             );
-        }
-        catch (\Exception $exception)
-        {
+        } catch (\Exception $exception) {
             throw new \Exception($exception);
         }
     }
-
 
     private function cashTransaction(Shift $shift, array $data)
     {
@@ -116,7 +105,7 @@ class AddIncomeTransaction
 
         $this->createLocationTransaction(
             data: $data,
-            location:  $location,
+            location: $location,
         );
 
         $location->updateQuietly([

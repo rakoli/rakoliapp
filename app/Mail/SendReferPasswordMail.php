@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use App\Models\User;
-use App\Utils\VerifyOTP;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -16,7 +15,9 @@ class SendReferPasswordMail extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
 
     public User $receiver;
+
     public User $upline;
+
     public $password;
 
     /**
@@ -48,7 +49,6 @@ class SendReferPasswordMail extends Mailable implements ShouldQueue
             markdown: 'emails.sendpasswordemail',
         );
     }
-
 
     /**
      * Get the attachments for the message.

@@ -2,8 +2,10 @@
 
 namespace App\Utils\Enums;
 
-enum FundSourceEnums: string
+enum ShortTypeEnum: string
 {
     case CASH = 'CASH';
+
     case TILL = 'TILL';
+
 }

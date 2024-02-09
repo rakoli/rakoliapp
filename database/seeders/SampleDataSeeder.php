@@ -11,12 +11,12 @@ class SampleDataSeeder extends Seeder
      */
     public function run(): void
     {
-        if (env('APP_ENV') != 'production'){
+        if (env('APP_ENV') != 'production') {
             $this->call([
                 SampleBusinessSeeder::class,
                 SampleReferralBusinessSeeder::class,
                 SampleSystemIncomeSeeder::class,
-//            SampleExchangeAdsSeeder::class, //In Business Seeder, PUT OF FOR OTHER TESTINGS
+                //            SampleExchangeAdsSeeder::class, //In Business Seeder, PUT OF FOR OTHER TESTINGS
                 SampleVasTaskSeeder::class,
                 SampleVasContractSeeder::class,
                 SampleVasPaymentSeeder::class,
@@ -24,7 +24,7 @@ class SampleDataSeeder extends Seeder
                 SampleTransactionSeeder::class,
                 SampleNetworkSeeder::class,
                 SampleShiftSeeder::class,
-//            SampleExchangeTransactionSeeder::class, //In Business Seeder
+                //            SampleExchangeTransactionSeeder::class, //In Business Seeder
             ]);
         }
 

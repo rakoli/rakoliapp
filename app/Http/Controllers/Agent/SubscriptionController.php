@@ -5,12 +5,7 @@ namespace App\Http\Controllers\Agent;
 use App\Actions\CheckUserPendingSystemPayments;
 use App\Http\Controllers\Controller;
 use App\Models\Business;
-use App\Models\BusinessWithdrawMethod;
 use App\Models\InitiatedPayment;
-use App\Models\Package;
-use App\Models\PackageName;
-use App\Models\Region;
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
@@ -35,10 +30,10 @@ class SubscriptionController extends Controller
             //     return $content;
             // })
             // ->rawColumns(['actions'])
-                ->addColumn('amount_display',function($row){
-                    return number_format($row->amount,2) . ' '.strtoupper($row->amount_currency);
+                ->addColumn('amount_display', function ($row) {
+                    return number_format($row->amount, 2).' '.strtoupper($row->amount_currency);
                 })
-                ->editColumn('created_at', function($trn) {
+                ->editColumn('created_at', function ($trn) {
                     return Carbon::create($trn->created_at)->toDateTimeString('minute');
                 })
                 ->addIndexColumn()
@@ -59,16 +54,16 @@ class SubscriptionController extends Controller
             ->ajax(route('business.subscription')) // Assuming you have a named route for the roles.index endpoint
             ->paging(true)
             ->dom('frtilp')
-            ->lengthMenu([[5, 10, 20, -1], [5, 10, 20, "All"]]);
+            ->lengthMenu([[5, 10, 20, -1], [5, 10, 20, 'All']]);
 
         $hasPendingPayment = false;
         $initiatedPayments = auth()->user()->getBusinessPendingPayments();
-        if(!$initiatedPayments->isEmpty()){
+        if (! $initiatedPayments->isEmpty()) {
             $hasPendingPayment = true;
-            CheckUserPendingSystemPayments::run(auth()->user(),$initiatedPayments);
+            CheckUserPendingSystemPayments::run(auth()->user(), $initiatedPayments);
         }
 
-        return view('agent.business.subscription', compact('dataTableHtml','currency', 'business','hasPendingPayment','initiatedPayments'));
+        return view('agent.business.subscription', compact('dataTableHtml', 'currency', 'business', 'hasPendingPayment', 'initiatedPayments'));
     }
 
     public function subscriptionBuy(Request $request)
