@@ -58,19 +58,18 @@ trait InteractsWithShift
     // DEPOSIT Transaction
     public static function moneyIn(Shift $shift , array $data, bool $isLoan = false): array
     {
-
         // increase location balance
 
         $location = Location::query()
             ->where('code', $shift->location_code)
             ->first();
 
+        if (! $isLoan)
+        {
+            $location->balance = $location->balance + $data['amount'];
 
-        $location->balance = $location->balance + $data['amount'];
-
-        $location->saveQuietly();
-
-
+            $location->saveQuietly();
+        }
 
         // get old shift network balance if no transaction then
 
@@ -84,6 +83,8 @@ trait InteractsWithShift
             ->latest('created_at')
             ->first();
 
+
+
         if (! $lastTransaction)
         {
 
@@ -93,6 +94,7 @@ trait InteractsWithShift
                     'location_code' => $shift->location_code,
                     'network_code' => $data['network_code'],
                 ])
+
                 ->first();
 
             return [
@@ -102,30 +104,26 @@ trait InteractsWithShift
         }
 
         return [
-            $lastTransaction->balance_old - $data['amount'],
-            $lastTransaction->balance_old,
+            $lastTransaction->balance_new - $data['amount'],
+            $lastTransaction->balance_new,
 
         ];
     }
 
+    //
     public static function moneyOut(Shift $shift , array $data, bool $isLoan = false): array
     {
-
         // increase location balance
 
         $location = Location::query()
             ->where('code', $shift->location_code)
             ->first();
 
-
         $location->balance = $location->balance -  $data['amount'];
 
         $location->saveQuietly();
 
-
-
         // get old shift network balance if no transaction then
-
 
         $lastTransaction = ShiftTransaction::query()
             ->whereBelongsTo($shift, 'shift')
@@ -147,15 +145,30 @@ trait InteractsWithShift
                 ])
                 ->first();
 
+            if ($isLoan)
+            {
+                return [
+                    $shiftNetwork->balance_old, // new balance
+                    $shiftNetwork->balance_old, // old balance
+                ];
+            }
+
             return [
                 $shiftNetwork->balance_old +  $data['amount'], // new balance
                 $shiftNetwork->balance_old, // old balance
             ];
         }
+        if ($isLoan)
+        {
+            return [
+                $lastTransaction->balance_new, // new balance
+                $lastTransaction->balance_new, // old balance
+            ];
+        }
 
         return [
-            $lastTransaction->balance_old + $data['amount'], // new balance
-            $lastTransaction->balance_old, // old balance
+            $lastTransaction->balance_new + $data['amount'], // new balance
+            $lastTransaction->balance_new, // old balance
 
         ];
     }

@@ -24,12 +24,10 @@ class ShowLoanController extends Controller
 
         $tills = ShiftNetwork::query()->where('shift_id', $shift->id)->with('network.agency');
 
-        $totalBalance = $shift->cash_end + $tills->sum('balance_new');
-
         return view('agent.agency.loans.show')->with([
             'loan' => $loan,
             'shift' => $shift,
-            'totalBalance' => $totalBalance,
+            ...shiftBalances(shift: $shift),
             'tills' => $tills->cursor(),
             'datatableHtml' => $paymentDatatable->columns($datatableBuilder),
 

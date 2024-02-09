@@ -29,8 +29,6 @@ class AddLoan
                 exception: new \Exception('You cannot transact without an open shift')
             );
 
-            DB::beginTransaction();
-
             $loan = Loan::create([
                 'business_code' => auth()->user()->business_code,
                 'location_code' => $shift->location_code,
@@ -46,8 +44,8 @@ class AddLoan
             ]);
 
             [$newBalance, $oldBalance] = match ($data['type']) {
-                LoanTypeEnum::MONEY_IN->value => AddLoan::moneyIn($data, true),
-                LoanTypeEnum::MONEY_OUT->value => AddLoan::moneyOut($data, true),
+                LoanTypeEnum::MONEY_IN->value => AddLoan::moneyIn(shift:   $shift , data: $data, isLoan: true),
+                LoanTypeEnum::MONEY_OUT->value => AddLoan::moneyOut(shift:   $shift , data: $data, isLoan: true),
             };
 
             $data['type'] = match ($data['type']) {
