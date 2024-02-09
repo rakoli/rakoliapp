@@ -217,11 +217,7 @@ function shiftBalances(\App\Models\Shift $shift) :array
 {
     $cash =  $shift->loadMissing('location')->location->balance;
 
-
-
     $tills = [];
-
-
 
     foreach ($shift->loadMissing('shiftNetworks.network.agency')->shiftNetworks as $shiftNetworks) {
 
@@ -242,8 +238,6 @@ function shiftBalances(\App\Models\Shift $shift) :array
         ];
 
     }
-
-
 
     $tillBalances =  collect($tills)->sum(function ($item) {
         return floatval($item['balance']);
@@ -275,7 +269,11 @@ function shiftBalances(\App\Models\Shift $shift) :array
         ])
         ->sum('amount');
 
+    $startCapital = $shift->cash_start + $shift->shiftNetworks->sum('balance_old');
 
+    $endingCapital =  ($cash + $expenses + $tillBalances) - $income;
+
+    $shorts =   $startCapital - $endingCapital - $income;
 
     return [
         'totalBalance' =>  ($cash + $expenses + $tillBalances),
@@ -283,7 +281,11 @@ function shiftBalances(\App\Models\Shift $shift) :array
         'tillBalances' => $tillBalances,
         'expenses' => $expenses,
         'networks' => $tills,
-        'income' => $income
+        'income' => $income,
+        'startCapital' =>$startCapital,
+        'endCapital' => $endingCapital,
+        'endCapital' => $endingCapital,
+        'new_shorts' =>   $shorts
     ];
 }
 function runDatabaseTransaction(\Closure $closure): mixed
