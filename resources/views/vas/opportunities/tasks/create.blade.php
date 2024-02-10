@@ -1,6 +1,6 @@
 @extends('layouts.users.vas')
 
-@section('title', __("Edit Task"))
+@section('title', __("Create Task"))
 
 @section('content')
 
@@ -9,7 +9,7 @@
 
         @include('vas.opportunities._submenu')
 
-        @include('vas.tasks._form', ['submitUrl'=>route('vas.tasks.update',array($task->id)),'isEdit'=>true])
+        @include('vas.opportunities.tasks._form', ['submitUrl'=>route('vas.tasks.store'),'isEdit'=>false])
 
     </div>
     <!--end::Container-->
@@ -17,5 +17,5 @@
 @endsection
 
 @section('footer_js')
-    @include('vas.tasks._form_js')
+    @include('vas.opportunities.tasks._form_js')
 @endsection

@@ -31,9 +31,8 @@ class TasksController extends Controller
 
         if (request()->ajax()) {
 
-            $tasks = VasTask::where('country_code',$user->country_code)
-                ->where('vas_business_code',$user->business_code)
-                ->with(['country','business','area','region','town'])
+            $tasks = VasTask::where('vas_business_code',$user->business_code)
+                ->with(['area','region','town'])
                 ->orderBy('id','desc');;
 
             return \Yajra\DataTables\Facades\DataTables::eloquent($tasks)
@@ -41,16 +40,38 @@ class TasksController extends Controller
                 ->editColumn('task_type', function($task) {
                     return __($task->task_type);
                 })
+                ->addColumn('location', function(VasTask $task) {
+                    $region = $task->region;
+                    if($region != null){
+                        $region = $task->region->name;
+                    }
+                    $town = $task->town;
+                    if($town != null){
+                        $town = $task->town->name;
+                    }
+                    $area = $task->area;
+                    if($area != null){
+                        $area = $task->area->name;
+                    }
+                    $content = "<div class='d-flex flex-column'>
+                                  <div>Region: $region</div>
+                                  <div>Town: $town</div>
+                                  <div>Area: $area</div>
+                                </div>";
+
+                    return $content;
+                })
+
                 ->addColumn('action', function(VasTask $task) {
-                    $content = '<a class="btn btn-secondary btn-sm me-2" href="'.route('vas.tasks.show', $task->id).'">'.__("View Task").'</a>
-                                <a class="btn btn-secondary btn-sm me-2" href="'.route('vas.tasks.edit', $task->id).'">'.__("Edit").'</a>';
+                    $content = '<a class="btn btn-secondary btn-sm me-2 m-1" href="'.route('vas.tasks.show', $task->id).'">'.__("View Task").'</a>
+                                <a class="btn btn-secondary btn-sm me-2 m-1" href="'.route('vas.tasks.edit', $task->id).'">'.__("Edit").'</a>';
                     if($task->status != VasTaskStatusEnum::DELETED->value){
-                        $content .= '<button class="btn btn-secondary btn-sm me-2" onclick="deleteClicked('.$task->id.')">'.__("Delete").'</button>';
+                        $content .= '<button class="btn btn-secondary btn-sm me-2 m-1" onclick="deleteClicked('.$task->id.')">'.__("Delete").'</button>';
                     }
                     return $content;
                 })
                 ->addIndexColumn()
-                ->rawColumns(['action'])
+                ->rawColumns(['action','location'])
                 ->editColumn('id',function($task) {
                     return idNumberDisplay($task->id);
                 })
@@ -60,14 +81,10 @@ class TasksController extends Controller
         //Datatable
         $dataTableHtml = $builder->columns([
             ['data' => 'id', 'title' => __('id')],
-            ['data' => 'country.name', 'title' => __("Country")],
-            ['data' => 'business.business_name', 'title' => __("Business")],
-            ['data' => 'area.name', 'title' => __("Area")],
-            ['data' => 'region.name', 'title' => __("Region")],
-            ['data' => 'town.name', 'title' => __("Town")],
             ['data' => 'task_type' , 'title' => __("Type")],
+            ['data' => 'location' , 'title' => __("Location")],
             ['data' => 'time_start' , 'title' => __("Start Time")],
-            ['data' => 'time_start' , 'title' => __("End Time")],
+            ['data' => 'time_end' , 'title' => __("End Time")],
             ['data' => 'no_of_agents' , 'title' => __("Agents")],
             ['data' => 'description' , 'title' => __("Description")],
             ['data' => 'action' , 'title' => __("Action")],
@@ -78,7 +95,7 @@ class TasksController extends Controller
             ->dom('frtilp')
             ->lengthMenu([[25, 50, 100, -1], [25, 50, 100, "All"]]);
 
-        return view('vas.tasks.index',compact('dataTableHtml'));
+        return view('vas.opportunities.tasks.index',compact('dataTableHtml'));
     }
 
     /**
@@ -90,7 +107,7 @@ class TasksController extends Controller
         $regions = Region::where('country_code',session('country_code'))->get();
         $agents = User::where('type',UserTypeEnum::AGENT->value)->select('business_code','fname','lname')->get();
         $task = new VasTask;
-        return view('vas.tasks.create',compact('businessCode','regions','task','agents'));
+        return view('vas.opportunities.tasks.create',compact('businessCode','regions','task','agents'));
     }
 
     /**
@@ -145,7 +162,7 @@ class TasksController extends Controller
     {
         $task = VasTask::find($id);
         $agents = User::whereIn('business_code',$task->vas_task_applications->pluck('agent_business_code')->toArray())->select('business_code','fname','lname')->get();
-        return view('vas.tasks.show',compact('task','agents'));
+        return view('vas.opportunities.tasks.show',compact('task','agents'));
     }
 
     /**
@@ -166,7 +183,7 @@ class TasksController extends Controller
         if($task->town_code != null){
             $areas = Area::where('town_code',$task->town_code)->get();
         }
-        return view('vas.tasks.edit',compact('businessCode','agents','regions','towns','areas','task'));
+        return view('vas.opportunities.tasks.edit',compact('businessCode','agents','regions','towns','areas','task'));
     }
 
     /**
