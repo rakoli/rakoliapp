@@ -181,9 +181,19 @@ function returnActiveMenuStyle($menuSection) : string
     return '';
 }
 
+function removeEverythingAfter($text, $needle){
+    $position = strpos($text, $needle);
+    if ($position !== false) {
+        $newText = substr($text, 0, $position + strlen($needle));
+        return $newText; // Output: "This is the text to remove"
+    } else {
+        return $text; // No occurrence of 'apple' found
+    }
+}
+
 function returnActiveSubMenuStyle($subSection) : string
 {
-    $routeName = str_replace("index", "", Request()->route()->getName());
+    $routeName = removeEverythingAfter(Request()->route()->getName(),$subSection);
     if($subSection == cleanText(strstr($routeName, '.'))){
         return 'active';
     }
@@ -264,6 +274,5 @@ function runDatabaseTransaction(\Closure $closure)
 //            echo "Transaction failed!";
 //        }
     }
-
 
 }
