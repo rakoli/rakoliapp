@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Vas;
 
 use App\Http\Controllers\Controller;
+use App\Utils\Enums\TaskTypeEnum;
 use Illuminate\Http\Request;
 use App\Models\Area;
 use App\Models\ExchangeBusinessMethod;
@@ -119,11 +120,11 @@ class TasksController extends Controller
             'region_code' => 'sometimes',
             'town_code' => 'sometimes',
             'area_code' => 'sometimes',
-            'task_type' => 'required',
+            'task_type' => 'required|in:'.implode(',',TaskTypeEnum::toArray()),
             'time_start' => 'required|date|after:today',
-            'time_end' => 'required|date|after:time_start',
-            'no_of_agents' => 'required|numeric',
-            'is_public' => 'required',
+            'time_end' => 'sometimes|date|after:time_start|nullable',
+            'no_of_agents' => 'required|numeric|min:1',
+            'is_public' => 'required|in:1,0',
             'description' => 'required|string|max:200',
         ]);
         $user = $request->user();
@@ -131,7 +132,8 @@ class TasksController extends Controller
         $taskData = [
             'country_code' => $user->country_code,
             'vas_business_code' => $user->business_code,
-            'code' => generateCode(Str::random(10),'TZ'),
+            'code' => generateCode(Str::random(5),'TZ_'.$request->task_type),
+            'task_type' => $request->task_type,
             'time_start' => $request->time_start,
             'time_end' => $request->time_end,
             'region_code' => $request->region_code,
