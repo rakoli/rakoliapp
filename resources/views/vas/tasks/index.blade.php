@@ -11,7 +11,7 @@
     <!--begin::Container-->
     <div id="kt_content_container" class="container-xxl">
 
-        @include('vas.tasks._submenu')
+        @include('vas.opportunities._submenu')
 
         <!--begin::Table-->
         <div class="card card-flush mt-6 mt-xl-9">

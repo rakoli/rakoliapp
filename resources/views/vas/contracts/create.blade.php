@@ -7,7 +7,7 @@
     <!--begin::Container-->
     <div id="kt_content_container" class="container-xxl">
 
-        @include('vas.contracts._submenu')
+        @include('vas.opportunities._submenu')
 
         @include('vas.contracts._form', ['submitUrl'=>route('vas.contracts.store'),'isEdit'=>false])
 

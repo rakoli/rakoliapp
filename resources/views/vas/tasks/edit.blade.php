@@ -7,7 +7,7 @@
     <!--begin::Container-->
     <div id="kt_content_container" class="container-xxl">
 
-        @include('vas.tasks._submenu')
+        @include('vas.opportunities._submenu')
 
         @include('vas.tasks._form', ['submitUrl'=>route('vas.tasks.update',array($task->id)),'isEdit'=>true])
 
