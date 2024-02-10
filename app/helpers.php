@@ -183,7 +183,8 @@ function returnActiveMenuStyle($menuSection) : string
 
 function returnActiveSubMenuStyle($subSection) : string
 {
-    if($subSection == cleanText(strstr(Request()->route()->getName(), '.'))){
+    $routeName = str_replace("index", "", Request()->route()->getName());
+    if($subSection == cleanText(strstr($routeName, '.'))){
         return 'active';
     }
     return '';
