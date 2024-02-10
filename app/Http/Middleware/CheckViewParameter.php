@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class CheckViewParameter
 {
@@ -19,7 +18,7 @@ class CheckViewParameter
         $parameter = $request->route('parameter');
 
         // Check if the parameter exists in your view files
-        if (view()->exists('your.view.directory.' . $parameter)) {
+        if (view()->exists('your.view.directory.'.$parameter)) {
             // Parameter exists, load the corresponding view
             return $next($request);
         }

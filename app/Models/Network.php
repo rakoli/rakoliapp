@@ -15,6 +15,14 @@ class Network extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $guarded = [];
+
+    protected static function booted()
+    {
+        static::addGlobalScope(new LocationScoped());
+        static::addGlobalScope(new BusinessScoped());
+    }
+
     public function business() : BelongsTo
     {
         return $this->belongsTo(Business::class,'business_code','code');

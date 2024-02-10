@@ -32,5 +32,4 @@ class Kernel extends ConsoleKernel
             parent::bootstrappers(),
         );
     }
-
 }

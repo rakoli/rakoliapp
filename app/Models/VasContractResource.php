@@ -10,7 +10,7 @@ class VasContractResource extends Model
 {
     use HasFactory;
 
-    public function vas_contract() :BelongsTo
+    public function vas_contract(): BelongsTo
     {
         return $this->belongsTo(VasContract::class, 'vas_contract_code', 'code');
     }

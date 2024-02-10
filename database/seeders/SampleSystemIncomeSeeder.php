@@ -3,8 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\SystemIncome;
-use Database\Factories\SystemIncomeFactory;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class SampleSystemIncomeSeeder extends Seeder

@@ -14,7 +14,7 @@ class RequestEmailVerificationCode
 
     public function handle(User $user)
     {
-        if(VerifyOTP::shouldLockEmailOTP($user)){
+        if (VerifyOTP::shouldLockEmailOTP($user)) {
             return false;
         }
 
@@ -26,7 +26,6 @@ class RequestEmailVerificationCode
         $user->email_otp_time = now();
         $user->email_otp_count = $user->email_otp_count + 1;
         $user->save();
-
 
         return true;
     }

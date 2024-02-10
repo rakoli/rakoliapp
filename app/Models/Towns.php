@@ -21,10 +21,10 @@ class Towns extends Model
         'region_code',
         'name',
         'code',
-        'description'
+        'description',
     ];
 
-    public function country() : BelongsTo
+    public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class, 'country_code', 'code');
     }
@@ -34,24 +34,23 @@ class Towns extends Model
         return $this->belongsTo(Region::class, 'region_code', 'code');
     }
 
-    public function areas() : HasMany
+    public function areas(): HasMany
     {
         return $this->hasMany(Area::class, 'town_code', 'code');
     }
 
-    public function exchange_ads() : HasMany
+    public function exchange_ads(): HasMany
     {
         return $this->hasMany(ExchangeAds::class, 'town_code', 'code');
     }
 
-    public function locations() : HasMany
+    public function locations(): HasMany
     {
         return $this->hasMany(Location::class, 'town_code', 'code');
     }
 
-    public function vas_tasks() : HasMany
+    public function vas_tasks(): HasMany
     {
         return $this->hasMany(VasTask::class, 'town_code', 'code');
     }
-
 }

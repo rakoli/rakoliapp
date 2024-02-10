@@ -53,8 +53,8 @@ return new class extends Migration
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
 
-            $table->decimal('min_amount', 12,2);
-            $table->decimal('max_amount', 12,2);
+            $table->decimal('min_amount', 12, 2);
+            $table->decimal('max_amount', 12, 2);
             $table->string('currency');
             $table->string('status')->default(ExchangeStatusEnum::ACTIVE->value);
             $table->string('description')->nullable();

@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Setting;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class SettingsSeeder extends Seeder
@@ -14,16 +13,15 @@ class SettingsSeeder extends Seeder
     public function run(): void
     {
         $settings = [
-            "app_description" => "Rakoli agents management system web application"
-        ] ;
+            'app_description' => 'Rakoli agents management system web application',
+        ];
 
-        foreach ($settings as $key=> $setting)
-        {
+        foreach ($settings as $key => $setting) {
 
             Setting::updateOrCreate([
-                'key' => $key
-            ],[
-                'value' => $setting
+                'key' => $key,
+            ], [
+                'value' => $setting,
             ]);
 
         }

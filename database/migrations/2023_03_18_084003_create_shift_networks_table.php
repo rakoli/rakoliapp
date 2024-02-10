@@ -37,8 +37,8 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->decimal('balance_old' , 12, 2)->default(0);
-            $table->decimal('balance_new' , 12, 2)->default(0);
+            $table->decimal('balance_old', 12, 2)->default(0);
+            $table->decimal('balance_new', 12, 2)->default(0);
             $table->timestamps();
         });
     }

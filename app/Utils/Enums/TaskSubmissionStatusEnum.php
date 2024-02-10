@@ -2,11 +2,11 @@
 
 namespace App\Utils\Enums;
 
-enum TaskSubmissionStatusEnum : string
+enum TaskSubmissionStatusEnum: string
 {
-    case PENDING = "pending";
-    case APPROVED = "approved";
-    case REJECTED = "rejected";
+    case PENDING = 'pending';
+    case APPROVED = 'approved';
+    case REJECTED = 'rejected';
 
     public static function toArray()
     {

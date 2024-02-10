@@ -13,12 +13,10 @@ return [
     |
     */
 
-
     'reset' => 'Nyuwila yako imebadilishwa.',
     'sent' => 'Tumetuma link ya kubadili nyuwila kwenye baruapepe yako.',
     'throttled' => 'Tafadhani subiri kabla ya kujaribu tena.',
     'token' => 'Tokeni hii ya kubadili nyuwila sio sahihi.',
-    'user' => "Hakuna mtumiaji aliye hiyo ya baruapepe.",
-
+    'user' => 'Hakuna mtumiaji aliye hiyo ya baruapepe.',
 
 ];

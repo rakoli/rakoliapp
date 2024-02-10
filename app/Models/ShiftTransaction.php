@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Models\Scopes\BusinessScoped;
 use App\Models\Scopes\LocationScoped;
+use App\Utils\Enums\TransactionCategoryEnum;
+use App\Utils\Enums\TransactionTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +14,16 @@ class ShiftTransaction extends Model
 {
     use HasFactory;
 
-    public function business() : BelongsTo
+    protected $guarded = [
+        'id',
+    ];
+
+    protected $casts = [
+        'type' => TransactionTypeEnum::class,
+        'category' => TransactionCategoryEnum::class,
+    ];
+
+    public function business(): BelongsTo
     {
         return  $this->belongsTo(Business::class,'business_code','code');
     }

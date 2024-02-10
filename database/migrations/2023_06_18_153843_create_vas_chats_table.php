@@ -20,7 +20,6 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-
             $table->string('sender_code');
             $table->foreign('sender_code')->references('code')
                 ->on('users')
@@ -31,7 +30,6 @@ return new class extends Migration
             $table->text('notes')->nullable();
 
             $table->json('attachments')->nullable();
-
 
             $table->timestamps();
         });

@@ -19,7 +19,6 @@ return new class extends Migration
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
 
-
             $table->string('sender_code');
             $table->foreign('sender_code')->references('code')
                 ->on('users')

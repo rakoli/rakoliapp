@@ -2,7 +2,7 @@
 
 namespace App\Utils\Enums;
 
-enum SystemIncomeStatusEnum : string
+enum SystemIncomeStatusEnum: string
 {
     case RECEIVED = 'received';
     case DELETED = 'deleted';

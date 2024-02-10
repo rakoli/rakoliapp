@@ -11,34 +11,33 @@ class Short extends Model
 {
     use HasFactory;
 
-    public function business() : BelongsTo
+    public function business(): BelongsTo
     {
         return $this->belongsTo(Business::class, 'business_code', 'code');
     }
 
-    public function location() : BelongsTo
+    public function location(): BelongsTo
     {
         return $this->belongsTo(Location::class, 'location_code', 'code');
     }
 
-    public function network() : BelongsTo
+    public function network(): BelongsTo
     {
         return $this->belongsTo(Network::class, 'network_code', 'code');
     }
 
-    public function shift() : BelongsTo
+    public function shift(): BelongsTo
     {
         return $this->belongsTo(Shift::class);
     }
 
-    public function user() : BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_code', 'code');
     }
 
-    public function short_payments() : HasMany
+    public function short_payments(): HasMany
     {
         return $this->hasMany(ShortPayment::class, 'short_code', 'code');
     }
-
 }

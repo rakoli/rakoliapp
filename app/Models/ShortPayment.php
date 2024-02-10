@@ -10,12 +10,12 @@ class ShortPayment extends Model
 {
     use HasFactory;
 
-    public function shorts() : BelongsTo
+    public function shorts(): BelongsTo
     {
         return $this->belongsTo(Short::class, 'short_code', 'code');
     }
 
-    public function user() :BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_code', 'code');
     }

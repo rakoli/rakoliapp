@@ -160,7 +160,7 @@
                             </div>
                             <div>
 
-                                <button type="submit" class="btn btn-lg btn-primary" data-kt-stepper-action="submit">
+                                <button type="submit" class="btn btn-lg btn-primary" data-kt-stepper-action="submit" onclick="moveToComplete()">
 											<span class="indicator-label">{{ $translator("Submit","Nawasilisha")}}
 											<i class="ki-outline ki-arrow-right fs-4 ms-2"></i></span>
                                     <span class="indicator-progress">{{ $translator("Please wait...","Tafadhali subiri...")}}
@@ -245,11 +245,13 @@
 <script src="{{asset('assets/js/scripts.bundle.js')}}"></script>
 <!--end::Global Javascript Bundle-->
 <!--begin::Custom Javascript(used for this page only)-->
-@yield('js')
+
 @include('auth.registration_agent.js_steppers_movement')
 @include('auth.registration_agent.js_verification')
 @include('auth.registration_agent.js_businessdetails')
 
+@yield('js')
+@stack('js')
 
 <!--end::Custom Javascript-->
 <!--end::Javascript-->

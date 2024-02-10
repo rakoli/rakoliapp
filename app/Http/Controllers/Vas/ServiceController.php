@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Vas;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 
 class ServiceController extends Controller
 {

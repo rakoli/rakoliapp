@@ -1,4 +1,5 @@
 <?php
+
 return [
     ['region' => 'Arusha', 'district' => 'Meru District'],
     ['region' => 'Arusha', 'district' => 'Arusha City'],

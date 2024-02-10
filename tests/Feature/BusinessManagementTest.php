@@ -1097,6 +1097,7 @@ class BusinessManagementTest extends TestCase
             'type'=>UserTypeEnum::AGENT->value,
             'registration_step'=>0,
             'business_code'=> $business->code,
+            'country_code'=> $business->country_code,
         ]);
         $this->actingAs($user);
         $packages = Package::factory()->count(3)->create(['country_code'=>$business->country_code]);

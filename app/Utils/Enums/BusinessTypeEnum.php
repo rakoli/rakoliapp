@@ -2,10 +2,9 @@
 
 namespace App\Utils\Enums;
 
-enum BusinessTypeEnum : string
+enum BusinessTypeEnum: string
 {
+    case VAS = 'vas';
 
-    case VAS = "vas";
-
-    case AGENCY = "agent";
+    case AGENCY = 'agent';
 }
