@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             KEFSPSeeder::class,
             TzRegionTableSeeder::class,
             KeRegionTableSeeder::class,
+            WardsSeeder::class,
             SampleDataSeeder::class,
         ]);
     }
