@@ -41,7 +41,7 @@ class OpenShift
 
             ]), function (Shift $shift) {
 
-                foreach (Network::query()->cursor() as $network) {
+                foreach (Network::query()->where('location_code', $shift->location_code)->cursor() as $network) {
 
                     $shift->shiftNetworks()->create([
                         'business_code' => $shift->business_code,

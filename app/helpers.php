@@ -248,7 +248,7 @@ function shiftBalances(\App\Models\Shift $shift): array
             'user_code' => $shift->user_code,
             'category' => \App\Utils\Enums\TransactionCategoryEnum::EXPENSE,
         ])
-        ->whereDate('created_at', $shift->created_at)
+        //->whereDate('created_at', $shift->created_at)
         ->whereBetween('created_at', [
             $shift->created_at,
             now(),
@@ -261,7 +261,7 @@ function shiftBalances(\App\Models\Shift $shift): array
             'user_code' => $shift->user_code,
             'category' => \App\Utils\Enums\TransactionCategoryEnum::INCOME,
         ])
-        ->whereDate('created_at', $shift->created_at)
+        //->whereDate('created_at', $shift->created_at)
         ->whereBetween('created_at', [
             $shift->created_at,
             now(),
@@ -302,7 +302,6 @@ function runDatabaseTransaction(\Closure $closure): mixed
 
         // If an exception occurs, rollback the transaction
         DB::rollback();
-
           // Log the exception
         Log::debug('ERROR: '.$exception->getMessage());
 

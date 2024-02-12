@@ -10,11 +10,16 @@ use App\Models\ShiftNetwork;
 use App\Models\Short;
 use App\Utils\Enums\ShiftStatusEnum;
 use App\Utils\Enums\ShortTypeEnum;
+use App\Utils\Enums\TransactionCategoryEnum;
+use App\Utils\Enums\TransactionTypeEnum;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class CloseShift
 {
     use AsAction;
+
+
+    use InteractsWithShift;
 
     /**
      * @param Shift $shift
@@ -28,10 +33,6 @@ class CloseShift
         return runDatabaseTransaction(function () use ($shift, $data) {
 
             try {
-                $shift = Shift::query()->latest('created_at')
-                    ->where('location_code', $shift->location_code)
-                    ->where('status', "!=", ShiftStatusEnum::CLOSED)
-                    ->first();
 
                 $shift->updateQuietly([
                     'cash_end' => $data['closing_balance'],
@@ -47,13 +48,14 @@ class CloseShift
                         'balance' => $data['closing_balance']
                     ]);
 
-                $tillBalances = 0;
+
 
                 $shiftBalances = shiftBalances(shift: $shift);
 
                 foreach ($data['tills'] as $tillCode => $amount) {
 
                     Network::query()
+                        ->where('location_code', $shift->location_code)
                         ->where([
                             'code' => $tillCode,
                         ])
@@ -61,6 +63,7 @@ class CloseShift
                         ->updateQuietly([
                             'balance' => floatval($amount),
                         ]);
+
 
 
                     $shiftNetwork = ShiftNetwork::query()
@@ -79,7 +82,9 @@ class CloseShift
 
                     $code = $data['short_network_code'] ?? "Cash";
 
-                    Short::updateOrCreate([
+                    Short::query()->whereBelongsTo($shift, "shift")->delete();
+
+                    Short::create([
                         'shift_id' => $shift->id,
                         'business_code' => $shift->business_code,
                         'location_code' => $shift->location_code,
@@ -87,11 +92,34 @@ class CloseShift
                         'network_code' => $data['short_network_code'],
                         'user_code' => $shift->user_code,
                         'code' => generateCode(name: "short-" . $code, prefixText: "shift-" . $shift->id),
-                    ], [
                         "amount" => $data['total_shorts'],
                         "description" => $data['short_description'],
                     ]);
 
+                }
+
+                $data['location_code'] = $shift->location_code;
+                $data['business_code'] = $shift->business_code;
+                $data['location_new_balance'] = $data['closing_balance'];
+
+
+                if ($shiftBalances['expenses'] != $data['expenses'])
+                {
+                    $data['amount'] = $data['expenses'] - $shiftBalances['expenses'] ;
+
+                    $this->addExpense(
+                        location: $shift->location,
+                        data: $data
+                    );
+                }
+                if ($shiftBalances['income'] != $data['income'])
+                {
+                    $data['amount'] = $data['income'] - $shiftBalances['income'] ;
+
+                    $this->addIncome(
+                        location: $shift->location,
+                        data: $data
+                    );
                 }
 
 
@@ -99,12 +127,39 @@ class CloseShift
             }
             catch (\Exception $exception)
             {
-                \Log::info('ERRPT', [$exception->getMessage()]);
-                dd($exception);
+                throw new \Exception($exception->getMessage());
             }
 
         });
 
+
     }
 
+
+
+    protected function  addExpense (Location $location, array $data)
+    {
+        $data['type'] = TransactionTypeEnum::MONEY_OUT->value;
+
+        $data['category'] = TransactionCategoryEnum::EXPENSE;
+
+        return $this->createLocationTransaction(
+            data: $data,
+            location:  $location,
+
+        );
+    }
+
+    protected function addIncome(Location $location, array $data)
+    {
+        $data['type'] = TransactionTypeEnum::MONEY_IN->value;
+
+        $data['category'] = TransactionCategoryEnum::INCOME;
+
+        return $this->createLocationTransaction(
+            data: $data,
+            location:  $location,
+
+        );
+    }
 }

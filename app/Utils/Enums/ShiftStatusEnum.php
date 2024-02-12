@@ -22,7 +22,7 @@ enum ShiftStatusEnum: string
     {
         return match ($this) {
             self::OPEN => 'badge badge-primary',
-            self::CLOSED => 'badge badge-closed',
+            self::CLOSED => 'badge badge-danger',
             self::INREVIEW => 'badge badge-warning',
         };
 

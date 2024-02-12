@@ -31,8 +31,8 @@ class ShiftDatatable implements HasDatatable
             ->addColumn('cash_end', fn (Shift $shift) => money($shift->cash_end, currencyCode(), true))
             ->addColumn('branch', fn (Shift $shift) => $shift->location->name)
             ->addColumn('action', function (Shift $shift) {
-                return ShiftDatatable::make()->buttons([
 
+                $actions = [
                     'Details' => [
                         'route' => route('agency.shift.show', $shift),
                         'attributes' => 'null',
@@ -48,14 +48,31 @@ class ShiftDatatable implements HasDatatable
                     'Tills' => [
                         'route' => route('agency.shift.till', $shift),
                         'attributes' => null,
-                    ],
-                ]);
+                    ]
+                ];
+
+
+                if ($shift->status == ShiftStatusEnum::INREVIEW) // @todo Authorise this action
+                {
+                    $actions['Transfer Shift'] = [
+                        'route' => "#",
+                        "attributes" => null
+                    ];
+                }
+                return ShiftDatatable::make()->buttons($actions);
             })
             ->addColumn('status', function (Shift $shift) {
 
                 $table = ShiftDatatable::make();
 
-                return $shift->status == ShiftStatusEnum::OPEN ? $table->active($shift->status->value) : $table->notActive($shift->status->value);
+                return $shift->status == ShiftStatusEnum::OPEN ? $table->status(
+                    label: $shift->status->label(),
+                    badgeClass: $shift->status->color(),
+                )
+                    : $table->status(
+                        label: $shift->status->label(),
+                        badgeClass: $shift->status->color()
+                    );
             })
             ->rawColumns(['created_at', 'action', 'status'])
             ->toJson();

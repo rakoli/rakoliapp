@@ -18,7 +18,7 @@
 
     <div id="kt_app_content_container" class="app-container  container-xxl ">
 
-        <form method="post" id="close-shift" action="{{ route('agency.shift.close.store') }}">
+        <form method="post" id="close-shift">
             @csrf
 
             <!--begin::Layout-->
@@ -84,7 +84,7 @@
                                     <td class="fs-sm">
                                         <x-input
                                             type="number"
-                                            class="form-control-solid network-balance"
+                                            class="form-control-solid expenses"
                                             name="expenses"
                                             value="{{ $expenses }}"
                                             placeholder="expenses"
@@ -100,7 +100,7 @@
                                     <td class="fs-sm">
                                         <x-input
                                             type="number"
-                                            class="form-control-solid network-balance"
+                                            class="form-control-solid"
                                             name="income"
                                             value="{{ $income }}"
                                             placeholder="income"
@@ -361,11 +361,18 @@
                 $("div#shift_network_code").hide();
 
                 function calculateTotal() {
-                    var total = parseFloat(document.getElementById('closing_balance').value);
+
+                    var expenses = parseFloat(document.getElementById('expenses').value);
+
+                    var income = parseFloat(document.getElementById('income').value);
+
+                    var total = parseFloat(document.getElementById('closing_balance').value) + expenses - income;
+
 
                     // Loop through each network balance input field
                     var networkInputs = document.querySelectorAll('.network-balance');
                     networkInputs.forEach(function (input) {
+
                         total += parseFloat(input.value);
                     });
 
@@ -394,15 +401,19 @@
 
                 // Attach event listeners to input fields
                 document.getElementById('closing_balance').addEventListener('change', calculateTotal);
+                document.getElementById('expenses').addEventListener('change', calculateTotal);
+                document.getElementById('income').addEventListener('change', calculateTotal);
 
                 var networkInputs = document.querySelectorAll('.network-balance');
                 networkInputs.forEach(function (input) {
                     input.addEventListener('change', calculateTotal);
                 });
 
+
+
+
                 // Initial calculation on page load
                 calculateTotal();
-
 
 
                 $("select#select_shift_type").on('change', () => {
@@ -415,11 +426,9 @@
                     // Get the value of the selected option
                     var selectedValue = selectedOption.value;
 
-                    if(selectedValue == "TILL")
-                    {
+                    if (selectedValue == "TILL") {
                         $("div#shift_network_code").show();
-                    }
-                    else{
+                    } else {
                         $("div#shift_network_code").hide();
                     }
 

@@ -8,6 +8,7 @@ use App\Models\Location;
 use App\Models\Network;
 use App\Models\Shift;
 use App\Utils\Enums\ShiftStatusEnum;
+use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Http\Request;
 
 class OpenShiftController extends Controller
@@ -18,14 +19,23 @@ class OpenShiftController extends Controller
         if (Shift::query()->where('status', ShiftStatusEnum::OPEN)->exists()) {
             return to_route('agency.shift');
         }
-        $tills = Network::query()->with('agency')->cursor();
 
         $locations = Location::query()
-            // ->whereHas('users', fn($query) => $query->where('user_code', auth()->user()->code)) //@todo Remove this when implemented
-            ->cursor();
+            ->whereHas('users', fn($query) => $query->where('user_code', auth()->user()->code))
+            ->with([
+                'networks.agency'])
+            ->get()
+        ->map( fn(Location $location) : array => [
+            'name' => $location->name,
+            'balance' => $location->balance,
+            'code' => $location->code,
+            'networks' => $location->networks->map(fn(Network $network) : array => [
+                'name' => $network->agency->name,
+                'balance' => $network->balance
+            ]),
+        ]);
 
         return view('agent.agency.shift.open-shift', [
-            'tills' => $tills,
             'locations' => $locations,
         ]);
     }

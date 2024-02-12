@@ -36,7 +36,7 @@ trait InteractsWithShift
         ]);
     }
 
-    private function createLocationTransaction(array $data, Location $location)
+    private function createLocationTransaction(array $data, Location $location): Transaction
     {
         return Transaction::create([
             'business_code' => $data['business_code'],

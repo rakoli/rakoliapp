@@ -50,9 +50,10 @@
 
                                         @foreach($locations as $location)
                                             <option
-                                                value="{{ $location->code }}"
-                                                data-balance="{{  $location->balance }}"
-                                            >{{ $location->name }}</option>
+                                                value="{{ $location['code'] }}"
+                                                data-balance="{{  $location['balance'] }}"
+                                                data-networks="{{ json_encode($location['networks'] , true) }}"
+                                            >{{ $location['name'] }}</option>
                                         @endforeach
                                     </x-select2>
                                     @error('location_code')
@@ -86,11 +87,11 @@
 
                                 <div class="col-12 py-3">
 
-                                    <fieldset>
+                                    <fieldset class="table-responsive">
                                         <legend>
                                             {{ __("Tills") }}
                                         </legend>
-                                        <table class="table table-striped wrapper">
+                                        <table class="table table-striped">
 
 
                                             <thead>
@@ -99,13 +100,13 @@
                                                 <th>Balance</th>
                                             </tr>
                                             </thead>
-                                            <tbody>
-                                            @foreach($tills as $till)
-                                                <tr>
-                                                    <td>{{ $till->agency?->name }}</td>
-                                                    <td>{{ number_format($till->balance , 2) }}</td>
-                                                </tr>
-                                            @endforeach
+                                            <tbody id="shift-table-body">
+                                            {{-- @foreach($tills as $till)
+                                                 <tr>
+                                                     <td>{{ $till->agency?->name }}</td>
+                                                     <td>{{ number_format($till->balance , 2) }}</td>
+                                                 </tr>
+                                             @endforeach--}}
                                             </tbody>
                                         </table>
                                     </fieldset>
@@ -149,7 +150,7 @@
                                     label="Open Shift"
                                     id="open-shift-button"
 
-                                    />
+                                />
                             </div>
 
                         </form>
@@ -169,19 +170,36 @@
 
             $("select#location_code").on("change", function () {
 
-                var selectedOption = $(this).find(":selected");
+                let selectedOption = $(this).find(":selected");
+                let balance = selectedOption.data("balance");
+
+                let networks = selectedOption.data('networks');
+
+                let tableBody = "";
+
+                $("#shift-table-body").empty();
+
+                $.each(networks, (index, network) => {
+
+                    console.log(network)
+                    tableBody += "<tr>" +
+                        " <td>" + network.name + "</td> " +
+                        "<td>" + network.balance.toLocaleString('en-US', {maximumFractionDigits: 2}) + "</td>" +
+                        " </tr>"
+
+                });
 
 
-                var balance = selectedOption.data("balance");
+                $("table>tbody#shift-table-body").append(tableBody);
 
 
                 $("input#amount").val(balance);
             });
 
             const validations = [
-                { "name": "description", "error"  :  "Description Field is Required", "validators" : {} },
-                { "name": "location_code", "error"  :  "Location Field is Required", "validators" : {}  },
-                { "name": "cash_at_hand", "error"  :  "Cash Field is Required" ,"validators" : {}  },
+                {"name": "description", "error": "Description Field is Required", "validators": {}},
+                {"name": "location_code", "error": "Location Field is Required", "validators": {}},
+                {"name": "cash_at_hand", "error": "Cash Field is Required", "validators": {}},
             ];
 
             const form = document.getElementById('openShift');
