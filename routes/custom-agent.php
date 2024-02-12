@@ -25,7 +25,9 @@ use Illuminate\Support\Facades\Route;
 // All get methods will be loaded with this route
 Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(function () {
 
-    //Agency
+    Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('agent.dashboard'); //For Middleware testing and having a special user type dashboard route
+
+    //AGENCY MODULE
     Route::group(['prefix' => 'agency', 'route' => 'agency.'], function () {
 
         Route::get('transactions', TransactionsController::class)->name('agency.transactions');
@@ -70,6 +72,7 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
         });
 
     });
+    //END: AGENCY MODULE
 
     //EXCHANGE MODULE
     Route::name('exchange.')->prefix('exchange')->middleware('lastseen_update')->group(function () {
