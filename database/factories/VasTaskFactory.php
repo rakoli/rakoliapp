@@ -44,6 +44,8 @@ class VasTaskFactory extends Factory
             'time_end' => fake()->randomElement([now()->addHours(random_int(16,48)), null]),
             'task_type' => fake()->randomElement(TaskTypeEnum::class),
             'description' => fake()->sentence,
+            'no_of_agents' => random_int(1,10),
+            'is_public' => 0,
         ];
     }
 }

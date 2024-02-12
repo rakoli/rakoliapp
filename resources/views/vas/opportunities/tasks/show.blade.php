@@ -158,7 +158,7 @@
                             <div class="col-md-9 offset-md-3">
                                 <div class="d-flex">
                                     <!--begin::Button-->
-                                    <a href="{{route('agent.tasks')}}" class="btn btn-light me-3">{{__("Cancel")}}</a>
+                                    <a href="{{route('vas.tasks.index')}}" class="btn btn-light me-3">{{__("Cancel")}}</a>
                                     <!--end::Button-->
                                     <!--begin::Button-->
                                     <button type="submit" class="btn btn-primary" id="kt_submit">
