@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\BusinessScoped;
+use App\Models\Scopes\LocationScoped;
 use App\Utils\Enums\TransactionCategoryEnum;
 use App\Utils\Enums\TransactionTypeEnum;
 use Database\Factories\TransactionsFactory;
@@ -26,6 +28,12 @@ class Transaction extends Model
     protected static function newFactory(): Factory
     {
         return TransactionsFactory::new();
+    }
+
+    protected static function booted() : void
+    {
+        static::addGlobalScope(new LocationScoped());
+        static::addGlobalScope(new BusinessScoped());
     }
 
     public function location(): BelongsTo

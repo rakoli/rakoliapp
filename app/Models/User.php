@@ -96,7 +96,14 @@ class User extends Authenticatable
 
     public function locations(): BelongsToMany
     {
-        return $this->belongsToMany(Location::class, 'location_users', 'user_code', 'location_code')
+        return $this->belongsToMany(
+            related: Location::class,
+            table: 'location_users',
+            foreignPivotKey: "user_code",
+            relatedPivotKey: "location_code",
+            parentKey: "code",
+            relatedKey: "code",
+        )->using(class: LocationUser::class)
             ->withPivot('id', 'business_code')
             ->withTimestamps();
     }
