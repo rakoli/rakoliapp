@@ -17,7 +17,11 @@ class NetworkController extends Controller
             return $networkDatatable->index();
         }
 
-        $locations = Location::query()->cursor();
+        $locations =Location::query()
+            ->whereHas('users', fn($query) => $query->where('user_code', auth()->user()->code))
+            ->with([
+                'networks.agency'])
+            ->get();
 
         $fsps = FinancialServiceProvider::query()->cursor();
 

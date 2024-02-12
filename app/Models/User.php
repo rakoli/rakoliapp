@@ -49,7 +49,6 @@ class User extends Authenticatable
         'password' => 'hashed',
         'phone_otp_time' => 'datetime',
         'email_otp_time' => 'datetime',
-        'type' => UserTypeEnum::class,
     ];
 
     public function name()
