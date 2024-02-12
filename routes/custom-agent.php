@@ -38,7 +38,7 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
             Route::post('/open', [OpenShiftController::class, 'store'])->name('agency.shift.open.store');
             Route::get('/{shift}/close', [CloseShiftController::class, 'index'])->name('agency.shift.close');
             Route::post('/{shift}/transfer', [TransferShiftController::class, 'store'])->name('agency.shift.transfer');
-            Route::post('{shift}/close/', [CloseShiftController::class, 'store'])->name('agency.shift.close.store');
+            Route::post('{shift}/close/store', [CloseShiftController::class, 'store'])->name('agency.shift.close.store');
             Route::get('/{shift}/show', ShowShiftController::class)->name('agency.shift.show');
             Route::get('{shift}/tills', [TillController::class, 'index'])->name('agency.shift.till');
             Route::get('{shift}/loans', ShowShiftLoanController::class)->name('agency.shift.show.loans');

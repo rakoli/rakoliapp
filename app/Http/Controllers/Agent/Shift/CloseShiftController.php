@@ -17,7 +17,7 @@ class CloseShiftController extends Controller
     public function index(Request $request, Shift $shift)
     {
 
-        if (! Shift::query()->where('status', ShiftStatusEnum::CLOSED)->exists()) {
+        if (! $shift->status == ShiftStatusEnum::CLOSED) {
             return to_route('agency.shift');
         }
 
