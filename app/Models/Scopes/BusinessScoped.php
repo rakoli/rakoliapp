@@ -3,7 +3,7 @@
 namespace App\Models\Scopes;
 
 use App\Utils\Enums\UserTypeEnum;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
 
@@ -14,7 +14,6 @@ class BusinessScoped implements Scope
      */
     public function apply(Builder $builder, Model $model): Builder
     {
-
         if (auth()->check() && auth()->user()->type == UserTypeEnum::AGENT->value && (! app()->runningInConsole() )) {
 
             return $builder->where($model->getTable().'.business_code', auth()->user()->business_code);
