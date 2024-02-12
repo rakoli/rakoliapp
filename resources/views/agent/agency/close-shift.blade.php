@@ -184,7 +184,7 @@
                 <!--begin::Content-->
                 <div class="flex-lg-row-fluid ms-lg-15">
 
-                    <!--begin::Card-->
+                    <!--begin::Tills Summary Card -->
                     <div class="card pt-4 mb-6 mb-xl-9">
                         <!--begin::Card header-->
                         <div class="card-header border-0">
@@ -241,9 +241,66 @@
                         </div>
                         <!--end::Card body-->
                     </div>
-                    <!--end::Card-->
+                    <!--end::Tills and Summamry Card-->
 
-                    <!--begin::Loans-->
+
+                    <!--begin::Income and Expenses Card-->
+                    <div class="card pt-4 mb-6 mb-xl-9">
+                        <!--begin::Card header-->
+                        <div class="card-header border-0">
+                            <!--begin::Card title-->
+                            <div class="card-title">
+                                <h2>{{ __('Income and Expenses') }}</h2>
+                            </div>
+                            <!--end::Card title-->
+                        </div>
+                        <!--end::Card header-->
+
+                        <!--begin::Card body-->
+                        <div class="card-body pt-0 pb-5">
+                            <!--begin::Table-->
+                            <div id="kt_table_customers_payment_wrapper"
+                                 class="dataTables_wrapper dt-bootstrap4 no-footer">
+                                <div class="table-responsive">
+
+
+                                    <table class="table align-middle table-row-dashed gy-5 dataTable no-footer"
+                                           id="shift-loan-table">
+                                        <thead>
+                                        <tr>
+
+                                            <th>Type</th>
+                                            <th>Amount</th>
+
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        <tr>
+                                            <td>{{ __('Income') }}</td>
+                                            <td>{{ Number::currency($income, currencyCode()) }}</td>
+
+                                        </tr>
+
+                                        <tr>
+                                            <td>{{ __('Expenses') }}</td>
+                                            <td>{{ Number::currency($expenses, currencyCode()) }}</td>
+
+                                        </tr>
+
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                            </div>
+                            <!--end::Table-->
+                        </div>
+                        <!--end::Card body-->
+                    </div>
+                    <!--begin::END Income and Expenses Card-->
+
+                    <!--begin::Loans Card-->
                     <div class="card pt-4 mb-6 mb-xl-9">
                         <!--begin::Card header-->
                         <div class="card-header border-0">
@@ -294,8 +351,9 @@
                         </div>
                         <!--end::Card body-->
                     </div>
-                    <!--end::Card-->
-                    <!--begin::Loans-->
+                    <!--end::Loan sCard-->
+
+                    <!--begin::Shorts-->
                     <div class="card pt-4 mb-6 mb-xl-9">
                         <!--begin::Card header-->
                         <div class="card-header border-0">
@@ -344,7 +402,7 @@
                         </div>
                         <!--end::Card body-->
                     </div>
-                    <!--end::Card-->
+                    <!--end::Shorts-->
 
                 </div>
             </div>
