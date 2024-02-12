@@ -14,13 +14,15 @@ class RegistrationStepsTest extends TestCase
     /** @test */
     public function only_agent_users_with_pending_registration_can_access_agent_registration_steps()
     {
-        $user = User::factory()->create(['type' => UserTypeEnum::AGENT->value, 'registration_step' => 1]);
+        $business = Business::factory()->create();
+        $user = User::factory()->create(['type' => UserTypeEnum::AGENT->value, 'registration_step' => 1, 'business_code'=>$business->code]);
         $this->actingAs($user);
         $response = $this->get(route('registration.agent'));
         $response->assertOk();
         $response->assertSee('Agent Registration');
 
-        $user = User::factory()->create(['type' => UserTypeEnum::AGENT->value, 'registration_step' => 0]);
+        $business = Business::factory()->create();
+        $user = User::factory()->create(['type' => UserTypeEnum::AGENT->value, 'registration_step' => 0, 'business_code'=>$business->code]);
         $this->actingAs($user);
         $response = $this->get(route('registration.agent'));
         $response->assertRedirect(route('home'));
