@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Utils\Enums\InitiatedPaymentStatusEnum;
+use App\Utils\Enums\UserTypeEnum;
 use App\Utils\Traits\BusinessAuthorization;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -48,6 +49,7 @@ class User extends Authenticatable
         'password' => 'hashed',
         'phone_otp_time' => 'datetime',
         'email_otp_time' => 'datetime',
+        'type' => UserTypeEnum::class,
     ];
 
     public function name()
