@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Agent\Networks;
 use App\Actions\Agent\Shift\Network\UpdateLocationNetwork;
 use App\Http\Controllers\Controller;
 use App\Models\Network;
+use App\Models\ShiftTransaction;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -19,9 +21,11 @@ class UpdateNetworkController extends Controller
             'name' => 'required|string',
             'agent_no' => [
                 'required',
-                Rule::unique('networks', 'agent_no')
+                Rule::unique('networks')
                     ->whereNull('deleted_at')
-                    ->ignore($network->id),
+                    ->whereNot('id', $network->id)
+                    ->where('fsp_code', $network->fsp_code)
+                    ->ignore($network->id,'id'),
             ],
             'fsp_code' => [
                 'required',
@@ -37,6 +41,14 @@ class UpdateNetworkController extends Controller
         ]);
 
         try {
+
+            if ( ShiftTransaction::query()->whereBelongsTo($network, 'network')->exists()
+                &&
+                $network->balance != $validated['balance']
+            )
+            {
+                throw new \Exception(__("Cannot update till balance with a transaction "));
+            }
             UpdateLocationNetwork::run(
                 network: $network,
                 data: $validated
