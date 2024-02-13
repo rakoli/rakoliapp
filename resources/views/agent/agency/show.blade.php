@@ -144,8 +144,6 @@
                                        id="shift-loan-table">
                                     <thead>
                                     <tr>
-                                        <th>Date</th>
-                                        <th>Location</th>
                                         <th>User</th>
                                         <th>Agency</th>
                                         <th>Status</th>
@@ -153,15 +151,12 @@
                                         <th>Amount</th>
                                         <th>Paid</th>
                                         <th>Balance</th>
-                                        <th>Description</th>
-                                        <th>Statement</th>
+                                        <th>Actions</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     @foreach($loans as $loan)
                                         <tr>
-                                            <td class="font-sm">{{ $loan->created_at->format('Y-m-d') }}</td>
-                                            <td>{{ $loan->location->name }}</td>
                                             <td>{{ $loan->user->full_name }}</td>
                                             <td>{{ $loan->network?->agency?->name }}</td>
                                             <td>
@@ -178,39 +173,59 @@
                                             <td>{{ money(amount: $loan->amount, convert: true, currency: currencyCode()) }}</td>
                                             <td>{{ money(amount: $loan->paid ?? 0, convert: true, currency: currencyCode()) }}</td>
                                             <td>{{ money(amount: $loan->balance, convert: true, currency: currencyCode()) }}</td>
-                                            <td>
-                                                <x-modal_with_button
-                                                    btnClass="badge badge-google"
-                                                    targetId="view-description-{{ $loan->id }}"
-                                                    label="view Description"
-                                                    modalTitle=" Description and Notes"
-                                                >
 
-                                                    <div class="pb-5 fs-6">
-                                                        <!--begin::Details item-->
-                                                        <div
-                                                            class="d-flex flex-row gap-14 mt-5 justify-content-lg-between">
-                                                            <span>Description</span>
-                                                            <span> {{ str($loan->description)->toHtmlString() }}</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="pb-5 fs-6">
-                                                        <!--begin::Details item-->
-                                                        <div
-                                                            class="d-flex flex-row gap-14 mt-5 justify-content-lg-between">
-                                                            <span>Notes</span>
-                                                            <span> {{ str($loan->note)->toHtmlString() }}</span>
-                                                        </div>
-                                                    </div>
 
-                                                </x-modal_with_button>
+                                            <td class="pe-0 text-end">
+                                                <a href="#" class="btn btn-sm btn-light image.png btn-active-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                                                    Actions
+                                                    <i class="ki-duotone ki-down fs-5 ms-1"></i>
+                                                </a>
+                                                <!--begin::Menu-->
+                                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4" data-kt-menu="true">
+                                                    <!--begin::Menu item-->
+                                                    <div class="menu-item px-3" id="loan-{{ $loan->id }}">
+                                                        <x-modal_with_button
+                                                            btnClass="menu-link px-3"
+                                                            targetId="view-description-{{ $loan->id }}"
+                                                            label="view Description"
+                                                            modalTitle=" Description and Notes"
+                                                        >
+
+                                                            <div class="pb-5 fs-6">
+                                                                <!--begin::Details item-->
+                                                                <div
+                                                                    class="d-flex flex-row gap-14 mt-5 justify-content-lg-between">
+                                                                    <span>Description</span>
+                                                                    <span> {{ str($loan->description)->toHtmlString() }}</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="pb-5 fs-6">
+                                                                <!--begin::Details item-->
+                                                                <div
+                                                                    class="d-flex flex-row gap-14 mt-5 justify-content-lg-between">
+                                                                    <span>Notes</span>
+                                                                    <span> {{ str($loan->note)->toHtmlString() }}</span>
+                                                                </div>
+                                                            </div>
+
+                                                        </x-modal_with_button>
+                                                    </div>
+                                                    <!--end::Menu item-->
+
+                                                    <!--begin::Menu item-->
+                                                    <div class="menu-item px-3">
+
+                                                        <a
+                                                            href="{{ route('agency.loans.show', ['shift' => $shift , 'loan' => $loan]), }}"
+                                                            class="menu-link px-3"
+                                                        >Statement</a>
+                                                    </div>
+                                                    <!--end::Menu item-->
+                                                </div>
+                                                <!--end::Menu-->
                                             </td>
-                                            <td>
-                                                <a
-                                                    href="{{ route('agency.loans.show', ['shift' => $shift , 'loan' => $loan]), }}"
-                                                    class="btn btn-sm btn-primary"
-                                                >Statement</a>
-                                            </td>
+
+
                                         </tr>
                                     @endforeach
                                     </tbody>

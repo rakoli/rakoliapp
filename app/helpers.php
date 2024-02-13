@@ -286,7 +286,7 @@ function shiftBalances(\App\Models\Shift $shift): array
 
     $endingCapital = ($cash + $expenses + $tillBalances + $loanBalances) - $income;
 
-    $shorts = $startCapital - $endingCapital - $income;
+    $shorts = $startCapital - $endingCapital + $loanBalances  - $income;
 
     return [
         'totalBalance' => $endingCapital + $income - $expenses,
@@ -297,7 +297,7 @@ function shiftBalances(\App\Models\Shift $shift): array
         'income' => $income,
         'startCapital' => $startCapital,
         'endCapital' => $endingCapital,
-        'shorts' => $shorts,
+        'shorts' => $shorts ,
         'loanBalances' => $loanBalances
     ];
 }

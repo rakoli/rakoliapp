@@ -33,6 +33,7 @@
                                 : {{ Number::currency($startCapital, currencyCode()) }}</h4>
                             <h4 class="py-sm-4 py-md-13 px-md-4 bg-light-primary">{{ __('Total Ending Capital') }}
                                 : {{ Number::currency($endCapital , currencyCode()) }}</h4>
+                            <div id="loans-balances" data-loans-balance="{{ $loanBalances }}"></div>
 
 
                             <table class="table table-borderless table-responsive" id="shift-loans-summary">
@@ -424,7 +425,9 @@
 
                     var income = parseFloat(document.getElementById('income').value);
 
-                    var total = parseFloat(document.getElementById('closing_balance').value) + expenses - income;
+                    var loanBalances = parseFloat(document.getElementById('income').attributes('loan-balances'));
+
+                    var total = parseFloat(document.getElementById('closing_balance').value) + expenses + loanBalances - income;
 
 
                     // Loop through each network balance input field

@@ -2,13 +2,13 @@
     'targetId',
     'label',
     'modalTitle',
-    'btnClass' => "btn btn-primary",
+    'btnClass' => "btn btn-primary  mt-sm-4 mt-md-6",
     'size' => "modal-lg",
     'isStacked' => false
 ])
 
 
-<button type="button" class="{{ $btnClass }}" data-bs-toggle="modal" data-bs-target="#{{ $targetId }}">
+<button type="button" class="{{ $btnClass }}  mt-sm-4 mt-md-6" data-bs-toggle="modal" data-bs-target="#{{ $targetId }}">
     {{ __($label) }}
 </button>
 
