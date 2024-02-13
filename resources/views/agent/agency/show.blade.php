@@ -34,10 +34,12 @@
 
 
                 @if($shift->status == \App\Utils\Enums\ShiftStatusEnum::OPEN)
-                    <div class="d-flex flex-lg-row gap-4 py-md-6">
+                    <div class="d-flex gap-4 py-md-6">
+                        <x-back :route="route('agency.shift')" class="py-md-4"/>
+
                         <x-modal_with_button
                             targetId="add-transaction"
-                            label="Add Transaction"
+                            label="Add Cash Transaction"
                             modalTitle="Fill the form below record a transaction"
                             btnClass="btn btn-facebook"
                         >
