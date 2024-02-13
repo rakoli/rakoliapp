@@ -16,7 +16,7 @@ trait InteractsWithShift
      *
      * @throws \Exception
      */
-    public function createShiftTransaction(Shift $shift, array $data, float $oldBalance, $newBalance)
+    public function createShiftTransaction(Shift $shift, array $data, float $oldBalance, float $newBalance)
     {
 
         return $shift->transactions()->create([

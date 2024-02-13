@@ -268,9 +268,23 @@ function shiftBalances(\App\Models\Shift $shift): array
         ])
         ->sum('amount');
 
+
+
+    $loanBalances = \App\Models\Loan::query()
+        ->whereBelongsTo($shift,'shift')
+        ->whereBetween('created_at', [
+            $shift->created_at,
+            now(),
+        ])
+        ->get( )
+    ->sum(fn (\App\Models\Loan $loan)  :float => + $loan->balance);
+
+
+
+
     $startCapital = $shift->cash_start + $shift->shiftNetworks->sum('balance_old');
 
-    $endingCapital = ($cash + $expenses + $tillBalances) - $income;
+    $endingCapital = ($cash + $expenses + $tillBalances + $loanBalances) - $income;
 
     $shorts = $startCapital - $endingCapital - $income;
 
@@ -284,6 +298,7 @@ function shiftBalances(\App\Models\Shift $shift): array
         'startCapital' => $startCapital,
         'endCapital' => $endingCapital,
         'shorts' => $shorts,
+        'loanBalances' => $loanBalances
     ];
 }
 function runDatabaseTransaction(\Closure $closure): mixed
@@ -299,7 +314,7 @@ function runDatabaseTransaction(\Closure $closure): mixed
 
         return $result; // Return the result of the closure if needed
     } catch (\Exception $exception) {
-
+dd($exception);
         // If an exception occurs, rollback the transaction
         DB::rollback();
           // Log the exception

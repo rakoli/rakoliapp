@@ -47,7 +47,11 @@
                             <div class="d-flex flex-lg-row gap-4 py-md-6">
                                 @if($shift->status == \App\Utils\Enums\ShiftStatusEnum::OPEN)
 
-                                <x-a-button class="btn btn-outline-danger btn-google text-white" route="{{ route('agency.shift.close', $shift) }}">Close Shift</x-a-button>
+                                <x-a-button
+                                    class="btn btn-outline-danger btn-google text-white"
+                                    route="{{ route('agency.shift.close', $shift) }}">
+                                    Close Shift
+                                </x-a-button>
                                 @endif
 
 
@@ -57,6 +61,7 @@
                                     label="Loan Amount: {{ money($loan->amount , currencyCode(), true)  }}">
 
                                 </x-a-button>
+
                                 <x-a-button
                                     route="#"
                                     class="btn-light-primary btn-active-color-dark"
@@ -65,18 +70,24 @@
                                 </x-a-button>
 
 
-                            <x-modal_with_button
-                                btnClass="btn btn-light-facebook"
-                                targetId="receive-loan-payment"
-                                label="Receive Payment"
-                                modalTitle="Fill the form below record Loan payment"
-                                isStacked="true"
-                            >
+                                @if($loan->balance)
+                                        <x-modal_with_button
+                                            btnClass="btn btn-light-facebook"
+                                            targetId="receive-loan-payment"
+                                            label="Receive Payment"
+                                            modalTitle="Fill the form below record Loan payment"
+                                            isStacked="true"
+                                        >
 
-                                @include('agent.agency.shift.pay-loan')
+                                            @include('agent.agency.shift.pay-loan')
 
 
-                            </x-modal_with_button>
+                                        </x-modal_with_button>
+                                @endif
+
+                                <x-back
+                                    :route="route('agency.shift.show', $shift->id)"
+                                    />
 
 
                     </div>

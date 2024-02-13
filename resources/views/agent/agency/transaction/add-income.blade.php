@@ -8,9 +8,15 @@
                 <div class="col-6">
                     <x-label class="" label="{{ __('Amount') }}" for="amount"/>
                     <x-input
+                        type="number"
                         class="form-control-solid   @error('amount') form-control-feedback @enderror"
                         name="amount"
-                        placeholder="{{ __('amount') }}" id="amount"/>
+                        placeholder="{{ __('amount') }}"
+                        id="amount"
+                    />
+                    <x-helpertext>
+                        {{ __("Total Income Received") }}
+                    </x-helpertext>
                     @error('amount')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -31,6 +37,16 @@
                             >{{ str($source->name)->title()->value()  }}</option>
                         @endforeach
                     </x-select2>
+
+                    <x-helpertext>
+
+                        <ul class="list-style-none">
+                            <li class="py-md-1 text-primary">{{ __("Select the Income type either: to Cash or Till Balance") }}</li>
+                            <li>{{ __('Cash Income') }}: {{ __('Transaction will Increase Cash balances') }}</li>
+                            <li>{{ __('Till Income') }}: {{ __('Transaction will Increase Till balances') }}</li>
+
+                        </ul>
+                    </x-helpertext>
                     @error('income_type')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -45,7 +61,7 @@
                     <x-select2
                         name="network_code"
                         placeholder="{{ __('source: e.g Mpesa ') }}"
-                        id="network_code">
+                        id="network_code_income">
                         @foreach($tills as $till)
                             <option
                                 value="{{ $till->network_code }}"
@@ -65,8 +81,14 @@
 
             <div class="row fv-row py-3">
                 <div class="col-12">
-                    <x-label label="description" class="" for="description"/>
-                    <textarea    name="description" class="form-control form-control form-control-solid" rows="3"  data-kt-autosize="false"></textarea>
+                    <x-label label="Description" class="" for="description"/>
+                    <textarea
+                        name="description"
+                        class="form-control form-control form-control-solid"
+                        rows="3"
+                        data-kt-autosize="false"
+                    ></textarea>
+                    <x-helpertext>{{ __("Anything you want to note about this Transaction, Max length: 255 characters") }}</x-helpertext>
                     @error('description')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -79,7 +101,12 @@
             <div class="row fv-row py-3">
                 <div class="col-12">
                     <x-label label="notes" required="" class="" for="notes"/>
-                    <textarea  name="notes" class="form-control form-control form-control-solid" rows="3"  data-kt-autosize="false"></textarea>
+                    <textarea
+                        name="notes"
+                        class="form-control form-control form-control-solid"
+                        rows="3"
+                        data-kt-autosize="false"></textarea>
+                    <x-helpertext>{{ __("Any Additional note, Max length: 255 characters") }}</x-helpertext>
                     @error('notes')
                     <div class="help-block text-danger">
                         {{ $message }}

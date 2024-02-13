@@ -16,6 +16,8 @@ class ShowShiftController extends Controller
     public function __invoke(Request $request, Shift $shift, Builder $datatableBuilder, ShiftTransactionDatatable $transactionDatatable)
     {
 
+
+
         if ($request->ajax()) {
 
             return $transactionDatatable->index($shift);

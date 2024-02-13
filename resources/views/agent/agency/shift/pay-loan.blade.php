@@ -14,85 +14,94 @@
                         <x-label class="" label="{{ __('Amount') }}" for="amount"/>
 
                         <x-input
-                            class="form-control-solid   @error('amount') form-control-feedback @enderror"
-                               name="amount"
+                            type="number"
+                            name="amount"
+                            class="form-control-solid"
                             value="{{ $loan->balance }}"
                             placeholder="{{ __('amount') }}"
-                            id="amount"/>
-                        @error('amount')
-                        <div class="help-block text-danger">
-                            {{ $message }}
-                        </div>
-                        @enderror
+                            id="amount"
+                        />
+                        <x-helpertext>
+                            {{ __("Total Amount Received") }}
+                        </x-helpertext>
+
                     </div>
 
                     <div class="col-6">
                         <x-label class="" label="{{ __('Date') }}" for="date"/>
 
                         <x-datepicker-input
+                            class="form-control-solid"
                             name="deposited_at"
                             type="text"
                             id="date"
                         />
 
-
-                        @error('deposited_at')
-                        <div class="help-block text-danger">
-                            {{ $message }}
-                        </div>
-                        @enderror
+                        <x-helpertext>
+                            {{ __("Date Payment was Deposited or Received at the Store") }}
+                        </x-helpertext>
                     </div>
                 </div>
 
                 <div class="row fv-row py-3">
-                    <div class="col-6">
+                    <div class="col-8">
 
-                        <x-label class="" label="Payment Method" for="payment_method"/>
-
-
+                        <x-label
+                            class=""
+                            label="Payment Method"
+                            for="payment_method"
+                        />
                         <x-input
                             type="text"
-                            class="form-control-solid   @error('payment_method') form-control-feedback @enderror"
-                               name="payment_method"
+                            class="form-control-solid"
+                            name="payment_method"
                             placeholder="{{ __('payment_method') }}"
-                            id="payment_method"/>
-
+                            id="payment_method"
+                        />
+                        <x-helpertext>{{ __("How did you get paid? e,g Cash, Bank, Cheque, Till:M-Pesa") }}</x-helpertext>
                     </div>
                 </div>
 
                 <div class="row fv-row py-3">
                     <div class="col-12">
-                        <x-label label="description" class="" for="description"/>
-                        <textarea    name="description" class="form-control form-control form-control-solid" rows="3"
-                                     data-kt-autosize="false"></textarea>
-                        @error('description')
-                        <div class="help-block text-danger">
-                            {{ $message }}
-                        </div>
-                        @enderror
+                        <x-label
+                            label="Description"
+                            class=""
+                            for="description"
+                        />
+                        <textarea
+                            name="description"
+                            class="form-control form-control form-control-solid"
+                            rows="3"
+                            data-kt-autosize="false"></textarea>
+
+                        <x-helpertext>{{ __("Anything you want to note about this Transaction, Max length: 255 characters") }}</x-helpertext>
+
                     </div>
                 </div>
 
 
                 <div class="row fv-row py-3">
                     <div class="col-12">
-                        <x-label label="notes" required="" for="notes"/>
-                        <textarea    name="notes" class="form-control form-control form-control-solid" rows="3"
-                                  data-kt-autosize="false"></textarea>
-                        @error('notes')
-                        <div class="help-block text-danger">
-                            {{ $message }}
-                        </div>
-                        @enderror
+                        <x-label
+                            label="Notes"
+                            required=""
+                            for="notes"/>
+                        <textarea
+                            name="notes"
+                            class="form-control form-control form-control-solid"
+                            rows="3"
+                            data-kt-autosize="false"></textarea>
+
+                        <x-helpertext>{{ __("Any Additional note, Max length: 255 characters") }}</x-helpertext>
+
                     </div>
                 </div>
             </div>
 
-
-
             <div class="modal-footer">
 
-                <button type="button" id="pay-loan-button" class="btn btn-primary">Save changes</button>
+                <x-submit-button type="button" id="pay-loan-button" class="btn btn-primary">Save changes</x-submit-button>
             </div>
         </form>
 
