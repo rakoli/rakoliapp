@@ -233,10 +233,10 @@
                                             </tr>
                                         @endforeach
 
-                                        <tr class="" style="border-top: 1px  dotted; border-bottom: 1px  dotted">
+                                        <tr class="fw-bold" style="border-top: 1px  dotted; border-bottom: 1px  dotted">
                                             <td class=""> {{ __('Subtotal') }}</td>
                                             <td class="border-dashed">{{ \Illuminate\Support\Number::currency($shift->cash_start + collect($networks)->sum('balance_old'), currencyCode()) }}</td>
-                                            <td class="fw-bolder border-dashed">{{ \Illuminate\Support\Number::currency( $totals += $cashAtHand + collect($networks)->sum('balance'), currencyCode()) }}</td>
+                                            <td class="fw-bold border-dashed">{{ \Illuminate\Support\Number::currency( $totals += $cashAtHand + collect($networks)->sum('balance'), currencyCode()) }}</td>
                                             <td class=" border-dashed">{{ \Illuminate\Support\Number::currency($transacted, currencyCode()) }}</td>
 
                                         </tr>
@@ -255,11 +255,22 @@
                                             <td class=" border-dashed">{{ \Illuminate\Support\Number::currency($income, currencyCode()) }}</td>
 
                                         </tr>
+
                                         <tr class="border-1">
                                             <td class="border-top-1"> {{ __('Total Expenses') }}</td>
                                             <td class=" border-dashed">{{ \Illuminate\Support\Number::currency(0, currencyCode()) }}</td>
                                             <td class="fw-bolder border-dashed">{{ \Illuminate\Support\Number::currency($expenses, currencyCode()) }}</td>
                                             <td class=" border-dashed">{{ \Illuminate\Support\Number::currency($expenses, currencyCode()) }}</td>
+
+                                        </tr>
+
+
+
+                                        <tr class="border-1">
+                                            <td class="border-top-1"> {{ __('Total Shorts') }}</td>
+                                            <td class=" border-dashed">{{ \Illuminate\Support\Number::currency(0, currencyCode()) }}</td>
+                                            <td class="fw-bolder border-dashed">{{ \Illuminate\Support\Number::currency($shorts, currencyCode()) }}</td>
+                                            <td class=" border-dashed">{{ \Illuminate\Support\Number::currency($shorts, currencyCode()) }}</td>
 
                                         </tr>
 
