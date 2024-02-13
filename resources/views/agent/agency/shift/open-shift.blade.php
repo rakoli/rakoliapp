@@ -26,21 +26,16 @@
                 <div class="card-body fs-6 py-15 px-10 py-lg-15 px-lg-15 text-gray-700">
                     <div>
 
-                        <x-a-button
-                            class="btn-google text-gray-100"
-                            route="{{ route('agency.shift') }}"
-                        >
-                            <i class="bi bi-arrow-left"></i>
-
-                            {{ __('Back ') }}
-                        </x-a-button>
+                        <x-back
+                            :route="route('agency.shift') "
+                            />
 
                         <form method="post" id="openShift" action="{{ route('agency.shift.open.store') }}">
                             @csrf
                             <div class="row fv-row py-2">
 
                                 <div class="col-6">
-                                    <x-label class="" label="{{ __('location') }}" for="location"/>
+                                    <x-label class="" label="{{ __('Location') }}" for="location"/>
                                     <x-select2
                                         class="@error('location_code') form-control-error @enderror"
                                         name="location_code"
@@ -56,6 +51,7 @@
                                             >{{ $location['name'] }}</option>
                                         @endforeach
                                     </x-select2>
+                                    <x-helpertext> {{ __("Location for this Shift") }}</x-helpertext>
                                     @error('location_code')
                                     <div class="help-block text-danger">
                                         {{ $message }}
@@ -65,7 +61,7 @@
 
 
                                 <div class="col-6">
-                                    <x-label class="" label="{{ __('Cash at hand') }}" for="amount"/>
+                                    <x-label class="" label="{{ __('Cash At Hand') }}" for="amount"/>
                                     <x-input
                                         type="number"
                                         class="form-control-solid   @error('cash_at_hand') form-control-feedback @enderror"
@@ -73,6 +69,7 @@
                                         placeholder="{{ __('cash at hand') }}"
                                         readonly="readonly"
                                         id="amount"/>
+                                    <x-helpertext> {{ __("Current cash you have in this Location") }}</x-helpertext>
                                     @error('cash_at_hand')
                                     <div class="help-block text-danger">
                                         {{ $message }}
@@ -123,6 +120,7 @@
                                         class="form-control form-control form-control-solid"
                                         rows="3"
                                         data-kt-autosize="false"></textarea>
+                                    <x-helpertext> {{ __("What would like to note about this shift, max length: 255 characters") }}</x-helpertext>
                                     @error('description')
                                     <div class="help-block text-danger">
                                         {{ $message }}
@@ -130,11 +128,12 @@
                                     @enderror
                                 </div>
                                 <div class="col-12">
-                                    <x-label required="" label="notes" class="" for="notes"/>
+                                    <x-label required="" label="Notes" class="" for="notes"/>
                                     <textarea
                                         name="notes"
                                         class="form-control form-control form-control-solid" rows="3"
                                         data-kt-autosize="false"></textarea>
+                                    <x-helpertext> {{ __("Do you have extra note?, max length: 255 characters ") }}</x-helpertext>
                                     @error('notes')
                                     <div class="help-block text-danger">
                                         {{ $message }}
@@ -180,8 +179,6 @@
                 $("#shift-table-body").empty();
 
                 $.each(networks, (index, network) => {
-
-                    console.log(network)
                     tableBody += "<tr>" +
                         " <td>" + network.name + "</td> " +
                         "<td>" + network.balance.toLocaleString('en-US', {maximumFractionDigits: 2}) + "</td>" +
