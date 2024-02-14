@@ -275,7 +275,7 @@
                                         </tr>
 
 
-                                        <tr class="fw-bolder text-light-primary" style="border-top: 2px  dotted; border-bottom: 2px  dotted">
+                                        <tr class="fw-bolder text-primary" style="border-top: 2px  dotted; border-bottom: 2px  dotted">
                                             <td>{{ __('Totals') }}</td>
                                             <td class=" border-dashed">{{ \Illuminate\Support\Number::currency($shift->cash_start + collect($networks)->sum('balance_old'), currencyCode()) }}</td>
                                             <td class="fw-bolder border-dashed">{{ \Illuminate\Support\Number::currency($totals + $expenses + $shorts + $loanBalances -$income, currencyCode()) }}</td>
