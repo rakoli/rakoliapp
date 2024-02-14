@@ -275,7 +275,7 @@
                                         </tr>
 
 
-                                        <tr class="fw-bolder" style="border-top: 2px  dotted; border-bottom: 2px  dotted">
+                                        <tr class="fw-bolder text-light-primary" style="border-top: 2px  dotted; border-bottom: 2px  dotted">
                                             <td>{{ __('Totals') }}</td>
                                             <td class=" border-dashed">{{ \Illuminate\Support\Number::currency($shift->cash_start + collect($networks)->sum('balance_old'), currencyCode()) }}</td>
                                             <td class="fw-bolder border-dashed">{{ \Illuminate\Support\Number::currency($totals + $expenses + $shorts + $loanBalances -$income, currencyCode()) }}</td>
@@ -496,12 +496,12 @@
                         total += parseFloat(input.value);
                     });
 
-                    // Display the total in some element (you can adjust this based on your needs)
-                    document.getElementById('total_balance').innerText = total.toLocaleString('en-US', {maximumFractionDigits: 2});
 
                     let startingCapital = $("h4#starting-capital").data('starting-capital')
 
                     let totalShort = (parseFloat(startingCapital) - total);
+                    // Display the total in some element (you can adjust this based on your needs)
+                    document.getElementById('total_balance').innerText =  (total + totalShort ).toLocaleString('en-US', {maximumFractionDigits: 2});
 
 
                     document.getElementById('total_shorts').innerText = totalShort.toLocaleString('en-US', {maximumFractionDigits: 2});
