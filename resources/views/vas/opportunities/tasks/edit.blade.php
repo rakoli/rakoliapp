@@ -18,4 +18,27 @@
 
 @section('footer_js')
     @include('vas.opportunities.tasks._form_js')
+    <script>
+    jQuery(document).ready(function(){
+        jQuery("#private_agents").select2({
+            minimumInputLength: 3,
+            ajax: {
+                url: '{!! route("get.agents") !!}',
+                data: function (params) {
+                var query = {
+                    search: params.term,
+                }
+                return query;
+                },
+                processResults: function (data) {
+                // Transforms the top-level key of the response object from 'items' to 'results'
+                data = data.data;
+                return {
+                    results: data.map(({business_code, fname, lname}) => ({id: business_code, text: fname+" "+lname}))
+                };
+                }
+            }
+        })
+    });
+</script>
 @endsection

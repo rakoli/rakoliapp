@@ -228,20 +228,12 @@
                 <!--End::Input group-->
 
                 <!--begin::Input group-->
-                <div class="mb-5 fv-row" id="private_agents_list" style="display: none">
+                <div class="mb-5 fv-row" id="private_agents_list" style="display: @if($isEdit){{!$task->is_public ? 'block' : 'none'}} @else 'none' @endif">
                     <!--begin::Label-->
                     <label class="form-label">{{__('Task Agent')}}</label>
                     <!--end::Label-->
                     <!--begin::Input-->
                     <select class="form-select mb-2" data-control="select2" data-placeholder="{{__("Select Task Agent")}}" multiple="multiple"  id="private_agents" name="private_agents[]">
-                        <option></option>
-                        @foreach($agents as $agent)
-                            <option value="{{$agent->business_code}}"
-                                @if(in_array($agent->business_code,[]))
-                                    selected
-                                @endif
-                            >{{strtoupper($agent->fname)}} {{ strtoupper($agent->lname)}}</option>
-                        @endforeach
                     </select>
                     <!--end::Input-->
                 </div>

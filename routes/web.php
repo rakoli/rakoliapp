@@ -44,6 +44,7 @@ Route::get('lang/switch', [LanguageController::class, 'languageSwitch'])->name('
 //Town and Area List
 Route::get('towns', [App\Http\Controllers\Controller::class, 'getTown'])->name('get.towns');
 Route::get('areas', [App\Http\Controllers\Controller::class, 'getArea'])->name('get.areas');
+Route::get('agents', [App\Http\Controllers\Controller::class, 'getAgent'])->name('get.agents');
 
 //USERTYPE SPECIFIC ROUTES
 include 'custom-admin.php';
