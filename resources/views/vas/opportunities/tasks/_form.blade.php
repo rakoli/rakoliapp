@@ -228,7 +228,7 @@
                 <!--End::Input group-->
 
                 <!--begin::Input group-->
-                <div class="mb-5 fv-row" id="private_agents_list" style="display: @if($isEdit){{!$task->is_public ? 'block' : 'none'}} @else 'none' @endif">
+                <div class="mb-5 fv-row" id="private_agents_list" style="display:none">
                     <!--begin::Label-->
                     <label class="form-label">{{__('Task Agent')}}</label>
                     <!--end::Label-->

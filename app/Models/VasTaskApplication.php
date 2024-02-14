@@ -12,7 +12,7 @@ class VasTaskApplication extends Model
 
     public function agent() : BelongsTo
     {
-        return $this->belongsTo(Business::class, 'agent_code', 'code');
+        return $this->belongsTo(Business::class, 'agent_business_code', 'code');
     }
 
     public function vas_task() : BelongsTo

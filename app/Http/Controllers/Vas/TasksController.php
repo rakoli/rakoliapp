@@ -69,6 +69,7 @@ class TasksController extends Controller
                     if($task->status != VasTaskStatusEnum::DELETED->value){
                         $content .= '<button class="btn btn-secondary btn-sm me-2 m-1" onclick="deleteClicked('.$task->id.')">'.__("Delete").'</button>';
                     }
+                    $content .= '<a class="btn btn-secondary btn-sm me-2 m-1" href="'.route('vas.task.applications.index', $task->id).'">'.__("Applications").'</a>';
                     return $content;
                 })
                 ->addIndexColumn()

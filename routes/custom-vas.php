@@ -22,10 +22,11 @@ Route::name('vas.')->prefix('vas')->middleware(['auth','should_complete_registra
 
     //Tasks
     Route::resource('tasks',App\Http\Controllers\Vas\TasksController::class);
+    Route::resource('task.applications',App\Http\Controllers\Vas\TaskApplicationsController::class);
 
     //Contracts
     Route::resource('contracts',App\Http\Controllers\Vas\ContractsController::class);
-    Route::get('contracts/receive/message', [App\Http\Controllers\Agent\ContractsController::class, 'contractsReceiveMessage'])->name('contracts.receive.message');
+    Route::get('contracts/receive/message', [App\Http\Controllers\Vas\ContractsController::class, 'contractsReceiveMessage'])->name('contracts.receive.message');
 
     //Contract Submission
     Route::resource('contracts.submissions',App\Http\Controllers\Vas\ContractSubmissionsController::class);
