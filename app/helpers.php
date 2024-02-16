@@ -280,13 +280,13 @@ function shiftBalances(\App\Models\Shift $shift): array
     ->sum(fn (\App\Models\Loan $loan)  :float => + $loan->balance);
 
 
-
-
     $startCapital = $shift->cash_start + $shift->shiftNetworks->sum('balance_old');
 
     $endingCapital = ($cash + $expenses + $tillBalances + $loanBalances) - $income;
 
-    $shorts = $startCapital - $endingCapital + $loanBalances  - $income;
+    $shorts = $startCapital - $endingCapital ;
+
+
 
     return [
         'totalBalance' => $endingCapital + $income - $expenses,

@@ -10,7 +10,10 @@
                     <x-input
                         class="form-control-solid   @error('name') form-control-feedback @enderror"
                         name="name"
-                        placeholder="{{ __('name') }}" id="name"/>
+                        placeholder="{{ __('name') }}"
+                        id="name"
+                    />
+                    <x-helpertext>{{ __('Till Name E.G: M-Pesa') }}</x-helpertext>
                     @error('name')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -20,19 +23,22 @@
 
                 <div class="col-6">
 
-                    <x-label class="" label="Select Network Provider" for="fsp_code"/>
+                    <x-label
+                        class=""
+                        label="Select Network Provider"
+                        for="fsp_code"
+                    />
                     <x-select2
-
                         modalId="add-network"
                         name="fsp_code"
                         placeholder="{{ __('Select a Network Provider') }}"
                         id="fsp_code"
                     >
-
                         @foreach($agencies as $agency)
                             <option value="{{ $agency->code }}">{{ $agency->name }}</option>
                         @endforeach
                     </x-select2>
+                    <x-helpertext>{{ __('Till Provider E.G: Equity Bank') }}</x-helpertext>
                     @error('fsp_code')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -42,11 +48,18 @@
             </div>
             <div class="row fv-row py-2">
                 <div class="col-6">
-                    <x-label class="" label="{{ __('Agent No') }}" for="agent_no"/>
+                    <x-label
+                        class=""
+                        label="{{ __('Agent No') }}"
+                        for="agent_no"
+                    />
                     <x-input
                         class="form-control-solid   @error('agent_no') form-control-feedback @enderror"
                         name="agent_no"
-                        placeholder="{{ __('agent_no') }}" id="agent_no"/>
+                        placeholder="{{ __('agent_no') }}"
+                        id="agent_no"
+                    />
+                    <x-helpertext>{{ __('Till Agency No:') }}</x-helpertext>
                     @error('agent_no')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -54,11 +67,18 @@
                     @enderror
                 </div>
                 <div class="col-6">
-                    <x-label class="" label="{{ __('Balance') }}" for="balance"/>
+                    <x-label
+                        class=""
+                        label="{{ __('Balance') }}"
+                        for="balance"
+                    />
                     <x-input
                         class="form-control-solid   @error('balance') form-control-feedback @enderror"
                         name="balance"
-                        placeholder="{{ __('balance') }}" id="balance"/>
+                        placeholder="{{ __('balance') }}"
+                        id="balance"
+                    />
+                    <x-helpertext>{{ __('Till Current Balance: Note this cannot be updated after you start transcating') }}</x-helpertext>
                     @error('balance')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -68,7 +88,11 @@
             </div>
             <div class="row fv-row py-2">
                 <div class="col-6">
-                    <x-label class="" label="Select Location" for="location_code"/>
+                    <x-label
+                        class=""
+                        label="Select Location"
+                        for="location_code"
+                    />
                     <x-select2
                         modalId="add-network"
                         name="location_code"
@@ -80,6 +104,7 @@
                             <option value="{{ $location->code }}">{{ $location->name }}</option>
                         @endforeach
                     </x-select2>
+                    <x-helpertext>{{ __('This Till belongs to which Branch?') }}</x-helpertext>
                     @error('location_code')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -89,9 +114,14 @@
             </div>
             <div class="row fv-row py-3">
                 <div class="col-12">
-                    <x-label label="description" required="" for="description"/>
+                    <x-label
+                        label="description"
+                        required=""
+                        for="description"
+                    />
                     <textarea name="description" class="form-control form-control form-control-solid" rows="3"
                               data-kt-autosize="false"></textarea>
+                    <x-helpertext>{{ __('Anything to note about this Till? Max length: 255') }}</x-helpertext>
                     @error('description')
                     <div class="help-block text-danger">
                         {{ $message }}

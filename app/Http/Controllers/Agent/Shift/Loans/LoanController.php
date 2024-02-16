@@ -28,7 +28,7 @@ class LoanController extends Controller
         $locations = Location::query()->cursor();
         $networks = Network::query()->cursor();
 
-        return view('agent.agency.loans')->with([
+        return view('agent.agency.loans.index')->with([
             'datatableHtml' => $loanDatatable->columns($datatableBuilder),
             'locations' => $locations,
             'networks' => $networks,

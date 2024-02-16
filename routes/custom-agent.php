@@ -70,6 +70,10 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
             Route::get('/', [\App\Http\Controllers\Agent\Shift\AgencyController::class, 'tills'])->name('agency.tills');
 
         });
+        Route::prefix('loans')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Agent\Shift\Loans\LoanController::class, 'index'])->name('agency.loans');
+
+        });
 
     });
     //END: AGENCY MODULE

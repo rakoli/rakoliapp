@@ -57,11 +57,24 @@
                 </a>
 
 
-                <a class="menu-link"   href ="{{route('agency.networks')}}">
+                <a
+                    class="menu-link"
+                    href ="{{route('agency.networks')}}"
+                >
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Networks') }}</span>
+                </a>
+
+                <a
+                    class="menu-link"
+                    href ="{{route('agency.loans')}}"
+                >
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ __('Loans') }}</span>
                 </a>
 
 
