@@ -302,7 +302,7 @@
                                             <td class="border-top-1"> {{ __('Total Shorts') }}</td>
                                             <td class=" border-dashed">{{ \Illuminate\Support\Number::currency(0, currencyCode()) }}</td>
                                             <td class="fw-bolder border-dashed">
-                                                <span class="ending-balance"  data-name="shorts" id="total_shorts">
+                                                <span class=""  data-name="shorts" id="total_shorts">
                                                     {{ \Illuminate\Support\Number::currency($shorts, currencyCode()) }}
                                                 </span>
                                             </td>
@@ -315,7 +315,7 @@
                                             <td>{{ __('Totals') }}</td>
                                             <td class=" border-dashed">{{ \Illuminate\Support\Number::currency($shift->cash_start + collect($networks)->sum('balance_old'), currencyCode()) }}</td>
                                             <td class="fw-bolder border-dashed">
-                                                <span cid="total-ending-balance">
+                                                <span id="total-ending-balance">
                                                 {{ \Illuminate\Support\Number::currency($totals + $loanBalances + $shorts, currencyCode()) }}
                                             </td>
                                             <td class=" border-dashed">{{ \Illuminate\Support\Number::currency($transacted + $income + $expenses + $shorts + $shift->loans->sum('amount')  , currencyCode()) }}</td>
@@ -553,17 +553,17 @@
 
                     let startingCapital = $("h4#starting-capital").data('starting-capital')
 
-                    let totalShort = (parseFloat(startingCapital) - total);
+                    let totalShort = (parseFloat(startingCapital) - total - income);
                     // Display the total in some element (you can adjust this based on your needs)
                     document.getElementById('total_balance').innerText =  (total + totalShort ).toLocaleString('en-US', {maximumFractionDigits: 2});
 
 
                     document.getElementById('total_shorts').innerText = totalShort.toLocaleString('en-US', {maximumFractionDigits: 2});
 
-                    $("input.total_shorts_input").val(totalShort)
+                    $("input.total_shorts_input").val(totalShort )
 
                     $("span#total_shorts").text(totalShort)
-                    $("span#total_shorts").text(totalShort)
+
 
                     $("span#total-balance").text(total + totalShort + income)
 
@@ -582,11 +582,14 @@
 
                     endingBalance.forEach(function (span) {
                         console.log(`${span.dataset.name} =>  ${parseFloat(span.textContent.trim().replace(/[^\d.]/g, ''))}`)
-                        totalEndingBalance += parseFloat(parseFloat(span.textContent.trim().replace(/[^\d.]/g, '')));
+                        totalEndingBalance +=  parseFloat(parseFloat(span.textContent.trim().replace(/[^\d.]/g, '')));
                     });
 
                     $("span#total-subtotal").text(total.toLocaleString('en-US', {maximumFractionDigits: 2}))
-                    $("span#total-ending-balance").text(totalEndingBalance.toLocaleString('en-US', {maximumFractionDigits: 2}))
+
+
+
+                    $("span#total-ending-balance").text((totalEndingBalance ).toLocaleString('en-US', {maximumFractionDigits: 2}))
                 }
 
 
