@@ -656,7 +656,7 @@
                         // react transacted amount
                         let transacted = document.querySelector("." + span.dataset.class);
 
-                        transacted.textContent = Math.abs(parseFloat(parseFloat(span.textContent.trim().replace(/[^\d.]/g, ''))) - transacted.dataset.start)
+                        transacted.textContent = Math.abs(parseFloat(parseFloat(span.textContent.trim().replace(/[^\d.]/g, ''))) - transacted.dataset.start).toLocaleString('en-US', {maximumFractionDigits: 2})
 
 
                     });
