@@ -52,8 +52,7 @@
                                     <td>
                                         <x-input
                                             type="number"
-                                            class="form-control-solid fa-money-bill-transfer
-                                            @error('closing_balance') form-control-feedback @enderror"
+                                            class="form-control-solid fa-money-bill-transfer closing-cash"
                                             name="closing_balance"
                                             value="{{ $cashAtHand }}"
                                             placeholder="{{ __('Closing Balance') }}" id="closing_balance"/>
@@ -68,7 +67,8 @@
                                         <td class="fs-sm">
                                             <x-input
                                                 type="number"
-                                                class="form-control-solid network-balance"
+                                                data-name="tills-{{ $network['code'] }}"
+                                                class="form-control-solid network-balance tills-{{ $network['code'] }}"
                                                 name="tills[{{ $network['code'] }}]"
                                                 value="{{ $network['balance'] }}"
                                                 placeholder="{{ $network['balance'] }}"
@@ -216,7 +216,11 @@
                                             <td>{{  __("Starting Cash") }}</td>
 
                                             <td>{{  Number::currency($shift->cash_start,  currencyCode())}}</td>
-                                            <td  class="fw-bolder">{{  Number::currency($cashAtHand,  currencyCode())}}</td>
+                                            <td  class="fw-bolder">
+                                                <span id="cash"  class="ending-balance">
+                                                    {{  Number::currency($cashAtHand,  currencyCode())}}
+                                                </span>
+                                            </td>
                                             <td>{{  Number::currency(  abs($shift->cash_start - $cashAtHand),  currencyCode())}}</td>
                                         </tr>
 
@@ -228,7 +232,13 @@
                                                 <td>{{  __($name) }}</td>
 
                                                 <td>{{  Number::currency($network['balance_old'],  currencyCode())}}</td>
-                                                <td class="fw-bolder">{{  Number::currency($network['balance'],  currencyCode())}}</td>
+                                                <td class="fw-bolder">
+                                                    <span
+                                                        class="tills-{{ $network['code']}} ending-balance">
+                                                          {{  Number::currency($network['balance'],  currencyCode())}}
+                                                    </span>
+
+                                                </td>
                                                 <td>{{   Number::currency(abs(($network['balance_old'] - $network['balance'])),  currencyCode())   }}</td>
                                             </tr>
                                         @endforeach
@@ -236,7 +246,11 @@
                                         <tr class="fw-bold" style="border-top: 1px  dotted; border-bottom: 1px  dotted">
                                             <td class=""> {{ __('Subtotal') }}</td>
                                             <td class="border-dashed">{{ \Illuminate\Support\Number::currency($shift->cash_start + collect($networks)->sum('balance_old'), currencyCode()) }}</td>
-                                            <td class="fw-bold border-dashed">{{ \Illuminate\Support\Number::currency( $totals += $cashAtHand + collect($networks)->sum('balance'), currencyCode()) }}</td>
+                                            <td class="fw-bold border-dashed">
+                                                <span id="total-subtotal">
+                                                     {{ \Illuminate\Support\Number::currency( $totals += $cashAtHand + collect($networks)->sum('balance'), currencyCode()) }}
+                                                </span>
+                                            </td>
                                             <td class=" border-dashed">{{ \Illuminate\Support\Number::currency($transacted, currencyCode()) }}</td>
 
                                         </tr>
@@ -244,14 +258,22 @@
                                         <tr class="border-1">
                                             <td class=""> {{ __('Total loans') }}</td>
                                             <td class=" border-dashed">{{ \Illuminate\Support\Number::currency(0, currencyCode()) }}</td>
-                                            <td class="fw-bolder border-dashed">{{ \Illuminate\Support\Number::currency($loanBalances, currencyCode()) }}</td>
+                                            <td class="fw-bolder border-dashed">
+                                                <span class="ending-balance">
+                                                {{ \Illuminate\Support\Number::currency($loanBalances, currencyCode()) }}
+                                                </span>
+                                            </td>
                                             <td class="border-dashed">{{ \Illuminate\Support\Number::currency($shift->loans->sum('amount'), currencyCode()) }}</td>
 
                                         </tr>
                                         <tr class="border-1">
                                             <td class="border-top-1"> {{ __('Total Incomes') }}</td>
                                             <td class=" border-dashed">{{ \Illuminate\Support\Number::currency(0, currencyCode()) }}</td>
-                                            <td class="fw-bolder border-dashed">{{ \Illuminate\Support\Number::currency($income, currencyCode()) }}</td>
+                                            <td class="fw-bolder border-dashed">
+                                                <span class="ending-balance income">
+                                                    {{ \Illuminate\Support\Number::currency($income, currencyCode()) }}
+                                                </span>
+                                            </td>
                                             <td class=" border-dashed">{{ \Illuminate\Support\Number::currency($income, currencyCode()) }}</td>
 
                                         </tr>
@@ -259,7 +281,11 @@
                                         <tr class="border-1">
                                             <td class="border-top-1"> {{ __('Total Expenses') }}</td>
                                             <td class=" border-dashed">{{ \Illuminate\Support\Number::currency(0, currencyCode()) }}</td>
-                                            <td class="fw-bolder border-dashed">{{ \Illuminate\Support\Number::currency($expenses, currencyCode()) }}</td>
+                                            <td class="fw-bolder border-dashed">
+                                                <span class="ending-balance expenses">
+                                                    {{ \Illuminate\Support\Number::currency($expenses, currencyCode()) }}
+                                                </span>
+                                            </td>
                                             <td class=" border-dashed">{{ \Illuminate\Support\Number::currency($expenses, currencyCode()) }}</td>
 
                                         </tr>
@@ -269,7 +295,11 @@
                                         <tr class="border-1">
                                             <td class="border-top-1"> {{ __('Total Shorts') }}</td>
                                             <td class=" border-dashed">{{ \Illuminate\Support\Number::currency(0, currencyCode()) }}</td>
-                                            <td class="fw-bolder border-dashed">{{ \Illuminate\Support\Number::currency($shorts, currencyCode()) }}</td>
+                                            <td class="fw-bolder border-dashed">
+                                                <span class="ending-balance" id="total_shorts">
+                                                    {{ \Illuminate\Support\Number::currency($shorts, currencyCode()) }}
+                                                </span>
+                                            </td>
                                             <td class=" border-dashed">{{ \Illuminate\Support\Number::currency($shorts, currencyCode()) }}</td>
 
                                         </tr>
@@ -278,7 +308,10 @@
                                         <tr class="fw-bolder text-primary" style="border-top: 2px  dotted; border-bottom: 2px  dotted">
                                             <td>{{ __('Totals') }}</td>
                                             <td class=" border-dashed">{{ \Illuminate\Support\Number::currency($shift->cash_start + collect($networks)->sum('balance_old'), currencyCode()) }}</td>
-                                            <td class="fw-bolder border-dashed">{{ \Illuminate\Support\Number::currency($totals + $loanBalances + $shorts, currencyCode()) }}</td>
+                                            <td class="fw-bolder border-dashed">
+                                                <span class="total-ending-balance" id="total-ending-balance">
+                                                {{ \Illuminate\Support\Number::currency($totals + $loanBalances + $shorts, currencyCode()) }}
+                                            </td>
                                             <td class=" border-dashed">{{ \Illuminate\Support\Number::currency($transacted + $income + $expenses + $shorts + $shift->loans->sum('amount')  , currencyCode()) }}</td>
 
                                         </tr>
@@ -482,7 +515,15 @@
 
                     var expenses = parseFloat(document.getElementById('expenses').value);
 
+
+                    $("span.expenses").text(expenses)
+
+                    var cash =   parseFloat(document.getElementById('closing_balance').value)  ;
+                    $("span#cash").text(cash)
+
                     var income = parseFloat(document.getElementById('income').value);
+
+                    $("span.income").text(income)
 
                     var loanBalances = parseFloat(document.getElementById('loans-balances').getAttribute('data-loans-balance'));
 
@@ -491,10 +532,24 @@
 
                     // Loop through each network balance input field
                     var networkInputs = document.querySelectorAll('.network-balance');
+
                     networkInputs.forEach(function (input) {
 
                         total += parseFloat(input.value);
+
+                        $("span."+ input.dataset.name).text(input.value)
+
                     });
+                    var endingBalance = document.querySelectorAll('.ending-balance');
+
+                    let  totalEndingBalance = 0;
+
+                    endingBalance.forEach(function (span) {
+                        totalEndingBalance += parseFloat(parseFloat(span.textContent.trim().replace(/[^\d.]/g, '')));
+                    });
+
+                    $("span#total-subtotal").text(total.toLocaleString('en-US', {maximumFractionDigits: 2}))
+                    $("span#total-ending-balance").text(totalEndingBalance.toLocaleString('en-US', {maximumFractionDigits: 2}))
 
 
                     let startingCapital = $("h4#starting-capital").data('starting-capital')
@@ -507,6 +562,11 @@
                     document.getElementById('total_shorts').innerText = totalShort.toLocaleString('en-US', {maximumFractionDigits: 2});
 
                     $("input.total_shorts_input").val(totalShort)
+
+                    $("span#total_shorts").text(totalShort)
+                    $("span#total_shorts").text(totalShort)
+
+                    $("span#total-balance").text(total + totalShort + income)
 
                     if (totalShort > 0) {
                         $("div#has_short").show();
@@ -526,6 +586,7 @@
 
                 var networkInputs = document.querySelectorAll('.network-balance');
                 networkInputs.forEach(function (input) {
+
                     input.addEventListener('change', calculateTotal);
                 });
 
