@@ -301,58 +301,6 @@ function shiftBalances(\App\Models\Shift $shift): array
         'loanBalances' => $loanBalances
     ];
 }
-function runDatabaseTransaction(\Closure $closure): mixed
-{
-    DB::beginTransaction();
-
-    try {
-        // Execute the provided closure
-        $result = $closure();
-
-        // If the closure execution is successful, commit the transaction
-        DB::commit();
-
-        return $result; // Return the result of the closure if needed
-    } catch (\Exception $exception) {
-dd($exception);
-        // If an exception occurs, rollback the transaction
-        DB::rollback();
-          // Log the exception
-        Log::debug('ERROR: '.$exception->getMessage());
-
-        // Notify Bugsnag about the exception
-        Bugsnag::notifyException($exception);
-
-        return false; // Return false or handle the error as needed
-
-        // Example usage with variables
-        //        $userId = 1;
-        //        $newEmail = 'newemail@example.com';
-        //
-        //        $result = runDatabaseTransaction(function () use ($userId, $newEmail) {
-        //            // Access variables passed to the closure
-        //            // Perform database actions using $userId and $newEmail
-        //
-        //            // Example: Update user email
-        //            $user = User::find($userId);
-        //            $user->email = $newEmail;
-        //            $user->save();
-        //
-        //            return true; // Return any result if needed
-        //        });
-        //
-        //        if ($result !== false) {
-        //            // Transaction was successful
-        //            // Handle the result if needed
-        //            echo "Transaction successful!";
-        //        } else {
-        //            // Transaction failed
-        //            // Handle the failure or error
-        //            echo "Transaction failed!";
-        //        }
-    }
-
-}
 
 
 function runDatabaseTransaction(\Closure $closure)
@@ -368,6 +316,8 @@ function runDatabaseTransaction(\Closure $closure)
 
         return $result; // Return the result of the closure if needed
     } catch (\Exception $exception) {
+
+
         // If an exception occurs, rollback the transaction
         DB::rollback();
 

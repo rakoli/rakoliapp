@@ -28,6 +28,7 @@ class AddNetworkController extends Controller
         ]);
 
         try {
+
             AddLocationNetwork::run($validated);
 
             return response()
