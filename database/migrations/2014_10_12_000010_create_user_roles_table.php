@@ -33,7 +33,7 @@ return new class extends Migration
                 ->onUpdate('cascade');
             $table->timestamps();
 
-            $table->unique(['user_code'], 'u_user_lo');
+            $table->unique(['user_code'],'u_user_lo');
         });
     }
 

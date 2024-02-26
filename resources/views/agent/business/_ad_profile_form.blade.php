@@ -69,7 +69,7 @@
                 </div>
                 <div class="mb-5 fv-row">
                     <!--end::Label-->
-                    <label class="form-label">{{__('Business Location')}}</label>
+                    <label class="form-label">{{__('Business location')}}</label>
                     <!--begin::Input-->
                     <textarea type="text" class="form-control mb-2" id="business_location " name="business_location " placeholder="{{__("Enter location")}}">{{$business->business_location  }}</textarea>
                 </div>

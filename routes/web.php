@@ -38,6 +38,8 @@ Route::post('registration/vas/finish', [App\Http\Controllers\RegistrationStepCon
 
 Route::get('r/{businessCode}', [App\Http\Controllers\Auth\RegisterController::class, 'referral'])->name('referral.link');
 
+Route::get('r/{businessCode}', [App\Http\Controllers\Auth\RegisterController::class, 'referral'])->name('referral.link');
+
 //LANGUAGE SWITCHER
 Route::get('lang/switch', [LanguageController::class, 'languageSwitch'])->name('languageSwitch');
 

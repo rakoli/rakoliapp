@@ -22,7 +22,7 @@ class BusinessAccountTransaction extends Model
         'note',
     ];
 
-    public function business(): BelongsTo
+    public function business() :BelongsTo
     {
         return $this->belongsTo(Business::class, 'business_code', 'code');
     }

@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class UserRole extends Model
 {
     use HasFactory;
-
     protected $fillable = [
         'business_code',
         'user_code',
@@ -20,16 +19,18 @@ class UserRole extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_code', 'code');
+        return  $this->belongsTo(User::class,'user_code','code');
     }
 
     public function location(): BelongsTo
     {
-        return $this->belongsTo(BusinessRole::class, 'user_role', 'code');
+        return  $this->belongsTo(BusinessRole::class,'user_role','code');
     }
 
     public function business(): BelongsTo
     {
         return $this->belongsTo(Business::class, 'business_code', 'code');
     }
+
+
 }

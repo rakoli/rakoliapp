@@ -3,6 +3,7 @@
 @section('title', __('Finance'))
 
 @section('header_js')
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <link href="{{ asset('assets/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
 @endsection
 
@@ -57,22 +58,22 @@
                             <div class="py-5 fs-6">
                                 <div class="fw-bold mt-5">{{ __('Method Name') }}</div>
                                 <div class="text-gray-600">
-                                    {{ old('method_name', $withdrawMethod->method_name ?? __('Not set')) }}
+                                    {{ old('method_name', $withdrawMethod->method_name ?? 'Not mention') }}
                                 </div>
 
                                 <div class="fw-bold mt-5">{{ __('Method AC Name') }}</div>
                                 <div class="text-gray-600">
-                                    {{ old('method_ac_name', $withdrawMethod->method_ac_name ?? __('Not set')) }}
+                                    {{ old('method_ac_name', $withdrawMethod->method_ac_name ?? 'Not mention') }}
                                 </div>
 
                                 <div class="fw-bold mt-5">{{ __('Method AC Number') }}</div>
                                 <div class="text-gray-600">
-                                    {{ old('method_ac_number', $withdrawMethod->method_ac_number ?? __('Not set')) }}
+                                    {{ old('method_ac_number', $withdrawMethod->method_ac_number ?? 'Not mention') }}
                                 </div>
 
                                 <div class="fw-bold mt-5">{{ __('Amount Currency') }}</div>
                                 <div class="text-gray-600">
-                                    {{ old('amount_currency', $withdrawMethod->amount_currency ?? __('Not set')) }}
+                                    {{ old('amount_currency', $withdrawMethod->amount_currency ?? 'Not mention') }}
                                 </div>
 
                             </div>
@@ -88,14 +89,14 @@
             <!--begin::Content-->
             <div class="flex-lg-row-fluid ms-lg-15">
 
-                <!--begin::Card-->
+                <!--begin::Table-->
                 <div class="card card-flush pt-4 mb-6 mb-xl-9">
 
                     <!--begin::Card header-->
                     <div class="card-header border-0">
                         <!--begin::Card title-->
                         <div class="card-title">
-                            <h2 class="fw-bold mb-0">{{__('Account Transactions')}}</h2>
+                            <h2 class="fw-bold mb-0">Account Transactions Methods</h2>
                         </div>
                         <!--end::Card title-->
                     </div>
@@ -115,14 +116,14 @@
                 </div>
                 <!--end::Card-->
 
-                <!--begin::Card-->
+                <!--begin::Table-->
                 <div class="card card-flush pt-4 mb-6 mb-xl-9">
 
                     <!--begin::Card header-->
                     <div class="card-header border-0">
                         <!--begin::Card title-->
                         <div class="card-title">
-                            <h2 class="fw-bold mb-0">{{__('Withdraw Requests')}}</h2>
+                            <h2 class="fw-bold mb-0">Withdraw Requests</h2>
                         </div>
                         <!--end::Card title-->
                     </div>
@@ -155,7 +156,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title">{{ __('Update Withdraw Method') }}</h3>
+                    <h3 class="modal-title">{{ __('Update Withdraw Details') }}</h3>
                     <!--begin::Close-->
                     <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
                         aria-label="Close">
@@ -163,7 +164,7 @@
                     </div>
                     <!--end::Close-->
                 </div>
-                <form class="my-auto pb-5" action="{{ route('business.finance.withdrawmethod.update') }}" method="POST">
+                <form class="my-auto pb-5" action="{{ route('business.finance.update') }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <!--begin::Input group-->
@@ -183,6 +184,7 @@
                                 <input name="method_ac_name" type="text" class="form-control"
                                     value="{{ old('method_ac_name', $withdrawMethod->method_ac_name ?? '') }}"
                                     value="" placeholder="{{ __('enter method ac name') }}" />
+                                {{-- <textarea name="description" type="text" class="form-control" value="" placeholder="{{__('enter description')}}"></textarea> --}}
                             </div>
                         </div>
                         <!--end::Input group-->
@@ -193,6 +195,7 @@
                                 <input name="method_ac_number" type="text" class="form-control"
                                     value="{{ old('method_ac_number', $withdrawMethod->method_ac_number ?? '') }}"
                                     value="" placeholder="{{ __('enter method ac number') }}" />
+                                {{-- <textarea name="description" type="text" class="form-control" value="" placeholder="{{__('enter description')}}"></textarea> --}}
                             </div>
                         </div>
                         <!--end::Input group-->
@@ -209,12 +212,12 @@
     <!--end::Modal group-->
 
 
-    <!--begin::Request Withdraw Modal group-->
+    <!--begin::Modal group-->
     <div class="modal fade" tabindex="-1" id="withdraw_method_modal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title">{{ __('Request Funds Withdraw') }}</h3>
+                    <h3 class="modal-title">{{ __('Add Withdraw Fund Details') }}</h3>
                     <!--begin::Close-->
                     <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
                         aria-label="Close">
@@ -255,40 +258,37 @@
             </div>
         </div>
     </div>
-    <!--end::Request Withdraw Modal group-->
-
-    <!-- Request Withdraw Confirmation Modal -->
+    <!--end::Modal group-->
+    <!-- Confirmation Modal -->
     <div class="modal fade" tabindex="-1" id="confirmation_modal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">{{__('Confirmation')}}</h5>
+                    <h5 class="modal-title">Confirmation</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    {{__('Are you sure for processing withdraw request?')}}
+                    Are you sure for processing withdraw request?
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="confirmWithdraw">{{__('Yes')}}</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{__('No')}}</button>
+                    <button type="button" class="btn btn-primary" id="confirmWithdraw">Yes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Request Withdraw Confirmation Modal -->
-
     <div class="modal fade" tabindex="-1" id="Messages">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">{{__('Alert')}}</h5>
+                    <h5 class="modal-title">Alert</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <h4 id="modalMessage">   </h4>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{__('OK')}}</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ok</button>
                 </div>
             </div>
         </div>

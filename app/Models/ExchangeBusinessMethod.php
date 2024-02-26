@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ExchangeBusinessMethod extends Model
 {
-    use BusinessAuthorization, HasFactory;
+    use HasFactory, BusinessAuthorization;
 
     protected $fillable = [
         'business_code',
@@ -19,8 +19,9 @@ class ExchangeBusinessMethod extends Model
         'account_name',
     ];
 
-    public function business(): BelongsTo
+    public function business() : BelongsTo
     {
         return $this->belongsTo(Business::class, 'business_code', 'code');
     }
+
 }

@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Business;
+use App\Models\Location;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -18,11 +19,11 @@ class BusinessRoleFactory extends Factory
      */
     public function definition(): array
     {
-        $businesses = Business::get(['code', 'business_name'])->toArray();
+        $businesses = Business::get(['code','business_name'])->toArray();
         $selectedBusiness = null;
-        if (empty($businesses)) {
+        if(empty($businesses)){
             $selectedBusiness = Business::factory()->create()->toArray();
-        } else {
+        }else{
             $selectedBusiness = fake()->randomElement($businesses);
         }
 
