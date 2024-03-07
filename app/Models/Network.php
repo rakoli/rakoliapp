@@ -60,4 +60,28 @@ class Network extends Model
     {
         return $this->hasMany(Short::class, 'network_code', 'code');
     }
+
+    public static function addBusinessDefaultTills(Business $business, Location $location)
+    {
+        $fsps = FinancialServiceProvider::where([
+            'country_code' => $business->country_code,
+            'is_default' => true
+        ])->get();
+
+
+        foreach ($fsps as $fsp){
+            Network::create([
+                'code' => generateCode($fsp->name,$business->code),
+                'business_code' => $business->code,
+                'location_code' => $location->code,
+                'fsp_code' => $fsp->code,
+                'name' => $fsp->name .' Default',
+                'agent_no' => 'Default '.random_int(1,99),
+                'description' => 'System default till, edit details or remove',
+                'balance' => 0,
+                'balance_currency' => $business->country->currency,
+            ]);
+        }
+
+    }
 }

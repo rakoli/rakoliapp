@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Business;
 use App\Models\Location;
+use App\Models\LocationUser;
 use App\Models\Package;
 use App\Models\User;
 use App\Utils\Enums\BusinessStatusEnum;
@@ -41,13 +42,13 @@ class UsersTableSeeder extends Seeder
             'status' => BusinessStatusEnum::ACTIVE->value,
         ]);
 
-        Location::create([
-            'business_code' => $agentBusiness->code,
-            'code' => Str::random(10),
-            'name' => 'Vertice Branch',
-            'balance' => fake()->numberBetween(500000, 5000000),
-            'balance_currency' => fake()->randomElement(['kes', 'tzs']),
-        ]);
+//        Location::create([
+//            'business_code' => $agentBusiness->code,
+//            'code' => Str::random(10),
+//            'name' => 'Vertice Branch',
+//            'balance' => fake()->numberBetween(500000, 5000000),
+//            'balance_currency' => fake()->randomElement(['kes', 'tzs']),
+//        ]);
 
         //VAS BUSINESS
         $name = 'Pulsans Advertisement Ltd';
@@ -120,6 +121,18 @@ class UsersTableSeeder extends Seeder
 
             User::create($user);
 
+        }
+
+        $agentBusinessLocations = Location::where('business_code', $agentBusiness->code)->get();
+
+        $agentUser = User::where('email','agent@rakoli.com')->first();
+
+        foreach ($agentBusinessLocations as $agentBusinessLocation) {
+            LocationUser::create([
+                'business_code' => $agentBusiness->code,
+                'user_code' => $agentUser->code,
+                'location_code' => $agentBusinessLocation->code
+            ]);
         }
 
     }

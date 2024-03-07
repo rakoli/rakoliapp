@@ -32,7 +32,7 @@ class Location extends Model
 
     public function business(): BelongsTo
     {
-        return $this->belongsTo(Business::class, 'Business_Code', 'Business_Code');
+        return $this->belongsTo(Business::class, 'business_Code', 'business_Code');
     }
 
     public function networks(): HasMany

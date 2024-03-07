@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('name')->index();
             $table->string('desc')->nullable();
             $table->string('pic')->nullable();
+            $table->boolean('is_default')->default(false);
             $table->timestamps();
         });
     }
