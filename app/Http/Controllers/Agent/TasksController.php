@@ -38,8 +38,9 @@ class TasksController extends Controller
                 $tasks = $tasks->where('is_public',"0")->whereHas('vas_task_availabilities',function($query) use($user){
                     $query->where('agent_business_code',$user->business_code);
                 });
-            } else {
-                $tasks = $tasks->where('is_public',1);
+            }
+            else {
+                $tasks = $tasks->where('is_public',"1");
             }
 
             return \Yajra\DataTables\Facades\DataTables::eloquent($tasks)

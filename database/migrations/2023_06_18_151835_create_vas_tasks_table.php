@@ -54,7 +54,7 @@ return new class extends Migration
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
 
-            $table->boolean('is_public')->default(true); //
+            $table->boolean('is_public')->default(1); //
             $table->integer('no_of_agents')->nullable();
             $table->json('attachments')->invisible()->nullable();
 
