@@ -45,7 +45,7 @@ class VasTaskFactory extends Factory
             'task_type' => fake()->randomElement(TaskTypeEnum::class),
             'description' => fake()->sentence,
             'no_of_agents' => random_int(1,10),
-            'is_public' => 1,
+            'is_public' => fake()->randomElement(0,1),
         ];
     }
 }
