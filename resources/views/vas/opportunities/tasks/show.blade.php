@@ -84,7 +84,7 @@
                         <!--end::Card title-->
                     </div>
                     <!--end::Card header-->
-                    <form class="form" data-kt-redirect-url="{{route('vas.tasks.show',array($task->id))}}" action="{{route('vas.contracts.store')}}" method="post" id="kt_form">
+                    <form class="form" data-kt-redirect-url="{{route('vas.contracts.index')}}" action="{{route('vas.contracts.store')}}" method="post" id="kt_form">
                     <input type="hidden" name="vas_task_code" value="{!! $task->code !!}">
                     <!--begin::Card body-->
                     <div class="card-body pt-0">
@@ -273,6 +273,9 @@
                                         Swal.fire({
                                             text: "Applied",
                                             icon: "success",
+                                        }).then(function() {
+                                            const redirectUrl = form.getAttribute('data-kt-redirect-url');
+                                            location.href = redirectUrl;
                                         });
                                     }else Swal.fire({
                                         text: response.data.resultExplanation,

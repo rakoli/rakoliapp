@@ -47,12 +47,33 @@ class TasksController extends Controller
                 ->editColumn('task_type', function($task) {
                     return __($task->task_type);
                 })
+                ->addColumn('location', function(VasTask $task) {
+                    $region = $task->region;
+                    if($region != null){
+                        $region = $task->region->name;
+                    }
+                    $town = $task->town;
+                    if($town != null){
+                        $town = $task->town->name;
+                    }
+                    $area = $task->area;
+                    if($area != null){
+                        $area = $task->area->name;
+                    }
+                    $content = "<div class='d-flex flex-column'>
+                                  <div>Region: $region</div>
+                                  <div>Town: $town</div>
+                                  <div>Area: $area</div>
+                                </div>";
+
+                    return $content;
+                })
                 ->addColumn('action', function(VasTask $task) {
                     $content = '<a class="btn btn-secondary btn-sm me-2" href="'.route('agent.task.show', $task->id).'">'.__("View Task").'</a>';
                     return $content;
                 })
                 ->addIndexColumn()
-                ->rawColumns(['action'])
+                ->rawColumns(['action','location'])
                 ->editColumn('id',function($task) {
                     return idNumberDisplay($task->id);
                 })
@@ -62,11 +83,8 @@ class TasksController extends Controller
         //Datatable
         $dataTableHtml = $builder->columns([
             ['data' => 'id', 'title' => __('id')],
-            ['data' => 'country.name', 'title' => __("Country")],
             ['data' => 'business.business_name', 'title' => __("Business")],
-            ['data' => 'area.name', 'title' => __("Area")],
-            ['data' => 'region.name', 'title' => __("Region")],
-            ['data' => 'town.name', 'title' => __("Town")],
+            ['data' => 'location', 'title' => __("Location")],
             ['data' => 'task_type' , 'title' => __("Type")],
             ['data' => 'time_start' , 'title' => __("Start Time")],
             ['data' => 'time_start' , 'title' => __("End Time")],

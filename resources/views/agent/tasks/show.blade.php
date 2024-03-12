@@ -89,14 +89,14 @@
                         <div class="fs-6 fw-normal mb-10">{{$task->description}}</div>
 
                         <!--begin::Form-->
-                        <form class="form" data-kt-redirect-url="{{route('agent.task.show',array($task->id))}}" action="{{route('agent.task.apply')}}" method="post" id="kt_form">
+                        <form class="form" data-kt-redirect-url="{{route('agent.tasks')}}" action="{{route('agent.task.apply')}}" method="post" id="kt_form">
                             <input type="hidden" name="task_id" value="{{$task->id}}">
                             <!--begin::Input group-->
                             <div class="row fv-row mb-7">
                                 <div class="col-md-3 text-md-end">
                                     <!--begin::Label-->
                                     <label class="fs-6 fw-semibold form-label mt-3">
-                                        {{__("Comment")}}
+                                        {{__("Cover letter")}}
                                     </label>
                                     <!--end::Label-->
                                 </div>
@@ -183,11 +183,11 @@
                                     }
                                 }
                             },
-                            'amount': {
+                            'comment': {
                                 validators: {
-                                    min: 10000,
-                                    max: 40000,
-                                    message: 'The Amount is required'
+                                    notEmpty: {
+                                        message: 'Please fill your cover letter.'
+                                    }
                                 }
                             }
                         },
@@ -229,6 +229,9 @@
                                         Swal.fire({
                                             text: "Applied",
                                             icon: "success",
+                                        }).then(function() {
+                                            const redirectUrl = form.getAttribute('data-kt-redirect-url');
+                                            location.href = redirectUrl;
                                         });
                                     }else Swal.fire({
                                         text: response.data.resultExplanation,

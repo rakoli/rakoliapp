@@ -40,13 +40,17 @@
                 <div class="card-body pt-0">
                     <!--begin::Select2-->
                     <select class="form-select mb-2" data-control="select2" data-hide-search="true" data-placeholder="{{__('Select Statusss')}}" id="status" name="status">
-                        @foreach(\App\Utils\Enums\VasTaskStatusEnum::userViewable() as $availableStatus)
-                            <option value="{{$availableStatus}}"
-                                @if($task->status == $availableStatus)
-                                    selected
-                                @endif
-                            >{{strtoupper($availableStatus)}}</option>
-                        @endforeach
+                        @if(in_array($task->status, \App\Utils\Enums\VasTaskStatusEnum::userViewable()))
+                            @foreach(\App\Utils\Enums\VasTaskStatusEnum::userViewable() as $availableStatus)
+                                <option value="{{$availableStatus}}"
+                                    @if($task->status == $availableStatus)
+                                        selected
+                                    @endif
+                                >{{strtoupper($availableStatus)}}</option>
+                            @endforeach
+                        @else
+                            <option value="{{$task->status}}" selected>{{strtoupper($task->status)}}</option>
+                        @endif
                     </select>
                     <!--end::Select2-->
                     <!--begin::Description-->

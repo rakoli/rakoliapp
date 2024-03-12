@@ -41,6 +41,9 @@ class TasksController extends Controller
                 ->editColumn('task_type', function($task) {
                     return __($task->task_type);
                 })
+                ->editColumn('status', function($task) {
+                    return strtoupper($task->status);
+                })
                 ->addColumn('location', function(VasTask $task) {
                     $region = $task->region;
                     if($region != null){
@@ -88,6 +91,7 @@ class TasksController extends Controller
             ['data' => 'time_start' , 'title' => __("Start Time")],
             ['data' => 'time_end' , 'title' => __("End Time")],
             ['data' => 'no_of_agents' , 'title' => __("Agents")],
+            ['data' => 'status' , 'title' => __("Status")],
             ['data' => 'description' , 'title' => __("Description")],
             ['data' => 'action' , 'title' => __("Action")],
         ])->responsive(true)
