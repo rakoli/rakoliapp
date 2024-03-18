@@ -39,7 +39,7 @@
 
                         <x-modal_with_button
                             targetId="add-transaction"
-                            label="Add Cash Transaction"
+                            label="Add Till Transaction"
                             modalTitle="Fill the form below record a transaction"
                             btnClass="btn btn-facebook"
                         >
@@ -97,7 +97,37 @@
                     <div class="card-header border-0">
                         <!--begin::Card title-->
                         <div class="card-title">
-                            <h2>Transaction History</h2>
+                            <h2>Till Transaction History</h2>
+                        </div>
+                        <!--end::Card title-->
+                    </div>
+                    <!--end::Card header-->
+
+                    <!--begin::Card body-->
+                    <div class="card-body pt-0 pb-5">
+                        <!--begin::Table-->
+                        <div id="kt_table_customers_payment_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                            <div class="table-responsive">
+
+
+                                {!! $dataTableHtml->table(['class' => 'table align-middle table-row-dashed gy-5 dataTable no-footer' , 'id' => 'transaction-table'],true) !!}
+
+                            </div>
+
+                        </div>
+                        <!--end::Table-->
+                    </div>
+                    <!--end::Card body-->
+                </div>
+                <!--end::Card-->
+
+                <!--begin::Card-->
+                <div class="card pt-4 mb-6 mb-xl-9">
+                    <!--begin::Card header-->
+                    <div class="card-header border-0">
+                        <!--begin::Card title-->
+                        <div class="card-title">
+                            <h2>Cash Transaction History</h2>
                         </div>
                         <!--end::Card title-->
                     </div>
@@ -272,6 +302,10 @@
                     sort: false,
                     perPage: 2
                 })
+
+                $('.modal').on('hidden.bs.modal', function () {
+                    $(this).find('form').trigger('reset');
+                });
             })
         </script>
 

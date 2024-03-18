@@ -1,4 +1,4 @@
-var submitFormAction = function submitForm(form, url, submitButton, method = 'post') {
+var submitFormAction = function submitForm(form, url, submitButton, redirect_url, method = 'post') {
 
     var formData = new FormData(form)
 
@@ -25,7 +25,7 @@ var submitFormAction = function submitForm(form, url, submitButton, method = 'po
 
 
         setTimeout(function () {
-            window.location.reload()
+            location.href = redirect_url;
         }, 1000);
 
 
@@ -52,7 +52,7 @@ var submitFormAction = function submitForm(form, url, submitButton, method = 'po
 }
 
 
-function lakoriValidation(validation, form, submitButton, formMethod, url) {
+function lakoriValidation(validation, form, submitButton, formMethod, url, redirect_url= "") {
 
     var validationsArray = [];
 
@@ -109,7 +109,8 @@ function lakoriValidation(validation, form, submitButton, formMethod, url) {
                     submitFormAction(
                         form,
                         url,
-                        submitButton
+                        submitButton,
+                        redirect_url
                     );
 
                 }

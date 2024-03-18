@@ -32,23 +32,25 @@ class ShiftDatatable implements HasDatatable
             ->addColumn('branch', fn (Shift $shift) => $shift->location->name)
             ->addColumn('action', function (Shift $shift) {
 
-                $actions = [
-                    'Details' => [
-                        'route' => route('agency.shift.show', $shift),
-                        'attributes' => 'null',
-                    ],
-                    'Close Shift' => [
+                $actions['Details'] = [
+                    'route' => route('agency.shift.show', $shift),
+                    'attributes' => 'null',
+                ];
+                if ($shift->status == ShiftStatusEnum::OPEN) // @todo Authorise this action
+                {
+                    $actions['Close Shift'] = [
                         'route' => route('agency.shift.close', $shift),
                         'attributes' => null,
-                    ],
-                    'Loans' => [
-                        'route' => route('agency.shift.show.loans', $shift),
-                        'attributes' => null,
-                    ],
-                    'Tills' => [
-                        'route' => route('agency.shift.till', $shift),
-                        'attributes' => null,
-                    ]
+                    ];
+                }
+
+                $actions['Loans'] = [
+                    'route' => route('agency.shift.show.loans', $shift),
+                    'attributes' => null,
+                ];
+                $actions['Tills'] = [
+                    'route' => route('agency.shift.till', $shift),
+                    'attributes' => null,
                 ];
 
 

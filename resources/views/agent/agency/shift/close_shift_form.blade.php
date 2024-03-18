@@ -31,7 +31,7 @@
         </div>
     </div>
     <div class="d-flex gap-3 flex-row align-content-between">
-
+        @if($shift->status == App\Utils\Enums\ShiftStatusEnum::OPEN)
         <x-modal_with_button
             modalTitle="Shift Transfer details"
             targetId="transfer_shift"
@@ -62,7 +62,7 @@
                              label="Close Shift"/>
 
         </x-modal_with_button>
-
+        @endif
     </div>
 
 
@@ -82,11 +82,11 @@
 
             const closeShiftButton = document.getElementById('close-shift-button');
 
-            lakoriValidation(validations, form, closeShiftButton, 'post', '{{  route('agency.shift.close.store', $shift) }}');
+            lakoriValidation(validations, form, closeShiftButton, 'post', '{{  route('agency.shift.close.store', $shift) }}', '{{ route('agency.shift') }}');
 
 
             const transferShiftButton = document.getElementById('transfer-shift-button');
-            lakoriValidation(validations, form, transferShiftButton, 'post', '{{  route('agency.shift.transfer', $shift) }}');
+            lakoriValidation(validations, form, transferShiftButton, 'post', '{{  route('agency.shift.transfer', $shift) }}', '{{ route('agency.shift') }}');
         </script>
 
     @endpush

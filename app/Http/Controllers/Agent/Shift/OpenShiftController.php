@@ -15,9 +15,9 @@ class OpenShiftController extends Controller
 {
     public function index()
     {
-
-        if (Shift::query()->where('status', ShiftStatusEnum::OPEN)->exists()) {
-            return to_route('agency.shift');
+        $shift = Shift::where('status', ShiftStatusEnum::OPEN)->first();
+        if ($shift) {
+            return to_route('agency.shift.show',$shift->id);
         }
 
         $locations = Location::query()
