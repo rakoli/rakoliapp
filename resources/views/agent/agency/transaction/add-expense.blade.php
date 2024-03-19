@@ -66,7 +66,7 @@
                         placeholder="{{ __('source: e.g Till ') }}"
                         id="till_source_code"
                         >
-                        @foreach($tills as $till)
+                        @foreach($tills_with_balance as $till)
                             <option
                                 value="{{ $till->network_code }}"
 

@@ -36,6 +36,25 @@ trait InteractsWithShift
         ]);
     }
 
+    public function createShiftCashTransaction(Shift $shift, array $data, float $oldBalance, float $newBalance)
+    {
+
+        return $shift->cashTransactions()->create([
+            'business_code' => $shift->business_code,
+            'location_code' => $shift->location_code,
+            'code' => generateCode($shift->user_code, time()),
+            'user_code' => auth()->user()->code,
+            'amount' => $data['amount'],
+            'amount_currency' => currencyCode(),
+            'type' => $data['type'],
+            'category' => $data['category'],
+            'balance_old' => $oldBalance,
+            'balance_new' => $newBalance,
+            'description' => $data['description'] ?? null,
+            'note' => $data['notes'] ?? null,
+        ]);
+    }
+
     private function createLocationTransaction(array $data, Location $location): Transaction
     {
         return Transaction::create([

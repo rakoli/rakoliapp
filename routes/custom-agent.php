@@ -41,7 +41,7 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
             Route::get('/{shift}/close', [CloseShiftController::class, 'index'])->name('agency.shift.close');
             Route::post('/{shift}/transfer', [TransferShiftController::class, 'store'])->name('agency.shift.transfer');
             Route::post('{shift}/close/store', [CloseShiftController::class, 'store'])->name('agency.shift.close.store');
-            Route::get('/{shift}/show', ShowShiftController::class)->name('agency.shift.show');
+            Route::any('/{shift}/show', ShowShiftController::class)->name('agency.shift.show');
             Route::get('{shift}/tills', [TillController::class, 'index'])->name('agency.shift.till');
             Route::get('{shift}/loans', ShowShiftLoanController::class)->name('agency.shift.show.loans');
             Route::post('/{shift}/loans/store', AddLoanController::class)->name('agency.loans.store');
@@ -54,7 +54,6 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
                 Route::post('add-expense', AddExpenseTransactionController::class)->name('agency.transactions.add.expense');
                 Route::post('add-income', AddIncomeTransactionController::class)->name('agency.transactions.add.income');
             });
-
         });
 
         Route::prefix('networks')->group(function () {

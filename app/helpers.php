@@ -242,11 +242,11 @@ function shiftBalances(\App\Models\Shift $shift): array
         return floatval($item['balance']);
     });
 
-    $expenses = \App\Models\Transaction::query()
+    $expenses = \App\Models\ShiftCashTransaction::query()
         ->where([
             'location_code' => $shift->location_code,
             'user_code' => $shift->user_code,
-            'category' => \App\Utils\Enums\TransactionCategoryEnum::EXPENSE,
+            'type' => \App\Utils\Enums\TransactionTypeEnum::MONEY_OUT,
         ])
         //->whereDate('created_at', $shift->created_at)
         ->whereBetween('created_at', [
@@ -255,11 +255,11 @@ function shiftBalances(\App\Models\Shift $shift): array
         ])
         ->sum('amount');
 
-    $income = \App\Models\Transaction::query()
+    $income = \App\Models\ShiftCashTransaction::query()
         ->where([
             'location_code' => $shift->location_code,
             'user_code' => $shift->user_code,
-            'category' => \App\Utils\Enums\TransactionCategoryEnum::INCOME,
+            'type' => \App\Utils\Enums\TransactionTypeEnum::MONEY_IN,
         ])
         //->whereDate('created_at', $shift->created_at)
         ->whereBetween('created_at', [

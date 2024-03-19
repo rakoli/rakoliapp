@@ -108,10 +108,7 @@
                         <!--begin::Table-->
                         <div id="kt_table_customers_payment_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
                             <div class="table-responsive">
-
-
-                                {!! $dataTableHtml->table(['class' => 'table align-middle table-row-dashed gy-5 dataTable no-footer' , 'id' => 'transaction-table'],true) !!}
-
+                                {!! $dataTableHtml->table(['class' => '' , 'id' => 'transaction-table'],true) !!}
                             </div>
 
                         </div>
@@ -138,12 +135,19 @@
                         <!--begin::Table-->
                         <div id="kt_table_customers_payment_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
                             <div class="table-responsive">
-
-
-                                {!! $dataTableHtml->table(['class' => 'table align-middle table-row-dashed gy-5 dataTable no-footer' , 'id' => 'transaction-table'],true) !!}
-
+                                <table id="cash-transaction-table" class="table align-middle table-row-dashed gy-5 dataTable no-footer">
+                                    <thead>
+                                        <tr>
+                                            <th>Location</th>
+                                            <th>User</th>
+                                            <th>Old Balance {{ strtoupper(session('currency')) }}</th>
+                                            <th>Amount Transacted {{ strtoupper(session('currency')) }}</th>
+                                            <th>New Balance</th>
+                                            <th>Type</th>
+                                        </tr>
+                                    </thead>
+                                </table>
                             </div>
-
                         </div>
                         <!--end::Table-->
                     </div>
@@ -280,22 +284,72 @@
 
     @push('js')
         <script src="{{ asset('assets/js/rakoli_ajax.js') }}"></script>
-
         <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}"
                 type="text/javascript"></script>
         {{ $dataTableHtml->scripts()  }}
 
-
-
-        <script src="{{ asset('assets/js/rakoli_ajax.js') }}"></script>
-
         <script>
             $(document).ready(function () {
 
-
-                window.LaravelDataTables['transaction-table'].on('draw', function () {
-                    KTMenu.createInstances();
-                })
+                datatable = $('#cash-transaction-table').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    responsive: true,
+                    lengthMenu: [[10, 50, 100, -1], [10, 50, 100,  'All']],
+                    pageLength: 10,
+                    aaSorting: [6, 'DESC'],
+                    ajax: {
+                        url: "{{ route('agency.shift.show',$shift->id) }}",
+                        type: "POST",
+                        dataType: "json",
+                        headers: {
+                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                        },
+                        data: function(data) {
+                            data.isCash = true;
+                        },
+                    },
+                    columnDefs: [
+                        {
+                            targets: [0], // first column & numbering column
+                            orderable: false, // set not orderable
+                        },
+                        {
+                            targets: [6], // column index
+                            visible: false,
+                        }
+                    ],
+                    columns: [
+                        {
+                            data: 'created_at',
+                            name: 'created_at'
+                        },
+                        {
+                            data: 'balance_old',
+                            name: 'balance_old'
+                        },
+                        {
+                            data: 'user_name',
+                            name: 'user_name'
+                        },
+                        {
+                            data: 'amount',
+                            name: 'amount'
+                        },
+                        {
+                            data: 'balance_new',
+                            name: 'balance_new'
+                        },
+                        {
+                            data: 'transaction_type',
+                            name: 'transaction_type'
+                        },
+                        {
+                            data: 'id',
+                            name: 'id'
+                        }
+                    ],
+                });
 
 
                 $("table#shift-loan-table").DataTable({

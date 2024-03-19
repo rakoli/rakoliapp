@@ -7,26 +7,28 @@ use App\Models\Loan;
 use App\Models\Location;
 use App\Models\Shift;
 use App\Models\ShiftNetwork;
+use App\Utils\Datatables\Agent\Shift\ShiftCashTransactionDatatable;
 use App\Utils\Datatables\Agent\Shift\ShiftTransactionDatatable;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Html\Builder;
 
 class ShowShiftController extends Controller
 {
-    public function __invoke(Request $request, Shift $shift, Builder $datatableBuilder, ShiftTransactionDatatable $transactionDatatable)
+    public function __invoke(Request $request, Shift $shift, Builder $datatableBuilder, ShiftTransactionDatatable $transactionDatatable, ShiftCashTransactionDatatable $cashTransactionDatatable)
     {
-
-
-
         if ($request->ajax()) {
-
+            if($request->has('isCash')){
+                return $cashTransactionDatatable->index($shift);
+            }
             return $transactionDatatable->index($shift);
 
         }
 
         $dataTableHtml = $transactionDatatable->columns(datatableBuilder: $datatableBuilder);
 
-        $tills = ShiftNetwork::query()->where('shift_networks.shift_id', $shift->id)->leftJoin('networks','shift_networks.network_code','networks.code')->where('networks.balance','>',0)->with('network.agency');
+        $tills = ShiftNetwork::query()->where('shift_networks.shift_id', $shift->id)->with('network.agency');
+
+        $tills_with_balance = ShiftNetwork::query()->where('shift_networks.shift_id', $shift->id)->leftJoin('networks','shift_networks.network_code','networks.code')->where('networks.balance','>',0)->with('network.agency');
 
         $locations = Location::query()->where('code', $shift->location_code)->cursor();
 
@@ -43,7 +45,9 @@ class ShowShiftController extends Controller
             'locations' => $locations,
             ...shiftBalances(shift: $shift),
             'tills' => $tills->cursor(),
+            'tills_with_balance' => $tills_with_balance->cursor(),
             'shift' => $shift->loadMissing('user', 'location'),
         ]);
     }
+
 }
