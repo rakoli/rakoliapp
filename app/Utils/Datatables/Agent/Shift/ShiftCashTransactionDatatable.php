@@ -31,7 +31,7 @@ class ShiftCashTransactionDatatable implements HasDatatable
             ->addIndexColumn()
             ->addColumn('created_at', fn (ShiftCashTransaction $transaction) => $transaction->created_at->format('Y-F-d'))
             ->addColumn('balance_old', fn (ShiftCashTransaction $transaction) => money($transaction->balance_old, currencyCode(), true))
-            ->addColumn('user_name', fn (ShiftCashTransaction $transaction) => $transaction->user->full_name)
+            ->addColumn('user_name', fn (ShiftCashTransaction $transaction) => $transaction->user->name())
             ->addColumn('amount', fn (ShiftCashTransaction $transaction) => money($transaction->amount, currencyCode(), true))
             ->addColumn('balance_new', fn (ShiftCashTransaction $transaction) => money($transaction->balance_new, currencyCode(), true))
             ->addColumn('transaction_type', function (ShiftCashTransaction $transaction) {

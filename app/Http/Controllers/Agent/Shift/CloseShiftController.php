@@ -7,7 +7,9 @@ use App\Models\Loan;
 use App\Models\Location;
 use App\Models\Shift;
 use App\Models\ShiftNetwork;
+use App\Models\User;
 use App\Utils\Enums\ShiftStatusEnum;
+use App\Utils\Enums\UserTypeEnum;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -28,11 +30,14 @@ class CloseShiftController extends Controller
 
         $loans = Loan::query()->whereBelongsTo($shift, 'shift')->get()->groupBy(fn (Loan $loan) => $loan->type->label());
 
+        $colleague = User::query()->where('code','!=',auth()->user()->code)->where('type',UserTypeEnum::AGENT)->where('business_code',auth()->user()->business_code)->get();
+
         return view('agent.agency.close-shift')->with([
             'tills' => $tills->cursor(),
             'locations' => $locations,
             'shift' => $shift->loadMissing('shorts.network.agency'),
             'loans' => $loans,
+            'colleague' => $colleague,
             ...shiftBalances($shift),
         ]);
     }

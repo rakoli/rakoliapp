@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Scopes\BusinessScoped;
 use App\Models\Scopes\LocationScoped;
+use App\Models\Scopes\UserScoped;
 use App\Utils\Enums\ShiftStatusEnum;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -28,6 +29,7 @@ class Shift extends Model
     {
         static::addGlobalScope(new LocationScoped());
         static::addGlobalScope(new BusinessScoped());
+        static::addGlobalScope(new UserScoped());
     }
 
     public function user(): BelongsTo

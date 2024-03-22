@@ -105,7 +105,7 @@
                         <!--end::Number-->
 
                         <!--begin::Label-->
-                        <div class="fw-semibold fs-6 text-gray-500">{{ __('Expenses') }}</div>
+                        <div class="fw-semibold fs-6 text-gray-500">{{ __('Cash Out') }}</div>
                         <!--end::Label-->
                     </div>
                     <!--end::Stat-->
@@ -124,7 +124,7 @@
                         <!--end::Number-->
 
                         <!--begin::Label-->
-                        <div class="fw-semibold fs-6 text-gray-500">{{ __('Incomes') }}</div>
+                        <div class="fw-semibold fs-6 text-gray-500">{{ __('Cash In') }}</div>
                         <!--end::Label-->
                     </div>
                     <!--end::Stat-->

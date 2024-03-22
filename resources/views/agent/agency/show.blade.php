@@ -51,8 +51,8 @@
 
                         <x-modal_with_button
                             targetId="add-expenses"
-                            label="Add Expenses"
-                            modalTitle="Fill the form below record a Expenses"
+                            label="Add Cash Out"
+                            modalTitle="Fill the form below record a Cash Out"
                             btnClass="btn btn-youtube"
                         >
 
@@ -63,8 +63,8 @@
 
                         <x-modal_with_button
                             targetId="add-income"
-                            label="Add Income"
-                            modalTitle="Fill the form below record a income"
+                            label="Add Caah In"
+                            modalTitle="Fill the form below record a Cash in"
                         >
 
                             @include('agent.agency.transaction.add-income')
@@ -321,16 +321,16 @@
                     ],
                     columns: [
                         {
-                            data: 'created_at',
-                            name: 'created_at'
-                        },
-                        {
-                            data: 'balance_old',
-                            name: 'balance_old'
+                            data: 'location_name',
+                            name: 'location_name'
                         },
                         {
                             data: 'user_name',
                             name: 'user_name'
+                        },
+                        {
+                            data: 'balance_old',
+                            name: 'balance_old'
                         },
                         {
                             data: 'amount',

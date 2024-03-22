@@ -286,6 +286,7 @@ function shiftBalances(\App\Models\Shift $shift): array
 
     $shorts = $startCapital - $endingCapital ;
 
+    $cash = $cash + $income - $expenses;
 
 
     return [

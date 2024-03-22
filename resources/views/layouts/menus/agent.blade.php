@@ -77,6 +77,16 @@
                     <span class="menu-title">{{ __('Loans') }}</span>
                 </a>
 
+                <a
+                    class="menu-link"
+                    href ="{{route('agency.shift.transfer.request')}}"
+                >
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ __('Transfer Request') }}</span>
+                </a>
+
 
             </div>
             <!--end:Menu sub-->

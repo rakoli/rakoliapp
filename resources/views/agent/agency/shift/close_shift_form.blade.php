@@ -41,7 +41,20 @@
         >
 
             @include('agent.agency.shift._short_form')
+            <div class="col-6 mt-4" id="transfer_shift_user_code">
+                <x-label label="User" required="" for="transfer_shift_user_code"/>
+                <x-select2
+                    modalId="transfer_shift"
+                    id="transfer_shift_user_code"
+                    class="total_shorts_input"
+                    name="transfer_user_code"
+                >
+                    @foreach($colleague as $col)
+                        <option value="{{ $col->code }}">{{ $col->name() }}</option>
+                    @endforeach
 
+                </x-select2>
+            </div>
             <x-submit-button type="button" id="transfer-shift-button" class="btn btn-primary mt-sm-4 mt-md-6"
                              label="Confirm Transfer Shift"/>
 
