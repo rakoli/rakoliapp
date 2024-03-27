@@ -25,41 +25,36 @@ class ShiftTransferRequestDatatable implements HasDatatable
                 return $query->orderBy('created_at', 'desc');
             })
             ->addIndexColumn()
-            ->addColumn('created_at', fn (ShiftTransferRequest $shift) => $shift->created_at->format('Y-F-d'))
-            ->addColumn('user_name', fn (ShiftTransferRequest $shift) => $shift->user->name())
-            ->addColumn('branch', fn (ShiftTransferRequest $shift) => $shift->location->name)
-            ->addColumn('action', function (ShiftTransferRequest $shift) {
+            ->addColumn('created_at', fn (ShiftTransferRequest $shiftTransferRequest) => $shiftTransferRequest->created_at->format('Y-F-d'))
+            ->addColumn('user_name', fn (ShiftTransferRequest $shiftTransferRequest) => $shiftTransferRequest->user->name())
+            ->addColumn('branch', fn (ShiftTransferRequest $shiftTransferRequest) => $shiftTransferRequest->location->name)
+            ->addColumn('action', function (ShiftTransferRequest $shiftTransferRequest) {
 
-                $actions['Details'] = [
-                    'route' => "#",
-                    'attributes' => 'null',
-                ];
-                if ($shift->status == ShiftTransferRequestStatusEnum::PENDING) // @todo Authorise this action
+                if ($shiftTransferRequest->status == ShiftTransferRequestStatusEnum::PENDING) // @todo Authorise this action
                 {
                     $actions['Accept'] = [
-                        'route' => "#",
+                        'route' => route("agency.shift.transfer.request.update",array($shiftTransferRequest,ShiftTransferRequestStatusEnum::ACCEPTED)),
                         'attributes' => null,
                     ];
                     $actions['Reject'] = [
-                        'route' => "#",
+                        'route' => route("agency.shift.transfer.request.update",array($shiftTransferRequest,ShiftTransferRequestStatusEnum::REJECTED)),
                         'attributes' => null,
                     ];
-
+                    return ShiftTransferRequestDatatable::make()->buttons($actions);
                 }
 
-                return ShiftTransferRequestDatatable::make()->buttons($actions);
             })
-            ->addColumn('status', function (ShiftTransferRequest $shift) {
+            ->addColumn('status', function (ShiftTransferRequest $shiftTransferRequest) {
 
                 $table = ShiftTransferRequestDatatable::make();
 
-                return $shift->status == ShiftTransferRequestStatusEnum::PENDING ? $table->status(
-                    label: $shift->status->label(),
-                    badgeClass: $shift->status->color(),
+                return $shiftTransferRequest->status == ShiftTransferRequestStatusEnum::PENDING ? $table->status(
+                    label: $shiftTransferRequest->status->label(),
+                    badgeClass: $shiftTransferRequest->status->color(),
                 )
                     : $table->status(
-                        label: $shift->status->label(),
-                        badgeClass: $shift->status->color()
+                        label: $shiftTransferRequest->status->label(),
+                        badgeClass: $shiftTransferRequest->status->color()
                     );
             })
             ->rawColumns(['created_at', 'action', 'status'])

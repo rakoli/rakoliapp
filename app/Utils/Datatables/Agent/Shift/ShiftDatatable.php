@@ -53,11 +53,10 @@ class ShiftDatatable implements HasDatatable
                     'attributes' => null,
                 ];
 
-
-                if ($shift->status == ShiftStatusEnum::INREVIEW) // @todo Authorise this action
+                if ($shift->status == ShiftStatusEnum::OPEN) // @todo Authorise this action
                 {
                     $actions['Transfer Shift'] = [
-                        'route' => "#",
+                        'route' => route('agency.shift.close', $shift),
                         "attributes" => null
                     ];
                 }

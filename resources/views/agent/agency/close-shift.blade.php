@@ -270,7 +270,7 @@
                                             </tr>
                                         @endforeach
 
-                                        <tr class="fw-bold" style="border-top: 1px  dotted; border-bottom: 1px  dotted">
+                                        {{-- <tr class="fw-bold" style="border-top: 1px  dotted; border-bottom: 1px  dotted">
                                             <td class=""> {{ __('Subtotal') }}</td>
                                             <td class="border-dashed">{{ \Illuminate\Support\Number::currency($shift->cash_start + collect($networks)->sum('balance_old'), currencyCode()) }}</td>
                                             <td class="fw-bold border-dashed">
@@ -282,9 +282,9 @@
                                                 <span id="total-end-subtotal"></span>
                                             </td>
 
-                                        </tr>
+                                        </tr> --}}
 
-                                        <tr class="border-1">
+                                        {{-- <tr class="border-1">
                                             <td class=""> {{ __('Total loans') }}</td>
                                             <td class=" border-dashed">{{ \Illuminate\Support\Number::currency(0, currencyCode()) }}</td>
                                             <td class="fw-bolder border-dashed">
@@ -306,10 +306,9 @@
 
                                             </td>
 
-                                        </tr>
+                                        </tr> --}}
                                         <tr class="border-1">
                                             <td class="border-top-1"> {{ __('Total Incomes') }}</td>
-                                            <td class=" border-dashed">{{ \Illuminate\Support\Number::currency(0, currencyCode()) }}</td>
                                             <td class="fw-bolder border-dashed">
                                                 <span
                                                     class="ending-balance income"
@@ -319,6 +318,7 @@
                                                     {{ \Illuminate\Support\Number::currency($income, currencyCode()) }}
                                                 </span>
                                             </td>
+                                            <td class=" border-dashed">{{ \Illuminate\Support\Number::currency(0, currencyCode()) }}</td>
                                             <td class=" border-dashed">
                                                 <span
                                                     data-name="transacted-incomes"
@@ -377,15 +377,19 @@
                                         <tr class="fw-bolder text-primary"
                                             style="border-top: 2px  dotted; border-bottom: 2px  dotted">
                                             <td>{{ __('Totals') }}</td>
-                                            <td class=" border-dashed">{{ \Illuminate\Support\Number::currency($shift->cash_start + collect($networks)->sum('balance_old'), currencyCode()) }}</td>
+                                            <td class=" border-dashed">
+                                                <span id="total-left-balance">
+                                                    {{ \Illuminate\Support\Number::currency($shift->cash_start + collect($networks)->sum('balance_old') + $income, currencyCode()) }}
+                                                </span>
+                                            </td>
                                             <td class="fw-bolder border-dashed">
-                                                <span id="total-ending-balance">
+                                                <span id="total-right-balance">
                                                 {{ \Illuminate\Support\Number::currency($totals + $loanBalances + $shorts, currencyCode()) }}
                                             </td>
                                             <td class=" border-dashed">
                                                 <span id="total-ending-transacted">
 
-                                                {{ \Illuminate\Support\Number::currency($transacted + $income + $expenses + $shorts + $shift->loans->sum('amount')  , currencyCode()) }}
+                                                {{ \Illuminate\Support\Number::currency($transacted + $expenses + $shorts + $shift->loans->sum('amount')  , currencyCode()) }}
                                                 </span>
                                             </td>
 
@@ -557,7 +561,7 @@
                                             <tr>
                                                 <td>{{ $short->type }}</td>
                                                 <td>{{ $short->network?->agency?->name }}</td>
-                                                <td>{{ $short->amount }}</td>
+                                                <td>{{ Number::currency($short->amount, currencyCode()) }}</td>
                                             </tr>
                                         @endforeach
                                         </tbody>
@@ -582,6 +586,11 @@
 
     @push('js')
         <script>
+            const { format } = new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: "{{ currencyCode() }}",
+                maximumFractionDigits: 2,
+            });
 
             $(document).ready(() => {
                 $("div#has_short").hide();
@@ -589,47 +598,61 @@
 
                 function calculateTotal() {
 
-                    var expenses = parseFloat(document.getElementById('expenses').value);
 
-
-                    $("span.expenses").text(expenses)
+                    //Right Side Calculation 
 
                     var cash = parseFloat(document.getElementById('closing_balance').value);
-                    $("span#cash").text(cash)
-
-                    var income = parseFloat(document.getElementById('income').value);
-
-                    $("span.income").text(income)
-
-                    var loanBalances = parseFloat(document.getElementById('loans-balances').getAttribute('data-loans-balance'));
-
-                    var total = parseFloat(document.getElementById('closing_balance').value) + expenses + loanBalances - income;
-
+                    $("span#cash").text(format(cash));
 
                     // Loop through each network balance input field
                     var networkInputs = document.querySelectorAll('.network-balance');
-
+                    var networkTotal = total = 0;
                     networkInputs.forEach(function (input) {
 
-                        total += parseFloat(input.value);
+                        networkTotal += parseFloat(input.value);
 
-                        $("span." + input.dataset.name).text(input.value)
+                        $("span." + input.dataset.name).text(format(input.value));
 
                     });
 
+                    var expenses = parseFloat(document.getElementById('expenses').value);
+                    $("span.expenses").text(format(expenses));
 
-                    let startingCapital = $("h4#starting-capital").data('starting-capital')
+                    var rTotal = cash + networkTotal + expenses;
+                    
 
-                    let totalShort = (parseFloat(startingCapital) - total - income);
+
+                    //Left Side Calculation
+
+                    let startingCapital = $("h4#starting-capital").data('starting-capital');
+
+                    var income = parseFloat(document.getElementById('income').value);
+
+                    $("span.income").text(format(income))
+
+                    var loanBalances = parseFloat(document.getElementById('loans-balances').getAttribute('data-loans-balance'));
+
+                    var lTotal = startingCapital + income;
+
+
+                    let totalShort = (parseFloat(lTotal) - parseFloat(rTotal)) > 0 ? (parseFloat(lTotal) - parseFloat(rTotal)) : 0;
+
+                    $("span#total_shorts").text(format(totalShort));
+
+
+                    rTotal = rTotal + totalShort;
+
+                    $("span#total-right-balance").text(format(rTotal));
+
+                    $("span#total-left-balance").text(format(lTotal));
+
+
                     // Display the total in some element (you can adjust this based on your needs)
-                    document.getElementById('total_balance').innerText = (total ).toLocaleString('en-US', {maximumFractionDigits: 2});
+                    document.getElementById('total_balance').innerText = format(rTotal);
 
+                    document.getElementById('total_shorts').innerText = format(totalShort);
 
-                    document.getElementById('total_shorts').innerText = totalShort.toLocaleString('en-US', {maximumFractionDigits: 2});
-
-                    $("input.total_shorts_input").val(totalShort)
-
-                    $("span#total_shorts").text(totalShort)
+                    $("input.total_shorts_input").val(format(totalShort));
 
 
                     $("span#total-balance").text(total + totalShort + income)
@@ -656,15 +679,11 @@
                         // react transacted amount
                         let transacted = document.querySelector("." + span.dataset.class);
 
-                        transacted.textContent = Math.abs(parseFloat(parseFloat(span.textContent.trim().replace(/[^\d.]/g, ''))) - transacted.dataset.start).toLocaleString('en-US', {maximumFractionDigits: 2})
-
+                        transacted.textContent = format(Math.abs(parseFloat(parseFloat(span.textContent.trim().replace(/[^\d.]/g, ''))) - transacted.dataset.start));
 
                     });
 
-                    $("span#total-subtotal").text(total.toLocaleString('en-US', {maximumFractionDigits: 2}))
-
-                    $("span#total-ending-balance").text((totalEndingBalance).toLocaleString('en-US', {maximumFractionDigits: 2}))
-
+                    $("span#total-subtotal").text(format(total));
 
                     // reacting on transacted amount
 
@@ -689,9 +708,9 @@
 
 
                     });
-                    $("span#total-end-subtotal").text(totalEndSubtotal.toLocaleString('en-US', {maximumFractionDigits: 2}))
+                    $("span#total-end-subtotal").text(format(totalEndSubtotal));
 
-                    $("span#total-ending-transacted").text((totalTransacted ).toLocaleString('en-US', {maximumFractionDigits: 2}))
+                    $("span#total-ending-transacted").text(format(totalTransacted));
 
                 }
 

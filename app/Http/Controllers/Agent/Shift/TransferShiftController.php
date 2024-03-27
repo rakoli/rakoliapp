@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers\Agent\Shift;
 
+use App\Actions\Agent\Shift\OpenShift;
 use App\Http\Controllers\Controller;
+use App\Models\Location;
 use App\Models\Shift;
+use App\Models\ShiftTransferRequest;
 use App\Utils\Datatables\Agent\Shift\ShiftTransferRequestDatatable;
 use App\Utils\Enums\ShiftStatusEnum;
+use App\Utils\Enums\ShiftTransferRequestStatusEnum;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -25,6 +29,36 @@ class TransferShiftController extends Controller
         ]);
     }
 
+    public function updateStatus($shiftTransferRequest, $status)
+    {
+        $shiftTransferRequest = ShiftTransferRequest::find($shiftTransferRequest);
+        if($status == ShiftTransferRequestStatusEnum::ACCEPTED->value){
+            
+            $shift = Shift::where('status', ShiftStatusEnum::OPEN)->first();
+            if ($shift) {
+                return redirect()->back()->with('error','Please close open shift.');
+            }
+    
+            OpenShift::run(
+                cashAtHand: Location::query()->where('code', $shiftTransferRequest->location_code)->pluck('balance')->first(),
+                locationCode: $shiftTransferRequest->location_code,
+                notes: "",
+                description: ""
+            );
+
+            $shiftTransferRequest->update(['status' => ShiftTransferRequestStatusEnum::ACCEPTED]);
+            
+            return redirect()->route('agency.shift.transfer.request')->with('success','Transfer Request has been accepted successfully.');
+
+        } else if($status == ShiftTransferRequestStatusEnum::REJECTED->value){
+
+            $shiftTransferRequest->update(['status' => ShiftTransferRequestStatusEnum::REJECTED]);
+            
+            return redirect()->route('agency.shift.transfer.request')->with('success','Transfer Request has been rejected successfully.');
+
+        }
+        return redirect()->route('agency.shift.transfer.request')->with('error','Status is not valid');
+    }
     protected function validateForm(Request $request): array
     {
         return $request->validate(rules: [
@@ -68,10 +102,10 @@ class TransferShiftController extends Controller
                 data: $validated
             );
 
-            // \App\Actions\Agent\Shift\CloseShift::run(
-            //     shift: $shift,
-            //     data: $validated
-            // );
+            \App\Actions\Agent\Shift\CloseShift::run(
+                shift: $shift,
+                data: $validated
+            );
 
             return response()
                 ->json([

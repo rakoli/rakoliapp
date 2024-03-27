@@ -39,6 +39,7 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
             Route::get('/open', [OpenShiftController::class, 'index'])->name('agency.shift.open.index');
             Route::post('/open', [OpenShiftController::class, 'store'])->name('agency.shift.open.store');
             Route::get('/transfer/requests', [TransferShiftController::class, 'index'])->name('agency.shift.transfer.request');
+            Route::get('/transfer/{transfer}/{status}', [TransferShiftController::class, 'updateStatus'])->name('agency.shift.transfer.request.update');
             Route::get('/{shift}/close', [CloseShiftController::class, 'index'])->name('agency.shift.close');
             Route::post('/{shift}/transfer', [TransferShiftController::class, 'store'])->name('agency.shift.transfer');
             Route::post('{shift}/close/store', [CloseShiftController::class, 'store'])->name('agency.shift.close.store');

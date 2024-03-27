@@ -63,7 +63,7 @@
 
                         <x-modal_with_button
                             targetId="add-income"
-                            label="Add Caah In"
+                            label="Add Cash In"
                             modalTitle="Fill the form below record a Cash in"
                         >
 
