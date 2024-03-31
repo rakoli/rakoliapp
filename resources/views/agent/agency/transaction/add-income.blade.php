@@ -15,7 +15,7 @@
                         id="amount"
                     />
                     <x-helpertext>
-                        {{ __("Total Income Received") }}
+                        {{ __("Total Cash In Received") }}
                     </x-helpertext>
                     @error('amount')
                     <div class="help-block text-danger">
@@ -25,7 +25,7 @@
                 </div>
 
                 <div class="col-6">
-                    <x-label class="" label="{{ __('Income Type') }}" for="income_type"/>
+                    <x-label class="" label="{{ __('Cash In Type') }}" for="income_type"/>
                     <x-select2
                         name="income_type"
                         placeholder="{{ __('source: e.g Cash ') }}"
@@ -42,8 +42,8 @@
 
                         <ul class="list-style-none">
                             <li class="py-md-1 text-primary">{{ __("Select the Income type either: to Cash or Till Balance") }}</li>
-                            <li>{{ __('Cash Income') }}: {{ __('Transaction will Increase Cash balances') }}</li>
-                            <li>{{ __('Till Income') }}: {{ __('Transaction will Increase Till balances') }}</li>
+                            <li>{{ __('Cash In') }}: {{ __('Transaction will Increase Cash balances') }}</li>
+                            <li>{{ __('Till Cash In') }}: {{ __('Transaction will Increase Till balances') }}</li>
 
                         </ul>
                     </x-helpertext>
@@ -120,7 +120,7 @@
 
         <div class="modal-footer my-4">
 
-            <x-submit-button id="add-income-button" label="Save incomes"/>
+            <x-submit-button id="add-income-button" label="Save Cash In"/>
         </div>
 
     </form>

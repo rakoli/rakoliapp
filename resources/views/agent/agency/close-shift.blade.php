@@ -81,7 +81,7 @@
                                 @endforeach
 
                                 <tr>
-                                    <td>{{  __("Expenses") }}</td>
+                                    <td>{{  __("Cash Out") }}</td>
 
                                     <td>: {{  Number::currency($expenses,  currencyCode())}}</td>
                                     <td class="fs-sm">
@@ -93,12 +93,12 @@
                                             placeholder="expenses"
                                             id="expenses"
                                         />
-                                        <x-helpertext>{{ __("Confirm closing Expenses Amount") }}</x-helpertext>
+                                        <x-helpertext>{{ __("Confirm closing Cash Out Amount") }}</x-helpertext>
                                     </td>
                                 </tr>
 
                                 <tr>
-                                    <td>{{  __("Income") }}</td>
+                                    <td>{{  __("Cash In") }}</td>
 
                                     <td>: {{  Number::currency($income,  currencyCode())}}</td>
                                     <td class="fs-sm">
@@ -107,10 +107,10 @@
                                             class="form-control-solid"
                                             name="income"
                                             value="{{ $income }}"
-                                            placeholder="income"
+                                            placeholder="Cash In"
                                             id="income"
                                         />
-                                        <x-helpertext>{{ __("Confirm closing Income Amount") }}</x-helpertext>
+                                        <x-helpertext>{{ __("Confirm closing Cash In Amount") }}</x-helpertext>
                                     </td>
                                 </tr>
 
@@ -593,6 +593,9 @@
             });
 
             $(document).ready(() => {
+                var closing_text = "You are closing the {!! $shift->no !!} of the {!! $shift->created_at->format('d-m-Y') !!}.";
+                var short_text = "";
+                var loan_text = "The total loans on this shift is {!! Number::currency($loans->sum('balance'), currencyCode()) !!}";
                 $("div#has_short").hide();
                 $("div#shift_network_code").hide();
 
@@ -600,7 +603,6 @@
 
 
                     //Right Side Calculation 
-
                     var cash = parseFloat(document.getElementById('closing_balance').value);
                     $("span#cash").text(format(cash));
 
@@ -652,7 +654,7 @@
 
                     document.getElementById('total_shorts').innerText = format(totalShort);
 
-                    $("input.total_shorts_input").val(format(totalShort));
+                    $("input.total_shorts_input").val(totalShort);
 
 
                     $("span#total-balance").text(total + totalShort + income)
@@ -660,9 +662,11 @@
                     if (totalShort > 0) {
                         $("div#has_short").show();
                         $("div.shift-has-shorts").show();
+                        short_text = "The total transacted volume is "+ jQuery("#total_balance").text()+" with a short of "+ format(totalShort)+".";
                     } else {
                         $("div#has_short").hide();
                         $("div.shift-has-shorts").hide();
+                        short_text = "The total transacted volume is "+ jQuery("#total_balance").text()+" with no short.";
                     }
 
 
@@ -712,6 +716,7 @@
 
                     $("span#total-ending-transacted").text(format(totalTransacted));
 
+
                 }
 
 
@@ -749,6 +754,12 @@
 
 
                 })
+                
+                $('#summary').on('shown.bs.modal', function() { 
+                    jQuery(".shift_info").html(closing_text+short_text+loan_text);
+                    jQuery(".close_info").html(jQuery("#closing_description").val());
+                });
+
 
             })
         </script>

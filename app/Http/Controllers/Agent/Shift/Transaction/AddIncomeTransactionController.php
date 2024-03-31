@@ -32,13 +32,13 @@ class AddIncomeTransactionController extends Controller
 
             return response()
                 ->json([
-                    'message' => 'Income Added successfully',
+                    'message' => 'Cash In Added successfully',
                 ]);
 
         } catch (\Exception|\Throwable $e) {
             return response()
                 ->json([
-                    'message' => 'Income could not be added'.$e->getMessage(),
+                    'message' => 'Cash In could not be added'.$e->getMessage(),
                 ], 422);
         }
     }

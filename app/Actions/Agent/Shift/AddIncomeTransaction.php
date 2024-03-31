@@ -121,9 +121,8 @@ class AddIncomeTransaction
                 ->first();
 
             if (! $lastTransaction) {
-                $last_balance = 0;
-                $newBalance = $last_balance + $data['amount'];
-                $oldBalance = floatval($last_balance);
+                $newBalance = $balance + $data['amount'];
+                $oldBalance = floatval($balance);
 
             } else {
                 $newBalance = $lastTransaction->balance_new + $data['amount'];

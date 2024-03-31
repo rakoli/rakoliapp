@@ -5,6 +5,7 @@
             <x-label label="description" class="" for="description"/>
             <textarea
                 name="description"
+                id="closing_description"
                 class="form-control form-control form-control-solid"
                 rows="3"
                 data-kt-autosize="false">{{ $shift->description }}</textarea>
@@ -69,7 +70,11 @@
         >
 
             @include('agent.agency.shift._short_form')
-
+            <div class="col-6 mt-4" id="close_shift_info">
+                <p class="shift_info">The total loans on this shift is {total loan amount}</p>
+                <strong>Closing Remarks</strong>
+                <p class="close_info">description entered on closing page</p>
+            </div>
 
             <x-submit-button type="button" id="close-shift-button" class="btn btn-primary mt-sm-4 mt-md-6"
                              label="Close Shift"/>

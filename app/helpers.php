@@ -282,7 +282,7 @@ function shiftBalances(\App\Models\Shift $shift): array
 
     $startCapital = $shift->cash_start + $shift->shiftNetworks->sum('balance_old');
 
-    $endingCapital = ($cash + $expenses + $tillBalances + $loanBalances) - $income;
+    $endingCapital = ($cash + $income + $tillBalances + $loanBalances) - $expenses;
 
     $shorts = $startCapital - $endingCapital ;
 
@@ -290,7 +290,7 @@ function shiftBalances(\App\Models\Shift $shift): array
 
 
     return [
-        'totalBalance' => $endingCapital + $income - $expenses,
+        'totalBalance' => $endingCapital,
         'cashAtHand' => $cash,
         'tillBalances' => $tillBalances,
         'expenses' => $expenses,
