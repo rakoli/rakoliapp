@@ -71,20 +71,20 @@
 
 
                         </x-modal_with_button>
+                        @if(validateSubscription("loan management"))
+                            <x-modal_with_button
+                                btnClass="btn btn-instagram"
+                                targetId="add-loan"
+                                label="Add Loan"
+                                modalTitle="Fill the form below record a Loan"
 
-                        <x-modal_with_button
-                            btnClass="btn btn-instagram"
-                            targetId="add-loan"
-                            label="Add Loan"
-                            modalTitle="Fill the form below record a Loan"
+                            >
 
-                        >
-
-                            @include('agent.agency.loans.add-loan')
+                                @include('agent.agency.loans.add-loan')
 
 
-                        </x-modal_with_button>
-
+                            </x-modal_with_button>
+                        @endif
                         <x-a-button class="btn btn-outline-danger btn-google text-white" route="{{ route('agency.shift.close', $shift) }}">Close Shift</x-a-button>
 
                     </div>
@@ -121,6 +121,7 @@
                 </div>
                 <!--end::Card-->
 
+                @if(validateSubscription("loan management"))
                 <!--begin::Loans-->
                 <div class="card pt-4 mb-6 mb-xl-9">
                     <!--begin::Card header-->
@@ -239,7 +240,7 @@
                     <!--end::Card body-->
                 </div>
                 <!--end::Card-->
-
+                @endif
             </div>
         </div>
     </div>

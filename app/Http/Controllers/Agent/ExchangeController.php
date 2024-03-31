@@ -544,6 +544,10 @@ class ExchangeController extends Controller
 
     public function postsCreate()
     {
+        if(!validateSubscription("post exchange ads",ExchangeAds::where('business_code', auth()->user()->business_code)->count())){
+            return redirect()->back()->withErrors(['message' => 'You have exceeded ad limit, Please upgrade your plan']);
+        }
+
         $businessCode = \auth()->user()->business_code;
         $branches = Location::where('business_code', $businessCode)->get();
         $regions = Region::where('country_code', session('country_code'))->get();
@@ -605,6 +609,10 @@ class ExchangeController extends Controller
 
     public function postsCreateSubmit(Request $request)
     {
+        if(!validateSubscription("post exchange ads",ExchangeAds::where('business_code', auth()->user()->business_code)->count())){
+            return redirect()->back()->withErrors(['message' => 'You have exceeded ad limit, Please upgrade your plan']);
+        }
+
         $request->validate([
             'ad_branch' => 'required|exists:locations,code',
             'availability_desc' => 'required|string',

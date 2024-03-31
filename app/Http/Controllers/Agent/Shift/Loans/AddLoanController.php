@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Agent\Shift\Loans;
 
 use App\Actions\Agent\Shift\AddLoan;
 use App\Http\Controllers\Controller;
+use App\Models\Loan;
 use App\Models\Shift;
 use App\Utils\Enums\TransactionCategoryEnum;
 use Illuminate\Http\Request;
@@ -15,6 +16,12 @@ class AddLoanController extends Controller
      */
     public function __invoke(Request $request, Shift $shift)
     {
+        if(!validateSubscription("loan management",Loan::where('business_code', auth()->user()->business_code)->count())){
+            return response()->json([
+                'message' => "You have exceeded loan limit, Please upgrade your plan",
+            ], 403);
+        }
+
 
         $validated = $request->validate([
             'amount' => 'required',

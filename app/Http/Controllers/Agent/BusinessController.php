@@ -182,6 +182,9 @@ class BusinessController extends Controller
     }
     public function branchesCreate()
     {
+        if(!validateSubscription("branches",Location::where('business_code', auth()->user()->business_code)->count())){
+            return redirect()->back()->withErrors(['message' => 'You have exceeded branch limit, Please upgrade your plan']);
+        }
         $businessCode = \auth()->user()->business_code;
         // $branches = Location::where('business_code',$businessCode)->get();
         $regions = Region::where('country_code', session('country_code'))->get();
@@ -191,6 +194,10 @@ class BusinessController extends Controller
     }
     public function branchesCreateSubmit(Request $request)
     {
+        if(!validateSubscription("branches",Location::where('business_code', auth()->user()->business_code)->count())){
+            return redirect()->back()->withErrors(['message' => 'You have exceeded branch limit, Please upgrade your plan']);
+        }
+        
         $request->validate([
             'name' => 'required',
             'balance' => 'required|numeric',
