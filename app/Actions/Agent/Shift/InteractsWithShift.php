@@ -4,6 +4,7 @@ namespace App\Actions\Agent\Shift;
 
 use App\Models\Location;
 use App\Models\Shift;
+use App\Models\ShiftCashTransaction;
 use App\Models\ShiftNetwork;
 use App\Models\ShiftTransaction;
 use App\Models\Transaction;
@@ -167,6 +168,97 @@ trait InteractsWithShift
             return [
                 $shiftNetwork->balance_old + $data['amount'], // new balance
                 $shiftNetwork->balance_old, // old balance
+            ];
+        }
+        if ($isLoan) {
+            return [
+                $lastTransaction->balance_new, // new balance
+                $lastTransaction->balance_new, // old balance
+            ];
+        }
+
+        return [
+            $lastTransaction->balance_new + $data['amount'], // new balance
+            $lastTransaction->balance_new, // old balance
+
+        ];
+    }
+
+    // DEPOSIT Transaction
+    public static function cashMoneyIn(Shift $shift, array $data, bool $isLoan = false): array
+    {
+        // increase location balance
+
+        $location = Location::query()
+            ->where('code', $shift->location_code)
+            ->first();
+
+        if (! $isLoan) {
+            $location->balance = $location->balance + $data['amount'];
+
+            $location->saveQuietly();
+        }
+
+        // get old shift network balance if no transaction then
+
+        $lastTransaction = ShiftCashTransaction::query()
+            ->whereBelongsTo($shift, 'shift')
+            ->where([
+                'location_code' => $shift->location_code,
+            ])
+            ->latest('created_at')
+            ->first();
+
+        if (! $lastTransaction) {
+            
+            return [
+                $location->balance - $data['amount'],
+                $location->balance,
+            ];
+        }
+
+        return [
+            $lastTransaction->balance_new - $data['amount'],
+            $lastTransaction->balance_new,
+
+        ];
+    }
+
+    //
+    public static function cashMoneyOut(Shift $shift, array $data, bool $isLoan = false): array
+    {
+        // increase location balance
+
+        $location = Location::query()
+            ->where('code', $shift->location_code)
+            ->first();
+
+        $location->balance = $location->balance - $data['amount'];
+
+        $location->saveQuietly();
+
+        // get old shift network balance if no transaction then
+
+        $lastTransaction = ShiftTransaction::query()
+            ->whereBelongsTo($shift, 'shift')
+            ->where([
+                'location_code' => $shift->location_code,
+            ])
+            ->latest('created_at')
+            ->first();
+
+        if (! $lastTransaction) {
+
+            if ($isLoan) {
+                return [
+                    $location->balance, // new balance
+                    $location->balance, // old balance
+                ];
+            }
+
+            return [
+                $location->balance + $data['amount'], // new balance
+                $location->balance, // old balance
             ];
         }
         if ($isLoan) {

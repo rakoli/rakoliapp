@@ -46,7 +46,6 @@ class ShiftTransactionDatatable implements HasDatatable
             ->addColumn('actions', function (ShiftTransaction $transaction) {
 
             })
-            ->addColumn('location_name', fn (ShiftTransaction $transaction) => $transaction->location->name)
             ->addColumn('network_name', fn (ShiftTransaction $transaction) => $transaction->network?->agency?->name)
 
             ->rawColumns(['balance_old', 'balance_new', 'transaction_type', 'actions'])
@@ -57,8 +56,7 @@ class ShiftTransactionDatatable implements HasDatatable
     {
         return $datatableBuilder
             ->columns([
-                Column::make('location.name')->title(__('Location')),
-                Column::make('user_name')->title(__('user'))->orderable(),
+                Column::make('user_name')->title(__('User'))->orderable(),
                 Column::make('balance_old')->title(__('Old Balance').' '.strtoupper(session('currency')))->orderable(),
                 Column::make('amount')->title(__('Amount Transacted').' '.strtoupper(session('currency')))->orderable(),
                 Column::make('balance_new')->title(__('New Balance')),

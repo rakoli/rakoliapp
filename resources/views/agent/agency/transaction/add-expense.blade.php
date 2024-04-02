@@ -58,19 +58,21 @@
             </div>
 
 
-            <div class="row fv-row py-3">
-                <div class="col-6  hidden" id="till-source">
+            <div class="row fv-row py-3 hidden" id="till-source"">
+                <div class="col-6">
                     <x-label class="" label="{{ __('Till') }}" for="till_source_code"/>
                     <x-select2
                         name="network_code"
                         placeholder="{{ __('source: e.g Till ') }}"
                         id="till_source_code"
                         >
-                        @foreach($tills_with_balance as $till)
-                            <option
-                                value="{{ $till->network_code }}"
+                        @foreach($tills as $till)
+                            @if($till->network->balance >  0)
+                                <option
+                                    value="{{ $till->network_code }}"
 
-                            >{{ str($till->network?->agency?->name )->title()->value()  }}</option>
+                                >{{ str($till->network?->agency?->name )->title()->value()  }}</option>
+                            @endif
                         @endforeach
                     </x-select2>
                     <x-helpertext>{{ __('Select till used for this Expenses') }}</x-helpertext>
@@ -164,11 +166,11 @@
                         "validators": {}
                     },
 
-                    {
-                        "name": "network_code",
-                        "error": "Till is Required",
-                        "validators": {}
-                    },
+                    // {
+                    //     "name": "network_code",
+                    //     "error": "Till is Required",
+                    //     "validators": {}
+                    // },
 
                     {
                         "name": "description",

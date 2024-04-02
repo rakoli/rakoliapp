@@ -7,7 +7,7 @@
             <div class="row fv-row py-2">
 
                 <div class="col-6 py-3">
-                    <x-label class="" label="Transaction Type" for="transaction_type"/>
+                    <x-label class="" label="Client Action(Transaction Type)" for="transaction_type"/>
 
                     <x-select2
 
@@ -32,7 +32,7 @@
 
                 </div>
 
-                <div class="col-6 py-3">
+                <div class="col-6 py-3" id="allNetwork">
                     <x-label class="" label="Select Till" for="till_code"/>
 
                     <x-select2
@@ -44,7 +44,7 @@
                         <option value="">  </option>
 
                         @foreach($tills as $till)
-                            <option value="{{ $till->network_code }}">{{ $till->network?->agency?->name }}</option>
+                            <option value="{{ $till->network_code }}" class="{!! $till->network->balance > 0 ? 'balance' : 'nobalance' !!}">{{ $till->network?->agency?->name }}</option>
                         @endforeach
                     </x-select2>
                     <x-helpertext>{{ __("Till you want to transact from") }}</x-helpertext>
@@ -56,9 +56,6 @@
                     @enderror
 
                 </div>
-
-
-
             </div>
             <div class="row fv-row">
 
@@ -135,6 +132,18 @@
 
 
              $(document).ready(() => {
+
+                $("select#transaction_type").on("change", function () {
+                    var selectedOption = $(this).find(":selected").val();
+
+                    if(selectedOption == "IN"){
+                        $(".nobalance").attr("disabled", true);
+                    } else  {
+                        $(".nobalance").attr("disabled", false);
+                    }
+
+                });
+
                  const validations = [
                      {
                          "name": "amount",

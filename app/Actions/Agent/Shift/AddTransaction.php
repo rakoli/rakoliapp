@@ -33,6 +33,19 @@ class AddTransaction
                 newBalance: $newBalance,
             );
 
+            // $data['type'] = $data['type'] == TransactionTypeEnum::MONEY_IN->value ? TransactionTypeEnum::MONEY_OUT->value : TransactionTypeEnum::MONEY_IN->value;
+            // [$newCashBalance, $oldCashBalance] = match ($data['type']) {
+            //     TransactionTypeEnum::MONEY_IN->value => AddTransaction::cashMoneyIn(shift: $shift, data: $data),
+            //     TransactionTypeEnum::MONEY_OUT->value => AddTransaction::cashMoneyOut(shift: $shift, data: $data),
+            // };
+
+            // $this->createShiftCashTransaction(
+            //     shift: $shift,
+            //     data: $data,
+            //     oldBalance: $oldCashBalance,
+            //     newBalance: $newCashBalance,
+            // );
+
         });
 
     }

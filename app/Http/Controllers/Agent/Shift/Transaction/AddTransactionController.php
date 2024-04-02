@@ -25,24 +25,24 @@ class AddTransactionController extends Controller
 
         $validated['category'] = TransactionCategoryEnum::GENERAL;
 
-        try {
+        // try {
 
             throw_if(! $shift->created_at->isToday(), new \Exception('You must close previous Day shift to make this Transaction'));
 
             \App\Actions\Agent\Shift\AddTransaction::run(shift: $shift, data: $validated);
-
+            
             return response()
                 ->json([
                     'message' => 'Transaction Added successfully',
                 ]);
 
-        } catch (\Exception|\Throwable $e) {
+        // } catch (\Exception|\Throwable $e) {
 
-            return response()
-                ->json([
-                    'message' => $e->getMessage(),
-                ], 422);
-        }
+        //     return response()
+        //         ->json([
+        //             'message' => $e->getMessage(),
+        //         ], 422);
+        // }
 
     }
 }

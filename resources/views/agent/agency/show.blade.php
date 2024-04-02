@@ -138,11 +138,11 @@
                                 <table id="cash-transaction-table" class="table align-middle table-row-dashed gy-5 dataTable no-footer">
                                     <thead>
                                         <tr>
-                                            <th>Location</th>
                                             <th>User</th>
                                             <th>Old Balance {{ strtoupper(session('currency')) }}</th>
                                             <th>Amount Transacted {{ strtoupper(session('currency')) }}</th>
                                             <th>New Balance</th>
+                                            <th>Till Name</th>
                                             <th>Type</th>
                                         </tr>
                                     </thead>
@@ -321,10 +321,6 @@
                     ],
                     columns: [
                         {
-                            data: 'location_name',
-                            name: 'location_name'
-                        },
-                        {
                             data: 'user_name',
                             name: 'user_name'
                         },
@@ -339,6 +335,10 @@
                         {
                             data: 'balance_new',
                             name: 'balance_new'
+                        },
+                        {
+                            data: 'location_name',
+                            name: 'location_name'
                         },
                         {
                             data: 'transaction_type',

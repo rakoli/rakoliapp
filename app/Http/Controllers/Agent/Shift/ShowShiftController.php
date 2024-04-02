@@ -28,8 +28,6 @@ class ShowShiftController extends Controller
 
         $tills = ShiftNetwork::query()->where('shift_networks.shift_id', $shift->id)->with('network.agency');
 
-        $tills_with_balance = ShiftNetwork::query()->where('shift_networks.shift_id', $shift->id)->leftJoin('networks','shift_networks.network_code','networks.code')->where('networks.balance','>',0)->with('network.agency');
-
         $locations = Location::query()->where('code', $shift->location_code)->cursor();
 
         $loans = Loan::query()
@@ -45,7 +43,6 @@ class ShowShiftController extends Controller
             'locations' => $locations,
             ...shiftBalances(shift: $shift),
             'tills' => $tills->cursor(),
-            'tills_with_balance' => $tills_with_balance->cursor(),
             'shift' => $shift->loadMissing('user', 'location'),
         ]);
     }
