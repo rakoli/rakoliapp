@@ -18,7 +18,7 @@ class ShiftCashTransactionDatatable implements HasDatatable
     {
         $transactions = ShiftCashTransaction::query()
             ->whereBelongsTo($shift, 'shift')
-            ->with('location', 'user');
+            ->with('location', 'user','network.agency');
 
         return Datatables::eloquent($transactions)
             ->filter(function ($query) {
@@ -46,7 +46,7 @@ class ShiftCashTransactionDatatable implements HasDatatable
             ->addColumn('actions', function (ShiftCashTransaction $transaction) {
 
             })
-            ->addColumn('location_name', fn (ShiftCashTransaction $transaction) => $transaction->location->name)
+            ->addColumn('network_name', fn (ShiftCashTransaction $transaction) => $transaction->network?->agency?->name)
 
             ->rawColumns(['balance_old', 'balance_new', 'transaction_type', 'actions'])
             ->toJson();

@@ -248,7 +248,6 @@ function shiftBalances(\App\Models\Shift $shift): array
             'user_code' => $shift->user_code,
             'type' => \App\Utils\Enums\TransactionTypeEnum::MONEY_OUT,
         ])
-        //->whereDate('created_at', $shift->created_at)
         ->whereBetween('created_at', [
             $shift->created_at,
             now(),
@@ -261,7 +260,6 @@ function shiftBalances(\App\Models\Shift $shift): array
             'user_code' => $shift->user_code,
             'type' => \App\Utils\Enums\TransactionTypeEnum::MONEY_IN,
         ])
-        //->whereDate('created_at', $shift->created_at)
         ->whereBetween('created_at', [
             $shift->created_at,
             now(),

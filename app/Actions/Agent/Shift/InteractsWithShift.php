@@ -8,6 +8,7 @@ use App\Models\ShiftCashTransaction;
 use App\Models\ShiftNetwork;
 use App\Models\ShiftTransaction;
 use App\Models\Transaction;
+use Illuminate\Support\Facades\Log;
 
 trait InteractsWithShift
 {
@@ -43,6 +44,7 @@ trait InteractsWithShift
         return $shift->cashTransactions()->create([
             'business_code' => $shift->business_code,
             'location_code' => $shift->location_code,
+            'network_code' => (isset($data['network_code']) && !empty($data['network_code'])) ? $data['network_code'] : NULL,
             'code' => generateCode($shift->user_code, time()),
             'user_code' => auth()->user()->code,
             'amount' => $data['amount'],
@@ -199,7 +201,7 @@ trait InteractsWithShift
             $location->saveQuietly();
         }
 
-        // get old shift network balance if no transaction then
+        // get old shift cash balance if no transaction then
 
         $lastTransaction = ShiftCashTransaction::query()
             ->whereBelongsTo($shift, 'shift')
@@ -209,8 +211,8 @@ trait InteractsWithShift
             ->latest('created_at')
             ->first();
 
-        if (! $lastTransaction) {
-            
+        if (!$lastTransaction) {
+
             return [
                 $location->balance - $data['amount'],
                 $location->balance,
@@ -220,7 +222,6 @@ trait InteractsWithShift
         return [
             $lastTransaction->balance_new - $data['amount'],
             $lastTransaction->balance_new,
-
         ];
     }
 
@@ -239,7 +240,7 @@ trait InteractsWithShift
 
         // get old shift network balance if no transaction then
 
-        $lastTransaction = ShiftTransaction::query()
+        $lastTransaction = ShiftCashTransaction::query()
             ->whereBelongsTo($shift, 'shift')
             ->where([
                 'location_code' => $shift->location_code,

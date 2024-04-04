@@ -37,7 +37,7 @@ class ShowShiftController extends Controller
             ->selectRaw('*, note')
             ->get();
 
-        return view('agent.agency.show', [
+            return view('agent.agency.show', [
             'dataTableHtml' => $dataTableHtml,
             'loans' => $loans,
             'locations' => $locations,

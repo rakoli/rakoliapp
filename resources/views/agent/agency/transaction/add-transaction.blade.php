@@ -43,8 +43,8 @@
                     >
                         <option value="">  </option>
 
-                        @foreach($tills as $till)
-                            <option value="{{ $till->network_code }}" class="{!! $till->network->balance > 0 ? 'balance' : 'nobalance' !!}">{{ $till->network?->agency?->name }}</option>
+                        @foreach($networks as $name =>  $network)
+                            <option value="{{ $network['code'] }}" class="{!! $network['balance'] > 0 ? 'balance' : 'nobalance' !!}">{{ $name }}</option>
                         @endforeach
                     </x-select2>
                     <x-helpertext>{{ __("Till you want to transact from") }}</x-helpertext>

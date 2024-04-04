@@ -26,6 +26,12 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
+            $table->string('network_code')->nullable();
+            $table->foreign('network_code')->references('code')
+                ->on('networks')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+
             $table->foreignIdFor(\App\Models\Shift::class)
                 ->constrained()
                 ->cascadeOnDelete()

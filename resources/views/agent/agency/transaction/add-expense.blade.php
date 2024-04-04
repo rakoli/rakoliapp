@@ -66,13 +66,12 @@
                         placeholder="{{ __('source: e.g Till ') }}"
                         id="till_source_code"
                         >
-                        @foreach($tills as $till)
-                            @if($till->network->balance >  0)
+                        @foreach($networks as $name =>  $network)
                                 <option
-                                    value="{{ $till->network_code }}"
+                                    value="{{ $network['code'] }}"  {{ $network['balance'] <= 0 ? 'disabled' : '' }}
 
-                                >{{ str($till->network?->agency?->name )->title()->value()  }}</option>
-                            @endif
+
+                                >{{ str($name)->title()->value()  }}</option>
                         @endforeach
                     </x-select2>
                     <x-helpertext>{{ __('Select till used for this Expenses') }}</x-helpertext>

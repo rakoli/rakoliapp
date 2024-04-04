@@ -142,7 +142,7 @@
                                             <th>Old Balance {{ strtoupper(session('currency')) }}</th>
                                             <th>Amount Transacted {{ strtoupper(session('currency')) }}</th>
                                             <th>New Balance</th>
-                                            <th>Till Name</th>
+                                            <th>Network</th>
                                             <th>Type</th>
                                         </tr>
                                     </thead>
@@ -337,8 +337,8 @@
                             name: 'balance_new'
                         },
                         {
-                            data: 'location_name',
-                            name: 'location_name'
+                            data: 'network_name',
+                            name: 'network_name'
                         },
                         {
                             data: 'transaction_type',

@@ -48,4 +48,8 @@ class ShiftCashTransaction extends Model
     {
         return $this->belongsTo(User::class, 'user_code', 'code');
     }
+    public function network(): BelongsTo
+    {
+        return $this->belongsTo(Network::class, 'network_code', 'code');
+    }
 }
