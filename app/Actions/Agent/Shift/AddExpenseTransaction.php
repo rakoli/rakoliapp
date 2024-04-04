@@ -36,6 +36,7 @@ class AddExpenseTransaction
             if ($source === FundSourceEnums::TILL) {
                 $this->tillTransaction(shift: $shift, data: $data);
             } else {
+                $data['network_code'] = NULL;
                 $this->cashTransaction(shift: $shift, data: $data);
             }
         });
