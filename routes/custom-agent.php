@@ -28,7 +28,7 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('agent.dashboard'); //For Middleware testing and having a special user type dashboard route
 
     //AGENCY MODULE
-    Route::group(['prefix' => 'agency', 'route' => 'agency.'], function () {
+    Route::group(['middleware' => 'validateSubscription','prefix' => 'agency', 'route' => 'agency.'], function () {
 
         Route::get('transactions', TransactionsController::class)->name('agency.transactions');
 
@@ -79,7 +79,7 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
     //END: AGENCY MODULE
 
     //EXCHANGE MODULE
-    Route::name('exchange.')->prefix('exchange')->middleware('lastseen_update')->group(function () {
+    Route::name('exchange.')->prefix('exchange')->middleware(['validateSubscription','lastseen_update'])->group(function () {
 
         Route::get('ads', [App\Http\Controllers\Agent\ExchangeController::class, 'ads'])->name('ads');
         Route::get('ads/view/{id}', [App\Http\Controllers\Agent\ExchangeController::class, 'adsView'])->name('ads.view');
@@ -130,16 +130,16 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
         Route::get('subscription', [App\Http\Controllers\Agent\SubscriptionController::class, 'subscription'])->name('subscription');
         Route::get('subscription_buy', [App\Http\Controllers\Agent\SubscriptionController::class, 'subscriptionBuy'])->name('subscription.buy');
 
-
-        Route::get('branches', [App\Http\Controllers\Agent\BusinessController::class, 'branches'])->name('branches');
-        Route::get('branches/create', [App\Http\Controllers\Agent\BusinessController::class, 'branchesCreate'])->name('branches.create');
-        Route::get('branches/edit/{id}', [App\Http\Controllers\Agent\BusinessController::class, 'branchesEdit'])->name('branches.edit');
-        Route::get('branches/delete/{id}', [App\Http\Controllers\Agent\BusinessController::class, 'branchesDelete'])->name('branches.delete');
-        Route::post('branches/create/submit', [App\Http\Controllers\Agent\BusinessController::class, 'branchesCreateSubmit'])->name('branches.create.submit');
-        Route::post('branches/edit/submit', [App\Http\Controllers\Agent\BusinessController::class, 'branchesEditSubmit'])->name('branches.edit.submit');
-        Route::get('branches/create/townlist', [App\Http\Controllers\Agent\BusinessController::class, 'branchesCreateTownlistAjax'])->name('branches.townlistAjax');
-        Route::get('branches/create/arealist', [App\Http\Controllers\Agent\BusinessController::class, 'branchesCreateArealistAjax'])->name('branches.arealistAjax');
-
+        Route::group(['middleware' => 'validateSubscription'], function () {
+            Route::get('branches', [App\Http\Controllers\Agent\BusinessController::class, 'branches'])->name('branches');
+            Route::get('branches/create', [App\Http\Controllers\Agent\BusinessController::class, 'branchesCreate'])->name('branches.create');
+            Route::get('branches/edit/{id}', [App\Http\Controllers\Agent\BusinessController::class, 'branchesEdit'])->name('branches.edit');
+            Route::get('branches/delete/{id}', [App\Http\Controllers\Agent\BusinessController::class, 'branchesDelete'])->name('branches.delete');
+            Route::post('branches/create/submit', [App\Http\Controllers\Agent\BusinessController::class, 'branchesCreateSubmit'])->name('branches.create.submit');
+            Route::post('branches/edit/submit', [App\Http\Controllers\Agent\BusinessController::class, 'branchesEditSubmit'])->name('branches.edit.submit');
+            Route::get('branches/create/townlist', [App\Http\Controllers\Agent\BusinessController::class, 'branchesCreateTownlistAjax'])->name('branches.townlistAjax');
+            Route::get('branches/create/arealist', [App\Http\Controllers\Agent\BusinessController::class, 'branchesCreateArealistAjax'])->name('branches.arealistAjax');
+        });
 
         Route::get('users', [App\Http\Controllers\Agent\BusinessController::class, 'users'])->name('users');
         Route::get('users/create', [App\Http\Controllers\Agent\BusinessController::class, 'usersCreate'])->name('users.create');
