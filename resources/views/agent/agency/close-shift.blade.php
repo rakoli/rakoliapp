@@ -24,7 +24,7 @@
             <!--begin::Layout-->
             <div class="d-flex flex-column flex-xl-row">
                 <!--begin::Sidebar-->
-                <div class="flex-column flex-lg-row-auto w-80 w-xl-700px mb-10">
+                <div class="flex-column flex-lg-row-auto w-80 w-xl-600px mb-10">
                     <div class="card mb-5">
 
                         <div class="card-body">
@@ -602,7 +602,7 @@
                 function calculateTotal() {
 
 
-                    //Right Side Calculation 
+                    //Right Side Calculation
                     var cash = parseFloat(document.getElementById('closing_balance').value);
                     $("span#cash").text(format(cash));
 
@@ -621,7 +621,7 @@
                     $("span.expenses").text(format(expenses));
 
                     var rTotal = cash + networkTotal + expenses;
-                    
+
 
 
                     //Left Side Calculation
@@ -754,8 +754,8 @@
 
 
                 })
-                
-                $('#summary').on('shown.bs.modal', function() { 
+
+                $('#summary').on('shown.bs.modal', function() {
                     jQuery(".shift_info").html(closing_text+short_text+loan_text);
                     jQuery(".close_info").html(jQuery("#closing_description").val());
                 });
