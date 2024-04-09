@@ -160,22 +160,9 @@ trait InteractsWithShift
                 ])
                 ->first();
 
-            if ($isLoan) {
-                return [
-                    $shiftNetwork->balance_old, // new balance
-                    $shiftNetwork->balance_old, // old balance
-                ];
-            }
-
             return [
                 $shiftNetwork->balance_old + $data['amount'], // new balance
                 $shiftNetwork->balance_old, // old balance
-            ];
-        }
-        if ($isLoan) {
-            return [
-                $lastTransaction->balance_new, // new balance
-                $lastTransaction->balance_new, // old balance
             ];
         }
 
@@ -250,25 +237,12 @@ trait InteractsWithShift
 
         if (! $lastTransaction) {
 
-            if ($isLoan) {
-                return [
-                    $location->balance, // new balance
-                    $location->balance, // old balance
-                ];
-            }
-
             return [
                 $location->balance + $data['amount'], // new balance
                 $location->balance, // old balance
             ];
         }
-        if ($isLoan) {
-            return [
-                $lastTransaction->balance_new, // new balance
-                $lastTransaction->balance_new, // old balance
-            ];
-        }
-
+    
         return [
             $lastTransaction->balance_new + $data['amount'], // new balance
             $lastTransaction->balance_new, // old balance

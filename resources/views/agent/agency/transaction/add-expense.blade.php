@@ -58,7 +58,7 @@
             </div>
 
 
-            <div class="row fv-row py-3 hidden" id="till-source"">
+            <div class="row fv-row py-3 hidden" id="till-source">
                 <div class="col-6">
                     <x-label class="" label="{{ __('Till') }}" for="till_source_code"/>
                     <x-select2

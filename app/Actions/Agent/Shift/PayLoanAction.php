@@ -6,6 +6,7 @@ use App\Events\Shift\LoanPaidEvent;
 use App\Models\Loan;
 use App\Models\LoanPayment;
 use App\Models\Shift;
+use App\Utils\Enums\FundSourceEnums;
 use App\Utils\Enums\LoanPaymentStatusEnum;
 use App\Utils\Enums\LoanTypeEnum;
 use App\Utils\Enums\ShiftStatusEnum;
@@ -13,6 +14,7 @@ use App\Utils\Enums\TransactionCategoryEnum;
 use App\Utils\Enums\TransactionTypeEnum;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class PayLoanAction
@@ -59,39 +61,49 @@ class PayLoanAction
                 'deposited_at' => Carbon::parse($data['deposited_at']),
             ]);
 
-            $currentShift = $currentShift->first();
+            $shift = $currentShift->first();
+            $source = FundSourceEnums::tryFrom($data['source']);
+            Log::info($source);
 
+            if ($source === FundSourceEnums::TILL) {
+                [$newBalance, $oldBalance] = match ($data['type']) {
+                    LoanTypeEnum::MONEY_IN->value => AddLoan::moneyIn(shift: $shift, data: $data, isLoan: true),
+                    LoanTypeEnum::MONEY_OUT->value => AddLoan::moneyOut(shift: $shift, data: $data, isLoan: true),
+                };
 
-            $shiftBalances = shiftBalances(shift: $currentShift);
+                $data['type'] = match ($data['type']) {
+                    LoanTypeEnum::MONEY_IN->value => TransactionTypeEnum::MONEY_IN,
+                    LoanTypeEnum::MONEY_OUT->value => TransactionTypeEnum::MONEY_OUT,
+                };
+                Log::info("Till");
+                Log::info($data);
+                $this->createShiftTransaction(
+                    shift: $shift,
+                    data: $data,
+                    oldBalance: $oldBalance,
+                    newBalance: $newBalance
+                );
+            }else {
+                [$newBalance, $oldBalance] = match ($data['type']) {
+                    LoanTypeEnum::MONEY_IN->value => AddLoan::cashMoneyIn(shift: $shift, data: $data, isLoan: true),
+                    LoanTypeEnum::MONEY_OUT->value => AddLoan::cashMoneyOut(shift: $shift, data: $data, isLoan: true),
+                };
 
+                $data['type'] = match ($data['type']) {
+                    LoanTypeEnum::MONEY_IN->value => TransactionTypeEnum::MONEY_IN,
+                    LoanTypeEnum::MONEY_OUT->value => TransactionTypeEnum::MONEY_OUT,
+                };
+                Log::info("Cash");
+                Log::info($data);
 
-            $oldBalance = collect($shiftBalances['networks'])->where('code', $loan->network_code)->first();
-
-
-            $data['network_code'] = $loan->network_code;
-            $data['category'] = TransactionCategoryEnum::GENERAL;
-            $data['description'] = "Loan Repayment {$loan->type->label()} transaction on: {$loan->created_at->format('Y-m-d')}";
-            $data['type'] = LoanTypeEnum::MONEY_OUT ? TransactionTypeEnum::MONEY_OUT : TransactionTypeEnum::MONEY_IN;
-
-            if ($loan->type == LoanTypeEnum::MONEY_OUT)
-            {
-                $newBalance =  $oldBalance['balance'] + $data['amount'];
+                $this->createShiftCashTransaction(
+                    shift: $shift,
+                    data: $data,
+                    oldBalance: $oldBalance,
+                    newBalance: $newBalance
+                );
             }
-           else
-           {
-               $newBalance =  $oldBalance['balance'] - $data['amount'];
-           }
-
-
-            $this->createShiftTransaction(
-                shift: $currentShift,
-                data:  $data,
-                oldBalance: $oldBalance['balance'],
-                newBalance:   $newBalance
-            );
-
-
-
+            
             $loan->refresh();
 
             if ($loan->paid != $loan->amount) {

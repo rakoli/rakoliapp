@@ -17,7 +17,9 @@ class PayLoanController extends Controller
     {
         $validated = $request->validate([
             'amount' => 'required',
-            'payment_method' => 'required',
+            'source' => 'required',
+            'network_code' => 'required_if:source,TILL',
+            'type' => 'required_if:source,TILL',
             'deposited_at' => 'required',
             'notes' => 'nullable',
             'description' => 'nullable',

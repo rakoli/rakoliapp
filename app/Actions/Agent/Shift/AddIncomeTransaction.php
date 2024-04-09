@@ -140,22 +140,5 @@ class AddIncomeTransaction
         } catch (\Exception $exception) {
             throw new \Exception($exception);
         }
-
-        // $location = Location::query()->where('code', $shift->location_code)->first();
-
-        // $balance = $location->balance;
-
-        // $data['location_new_balance'] = $balance + floatval($data['amount']);
-
-        // $this->createLocationTransaction(
-        //     data: $data,
-        //     location: $location,
-        // );
-
-        // $location->updateQuietly([
-        //     'balance' => $balance + $data['amount'],
-        // ]);
-
-        // event(new LocationBalanceUpdate(location: $location, amount: $data['amount']));
     }
 }

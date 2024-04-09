@@ -57,39 +57,41 @@ if (! function_exists('cleanText')) {
     }
 }
 
-function number_format_short($n, $precision = 1)
-{
+if (! function_exists('number_format_short')) {
+    function number_format_short($n, $precision = 1)
+    {
 
-    if ($n < 900) {
-        // 0 - 900
-        $n_format = number_format($n, $precision);
-        $suffix = '';
-    } elseif ($n < 900000) {
-        // 0.9k-850k
-        $n_format = number_format($n / 1000, $precision);
-        $suffix = 'K';
-    } elseif ($n < 900000000) {
-        // 0.9m-850m
-        $n_format = number_format($n / 1000000, $precision);
-        $suffix = 'M';
-    } elseif ($n < 900000000000) {
-        // 0.9b-850b
-        $n_format = number_format($n / 1000000000, $precision);
-        $suffix = 'B';
-    } else {
-        // 0.9t+
-        $n_format = number_format($n / 1000000000000, $precision);
-        $suffix = 'T';
+        if ($n < 900) {
+            // 0 - 900
+            $n_format = number_format($n, $precision);
+            $suffix = '';
+        } elseif ($n < 900000) {
+            // 0.9k-850k
+            $n_format = number_format($n / 1000, $precision);
+            $suffix = 'K';
+        } elseif ($n < 900000000) {
+            // 0.9m-850m
+            $n_format = number_format($n / 1000000, $precision);
+            $suffix = 'M';
+        } elseif ($n < 900000000000) {
+            // 0.9b-850b
+            $n_format = number_format($n / 1000000000, $precision);
+            $suffix = 'B';
+        } else {
+            // 0.9t+
+            $n_format = number_format($n / 1000000000000, $precision);
+            $suffix = 'T';
+        }
+
+        // Remove unecessary zeroes after decimal. "1.0" -> "1"; "1.00" -> "1"
+        // Intentionally does not affect partials, eg "1.50" -> "1.50"
+        if ($precision > 0) {
+            $dotzero = '.'.str_repeat('0', $precision);
+            $n_format = str_replace($dotzero, '', $n_format);
+        }
+
+        return $n_format.$suffix;
     }
-
-    // Remove unecessary zeroes after decimal. "1.0" -> "1"; "1.00" -> "1"
-    // Intentionally does not affect partials, eg "1.50" -> "1.50"
-    if ($precision > 0) {
-        $dotzero = '.'.str_repeat('0', $precision);
-        $n_format = str_replace($dotzero, '', $n_format);
-    }
-
-    return $n_format.$suffix;
 }
 
 function localeToLanguage($locale): string
@@ -254,6 +256,19 @@ function shiftBalances(\App\Models\Shift $shift): array
         ])
         ->sum('amount');
 
+    $tillExpense = \App\Models\ShiftTransaction::query()
+    ->where([
+        'location_code' => $shift->location_code,
+        'user_code' => $shift->user_code,
+        'type' => \App\Utils\Enums\TransactionTypeEnum::MONEY_OUT,
+    ])
+    ->whereBetween('created_at', [
+        $shift->created_at,
+        now(),
+    ])
+    ->sum('amount');
+
+
     $income = \App\Models\ShiftCashTransaction::query()
         ->where([
             'location_code' => $shift->location_code,
@@ -265,6 +280,18 @@ function shiftBalances(\App\Models\Shift $shift): array
             now(),
         ])
         ->sum('amount');
+
+    $tillIncome = \App\Models\ShiftTransaction::query()
+    ->where([
+        'location_code' => $shift->location_code,
+        'user_code' => $shift->user_code,
+        'type' => \App\Utils\Enums\TransactionTypeEnum::MONEY_IN,
+    ])
+    ->whereBetween('created_at', [
+        $shift->created_at,
+        now(),
+    ])
+    ->sum('amount');
 
 
 
@@ -291,9 +318,9 @@ function shiftBalances(\App\Models\Shift $shift): array
         'totalBalance' => $endingCapital,
         'cashAtHand' => $cash,
         'tillBalances' => $tillBalances,
-        'expenses' => $expenses,
+        'expenses' => ($expenses + $tillExpense),
         'networks' => $tills,
-        'income' => $income,
+        'income' => ($income + $tillIncome),
         'startCapital' => $startCapital,
         'endCapital' => $endingCapital,
         'shorts' => $shorts ,

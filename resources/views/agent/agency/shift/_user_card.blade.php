@@ -124,6 +124,18 @@
         <div id="networks_details" class="collapse show">
             <div class="py-5 fs-6">
 
+                <div class="d-flex flex-row mt-5 border-bottom-2 gap-14 justify-content-lg-between">
+                    <div class="fw-bold border-primary">Cash In Hand</div>
+                    <div class="text-gray-600">
+                        <span>{{  money(amount: $cashAtHand , convert: true, currency: currencyCode()) }}</span>
+                    </div>
+                </div>
+                <div class="d-flex flex-row mt-5 border-bottom-2 gap-14 justify-content-lg-between">
+                    <div class="fw-bold border-primary">Loan Balance</div>
+                    <div class="text-gray-600">
+                        <span>{{  money(amount: $loanBalances , convert: true, currency: currencyCode()) }}</span>
+                    </div>
+                </div>
 
                 @foreach($networks as $name =>  $network )
                     <!--begin::Details item-->
@@ -138,7 +150,7 @@
                 @endforeach
                 <div
                     class="text-gray-600 mt-15 fw-bold text-lg-end  border-bottom-3 border-dashed py-lg-2 px-lg-3 border-primary">
-                    <span>{{ money(amount: $tillBalances , convert: true, currency: currencyCode()) }}</span>
+                    <span>{{ money(amount: $totalBalance , convert: true, currency: currencyCode()) }}</span>
                 </div>
             </div>
         </div>
