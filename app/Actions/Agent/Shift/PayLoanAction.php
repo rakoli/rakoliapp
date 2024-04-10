@@ -55,10 +55,10 @@ class PayLoanAction
             $payment = LoanPayment::create([
                 'loan_code' => $loan->code,
                 'user_code' => auth()->user()->code,
+                'network_code' => $data['network_code'] ?? null,
                 'amount' => $data['amount'],
                 'description' => $data['description'] ?? null,
                 'notes' => $data['notes'] ?? null,
-                'payment_method' => $data['source'] ?? null,
                 'deposited_at' => Carbon::parse($data['deposited_at']),
             ]);
 

@@ -25,13 +25,18 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
+            $table->string('network_code')->nullable();
+            $table->foreign('network_code')->references('code')
+                ->on('networks')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+    
+
             $table->decimal('amount', 12, 2);
 
             $table->string('description')->nullable();
 
             $table->text('notes')->invisible()->nullable();
-
-            $table->string('payment_method')->nullable();
 
             $table->date('deposited_at')->nullable();
 
