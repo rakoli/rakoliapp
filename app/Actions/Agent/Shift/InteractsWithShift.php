@@ -85,12 +85,6 @@ trait InteractsWithShift
             ->where('code', $shift->location_code)
             ->first();
 
-        if (! $isLoan) {
-            $location->balance = $location->balance + $data['amount'];
-
-            $location->saveQuietly();
-        }
-
         // get old shift network balance if no transaction then
 
         $lastTransaction = ShiftTransaction::query()
@@ -135,10 +129,6 @@ trait InteractsWithShift
             ->where('code', $shift->location_code)
             ->first();
 
-        $location->balance = $location->balance - $data['amount'];
-
-        $location->saveQuietly();
-
         // get old shift network balance if no transaction then
 
         $lastTransaction = ShiftTransaction::query()
@@ -182,12 +172,6 @@ trait InteractsWithShift
             ->where('code', $shift->location_code)
             ->first();
 
-        if (! $isLoan) {
-            $location->balance = $location->balance + $data['amount'];
-
-            $location->saveQuietly();
-        }
-
         // get old shift cash balance if no transaction then
 
         $lastTransaction = ShiftCashTransaction::query()
@@ -220,11 +204,7 @@ trait InteractsWithShift
         $location = Location::query()
             ->where('code', $shift->location_code)
             ->first();
-
-        $location->balance = $location->balance - $data['amount'];
-
-        $location->saveQuietly();
-
+            
         // get old shift network balance if no transaction then
 
         $lastTransaction = ShiftCashTransaction::query()
