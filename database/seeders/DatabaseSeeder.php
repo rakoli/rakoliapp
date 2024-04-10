@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             KeRegionTableSeeder::class,
             TZFSPSeeder::class,
             KEFSPSeeder::class,
+            CryptoSeeder::class,
             PackagesTableSeeder::class,
             UsersTableSeeder::class,
             SampleDataSeeder::class,
