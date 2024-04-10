@@ -44,7 +44,7 @@
                         <option value="">  </option>
 
                         @foreach($networks as $name =>  $network)
-                            <option value="{{ $network['code'] }}" class="{!! $network['balance'] > 0 ? 'balance' : 'nobalance' !!}">{{ $name }}</option>
+                            <option value="{{ $network['code'] }}" class="{!! $network['balance'] > 0 ? 'balance' : 'nobalance' !!}">{{ $name }} - {{ number_format($network['balance'],2) }}</option>
                         @endforeach
                     </x-select2>
                     <x-helpertext>{{ __("Till you want to transact from") }}</x-helpertext>

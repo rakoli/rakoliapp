@@ -71,7 +71,7 @@
                                     value="{{ $network['code'] }}"  {{ $network['balance'] <= 0 ? 'disabled' : '' }}
 
 
-                                >{{ str($name)->title()->value()  }}</option>
+                                >{{ str($name)->title()->value()  }} - {{ number_format($network['balance'],2) }}</option>
                         @endforeach
                     </x-select2>
                     <x-helpertext>{{ __('Select till used for this Expenses') }}</x-helpertext>

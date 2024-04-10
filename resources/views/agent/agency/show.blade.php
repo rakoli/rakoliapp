@@ -250,7 +250,7 @@
                                     @foreach($loans as $loan)
                                         <tr>
                                             <td>{{ $loan->user->full_name }}</td>
-                                            <td>{{ $loan->network?->agency?->name }}</td>
+                                            <td>{{ $loan->network?->agency?->name ?? 'Cash' }}</td>
                                             <td>
                                                 <span class="{{ str($loan->status->color())->toHtmlString()  }}">
                                                 {{ str($loan->status->label())->toHtmlString() }}

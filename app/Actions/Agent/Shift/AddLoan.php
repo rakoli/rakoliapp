@@ -45,10 +45,9 @@ class AddLoan
                 'note' => $data['notes'],
             ]);
             Log::info($loan);
-
             $source = FundSourceEnums::tryFrom($data['source']);
-            Log::info($source);
-            if ($source === FundSourceEnums::TILL) {
+            $type = LoanTypeEnum::tryFrom($data['type']);
+            if ($source === FundSourceEnums::TILL && $type === LoanTypeEnum::MONEY_IN) {
                 [$newBalance, $oldBalance] = match ($data['type']) {
                     LoanTypeEnum::MONEY_IN->value => AddLoan::moneyIn(shift: $shift, data: $data, isLoan: true),
                     LoanTypeEnum::MONEY_OUT->value => AddLoan::moneyOut(shift: $shift, data: $data, isLoan: true),
@@ -67,17 +66,19 @@ class AddLoan
                     newBalance: $newBalance
                 );
             }else {
+                $data['type'] = LoanTypeEnum::MONEY_IN->value;
                 [$newBalance, $oldBalance] = match ($data['type']) {
                     LoanTypeEnum::MONEY_IN->value => AddLoan::cashMoneyIn(shift: $shift, data: $data, isLoan: true),
                     LoanTypeEnum::MONEY_OUT->value => AddLoan::cashMoneyOut(shift: $shift, data: $data, isLoan: true),
                 };
 
                 $data['type'] = match ($data['type']) {
-                    LoanTypeEnum::MONEY_IN->value => TransactionTypeEnum::MONEY_IN,
-                    LoanTypeEnum::MONEY_OUT->value => TransactionTypeEnum::MONEY_OUT,
+                    LoanTypeEnum::MONEY_IN->value => TransactionTypeEnum::MONEY_OUT,
+                    LoanTypeEnum::MONEY_OUT->value => TransactionTypeEnum::MONEY_IN,
                 };
                 Log::info("Cash");
                 Log::info($data);
+
 
                 $this->createShiftCashTransaction(
                     shift: $shift,

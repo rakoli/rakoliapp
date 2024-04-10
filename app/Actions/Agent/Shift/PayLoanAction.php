@@ -31,6 +31,7 @@ class PayLoanAction
     public function handle(Loan $loan, array $data)
     {
         return runDatabaseTransaction(function () use ($loan, $data) {
+            Log::info($data);
 
             throw_if(condition: ($loan->payments()->sum('amount') + $data['amount']) > $loan->amount,
                 exception: new \Exception(__('You cannot receive more than loan balance'))
@@ -57,13 +58,13 @@ class PayLoanAction
                 'amount' => $data['amount'],
                 'description' => $data['description'] ?? null,
                 'notes' => $data['notes'] ?? null,
-                'payment_method' => $data['payment_method'] ?? null,
+                'payment_method' => $data['source'] ?? null,
                 'deposited_at' => Carbon::parse($data['deposited_at']),
             ]);
 
             $shift = $currentShift->first();
             $source = FundSourceEnums::tryFrom($data['source']);
-            Log::info($source);
+            $data['type'] = LoanTypeEnum::MONEY_OUT->value;
 
             if ($source === FundSourceEnums::TILL) {
                 [$newBalance, $oldBalance] = match ($data['type']) {
@@ -72,8 +73,8 @@ class PayLoanAction
                 };
 
                 $data['type'] = match ($data['type']) {
-                    LoanTypeEnum::MONEY_IN->value => TransactionTypeEnum::MONEY_IN,
-                    LoanTypeEnum::MONEY_OUT->value => TransactionTypeEnum::MONEY_OUT,
+                    LoanTypeEnum::MONEY_IN->value => TransactionTypeEnum::MONEY_OUT,
+                    LoanTypeEnum::MONEY_OUT->value => TransactionTypeEnum::MONEY_IN,
                 };
                 Log::info("Till");
                 Log::info($data);
@@ -84,14 +85,15 @@ class PayLoanAction
                     newBalance: $newBalance
                 );
             }else {
+                $data['type'] = LoanTypeEnum::MONEY_OUT->value;
                 [$newBalance, $oldBalance] = match ($data['type']) {
                     LoanTypeEnum::MONEY_IN->value => AddLoan::cashMoneyIn(shift: $shift, data: $data, isLoan: true),
                     LoanTypeEnum::MONEY_OUT->value => AddLoan::cashMoneyOut(shift: $shift, data: $data, isLoan: true),
                 };
 
                 $data['type'] = match ($data['type']) {
-                    LoanTypeEnum::MONEY_IN->value => TransactionTypeEnum::MONEY_IN,
-                    LoanTypeEnum::MONEY_OUT->value => TransactionTypeEnum::MONEY_OUT,
+                    LoanTypeEnum::MONEY_IN->value => TransactionTypeEnum::MONEY_OUT,
+                    LoanTypeEnum::MONEY_OUT->value => TransactionTypeEnum::MONEY_IN,
                 };
                 Log::info("Cash");
                 Log::info($data);

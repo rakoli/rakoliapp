@@ -45,7 +45,7 @@
                 
                 <div class="row fv-row py-3">
                     <div class="col-6">
-                        <x-label class="" label="{{ __('Fund Source') }}" for="source"/>
+                        <x-label class="" label="{{ __('Account Paid') }}" for="source"/>
                         <x-select2
                             modalId="receive-loan-payment"
                             name="source"
@@ -69,32 +69,6 @@
                             </div>
                         @enderror
                     </div>
-                </div>
-                <div class="row fv-row py-3">
-                    <div class="col-6 till-source">
-                        <x-label class="" label="Transaction Type" for="type"/>
-
-                        <x-select2
-                            modalId="receive-loan-payment"
-                            class=" @error('type') @enderror"
-                            name="type"
-                            placeholder="{{ __('Select a Transaction Type') }}"
-                            id="type">
-                            <option value="">{{ __('Select a Transaction Type') }}</option>
-
-                            @foreach(LoanTypeEnum::cases() as $transactionType)
-                                <option value="{{ $transactionType->value }}">{{ $transactionType->label() }}</option>
-                            @endforeach
-                        </x-select2>
-                        <x-helpertext>{{ __("Type of Transaction, either deposit or withdraw") }}</x-helpertext>
-
-                        @error('type')
-                        <div class="help-block text-danger">
-                            {{ $message }}
-                        </div>
-                        @enderror
-                    </div>
-
                     <div class="col-6 till-source">
                         <x-label class="" label="Select Till" for="till_code"/>
 
@@ -119,6 +93,7 @@
                         @enderror
 
                     </div>
+
                 </div>
                 <div class="row fv-row py-3">
                     <div class="col-12">

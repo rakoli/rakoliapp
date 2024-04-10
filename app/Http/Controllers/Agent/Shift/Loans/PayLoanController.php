@@ -6,6 +6,7 @@ use App\Actions\Agent\Shift\PayLoanAction;
 use App\Http\Controllers\Controller;
 use App\Models\Loan;
 use App\Models\Shift;
+use App\Utils\Enums\TransactionCategoryEnum;
 use Illuminate\Http\Request;
 
 class PayLoanController extends Controller
@@ -19,7 +20,6 @@ class PayLoanController extends Controller
             'amount' => 'required',
             'source' => 'required',
             'network_code' => 'required_if:source,TILL',
-            'type' => 'required_if:source,TILL',
             'deposited_at' => 'required',
             'notes' => 'nullable',
             'description' => 'nullable',
@@ -27,6 +27,8 @@ class PayLoanController extends Controller
 
         try {
             throw_if($loan->shift_id != $shift->id, new \Exception('Loan does not belong to this Shift'));
+
+            $validated['category'] = TransactionCategoryEnum::GENERAL;
 
             PayLoanAction::run(
                 loan: $loan,

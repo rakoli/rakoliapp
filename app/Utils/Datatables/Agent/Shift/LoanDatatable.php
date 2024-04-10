@@ -30,7 +30,7 @@ class LoanDatatable implements HasDatatable
             ->addColumn('created_at', fn (Loan $record) => $record->created_at->format('Y-F-d'))
             ->addColumn('location_name', fn (Loan $record) => $record->location->name)
             ->addColumn('user_name', fn (Loan $record) => $record->user->full_name)
-            ->addColumn('agency_name', fn (Loan $record) => $record->network->agency->name)
+            ->addColumn('agency_name', fn (Loan $record) => $record->network->agency ? $record->network->agency->name : "Cash" )
             ->addColumn('status', function (Loan $record) {
 
                 $table = new self();
