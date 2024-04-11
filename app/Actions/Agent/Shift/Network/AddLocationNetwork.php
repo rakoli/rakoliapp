@@ -4,6 +4,7 @@ namespace App\Actions\Agent\Shift\Network;
 
 use App\Events\Shift\NetworkCreatedEvent;
 use App\Models\Network;
+use App\Utils\Enums\NetworkTypeEnum;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class AddLocationNetwork
@@ -19,7 +20,7 @@ class AddLocationNetwork
     {
 
         try {
-            runDatabaseTransaction(function () use ($data) {
+            return runDatabaseTransaction(function () use ($data) {
 
                 $networkCheck = Network::query()
                     ->where([
@@ -34,6 +35,7 @@ class AddLocationNetwork
                 $network = Network::create([
                     'business_code' => auth()->user()->business_code,
                     'location_code' => $data['location_code'],
+                    'type' => NetworkTypeEnum::tryFrom($data['type']),
                     'fsp_code' => $data['fsp_code'],
                     'code' => generateCode(name: $data['name'], prefixText: $data['fsp_code']),
                     'agent_no' => $data['agent_no'],

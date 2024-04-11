@@ -19,6 +19,7 @@ class UpdateNetworkController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string',
+            'type' => 'required',
             'agent_no' => [
                 'required',
                 Rule::unique('networks')
@@ -35,6 +36,7 @@ class UpdateNetworkController extends Controller
             'location_code' => 'required|exists:locations,code',
         ], [
             'fsp_code.required' => 'Financial service provider is required',
+            'type.required' => 'Network type is required',
             'balance.required' => 'Till balance is required',
             'location_code.required' => 'Location is required',
             'location_code.exists' => 'Location does not exist',

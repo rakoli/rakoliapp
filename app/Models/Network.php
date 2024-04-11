@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Scopes\BusinessScoped;
 use App\Models\Scopes\LocationScoped;
+use App\Utils\Enums\NetworkTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -71,6 +72,7 @@ class Network extends Model
 
         foreach ($fsps as $fsp){
             Network::create([
+                'type' => NetworkTypeEnum::FINANCE,
                 'code' => generateCode($fsp->name,$business->code),
                 'business_code' => $business->code,
                 'location_code' => $location->code,

@@ -1,3 +1,4 @@
+@php use App\Utils\Enums\NetworkTypeEnum; @endphp
 <div>
     <form method="post" id="add-network-form">
         @csrf
@@ -20,9 +21,34 @@
                     </div>
                     @enderror
                 </div>
-
+                
                 <div class="col-6">
 
+                    <x-label
+                        class=""
+                        label="Select Network Type"
+                        for="type"
+                    />
+                    <x-select2
+                        modalId="add-network"
+                        name="type"
+                        placeholder="{{ __('Select a Network Type') }}"
+                        id="type"
+                    >
+                        @foreach(NetworkTypeEnum::cases() as $networkType)
+                            <option value="{{ $networkType->value }}">{{ $networkType->label() }}</option>
+                        @endforeach
+                    </x-select2>
+                    <x-helpertext>{{ __('Till Type E.G: Fianace, Crypto') }}</x-helpertext>
+                    @error('type')
+                    <div class="help-block text-danger">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </div>
+            </div>
+            <div class="row fv-row py-2">
+                <div class="col-6 finance_data">
                     <x-label
                         class=""
                         label="Select Network Provider"
@@ -45,8 +71,32 @@
                     </div>
                     @enderror
                 </div>
+                <div class="col-6">
+                    <x-label
+                        class=""
+                        label="Select Location"
+                        for="location_code"
+                    />
+                    <x-select2
+                        modalId="add-network"
+                        name="location_code"
+                        placeholder="{{ __('Select a Location') }}"
+                        id="location_code"
+                    >
+
+                        @foreach($locations as $location)
+                            <option value="{{ $location->code }}">{{ $location->name }}</option>
+                        @endforeach
+                    </x-select2>
+                    <x-helpertext>{{ __('This Till belongs to which Branch?') }}</x-helpertext>
+                    @error('location_code')
+                    <div class="help-block text-danger">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </div>
             </div>
-            <div class="row fv-row py-2">
+            <div class="row fv-row py-2 finance_data">
                 <div class="col-6">
                     <x-label
                         class=""
@@ -86,26 +136,40 @@
                     @enderror
                 </div>
             </div>
-            <div class="row fv-row py-2">
+            <div class="row fv-row py-2 crypto_data">
                 <div class="col-6">
                     <x-label
                         class=""
-                        label="Select Location"
-                        for="location_code"
+                        label="{{ __('Agent No') }}"
+                        for="agent_no"
                     />
-                    <x-select2
-                        modalId="add-network"
-                        name="location_code"
-                        placeholder="{{ __('Select a Location') }}"
-                        id="location_code"
-                    >
-
-                        @foreach($locations as $location)
-                            <option value="{{ $location->code }}">{{ $location->name }}</option>
-                        @endforeach
-                    </x-select2>
-                    <x-helpertext>{{ __('This Till belongs to which Branch?') }}</x-helpertext>
-                    @error('location_code')
+                    <x-input
+                        class="form-control-solid   @error('agent_no') form-control-feedback @enderror"
+                        name="agent_no"
+                        placeholder="{{ __('agent_no') }}"
+                        id="agent_no"
+                    />
+                    <x-helpertext>{{ __('Till Agency No:') }}</x-helpertext>
+                    @error('agent_no')
+                    <div class="help-block text-danger">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </div>
+                <div class="col-6">
+                    <x-label
+                        class=""
+                        label="{{ __('Balance') }}"
+                        for="balance"
+                    />
+                    <x-input
+                        class="form-control-solid   @error('balance') form-control-feedback @enderror"
+                        name="balance"
+                        placeholder="{{ __('balance') }}"
+                        id="balance"
+                    />
+                    <x-helpertext>{{ __('Till Current Balance: Note this cannot be updated after you start transcating') }}</x-helpertext>
+                    @error('balance')
                     <div class="help-block text-danger">
                         {{ $message }}
                     </div>
@@ -142,7 +206,18 @@
         <script src="{{ asset('assets/js/rakoli_ajax.js') }}"></script>
 
         <script>
+            
 
+          jQuery("#type").on('click', function(){
+            if(jQuery(this).val() == "Crypto"){
+                jQuery(".finance_data").hide();
+                jQuery(".crypto_data").show();
+            } else {
+                jQuery(".finance_data").show();
+                jQuery(".crypto_data").hide();
+            }
+          }).click();
+            
           const validations = [
               {"name" : "name", "errors" : "Network name is required", "validators" : {}},
               {"name" : "location_code", "errors" : "Location Code is required", "validators" : {}},
