@@ -1,3 +1,4 @@
+@php use App\Utils\Enums\NetworkTypeEnum; @endphp
 <div>
     <h2 class="text-md-center">Edit Network Details</h2>
     <form method="post" id="update-network-form" class="uk-form-horizontal ">
@@ -6,6 +7,25 @@
 
 
             <div class="row fv-row py-2">
+
+                <div class="col-12">
+
+                    <x-label class="" label="Select Type" for="type"/>
+                    <x-select2
+                        name="type"
+                        placeholder="{{ __('Select a Network Type') }}"
+                        id="type">
+
+                        @foreach(NetworkTypeEnum::cases() as $networkType)
+                            <option value="{{ $networkType->value }}" @selected($networkType->value == $network->type)>{{ $networkType->label() }}</option>
+                        @endforeach
+                    </x-select2>
+                    @error('type')
+                    <div class="help-block text-danger">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </div>
 
                 <div class="col-12">
                     <x-label class="" label="{{ __('Name') }}" for="name"/>
