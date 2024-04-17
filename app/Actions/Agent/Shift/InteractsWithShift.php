@@ -35,6 +35,8 @@ trait InteractsWithShift
             'balance_new' => $newBalance,
             'description' => $data['description'] ?? null,
             'note' => $data['notes'] ?? null,
+            'crypto' => $data['crypto'],
+            'exchange_rate' => $data['exchange_rate'],
         ]);
     }
 

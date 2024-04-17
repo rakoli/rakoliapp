@@ -71,6 +71,29 @@
                     </div>
                     @enderror
                 </div>
+                <div class="col-6 crypto_data">
+                    <x-label
+                        class=""
+                        label="Select Crypto Provider"
+                        for="crypto_code"
+                    />
+                    <x-select2
+                        modalId="add-network"
+                        name="crypto_code"
+                        placeholder="{{ __('Select a Crypto Provider') }}"
+                        id="crypto_code"
+                    >
+                        @foreach($cryptos as $crypto)
+                            <option value="{{ $crypto->code }}" data-rate="{{ $crypto->usd_rate }}">{{ $crypto->name }}</option>
+                        @endforeach
+                    </x-select2>
+                    <x-helpertext>{{ __('Crypto Provider E.G: Bitcoin') }}</x-helpertext>
+                    @error('crypto_code')
+                    <div class="help-block text-danger">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </div>
                 <div class="col-6">
                     <x-label
                         class=""
@@ -140,17 +163,17 @@
                 <div class="col-6">
                     <x-label
                         class=""
-                        label="{{ __('Agent No') }}"
-                        for="agent_no"
+                        label="{{ __('Crypto Balance') }}"
+                        for="crypto_balance"
                     />
                     <x-input
-                        class="form-control-solid   @error('agent_no') form-control-feedback @enderror"
-                        name="agent_no"
-                        placeholder="{{ __('agent_no') }}"
-                        id="agent_no"
+                        class="form-control-solid   @error('crypto_balance') form-control-feedback @enderror"
+                        name="crypto_balance"
+                        placeholder="{{ __('balance') }}"
+                        id="crypto_balance"
                     />
-                    <x-helpertext>{{ __('Till Agency No:') }}</x-helpertext>
-                    @error('agent_no')
+                    <x-helpertext>{{ __('Crypto Current balance: Note this cannot be updated after you start transcating') }}</x-helpertext>
+                    @error('crypto_balance')
                     <div class="help-block text-danger">
                         {{ $message }}
                     </div>
@@ -159,17 +182,17 @@
                 <div class="col-6">
                     <x-label
                         class=""
-                        label="{{ __('Balance') }}"
-                        for="balance"
+                        label="{{ __('Exchange Rate') }}"
+                        for="exchange_rate"
                     />
                     <x-input
-                        class="form-control-solid   @error('balance') form-control-feedback @enderror"
-                        name="balance"
-                        placeholder="{{ __('balance') }}"
-                        id="balance"
+                        class="form-control-solid @error('exchange_rate') form-control-feedback @enderror"
+                        name="exchange_rate"
+                        placeholder="{{ __('Exchange Rate') }}"
+                        id="exchange_rate"
                     />
-                    <x-helpertext>{{ __('Till Current Balance: Note this cannot be updated after you start transcating') }}</x-helpertext>
-                    @error('balance')
+                    <x-helpertext>{{ __('Exchange Rate:') }}</x-helpertext>
+                    @error('exchange_rate')
                     <div class="help-block text-danger">
                         {{ $message }}
                     </div>
@@ -207,22 +230,30 @@
 
         <script>
             
+        jQuery(document).ready(function() {
+            
+            jQuery(".finance_data").show();
+            jQuery(".crypto_data").hide();
 
-          jQuery("#type").on('click', function(){
-            if(jQuery(this).val() == "Crypto"){
-                jQuery(".finance_data").hide();
-                jQuery(".crypto_data").show();
-            } else {
-                jQuery(".finance_data").show();
-                jQuery(".crypto_data").hide();
-            }
-          }).click();
+            jQuery("#type").on('change', function(){
+                if(jQuery(this).val() == "Crypto"){
+                    jQuery(".finance_data").hide();
+                    jQuery(".crypto_data").show();
+                } else {
+                    jQuery(".finance_data").show();
+                    jQuery(".crypto_data").hide();
+                }
+            });
+
+            jQuery("#crypto_code").on("change", function(){
+                var rate = jQuery("#crypto_code option:selected").data('rate');
+                jQuery("#exchange_rate").val(rate);
+            }).change();
+        });
             
           const validations = [
               {"name" : "name", "errors" : "Network name is required", "validators" : {}},
               {"name" : "location_code", "errors" : "Location Code is required", "validators" : {}},
-              {"name" : "agent_no", "errors" : "Agent No is required", "validators" : {}},
-              {"name" : "balance", "errors" : "Balance is required", "validators" : {}},
           ];
 
           const form = document.getElementById('add-network-form');

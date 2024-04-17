@@ -69,8 +69,6 @@
                         @foreach($networks as $name =>  $network)
                                 <option
                                     value="{{ $network['code'] }}"  {{ $network['balance'] <= 0 ? 'disabled' : '' }}
-
-
                                 >{{ str($name)->title()->value()  }} - {{ number_format($network['balance'],2) }}</option>
                         @endforeach
                     </x-select2>

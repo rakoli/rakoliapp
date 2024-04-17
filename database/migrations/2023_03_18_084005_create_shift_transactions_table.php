@@ -49,6 +49,8 @@ return new class extends Migration
             $table->string('amount_currency');
             $table->decimal('balance_old', 12, 2);
             $table->decimal('balance_new', 12, 2);
+            $table->decimal('crypto', 20, 10)->nullable();
+            $table->decimal('exchange_rate', 20, 10)->nullable();
             $table->string('description');
             $table->text('note')->nullable();
 

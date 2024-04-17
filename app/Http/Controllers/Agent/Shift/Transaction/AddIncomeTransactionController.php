@@ -19,6 +19,8 @@ class AddIncomeTransactionController extends Controller
             'network_code' => 'nullable',
             'description' => 'required|string',
             'notes' => 'nullable|string',
+            'crypto' => 'nullable|numeric',
+            'exchange_rate' => 'nullable|numeric'
         ]);
 
         try {

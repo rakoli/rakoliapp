@@ -40,6 +40,11 @@ class Network extends Model
         return $this->belongsTo(FinancialServiceProvider::class, 'fsp_code', 'code');
     }
 
+    public function crypto(): BelongsTo
+    {
+        return $this->belongsTo(Crypto::class, 'crypto_code', 'code');
+    }
+
     public function loans(): HasMany
     {
         return $this->hasMany(Loan::class, 'network_code', 'code');

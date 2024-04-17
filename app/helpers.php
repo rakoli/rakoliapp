@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Models\ShiftTransaction;
 use App\Models\User;
+use App\Utils\Enums\NetworkTypeEnum;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -221,22 +222,44 @@ function shiftBalances(\App\Models\Shift $shift): array
     $tills = [];
 
     foreach ($shift->loadMissing('shiftNetworks.network.agency')->shiftNetworks as $shiftNetworks) {
+        if($shiftNetworks->network->agency){
+            $tills[$shiftNetworks->network->agency?->name] = [
+                'balance' => $shift->transactions()
+                    ->where('network_code', $shiftNetworks->network_code)
+                    ->exists() ? ShiftTransaction::query()->whereBelongsTo($shift, 'shift')
+                    ->where('network_code', $shiftNetworks->network_code)
+                    ->latest('created_at')
+                    ->limit(1)
+                    ->pluck('balance_new')
+                    ->first()
+                :
+                $shiftNetworks->balance_new,
+                'code' => $shiftNetworks->network_code,
+                'balance_new' => $shiftNetworks->balance_new,
+                'balance_old' => $shiftNetworks->balance_old,
+                'type' => NetworkTypeEnum::FINANCE,
+            ];
+        }
 
-        $tills[$shiftNetworks->network->agency->name] = [
-            'balance' => $shift->transactions()
-                ->where('network_code', $shiftNetworks->network_code)
-                ->exists() ? ShiftTransaction::query()->whereBelongsTo($shift, 'shift')
-                ->where('network_code', $shiftNetworks->network_code)
-                ->latest('created_at')
-                ->limit(1)
-                ->pluck('balance_new')
-                ->first()
-               :
-               $shiftNetworks->balance_new,
-            'code' => $shiftNetworks->network_code,
-            'balance_new' => $shiftNetworks->balance_new,
-            'balance_old' => $shiftNetworks->balance_old,
-        ];
+        if($shiftNetworks->network->crypto){
+            $tills[$shiftNetworks->network->crypto?->name] = [
+                'balance' => $shift->transactions()
+                    ->where('network_code', $shiftNetworks->network_code)
+                    ->exists() ? ShiftTransaction::query()->whereBelongsTo($shift, 'shift')
+                    ->where('network_code', $shiftNetworks->network_code)
+                    ->latest('created_at')
+                    ->limit(1)
+                    ->pluck('balance_new')
+                    ->first()
+                   :
+                   $shiftNetworks->balance_new,
+                'code' => $shiftNetworks->network_code,
+                'balance_new' => $shiftNetworks->balance_new,
+                'balance_old' => $shiftNetworks->balance_old,
+                'type' => NetworkTypeEnum::CRYPTO,
+                'exchange_rate' => $shiftNetworks->network->exchange_rate,
+            ];    
+        }
 
     }
 

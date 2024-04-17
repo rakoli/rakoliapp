@@ -10,6 +10,7 @@ use App\Models\ShiftNetwork;
 use App\Models\ShiftTransaction;
 use App\Models\Transaction;
 use App\Utils\Enums\FundSourceEnums;
+use Illuminate\Support\Facades\Log;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class AddIncomeTransaction
@@ -85,7 +86,7 @@ class AddIncomeTransaction
 
                 $oldBalance = floatval($lastTransaction->balance_new);  // old balance
             }
-
+            Log::info($data);
             return $this->createShiftTransaction(
                 shift: $shift,
                 data: $data,

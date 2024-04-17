@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Location;
 use App\Models\Network;
 use App\Models\Shift;
+use App\Utils\Enums\NetworkTypeEnum;
 use App\Utils\Enums\ShiftStatusEnum;
 use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Http\Request;
@@ -30,7 +31,7 @@ class OpenShiftController extends Controller
             'balance' => $location->balance,
             'code' => $location->code,
             'networks' => $location->networks->map(fn(Network $network) : array => [
-                'name' => $network->agency->name,
+                'name' => $network->type == NetworkTypeEnum::FINANCE->value ? $network->agency?->name : $network->crypto?->name,
                 'balance' => $network->balance
             ]),
         ]);
