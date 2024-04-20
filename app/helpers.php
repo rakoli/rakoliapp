@@ -176,7 +176,7 @@ function setupSession(User $user, $isRegisteringUser = false)
 
 function returnActiveMenuStyle($menuSection): string
 {
-    if ($menuSection == cleanText(Request()->route()->getPrefix())) {
+    if ($menuSection == cleanText(strstr(Request()->route()->getName(), '.',true))) {
         return 'hover';
     }
 
@@ -258,7 +258,7 @@ function shiftBalances(\App\Models\Shift $shift): array
                 'balance_old' => $shiftNetworks->balance_old,
                 'type' => NetworkTypeEnum::CRYPTO,
                 'exchange_rate' => $shiftNetworks->network->exchange_rate,
-            ];    
+            ];
         }
 
     }
