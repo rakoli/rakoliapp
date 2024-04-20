@@ -14,9 +14,11 @@ class ShiftTransactionDatatable implements HasDatatable
 {
     use LakoriDatatable;
 
-    public function index(Shift $shift, bool $isToday = false): \Illuminate\Http\JsonResponse
+    public function index(Shift $shift, $type,bool $isToday = false): \Illuminate\Http\JsonResponse
     {
-        $transactions = ShiftTransaction::query()
+        $transactions = ShiftTransaction::select('shift_transactions.*')
+            ->join('networks','networks.code','shift_transactions.network_code')
+            ->where('networks.type', $type)
             ->whereBelongsTo($shift, 'shift')
             ->with('location', 'user', 'network.agency');
 
@@ -46,7 +48,7 @@ class ShiftTransactionDatatable implements HasDatatable
             ->addColumn('actions', function (ShiftTransaction $transaction) {
 
             })
-            ->addColumn('network_name', fn (ShiftTransaction $transaction) => $transaction->network?->agency?->name)
+            ->addColumn('network_name', fn (ShiftTransaction $transaction) => $transaction->network->agency ? $transaction->network?->agency?->name : $transaction->network?->crypto?->name)
 
             ->rawColumns(['balance_old', 'balance_new', 'transaction_type', 'actions'])
             ->toJson();

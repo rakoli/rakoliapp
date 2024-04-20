@@ -9,6 +9,7 @@ use App\Models\Shift;
 use App\Models\ShiftNetwork;
 use App\Utils\Datatables\Agent\Shift\ShiftCashTransactionDatatable;
 use App\Utils\Datatables\Agent\Shift\ShiftTransactionDatatable;
+use App\Utils\Enums\NetworkTypeEnum;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Html\Builder;
 
@@ -19,9 +20,11 @@ class ShowShiftController extends Controller
         if ($request->ajax()) {
             if($request->has('isCash')){
                 return $cashTransactionDatatable->index($shift);
+            } else if($request->has('isCrypto')){
+                return $transactionDatatable->index($shift,NetworkTypeEnum::CRYPTO);
+            } else {
+                return $transactionDatatable->index($shift,NetworkTypeEnum::FINANCE);
             }
-            return $transactionDatatable->index($shift);
-
         }
 
         $dataTableHtml = $transactionDatatable->columns(datatableBuilder: $datatableBuilder);

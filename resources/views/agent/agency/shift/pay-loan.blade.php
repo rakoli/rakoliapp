@@ -1,4 +1,6 @@
-@php use App\Utils\Enums\LoanTypeEnum; @endphp
+@php use App\Utils\Enums\LoanTypeEnum; 
+     use App\Utils\Enums\NetworkTypeEnum;
+@endphp
 <div>
 
 
@@ -82,7 +84,9 @@
                             <option value=""></option>
 
                             @foreach($networks as $name =>  $network)
-                                <option value="{{ $network['code'] }}" class="{!! $network['balance'] > 0 ? 'balance' : 'nobalance' !!}">{{ $name }} - {{ number_format($network['balance'],2) }}</option>
+                                @if($network['type'] != NetworkTypeEnum::CRYPTO)
+                                    <option value="{{ $network['code'] }}" class="{!! $network['balance'] > 0 ? 'balance' : 'nobalance' !!}">{{ $name }} - {{ number_format($network['balance'],2) }}</option>
+                                @endif
                             @endforeach
                         </x-select2>
                         <x-helpertext>{{ __("Select Till for this Loan") }}</x-helpertext>

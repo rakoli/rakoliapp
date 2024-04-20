@@ -176,6 +176,44 @@
                 </div>
                 <!--end::Card-->
 
+
+                <!--begin::Card-->
+                <div class="card pt-4 mb-6 mb-xl-9">
+                    <!--begin::Card header-->
+                    <div class="card-header border-0">
+                        <!--begin::Card title-->
+                        <div class="card-title">
+                            <h2>Crypto Transaction History</h2>
+                        </div>
+                        <!--end::Card title-->
+                    </div>
+                    <!--end::Card header-->
+
+                    <!--begin::Card body-->
+                    <div class="card-body pt-0 pb-5">
+                        <!--begin::Table-->
+                        <div id="kt_table_customers_payment_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                            <div class="table-responsive">
+                                <table id="crypto-transaction-table" class="table align-middle table-row-dashed gy-5 dataTable no-footer">
+                                    <thead>
+                                        <tr>
+                                            <th>User</th>
+                                            <th>Old Balance {{ strtoupper(session('currency')) }}</th>
+                                            <th>Amount Transacted {{ strtoupper(session('currency')) }}</th>
+                                            <th>New Balance</th>
+                                            <th>Network</th>
+                                            <th>Type</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                        <!--end::Table-->
+                    </div>
+                    <!--end::Card body-->
+                </div>
+                <!--end::Card-->
+                
                 <!--begin::Card-->
                 <div class="card pt-4 mb-6 mb-xl-9">
                     <!--begin::Card header-->
@@ -363,6 +401,66 @@
                         },
                         data: function(data) {
                             data.isCash = true;
+                        },
+                    },
+                    columnDefs: [
+                        {
+                            targets: [0], // first column & numbering column
+                            orderable: false, // set not orderable
+                        },
+                        {
+                            targets: [6], // column index
+                            visible: false,
+                        }
+                    ],
+                    columns: [
+                        {
+                            data: 'user_name',
+                            name: 'user_name'
+                        },
+                        {
+                            data: 'balance_old',
+                            name: 'balance_old'
+                        },
+                        {
+                            data: 'amount',
+                            name: 'amount'
+                        },
+                        {
+                            data: 'balance_new',
+                            name: 'balance_new'
+                        },
+                        {
+                            data: 'network_name',
+                            name: 'network_name'
+                        },
+                        {
+                            data: 'transaction_type',
+                            name: 'transaction_type'
+                        },
+                        {
+                            data: 'id',
+                            name: 'id'
+                        }
+                    ],
+                });
+
+                datatable1 = $('#crypto-transaction-table').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    responsive: true,
+                    lengthMenu: [[10, 50, 100, -1], [10, 50, 100,  'All']],
+                    pageLength: 10,
+                    aaSorting: [6, 'DESC'],
+                    ajax: {
+                        url: "{{ route('agency.shift.show',$shift->id) }}",
+                        type: "POST",
+                        dataType: "json",
+                        headers: {
+                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                        },
+                        data: function(data) {
+                            data.isCrypto = true;
                         },
                     },
                     columnDefs: [
