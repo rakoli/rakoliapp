@@ -197,7 +197,7 @@
                     var selectedOption = $(this).find(":selected");
                     if(selectedOption.data('type') == "Crypto"){
                         jQuery(".crypto-data").show();
-                        jQuery("#exchange_rate").val(selectedOption.data('rate'));
+                        jQuery("#add-transaction-form #exchange_rate").val(selectedOption.data('rate'));
 
                     } else {
                         jQuery(".crypto-data").hide();

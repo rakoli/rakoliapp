@@ -175,7 +175,8 @@
                         jQuery('select#network_code_income').change();
                     } else {
 
-                        jQuery("div#till-income-type").hide()
+                        jQuery("div#till-income-type").hide();
+                        jQuery(".crypto-data").hide();
                     }
                 });
 
@@ -183,7 +184,7 @@
                     var selectedOption = $(this).find(":selected");
                     if(selectedOption.data('type') == "Crypto"){
                         jQuery(".crypto-data").show();
-                        jQuery("#exchange_rate").val(selectedOption.data('rate'));
+                        jQuery("#add-income-form #exchange_rate").val(selectedOption.data('rate'));
 
                     } else {
                         jQuery(".crypto-data").hide();

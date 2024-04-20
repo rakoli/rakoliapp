@@ -37,6 +37,7 @@ trait InteractsWithShift
             'note' => $data['notes'] ?? null,
             'crypto' => $data['crypto'],
             'exchange_rate' => $data['exchange_rate'],
+            'fee' => $data['fee'] ?? 0,
         ]);
     }
 

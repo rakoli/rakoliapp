@@ -173,7 +173,8 @@
                         $("div#till-source").show();
                         jQuery('select#till_source_code').change();
                     } else {
-                        $("div#till-source").hide()
+                        $("div#till-source").hide();
+                        jQuery(".crypto-data").hide();
                     }
                 });
 
@@ -181,7 +182,7 @@
                     var selectedOption = $(this).find(":selected");
                     if(selectedOption.data('type') == "Crypto"){
                         jQuery(".crypto-data").show();
-                        jQuery("#exchange_rate").val(selectedOption.data('rate'));
+                        jQuery("#add-expense-form #exchange_rate").val(selectedOption.data('rate'));
 
                     } else {
                         jQuery(".crypto-data").hide();
