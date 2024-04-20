@@ -17,6 +17,9 @@ class AddTransactionController extends Controller
             'network_code' => 'required|exists:networks,code',
             'type' => 'required',
             'description' => 'required',
+            'crypto' => 'nullable|numeric',
+            'exchange_rate' => 'nullable|numeric',
+            'fee' => 'nullable|numeric'
         ], [
             'network_code.required' => 'Network is required',
             'network_code.exists' => 'Network does not exists',

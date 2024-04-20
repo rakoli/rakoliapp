@@ -46,7 +46,7 @@ class ShiftCashTransactionDatatable implements HasDatatable
             ->addColumn('actions', function (ShiftCashTransaction $transaction) {
 
             })
-            ->addColumn('network_name', fn (ShiftCashTransaction $transaction) => $transaction->network?->agency?->name)
+            ->addColumn('network_name', fn (ShiftCashTransaction $transaction) => $transaction->network ? $transaction->network?->agency?->name : $transaction->network?->crypto?->name)
 
             ->rawColumns(['balance_old', 'balance_new', 'transaction_type', 'actions'])
             ->toJson();

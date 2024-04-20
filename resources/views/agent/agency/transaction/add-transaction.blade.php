@@ -40,15 +40,23 @@
                         name="network_code"
                         modalId="add-transaction"
                         placeholder="{{ __('Select a Transaction Type') }}"
+                        id="network_code"
                     >
                         <option value="">  </option>
 
                         @foreach($networks as $name =>  $network)
-                            <option value="{{ $network['code'] }}" class="{!! $network['balance'] > 0 ? 'balance' : 'nobalance' !!}">{{ $name }} - {{ number_format($network['balance'],2) }}</option>
+                                <option
+                                value="{{ $network['code'] }}" class="{!! $network['balance'] > 0 ? 'balance' : 'nobalance' !!}" data-type="{{ $network['type'] }}" data-rate="{{ isset($network['exchange_rate']) ? $network['exchange_rate'] : '' }}"
+                                >{{ str($name)->title()->value()  }} - {{ number_format($network['balance'],2) }}</option>
                         @endforeach
                     </x-select2>
                     <x-helpertext>{{ __("Till you want to transact from") }}</x-helpertext>
-
+                    <x-helpertext>
+                        <ul class="list-style-none">
+                            <li>{{ __('Deposit') }}: {{ __('Increases Cash Balance and Reduces Till Balance') }}</li>
+                            <li>{{ __('Withdraw') }}: {{ __('Increases Till Balance and Reduces Cash Balance') }}</li>
+                        </ul>
+                    </x-helpertext>
                     @error('location_code')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -77,15 +85,54 @@
                     @enderror
                 </div>
 
-                <div class="col-6">
-                    <x-helpertext>
-                        <ul class="list-style-none">
-                            <li>{{ __('Deposit') }}: {{ __('Increases Cash Balance and Reduces Till Balance') }}</li>
-                            <li>{{ __('Withdraw') }}: {{ __('Increases Till Balance and Reduces Cash Balance') }}</li>
-                        </ul>
-                    </x-helpertext>
+                <div class="col-6 crypto-data">
+                    <x-label class="" label="{{ __('Fee') }}" for="fee"/>
+                    <x-input
+                        type="number"
+                        class="form-control-solid   @error('fee') form-control-feedback @enderror"
+                        name="fee"
+                        placeholder="{{ __('fee') }}"
+                        id="fee"
+                    />
+                    @error('fee')
+                    <div class="help-block text-danger">
+                        {{ $message }}
+                    </div>
+                    @enderror
                 </div>
 
+            </div>
+            <div class="row fv-row py-3 hidden">
+                <div class="col-6 crypto-data">
+                    <x-label class="" label="{{ __('Crypto Amount') }}" for="crypto"/>
+                    <x-input
+                        type="number"
+                        class="form-control-solid   @error('crypto') form-control-feedback @enderror"
+                        name="crypto"
+                        placeholder="{{ __('crypto') }}"
+                        id="crypto"
+                    />
+                    @error('crypto')
+                    <div class="help-block text-danger">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </div>
+                <div class="col-6 crypto-data">
+                    <x-label class="" label="{{ __('Exchange Rate') }}" for="exchange_rate"/>
+                    <x-input
+                        type="number"
+                        class="form-control-solid   @error('exchange_rate') form-control-feedback @enderror"
+                        name="exchange_rate"
+                        placeholder="{{ __('exchange_rate') }}"
+                        id="exchange_rate"
+                    />
+                    @error('exchange_rate')
+                    <div class="help-block text-danger">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </div>
             </div>
 
             <div class="row fv-row py-3">
@@ -133,6 +180,8 @@
 
              $(document).ready(() => {
 
+                jQuery(".crypto-data").hide();
+
                 $("select#transaction_type").on("change", function () {
                     var selectedOption = $(this).find(":selected").val();
 
@@ -143,6 +192,30 @@
                     }
 
                 });
+
+                jQuery('select#network_code').on("change", function(){
+                    var selectedOption = $(this).find(":selected");
+                    if(selectedOption.data('type') == "Crypto"){
+                        jQuery(".crypto-data").show();
+                        jQuery("#exchange_rate").val(selectedOption.data('rate'));
+
+                    } else {
+                        jQuery(".crypto-data").hide();
+                    }
+                });
+
+                jQuery("#add-transaction-form #amount, #add-transaction-form #crypto, #add-transaction-form #exchange_rate").on("change",function(){
+                    var amount = jQuery("#add-transaction-form #amount").val();
+                    var crypto = jQuery("#add-transaction-form #crypto").val();
+                    var exchange_rate = jQuery("#add-transaction-form #exchange_rate").val();
+
+                    if(crypto > 0){
+                        jQuery("#add-transaction-form #amount").val(crypto * exchange_rate)
+                    }else if(amount > 0){
+                        jQuery("#add-transaction-form #crypto").val(amount / exchange_rate)
+                    }
+                });
+
 
                  const validations = [
                      {
