@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Models\Crypto;
 use App\Models\ShiftTransaction;
 use App\Models\User;
 use App\Utils\Enums\NetworkTypeEnum;
@@ -257,7 +258,7 @@ function shiftBalances(\App\Models\Shift $shift): array
                 'balance_new' => $shiftNetworks->balance_new,
                 'balance_old' => $shiftNetworks->balance_old,
                 'type' => NetworkTypeEnum::CRYPTO,
-                'exchange_rate' => $shiftNetworks->network->exchange_rate,
+                'exchange_rate' => Crypto::convertCryptoToFiat($shiftNetworks->network?->crypto?->symbol,currencyCode()),
             ];
         }
 

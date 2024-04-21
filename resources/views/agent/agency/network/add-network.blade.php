@@ -84,7 +84,7 @@
                         id="crypto_code"
                     >
                         @foreach($cryptos as $crypto)
-                            <option value="{{ $crypto->code }}" data-rate="{{ $crypto->usd_rate }}">{{ $crypto->name }}</option>
+                            <option value="{{ $crypto->code }}" data-rate="{{ $crypto->exchange_rate }}">{{ $crypto->name }}</option>
                         @endforeach
                     </x-select2>
                     <x-helpertext>{{ __('Crypto Provider E.G: Bitcoin') }}</x-helpertext>

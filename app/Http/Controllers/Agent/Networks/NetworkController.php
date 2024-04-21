@@ -25,8 +25,11 @@ class NetworkController extends Controller
             ->get();
 
         $fsps = FinancialServiceProvider::query()->cursor();
-        $cryptos = Crypto::query()->cursor();
-
+        $cryptos = Crypto::all();
+        foreach($cryptos as $crypto)
+        {
+            $crypto->exchange_rate = Crypto::convertCryptoToFiat($crypto->symbol,currencyCode());
+        }
         return view('agent.agency.network.networks')->with([
             'dataTableHtml' => $networkDatatable->columns($datatableBuilder),
             'locations' => $locations,

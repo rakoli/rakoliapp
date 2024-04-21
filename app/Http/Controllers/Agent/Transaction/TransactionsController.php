@@ -16,7 +16,7 @@ class TransactionsController extends Controller
 
         if ($request->ajax()) {
 
-            return $transactionDatatable->index(isToday: true);
+            return $transactionDatatable->index(isToday: false);
         }
 
         $dataTableHtml = $transactionDatatable->columns(datatableBuilder: $datatableBuilder);

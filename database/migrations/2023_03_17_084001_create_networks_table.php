@@ -43,8 +43,8 @@ return new class extends Migration
             $table->string('name');
             $table->double('balance', 12, 0)->default(0);
             $table->string('balance_currency')->nullable();
-            $table->double('crypto_balance', 12, 0)->nullable();
-            $table->double('exchange_rate', 12, 6)->nullable();
+            $table->double('crypto_balance', 20, 10)->nullable();
+            $table->double('exchange_rate', 20, 10)->nullable();
             $table->string('description')->nullable();
             $table->timestamps();
             $table->softDeletes();
