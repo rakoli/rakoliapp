@@ -46,6 +46,7 @@ class NetworkFactory extends Factory
             'business_code' => $businessCode,
             'location_code' => fake()->randomElement($locations)['code'],
             'fsp_code' => fake()->randomElement($fsps)['code'],
+            'type' => 'Finance',
             'code' => Str::random(10),
             'agent_no' => strtoupper(Str::random(5)),
             'name' => $selectedFsp.' till',

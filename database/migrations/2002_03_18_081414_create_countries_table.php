@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->string('currency')->unique();
             $table->string('dialing_code')->unique();
+            $table->decimal('currency_usdrate',20,8)->nullable();
+            $table->string('currency_coincapid')->unique()->nullable();
             $table->timestamps();
         });
 

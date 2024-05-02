@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('shift_transactions', function (Blueprint $table) {
+        Schema::create('shift_cash_transactions', function (Blueprint $table) {
             $table->id();
 
             $table->string('business_code');
@@ -26,16 +26,16 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->foreignIdFor(\App\Models\Shift::class)
-                ->constrained()
-                ->cascadeOnDelete()
-                ->cascadeOnUpdate();
-
-            $table->string('network_code');
+            $table->string('network_code')->nullable();
             $table->foreign('network_code')->references('code')
                 ->on('networks')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
+
+            $table->foreignIdFor(\App\Models\Shift::class)
+                ->constrained()
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
 
             $table->string('user_code');
             $table->foreign('user_code')->references('code')
@@ -49,9 +49,6 @@ return new class extends Migration
             $table->string('amount_currency');
             $table->decimal('balance_old', 12, 2);
             $table->decimal('balance_new', 12, 2);
-            $table->decimal('crypto', 20, 10)->nullable();
-            $table->decimal('exchange_rate', 20, 10)->nullable();
-            $table->decimal('fee', 12, 2)->default(0);
             $table->string('description');
             $table->text('note')->nullable();
 
@@ -64,6 +61,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('shift_transactions');
+        Schema::dropIfExists('shift_cash_transactions');
     }
 };

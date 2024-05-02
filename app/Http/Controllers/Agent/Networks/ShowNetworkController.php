@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Agent\Networks;
 
 use App\Http\Controllers\Controller;
+use App\Models\Crypto;
 use App\Models\FinancialServiceProvider;
 use App\Models\Location;
 use App\Models\Network;
@@ -31,11 +32,13 @@ class ShowNetworkController extends Controller
         $locations = Location::query()->cursor();
 
         $fsps = FinancialServiceProvider::query()->cursor();
+        $cryptos = Crypto::query()->cursor();
 
         return view('agent.agency.network.show', [
             'network' => $network->loadMissing('agency', 'location'),
             'locations' => $locations,
             'agencies' => $fsps,
+            'cryptos' => $cryptos,
         ]);
     }
 }

@@ -5,10 +5,12 @@ namespace App\Actions\Agent\Shift;
 use App\Events\Shift\LocationBalanceUpdate;
 use App\Models\Location;
 use App\Models\Shift;
+use App\Models\ShiftCashTransaction;
 use App\Models\ShiftNetwork;
 use App\Models\ShiftTransaction;
 use App\Models\Transaction;
 use App\Utils\Enums\FundSourceEnums;
+use Illuminate\Support\Facades\Log;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class AddIncomeTransaction
@@ -34,6 +36,7 @@ class AddIncomeTransaction
             if ($source === FundSourceEnums::TILL) {
                 $this->tillTransaction(shift: $shift, data: $data);
             } else {
+                $data['network_code'] = NULL;
                 $this->cashTransaction(shift: $shift, data: $data);
             }
         });
@@ -83,7 +86,7 @@ class AddIncomeTransaction
 
                 $oldBalance = floatval($lastTransaction->balance_new);  // old balance
             }
-
+            Log::info($data);
             return $this->createShiftTransaction(
                 shift: $shift,
                 data: $data,
@@ -97,21 +100,46 @@ class AddIncomeTransaction
 
     private function cashTransaction(Shift $shift, array $data)
     {
-        $location = Location::query()->where('code', $shift->location_code)->first();
+        try {
+            $location = Location::query()->where('code', $shift->location_code)->first();
 
-        $balance = $location->balance;
+            $balance = $location->balance;
 
-        $data['location_new_balance'] = $balance + floatval($data['amount']);
+            $data['location_new_balance'] = $balance;
 
-        $this->createLocationTransaction(
-            data: $data,
-            location: $location,
-        );
+            //record a location balance for this expense transaction
 
-        $location->updateQuietly([
-            'balance' => $balance + $data['amount'],
-        ]);
+            $this->createLocationTransaction(
+                data: $data,
+                location: $location
+            );
 
-        event(new LocationBalanceUpdate(location: $location, amount: $data['amount']));
+            $lastTransaction = ShiftCashTransaction::query()
+                ->whereBelongsTo($shift, 'shift')
+                ->where([
+                    'location_code' => $shift->location_code,
+                ])
+                ->latest('created_at')
+                ->first();
+
+            if (! $lastTransaction) {
+                $newBalance = $balance + $data['amount'];
+                $oldBalance = floatval($balance);
+
+            } else {
+                $newBalance = $lastTransaction->balance_new + $data['amount'];
+
+                $oldBalance = floatval($lastTransaction->balance_new);  // old balance
+            }
+
+            return $this->createShiftCashTransaction(
+                shift: $shift,
+                data: $data,
+                oldBalance: $oldBalance,
+                newBalance: $newBalance,
+            );
+        } catch (\Exception $exception) {
+            throw new \Exception($exception);
+        }
     }
 }

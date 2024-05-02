@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 use App\Models\PackageAvailableFeatures;
 use App\Models\PackageFeature;
+use App\Models\Crypto;
 use App\Models\ShiftTransaction;
 use App\Models\User;
+use App\Utils\Enums\NetworkTypeEnum;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -59,39 +61,41 @@ if (! function_exists('cleanText')) {
     }
 }
 
-function number_format_short($n, $precision = 1)
-{
+if (! function_exists('number_format_short')) {
+    function number_format_short($n, $precision = 1)
+    {
 
-    if ($n < 900) {
-        // 0 - 900
-        $n_format = number_format($n, $precision);
-        $suffix = '';
-    } elseif ($n < 900000) {
-        // 0.9k-850k
-        $n_format = number_format($n / 1000, $precision);
-        $suffix = 'K';
-    } elseif ($n < 900000000) {
-        // 0.9m-850m
-        $n_format = number_format($n / 1000000, $precision);
-        $suffix = 'M';
-    } elseif ($n < 900000000000) {
-        // 0.9b-850b
-        $n_format = number_format($n / 1000000000, $precision);
-        $suffix = 'B';
-    } else {
-        // 0.9t+
-        $n_format = number_format($n / 1000000000000, $precision);
-        $suffix = 'T';
+        if ($n < 900) {
+            // 0 - 900
+            $n_format = number_format($n, $precision);
+            $suffix = '';
+        } elseif ($n < 900000) {
+            // 0.9k-850k
+            $n_format = number_format($n / 1000, $precision);
+            $suffix = 'K';
+        } elseif ($n < 900000000) {
+            // 0.9m-850m
+            $n_format = number_format($n / 1000000, $precision);
+            $suffix = 'M';
+        } elseif ($n < 900000000000) {
+            // 0.9b-850b
+            $n_format = number_format($n / 1000000000, $precision);
+            $suffix = 'B';
+        } else {
+            // 0.9t+
+            $n_format = number_format($n / 1000000000000, $precision);
+            $suffix = 'T';
+        }
+
+        // Remove unecessary zeroes after decimal. "1.0" -> "1"; "1.00" -> "1"
+        // Intentionally does not affect partials, eg "1.50" -> "1.50"
+        if ($precision > 0) {
+            $dotzero = '.'.str_repeat('0', $precision);
+            $n_format = str_replace($dotzero, '', $n_format);
+        }
+
+        return $n_format.$suffix;
     }
-
-    // Remove unecessary zeroes after decimal. "1.0" -> "1"; "1.00" -> "1"
-    // Intentionally does not affect partials, eg "1.50" -> "1.50"
-    if ($precision > 0) {
-        $dotzero = '.'.str_repeat('0', $precision);
-        $n_format = str_replace($dotzero, '', $n_format);
-    }
-
-    return $n_format.$suffix;
 }
 
 function localeToLanguage($locale): string
@@ -175,7 +179,7 @@ function setupSession(User $user, $isRegisteringUser = false)
 
 function returnActiveMenuStyle($menuSection): string
 {
-    if ($menuSection == cleanText(Request()->route()->getPrefix())) {
+    if ($menuSection == cleanText(strstr(Request()->route()->getName(), '.',true))) {
         return 'hover';
     }
 
@@ -221,22 +225,44 @@ function shiftBalances(\App\Models\Shift $shift): array
     $tills = [];
 
     foreach ($shift->loadMissing('shiftNetworks.network.agency')->shiftNetworks as $shiftNetworks) {
+        if($shiftNetworks->network->agency){
+            $tills[$shiftNetworks->network->agency?->name] = [
+                'balance' => $shift->transactions()
+                    ->where('network_code', $shiftNetworks->network_code)
+                    ->exists() ? ShiftTransaction::query()->whereBelongsTo($shift, 'shift')
+                    ->where('network_code', $shiftNetworks->network_code)
+                    ->latest('created_at')
+                    ->limit(1)
+                    ->pluck('balance_new')
+                    ->first()
+                :
+                $shiftNetworks->balance_new,
+                'code' => $shiftNetworks->network_code,
+                'balance_new' => $shiftNetworks->balance_new,
+                'balance_old' => $shiftNetworks->balance_old,
+                'type' => NetworkTypeEnum::FINANCE,
+            ];
+        }
 
-        $tills[$shiftNetworks->network->agency->name] = [
-            'balance' => $shift->transactions()
-                ->where('network_code', $shiftNetworks->network_code)
-                ->exists() ? ShiftTransaction::query()->whereBelongsTo($shift, 'shift')
-                ->where('network_code', $shiftNetworks->network_code)
-                ->latest('created_at')
-                ->limit(1)
-                ->pluck('balance_new')
-                ->first()
-               :
-               $shiftNetworks->balance_new,
-            'code' => $shiftNetworks->network_code,
-            'balance_new' => $shiftNetworks->balance_new,
-            'balance_old' => $shiftNetworks->balance_old,
-        ];
+        if($shiftNetworks->network->crypto){
+            $tills[$shiftNetworks->network->crypto?->name] = [
+                'balance' => $shift->transactions()
+                    ->where('network_code', $shiftNetworks->network_code)
+                    ->exists() ? ShiftTransaction::query()->whereBelongsTo($shift, 'shift')
+                    ->where('network_code', $shiftNetworks->network_code)
+                    ->latest('created_at')
+                    ->limit(1)
+                    ->pluck('balance_new')
+                    ->first()
+                   :
+                   $shiftNetworks->balance_new,
+                'code' => $shiftNetworks->network_code,
+                'balance_new' => $shiftNetworks->balance_new,
+                'balance_old' => $shiftNetworks->balance_old,
+                'type' => NetworkTypeEnum::CRYPTO,
+                'exchange_rate' => Crypto::convertCryptoToFiat($shiftNetworks->network?->crypto?->symbol,currencyCode()),
+            ];
+        }
 
     }
 
@@ -244,31 +270,54 @@ function shiftBalances(\App\Models\Shift $shift): array
         return floatval($item['balance']);
     });
 
-    $expenses = \App\Models\Transaction::query()
+    $expenses = \App\Models\ShiftCashTransaction::query()
         ->where([
             'location_code' => $shift->location_code,
             'user_code' => $shift->user_code,
-            'category' => \App\Utils\Enums\TransactionCategoryEnum::EXPENSE,
+            'type' => \App\Utils\Enums\TransactionTypeEnum::MONEY_OUT,
         ])
-        //->whereDate('created_at', $shift->created_at)
         ->whereBetween('created_at', [
             $shift->created_at,
             now(),
         ])
         ->sum('amount');
 
-    $income = \App\Models\Transaction::query()
+    $tillExpense = \App\Models\ShiftTransaction::query()
+    ->where([
+        'location_code' => $shift->location_code,
+        'user_code' => $shift->user_code,
+        'type' => \App\Utils\Enums\TransactionTypeEnum::MONEY_OUT,
+    ])
+    ->whereBetween('created_at', [
+        $shift->created_at,
+        now(),
+    ])
+    ->sum('amount');
+
+
+    $income = \App\Models\ShiftCashTransaction::query()
         ->where([
             'location_code' => $shift->location_code,
             'user_code' => $shift->user_code,
-            'category' => \App\Utils\Enums\TransactionCategoryEnum::INCOME,
+            'type' => \App\Utils\Enums\TransactionTypeEnum::MONEY_IN,
         ])
-        //->whereDate('created_at', $shift->created_at)
         ->whereBetween('created_at', [
             $shift->created_at,
             now(),
         ])
         ->sum('amount');
+
+    $tillIncome = \App\Models\ShiftTransaction::query()
+    ->where([
+        'location_code' => $shift->location_code,
+        'user_code' => $shift->user_code,
+        'type' => \App\Utils\Enums\TransactionTypeEnum::MONEY_IN,
+    ])
+    ->whereBetween('created_at', [
+        $shift->created_at,
+        now(),
+    ])
+    ->sum('amount');
 
 
 
@@ -284,19 +333,20 @@ function shiftBalances(\App\Models\Shift $shift): array
 
     $startCapital = $shift->cash_start + $shift->shiftNetworks->sum('balance_old');
 
-    $endingCapital = ($cash + $expenses + $tillBalances + $loanBalances) - $income;
+    $endingCapital = ($cash + $income + $tillBalances + $loanBalances) - $expenses;
 
     $shorts = $startCapital - $endingCapital ;
 
+    $cash = $cash + $income - $expenses;
 
 
     return [
-        'totalBalance' => $endingCapital + $income - $expenses,
+        'totalBalance' => $endingCapital,
         'cashAtHand' => $cash,
         'tillBalances' => $tillBalances,
-        'expenses' => $expenses,
+        'expenses' => ($expenses + $tillExpense),
         'networks' => $tills,
-        'income' => $income,
+        'income' => ($income + $tillIncome),
         'startCapital' => $startCapital,
         'endCapital' => $endingCapital,
         'shorts' => $shorts ,

@@ -17,6 +17,9 @@ class AddTransactionController extends Controller
             'network_code' => 'required|exists:networks,code',
             'type' => 'required',
             'description' => 'required',
+            'crypto' => 'nullable|numeric',
+            'exchange_rate' => 'nullable|numeric',
+            'fee' => 'nullable|numeric'
         ], [
             'network_code.required' => 'Network is required',
             'network_code.exists' => 'Network does not exists',
@@ -30,7 +33,7 @@ class AddTransactionController extends Controller
             throw_if(! $shift->created_at->isToday(), new \Exception('You must close previous Day shift to make this Transaction'));
 
             \App\Actions\Agent\Shift\AddTransaction::run(shift: $shift, data: $validated);
-
+            
             return response()
                 ->json([
                     'message' => 'Transaction Added successfully',

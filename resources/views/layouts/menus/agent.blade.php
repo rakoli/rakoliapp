@@ -56,28 +56,37 @@
                     <span class="menu-title">{{ __('Shift') }}</span>
                 </a>
 
-                @if(validateSubscription("tills"))
-                    <a
-                        class="menu-link"
-                        href ="{{route('agency.networks')}}"
-                    >
-                        <span class="menu-bullet">
-                            <span class="bullet bullet-dot"></span>
-                        </span>
-                        <span class="menu-title">{{ __('Networks') }}</span>
-                    </a>
-                @endif
-                @if(validateSubscription("loan management"))
-                    <a
-                        class="menu-link"
-                        href ="{{route('agency.loans')}}"
-                    >
-                        <span class="menu-bullet">
-                            <span class="bullet bullet-dot"></span>
-                        </span>
-                        <span class="menu-title">{{ __('Loans') }}</span>
-                    </a>
-                @endif
+
+                <a
+                    class="menu-link"
+                    href ="{{route('agency.networks')}}"
+                >
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ __('Networks') }}</span>
+                </a>
+
+                <a
+                    class="menu-link"
+                    href ="{{route('agency.loans')}}"
+                >
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ __('Loans') }}</span>
+                </a>
+
+                <a
+                    class="menu-link"
+                    href ="{{route('agency.shift.transfer.request')}}"
+                >
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ __('Transfer Request') }}</span>
+                </a>
+
 
             </div>
             <!--end:Menu sub-->
@@ -87,7 +96,6 @@
     <!--end:Menu sub-->
 </div>
 
-@if(validateSubscription('float exchange'))
 <!-- Exchange Management -->
 <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('exchange')}}" >
     <!--begin:Menu link-->
@@ -161,8 +169,7 @@
     </div>
     <!--end:Menu sub-->
 </div>
-@endif
-@if(validateSubscription('VAS opportunity'))
+
 <!-- VAS -->
 <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('vas')}}">
     <!--begin:Menu link-->
@@ -221,7 +228,7 @@
     </div>
     <!--end:Menu sub-->
 </div>
-@endif
+
 <!-- Business Management -->
 <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2">
     <!--begin:Menu link-->
@@ -282,13 +289,11 @@
                     </span>
                     <span class="menu-title">{{ __('Business Profile') }}</span>
                 </a>
-                @if(validateSubscription('branches'))
-                    <a class="menu-link" href="{{route('business.branches')}}"><span class="menu-bullet">
-                            <span class="bullet bullet-dot"></span>
-                        </span>
-                        <span class="menu-title">{{ __('Branches') }}</span>
-                    </a>
-                @endif
+                <a class="menu-link" href="{{route('business.branches')}}"><span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ __('Branches') }}</span>
+                </a>
             </div>
             <!--end:Menu sub-->
         </div>

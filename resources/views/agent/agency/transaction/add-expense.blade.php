@@ -58,19 +58,18 @@
             </div>
 
 
-            <div class="row fv-row py-3">
-                <div class="col-6  hidden" id="till-source">
+            <div class="row fv-row py-3 hidden" id="till-source">
+                <div class="col-6">
                     <x-label class="" label="{{ __('Till') }}" for="till_source_code"/>
                     <x-select2
                         name="network_code"
                         placeholder="{{ __('source: e.g Till ') }}"
                         id="till_source_code"
                         >
-                        @foreach($tills as $till)
-                            <option
-                                value="{{ $till->network_code }}"
-
-                            >{{ str($till->network?->agency?->name )->title()->value()  }}</option>
+                        @foreach($networks as $name =>  $network)
+                                <option
+                                value="{{ $network['code'] }}" data-type="{{ $network['type'] }}" data-rate="{{ isset($network['exchange_rate']) ? $network['exchange_rate'] : '' }}"
+                                >{{ str($name)->title()->value()  }} - {{ number_format($network['balance'],2) }}</option>
                         @endforeach
                     </x-select2>
                     <x-helpertext>{{ __('Select till used for this Expenses') }}</x-helpertext>
@@ -82,6 +81,38 @@
                 </div>
 
 
+            </div>
+            <div class="row fv-row py-3 hidden">
+                <div class="col-6 crypto-data">
+                    <x-label class="" label="{{ __('Crypto Amount') }}" for="crypto"/>
+                    <x-input
+                        type="number"
+                        class="form-control-solid   @error('crypto') form-control-feedback @enderror"
+                        name="crypto"
+                        placeholder="{{ __('crypto') }}"
+                        id="crypto"
+                    />
+                    @error('crypto')
+                    <div class="help-block text-danger">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </div>
+                <div class="col-6 crypto-data">
+                    <x-label class="" label="{{ __('Exchange Rate') }}" for="exchange_rate"/>
+                    <x-input
+                        type="number"
+                        class="form-control-solid   @error('exchange_rate') form-control-feedback @enderror"
+                        name="exchange_rate"
+                        placeholder="{{ __('exchange_rate') }}"
+                        id="exchange_rate"
+                    />
+                    @error('exchange_rate')
+                    <div class="help-block text-danger">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </div>
             </div>
             <div class="row fv-row py-3">
                 <div class="col-12">
@@ -132,23 +163,42 @@
             $(document).ready(() => {
 
                 $("div#till-source").hide()
+                jQuery(".crypto-data").hide();
 
                 $("select#source").on("change", function () {
-
                     var selectedOption = $(this).find(":selected");
-
-
                     var source = selectedOption.data("source");
 
-
                     if ("TILL" === source) {
-                        $("div#till-source").show()
+                        $("div#till-source").show();
+                        jQuery('select#till_source_code').change();
+                    } else {
+                        $("div#till-source").hide();
+                        jQuery(".crypto-data").hide();
+                    }
+                });
+
+                jQuery('select#till_source_code').on("change", function(){
+                    var selectedOption = $(this).find(":selected");
+                    if(selectedOption.data('type') == "Crypto"){
+                        jQuery(".crypto-data").show();
+                        jQuery("#add-expense-form #exchange_rate").val(selectedOption.data('rate'));
 
                     } else {
-                        $("div#till-source").hide()
+                        jQuery(".crypto-data").hide();
                     }
+                });
 
+                jQuery("#add-expense-form #amount, #add-expense-form #crypto, #add-expense-form #exchange_rate").on("change",function(){
+                    var amount = jQuery("#add-expense-form #amount").val();
+                    var crypto = jQuery("#add-expense-form #crypto").val();
+                    var exchange_rate = jQuery("#add-expense-form #exchange_rate").val();
 
+                    if(crypto > 0){
+                        jQuery("#add-expense-form #amount").val(crypto * exchange_rate)
+                    }else if(amount > 0){
+                        jQuery("#add-expense-form #crypto").val(amount / exchange_rate)
+                    }
                 });
 
                 const expenseValidations = [
@@ -164,11 +214,11 @@
                         "validators": {}
                     },
 
-                    {
-                        "name": "network_code",
-                        "error": "Till is Required",
-                        "validators": {}
-                    },
+                    // {
+                    //     "name": "network_code",
+                    //     "error": "Till is Required",
+                    //     "validators": {}
+                    // },
 
                     {
                         "name": "description",

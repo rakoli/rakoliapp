@@ -1,4 +1,6 @@
-@php use App\Utils\Enums\LoanTypeEnum; @endphp
+@php use App\Utils\Enums\LoanTypeEnum; 
+     use App\Utils\Enums\NetworkTypeEnum;
+@endphp
 <div>
 
 
@@ -42,26 +44,61 @@
                         </x-helpertext>
                     </div>
                 </div>
-
+                
                 <div class="row fv-row py-3">
-                    <div class="col-8">
-
-                        <x-label
-                            class=""
-                            label="Payment Method"
-                            for="payment_method"
-                        />
-                        <x-input
-                            type="text"
-                            class="form-control-solid"
-                            name="payment_method"
-                            placeholder="{{ __('payment_method') }}"
-                            id="payment_method"
-                        />
-                        <x-helpertext>{{ __("How did you get paid? e,g Cash, Bank, Cheque, Till:M-Pesa") }}</x-helpertext>
+                    <div class="col-6">
+                        <x-label class="" label="{{ __('Account Paid') }}" for="source"/>
+                        <x-select2
+                            modalId="receive-loan-payment"
+                            name="source"
+                            placeholder="{{ __('source: e.g Cash ') }}"
+                            id="source"
+                        >
+                            @foreach(\App\Utils\Enums\FundSourceEnums::cases() as $source)
+                                <option
+                                    value="{{ $source->value }}"
+                                    data-source="{{ $source->value }}"
+                                >{{ str($source->name)->title()->value()  }}</option>
+                            @endforeach
+                        </x-select2>
+                        <x-helpertext>
+                            {{ __("How did you get paid? e,g Cash, Till:M-Pesa") }}
+                        </x-helpertext>
+                        
+                        @error('source')
+                            <div class="help-block text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
                     </div>
-                </div>
+                    <div class="col-6 till-source">
+                        <x-label class="" label="Select Till" for="till_code"/>
 
+                        <x-select2
+                            class=" @error('network_code') form-control-error @enderror"
+                            name="network_code"
+                            modalId="receive-loan-payment"
+                            id="network_code"
+                            placeholder="{{ __('Select a Till') }}"
+                        >
+                            <option value=""></option>
+
+                            @foreach($networks as $name =>  $network)
+                                @if($network['type'] != NetworkTypeEnum::CRYPTO)
+                                    <option value="{{ $network['code'] }}" class="{!! $network['balance'] > 0 ? 'balance' : 'nobalance' !!}">{{ $name }} - {{ number_format($network['balance'],2) }}</option>
+                                @endif
+                            @endforeach
+                        </x-select2>
+                        <x-helpertext>{{ __("Select Till for this Loan") }}</x-helpertext>
+                        @error('network_code')
+                        <div class="help-block text-danger">
+                            {{ $message }}
+                        </div>
+                        @enderror
+
+                    </div>
+
+                </div>
                 <div class="row fv-row py-3">
                     <div class="col-12">
                         <x-label
@@ -123,11 +160,7 @@
                             "name": "amount",
                             "error": "Amount is Required",
                             "validators" : {}
-                        }, {
-                            "name": "amount",
-                            "error": "Amount is Required",
-                            "validators" : {}
-                        },
+                        }, 
 
                         {
                             "name": "deposited_at",
@@ -136,9 +169,9 @@
                         },
 
                         {
-                            "name": "payment_method",
-                            "error": "Payment method is Required",
-                            "validators" : {}
+                            "name": "source",
+                            "error": "Fund Source is Required",
+                            "validators": {}
                         },
 
                         {

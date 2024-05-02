@@ -181,7 +181,7 @@
 
 
                                                         <tr class="odd">
-                                                            <td data-order="Invalid date">{{ $network->agency->name }}</td>
+                                                            <td data-order="Invalid date">{{ $network->type == App\Utils\Enums\NetworkTypeEnum::FINANCE->value ? $network->agency?->name : $network->crypto?->name }}</td>
                                                             <td data-order="Invalid date">{{ $network->agent_no }}</td>
                                                             <td data-order="Invalid date">{{ $network->name }}</td>
                                                             <td data-order="Invalid date">{{ $network->location->name }}</td>

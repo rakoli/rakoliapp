@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Location;
 use App\Models\Network;
 use App\Models\Shift;
+use App\Utils\Enums\NetworkTypeEnum;
 use App\Utils\Enums\ShiftStatusEnum;
 use Carbon\Carbon;
 use Illuminate\Contracts\Database\Query\Builder;
@@ -16,9 +17,9 @@ class OpenShiftController extends Controller
 {
     public function index()
     {
-
-        if (Shift::query()->where('status', ShiftStatusEnum::OPEN)->exists()) {
-            return to_route('agency.shift');
+        $shift = Shift::where('status', ShiftStatusEnum::OPEN)->first();
+        if ($shift) {
+            return to_route('agency.shift.show',$shift->id);
         }
 
         $locations = Location::query()
@@ -31,7 +32,7 @@ class OpenShiftController extends Controller
             'balance' => $location->balance,
             'code' => $location->code,
             'networks' => $location->networks->map(fn(Network $network) : array => [
-                'name' => $network->agency->name,
+                'name' => $network->type == NetworkTypeEnum::FINANCE->value ? $network->agency?->name : $network->crypto?->name,
                 'balance' => $network->balance
             ]),
         ]);

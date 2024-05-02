@@ -1,5 +1,6 @@
 <?php
 
+use App\Utils\Enums\ShiftTransferRequestStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,9 +12,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('shift_transactions', function (Blueprint $table) {
+        Schema::create('shift_transfer_requests', function (Blueprint $table) {
             $table->id();
-
             $table->string('business_code');
             $table->foreign('business_code')->references('code')
                 ->on('businesses')
@@ -31,12 +31,6 @@ return new class extends Migration
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
-            $table->string('network_code');
-            $table->foreign('network_code')->references('code')
-                ->on('networks')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-
             $table->string('user_code');
             $table->foreign('user_code')->references('code')
                 ->on('users')
@@ -44,14 +38,7 @@ return new class extends Migration
                 ->onUpdate('cascade');
 
             $table->string('code')->unique();
-            $table->string('type'); // enum <TransactionTypeEnum<Money_in, Money_out>>
-            $table->decimal('amount', 12, 2);
-            $table->string('amount_currency');
-            $table->decimal('balance_old', 12, 2);
-            $table->decimal('balance_new', 12, 2);
-            $table->decimal('crypto', 20, 10)->nullable();
-            $table->decimal('exchange_rate', 20, 10)->nullable();
-            $table->decimal('fee', 12, 2)->default(0);
+            $table->string('status')->default(ShiftTransferRequestStatusEnum::PENDING);
             $table->string('description');
             $table->text('note')->nullable();
 
@@ -64,6 +51,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('shift_transactions');
+        Schema::dropIfExists('shift_transfer_requests');
     }
 };

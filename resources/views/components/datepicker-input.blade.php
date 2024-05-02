@@ -10,6 +10,7 @@
         $(document).ready(() => {
 
             $("#{{ $id }}").flatpickr({
+                defaultDate: new Date(),
                 maxDate: new Date()
             });
         });

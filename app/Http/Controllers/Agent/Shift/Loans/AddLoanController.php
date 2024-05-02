@@ -25,8 +25,9 @@ class AddLoanController extends Controller
 
         $validated = $request->validate([
             'amount' => 'required',
-            'network_code' => 'required|exists:networks,code',
-            'type' => 'required',
+            'source' => 'required',
+            'network_code' => 'required_if:source,TILL',
+            'type' => 'required_if:source,TILL',
             'notes' => 'nullable|string|max:255',
             'description' => 'required|string|max:255',
         ], [

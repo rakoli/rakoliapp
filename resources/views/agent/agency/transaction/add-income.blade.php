@@ -15,7 +15,7 @@
                         id="amount"
                     />
                     <x-helpertext>
-                        {{ __("Total Income Received") }}
+                        {{ __("Total Cash In Received") }}
                     </x-helpertext>
                     @error('amount')
                     <div class="help-block text-danger">
@@ -25,7 +25,7 @@
                 </div>
 
                 <div class="col-6">
-                    <x-label class="" label="{{ __('Income Type') }}" for="income_type"/>
+                    <x-label class="" label="{{ __('Cash In Type') }}" for="income_type"/>
                     <x-select2
                         name="income_type"
                         placeholder="{{ __('source: e.g Cash ') }}"
@@ -42,8 +42,8 @@
 
                         <ul class="list-style-none">
                             <li class="py-md-1 text-primary">{{ __("Select the Income type either: to Cash or Till Balance") }}</li>
-                            <li>{{ __('Cash Income') }}: {{ __('Transaction will Increase Cash balances') }}</li>
-                            <li>{{ __('Till Income') }}: {{ __('Transaction will Increase Till balances') }}</li>
+                            <li>{{ __('Cash In') }}: {{ __('Transaction will Increase Cash balances') }}</li>
+                            <li>{{ __('Till Cash In') }}: {{ __('Transaction will Increase Till balances') }}</li>
 
                         </ul>
                     </x-helpertext>
@@ -62,21 +62,51 @@
                         name="network_code"
                         placeholder="{{ __('source: e.g Mpesa ') }}"
                         id="network_code_income">
-                        @foreach($tills as $till)
-                            <option
-                                value="{{ $till->network_code }}"
-
-                            >{{ str($till->network?->agency?->name )->title()->value()  }}</option>
+                        @foreach($networks as $name =>  $network)
+                                <option
+                                    value="{{ $network['code'] }}" data-type="{{ $network['type'] }}" data-rate="{{ isset($network['exchange_rate']) ? $network['exchange_rate'] : '' }}"
+                                >{{ str($name)->title()->value()  }} - {{ number_format($network['balance'],2) }}</option>
                         @endforeach
                     </x-select2>
-                    @error('amount')
+                    @error('network_code')
                     <div class="help-block text-danger">
                         {{ $message }}
                     </div>
                     @enderror
                 </div>
             </div>
-
+            <div class="row fv-row py-3 hidden">
+                <div class="col-6 crypto-data">
+                    <x-label class="" label="{{ __('Crypto Amount') }}" for="crypto"/>
+                    <x-input
+                        type="number"
+                        class="form-control-solid   @error('crypto') form-control-feedback @enderror"
+                        name="crypto"
+                        placeholder="{{ __('crypto') }}"
+                        id="crypto"
+                    />
+                    @error('crypto')
+                    <div class="help-block text-danger">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </div>
+                <div class="col-6 crypto-data">
+                    <x-label class="" label="{{ __('Exchange Rate') }}" for="exchange_rate"/>
+                    <x-input
+                        type="number"
+                        class="form-control-solid   @error('exchange_rate') form-control-feedback @enderror"
+                        name="exchange_rate"
+                        placeholder="{{ __('exchange_rate') }}"
+                        id="exchange_rate"
+                    />
+                    @error('exchange_rate')
+                    <div class="help-block text-danger">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </div>
+            </div>
 
 
             <div class="row fv-row py-3">
@@ -120,7 +150,7 @@
 
         <div class="modal-footer my-4">
 
-            <x-submit-button id="add-income-button" label="Save incomes"/>
+            <x-submit-button id="add-income-button" label="Save Cash In"/>
         </div>
 
     </form>
@@ -129,27 +159,49 @@
         <script>
 
 
-            $(document).ready(() => {
-                $("div#till-income-type").hide()
+            jQuery(document).ready(() => {
+                jQuery("div#till-income-type").hide()
+                jQuery(".crypto-data").hide();
 
-                $("select#income_type").on("change", function () {
+                jQuery("select#income_type").on("change", function () {
 
-                    var selectedOption = $(this).find(":selected");
+                    var selectedOption = jQuery(this).find(":selected");
 
                     var incomeType = selectedOption.data('income');
 
                     if ("TILL" === incomeType)
                     {
-                        $("div#till-income-type").show()
-
+                        jQuery("div#till-income-type").show()
+                        jQuery('select#network_code_income').change();
                     } else {
 
-                        $("div#till-income-type").hide()
+                        jQuery("div#till-income-type").hide();
+                        jQuery(".crypto-data").hide();
                     }
-
-
                 });
 
+                jQuery('select#network_code_income').on("change", function(){
+                    var selectedOption = $(this).find(":selected");
+                    if(selectedOption.data('type') == "Crypto"){
+                        jQuery(".crypto-data").show();
+                        jQuery("#add-income-form #exchange_rate").val(selectedOption.data('rate'));
+
+                    } else {
+                        jQuery(".crypto-data").hide();
+                    }
+                });
+
+                jQuery("#add-income-form #amount, #add-income-form #crypto, #add-income-form #exchange_rate").on("change",function(){
+                    var amount = jQuery("#add-income-form #amount").val();
+                    var crypto = jQuery("#add-income-form #crypto").val();
+                    var exchange_rate = jQuery("#add-income-form #exchange_rate").val();
+
+                    if(crypto > 0){
+                        jQuery("#add-income-form #amount").val(crypto * exchange_rate)
+                    }else if(amount > 0){
+                        jQuery("#add-income-form #crypto").val(amount / exchange_rate)
+                    }
+                });
 
 
                 const incomeValidations = [

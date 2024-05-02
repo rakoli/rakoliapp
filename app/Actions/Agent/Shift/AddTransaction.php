@@ -33,6 +33,18 @@ class AddTransaction
                 newBalance: $newBalance,
             );
 
+            [$newCashBalance, $oldCashBalance] = match ($data['type']) {
+                TransactionTypeEnum::MONEY_IN->value => AddTransaction::cashMoneyOut(shift: $shift, data: $data),
+                TransactionTypeEnum::MONEY_OUT->value => AddTransaction::cashMoneyIn(shift: $shift, data: $data),
+            };
+
+            $this->createShiftCashTransaction(
+                shift: $shift,
+                data: $data,
+                oldBalance: $oldCashBalance,
+                newBalance: $newCashBalance,
+            );
+
         });
 
     }

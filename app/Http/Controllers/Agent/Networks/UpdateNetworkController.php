@@ -20,22 +20,27 @@ class UpdateNetworkController extends Controller
         $validated = $request->validate([
             'name' => 'required|string',
             'agent_no' => [
-                'required',
-                Rule::unique('networks')
-                    ->whereNull('deleted_at')
-                    ->whereNot('id', $network->id)
-                    ->where('fsp_code', $network->fsp_code)
-                    ->ignore($network->id,'id'),
+                        'required_if:type,Finance',
+                        Rule::unique('networks')
+                        ->whereNull('deleted_at')
+                        ->whereNot('id', $network->id)
+                        ->where('fsp_code', $network->fsp_code)
+                        ->ignore($network->id,'id'),
             ],
-            'fsp_code' => [
-                'required',
-            ],
+            'fsp_code' => 'sometimes|required',
+            'crypto_code' => 'sometimes|required',
+            'balance' => 'sometimes|required|numeric',
+            'crypto_balance' => 'sometimes|required|numeric',
+            'exchange_rate' => 'sometimes|required|numeric',
             'description' => 'nullable|string',
-            'balance' => 'required|numeric',
             'location_code' => 'required|exists:locations,code',
         ], [
             'fsp_code.required' => 'Financial service provider is required',
+            'crypto_code.required' => 'Crypto provider is required',
+            'type.required' => 'Network type is required',
             'balance.required' => 'Till balance is required',
+            'crypto_balance.required' => 'Crypto balance is required',
+            'exchange_rate.required' => 'Exchange Rate is required',
             'location_code.required' => 'Location is required',
             'location_code.exists' => 'Location does not exist',
         ]);

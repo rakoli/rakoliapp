@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Agent\Networks;
 
 use App\Http\Controllers\Controller;
+use App\Models\Crypto;
 use App\Models\FinancialServiceProvider;
 use App\Models\Location;
 use App\Utils\Datatables\Agent\Shift\NetworkDatatable;
@@ -24,11 +25,16 @@ class NetworkController extends Controller
             ->get();
 
         $fsps = FinancialServiceProvider::query()->cursor();
-
+        $cryptos = Crypto::all();
+        foreach($cryptos as $crypto)
+        {
+            $crypto->exchange_rate = Crypto::convertCryptoToFiat($crypto->symbol,currencyCode());
+        }
         return view('agent.agency.network.networks')->with([
             'dataTableHtml' => $networkDatatable->columns($datatableBuilder),
             'locations' => $locations,
             'agencies' => $fsps,
+            'cryptos' => $cryptos,
         ]);
     }
 }

@@ -38,10 +38,12 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
             Route::get('/', [\App\Http\Controllers\Agent\Shift\AgencyController::class, 'shift'])->name('agency.shift');
             Route::get('/open', [OpenShiftController::class, 'index'])->name('agency.shift.open.index');
             Route::post('/open', [OpenShiftController::class, 'store'])->name('agency.shift.open.store');
+            Route::get('/transfer/requests', [TransferShiftController::class, 'index'])->name('agency.shift.transfer.request');
+            Route::get('/transfer/{transfer}/{status}', [TransferShiftController::class, 'updateStatus'])->name('agency.shift.transfer.request.update');
             Route::get('/{shift}/close', [CloseShiftController::class, 'index'])->name('agency.shift.close');
             Route::post('/{shift}/transfer', [TransferShiftController::class, 'store'])->name('agency.shift.transfer');
             Route::post('{shift}/close/store', [CloseShiftController::class, 'store'])->name('agency.shift.close.store');
-            Route::get('/{shift}/show', ShowShiftController::class)->name('agency.shift.show');
+            Route::any('/{shift}/show', ShowShiftController::class)->name('agency.shift.show');
             Route::get('{shift}/tills', [TillController::class, 'index'])->name('agency.shift.till');
             Route::get('{shift}/loans', ShowShiftLoanController::class)->name('agency.shift.show.loans');
             Route::post('/{shift}/loans/store', AddLoanController::class)->name('agency.loans.store');
@@ -54,7 +56,6 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
                 Route::post('add-expense', AddExpenseTransactionController::class)->name('agency.transactions.add.expense');
                 Route::post('add-income', AddIncomeTransactionController::class)->name('agency.transactions.add.income');
             });
-
         });
 
         Route::prefix('networks')->group(function () {
@@ -151,7 +152,7 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
 
         Route::get('referrals', [App\Http\Controllers\Agent\BusinessController::class, 'referrals'])->name('referrals');
 
-        Route::get('referrals',[App\Http\Controllers\Agent\BusinessController::class,'referrals'])->name('referrals');
+        Route::get('referrals', [App\Http\Controllers\Agent\BusinessController::class, 'referrals'])->name('referrals');
 
         Route::post('referrals.referr', [App\Http\Controllers\Agent\BusinessController::class, 'referr'])->name('referrals.referr');
     });

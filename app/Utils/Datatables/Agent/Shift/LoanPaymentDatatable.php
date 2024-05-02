@@ -17,7 +17,7 @@ class LoanPaymentDatatable implements HasDatatable
     public function index(Loan $loan): \Illuminate\Http\JsonResponse
     {
 
-        $transactions = LoanPayment::query()->where('loan_code', $loan->code)->with('user');
+        $transactions = LoanPayment::query()->where('loan_code', $loan->code)->with('user')->with('network.agency', 'user');;
 
         return Datatables::eloquent($transactions)
             ->filter(function ($query) {
@@ -31,6 +31,7 @@ class LoanPaymentDatatable implements HasDatatable
             ->addColumn('created_at', fn (LoanPayment $record) => $record->created_at->format('Y-F-d'))
             ->addColumn('deposited_at', fn (LoanPayment $record) => $record->deposited_at->format('Y-F-d'))
             ->addColumn('user_name', fn (LoanPayment $record) => $record->user->full_name)
+            ->addColumn('agency_name', fn (LoanPayment $record) => $record->network?->agency?->name ?? "Cash" )
             ->addColumn('amount', fn (LoanPayment $record) => money($record->amount, currencyCode(), true))
 
             ->rawColumns(['balance', 'user_name'])
@@ -45,6 +46,7 @@ class LoanPaymentDatatable implements HasDatatable
             Column::make('created_at')->title(__('Date Received'))->searchable()->orderable(),
             Column::make('deposited_at')->title(__('Date Deposited'))->searchable()->orderable(),
             Column::make('user_name')->title(__('User'))->searchable()->orderable(),
+            Column::make('agency_name')->title(__('Agency'))->searchable()->orderable(),
             Column::make('amount')->title(__('amount').' '.strtoupper(session('currency')))->searchable()->orderable(),
 
         ])

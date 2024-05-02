@@ -31,7 +31,7 @@ return new class extends Migration
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
-            $table->string('network_code');
+            $table->string('network_code')->nullable();
             $table->foreign('network_code')->references('code')
                 ->on('networks')
                 ->onDelete('cascade')

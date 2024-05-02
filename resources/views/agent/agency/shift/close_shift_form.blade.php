@@ -5,6 +5,7 @@
             <x-label label="description" class="" for="description"/>
             <textarea
                 name="description"
+                id="closing_description"
                 class="form-control form-control form-control-solid"
                 rows="3"
                 data-kt-autosize="false">{{ $shift->description }}</textarea>
@@ -31,7 +32,7 @@
         </div>
     </div>
     <div class="d-flex gap-3 flex-row align-content-between">
-
+        @if($shift->status == App\Utils\Enums\ShiftStatusEnum::OPEN)
         <x-modal_with_button
             modalTitle="Shift Transfer details"
             targetId="transfer_shift"
@@ -41,7 +42,20 @@
         >
 
             @include('agent.agency.shift._short_form')
+            <div class="col-6 mt-4" id="transfer_shift_user_code">
+                <x-label label="User" required="" for="transfer_shift_user_code"/>
+                <x-select2
+                    modalId="transfer_shift"
+                    id="transfer_shift_user_code"
+                    class="total_shorts_input"
+                    name="transfer_user_code"
+                >
+                    @foreach($colleague as $col)
+                        <option value="{{ $col->code }}">{{ $col->name() }}</option>
+                    @endforeach
 
+                </x-select2>
+            </div>
             <x-submit-button type="button" id="transfer-shift-button" class="btn btn-primary mt-sm-4 mt-md-6"
                              label="Confirm Transfer Shift"/>
 
@@ -56,13 +70,17 @@
         >
 
             @include('agent.agency.shift._short_form')
-
+            <div class="col-6 mt-4" id="close_shift_info">
+                <p class="shift_info">The total loans on this shift is {total loan amount}</p>
+                <strong>Closing Remarks</strong>
+                <p class="close_info">description entered on closing page</p>
+            </div>
 
             <x-submit-button type="button" id="close-shift-button" class="btn btn-primary mt-sm-4 mt-md-6"
                              label="Close Shift"/>
 
         </x-modal_with_button>
-
+        @endif
     </div>
 
 
@@ -82,11 +100,11 @@
 
             const closeShiftButton = document.getElementById('close-shift-button');
 
-            lakoriValidation(validations, form, closeShiftButton, 'post', '{{  route('agency.shift.close.store', $shift) }}');
+            lakoriValidation(validations, form, closeShiftButton, 'post', '{{  route('agency.shift.close.store', $shift) }}', '{{ route('agency.shift') }}');
 
 
             const transferShiftButton = document.getElementById('transfer-shift-button');
-            lakoriValidation(validations, form, transferShiftButton, 'post', '{{  route('agency.shift.transfer', $shift) }}');
+            lakoriValidation(validations, form, transferShiftButton, 'post', '{{  route('agency.shift.transfer', $shift) }}', '{{ route('agency.shift') }}');
         </script>
 
     @endpush

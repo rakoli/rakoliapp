@@ -7,26 +7,29 @@ use App\Models\Loan;
 use App\Models\Location;
 use App\Models\Shift;
 use App\Models\ShiftNetwork;
+use App\Utils\Datatables\Agent\Shift\ShiftCashTransactionDatatable;
 use App\Utils\Datatables\Agent\Shift\ShiftTransactionDatatable;
+use App\Utils\Enums\NetworkTypeEnum;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Html\Builder;
 
 class ShowShiftController extends Controller
 {
-    public function __invoke(Request $request, Shift $shift, Builder $datatableBuilder, ShiftTransactionDatatable $transactionDatatable)
+    public function __invoke(Request $request, Shift $shift, Builder $datatableBuilder, ShiftTransactionDatatable $transactionDatatable, ShiftCashTransactionDatatable $cashTransactionDatatable)
     {
-
-
-
         if ($request->ajax()) {
-
-            return $transactionDatatable->index($shift);
-
+            if($request->has('isCash')){
+                return $cashTransactionDatatable->index($shift);
+            } else if($request->has('isCrypto')){
+                return $transactionDatatable->index($shift,NetworkTypeEnum::CRYPTO);
+            } else {
+                return $transactionDatatable->index($shift,NetworkTypeEnum::FINANCE);
+            }
         }
 
         $dataTableHtml = $transactionDatatable->columns(datatableBuilder: $datatableBuilder);
 
-        $tills = ShiftNetwork::query()->where('shift_id', $shift->id)->with('network.agency');
+        $tills = ShiftNetwork::query()->where('shift_networks.shift_id', $shift->id)->with(['network.agency','network.crypto']);
 
         $locations = Location::query()->where('code', $shift->location_code)->cursor();
 
@@ -37,7 +40,7 @@ class ShowShiftController extends Controller
             ->selectRaw('*, note')
             ->get();
 
-        return view('agent.agency.show', [
+            return view('agent.agency.show', [
             'dataTableHtml' => $dataTableHtml,
             'loans' => $loans,
             'locations' => $locations,
@@ -46,4 +49,5 @@ class ShowShiftController extends Controller
             'shift' => $shift->loadMissing('user', 'location'),
         ]);
     }
+
 }

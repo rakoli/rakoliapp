@@ -14,7 +14,7 @@ class TransactionDatatable implements HasDatatable
 {
     use LakoriDatatable;
 
-    public function index(bool $isToday = false): \Illuminate\Http\JsonResponse
+    public function index(bool $isToday = false, ): \Illuminate\Http\JsonResponse
     {
 
         $transactions = Transaction::query()
