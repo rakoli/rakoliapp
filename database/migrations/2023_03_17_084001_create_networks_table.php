@@ -25,17 +25,26 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->string('fsp_code');
+            $table->string('fsp_code')->nullable();
             $table->foreign('fsp_code')->references('code')
                 ->on('financial_service_providers')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
+            $table->string('crypto_code')->nullable();
+            $table->foreign('crypto_code')->references('code')
+                ->on('cryptos')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+        
+            $table->string('type'); // enum <NetworkTypeEnum<Finance, Crypto>
             $table->string('code')->unique();
             $table->string('agent_no')->index();
             $table->string('name');
-            $table->double('balance', 12, 0);
-            $table->string('balance_currency');
+            $table->double('balance', 12, 0)->default(0);
+            $table->string('balance_currency')->nullable();
+            $table->double('crypto_balance', 20, 10)->nullable();
+            $table->double('exchange_rate', 20, 10)->nullable();
             $table->string('description')->nullable();
             $table->timestamps();
             $table->softDeletes();

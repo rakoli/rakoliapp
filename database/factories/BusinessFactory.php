@@ -26,23 +26,23 @@ class BusinessFactory extends Factory
     {
         $referral = Business::first();
         $referralCode = null;
-        if($referral != null){
+        if ($referral != null) {
             $referralCode = $referral->code;
         }
 
         $packages = Package::get('code')->toArray();
         $packageCode = null;
-        if(empty($packages)){
+        if (empty($packages)) {
             $packageCode = Package::factory()->create()->code;
-        }else{
+        } else {
             $packageCode = fake()->randomElement($packages)['code'];
         }
 
         $countries = Country::get('code')->toArray();
         $countryCode = null;
-        if(empty($countries)){
+        if (empty($countries)) {
             $countryCode = Country::factory()->create()->code;
-        }else{
+        } else {
             $countryCode = fake()->randomElement($countries)['code'];
         }
 
@@ -54,9 +54,9 @@ class BusinessFactory extends Factory
             'business_name' => fake()->company,
             'status' => fake()->randomElement(BusinessStatusEnum::class),
             'package_code' => $packageCode,
-            'package_expiry_at' => now()->addDays(random_int(1,30)),
+            'package_expiry_at' => now()->addDays(random_int(1, 30)),
             'business_location' => fake()->address,
-            'last_seen' => now()->subMinutes(random_int(1,180)),
+            'last_seen' => now()->subMinutes(random_int(1, 180)),
         ];
     }
 }

@@ -40,7 +40,7 @@ class Business extends Model
             $businessInstance = self::create($data);
             $country = Country::where('code',$businessInstance->country_code)->first();
             $locationName = $businessInstance->business_name . " HQ";
-            Location::create([
+            $locationInstance = Location::create([
                 'business_code' => $businessInstance->code,
                 'code' => generateCode($locationName,$country->code) ,
                 'name' => $locationName,
@@ -63,6 +63,7 @@ class Business extends Model
                 'name'=>'Admin',
                 'description'=>'Administrator',
             ]);
+            Network::addBusinessDefaultTills($businessInstance, $locationInstance);
             DB::commit();
         }catch (\Exception $exception) {
             DB::rollback();
@@ -122,11 +123,6 @@ class Business extends Model
     public function referrals(): HasMany
     {
         return $this->hasMany(Business::class, 'referral_business_code', 'code');
-    }
-
-    public function verificationUploads(): HasMany
-    {
-        return $this->hasMany(BusinessVerificationUpload::class, 'business_code', 'code');
     }
 
     public function loans(): HasMany

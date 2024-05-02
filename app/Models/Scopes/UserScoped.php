@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Models\Scopes;
+
+use App\Utils\Enums\UserTypeEnum;
+use Illuminate\Contracts\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Scope;
+
+class UserScoped implements Scope
+{
+    /**
+     * Apply the scope to a given Eloquent query builder.
+     */
+    public function apply(Builder $builder, Model $model): Builder
+    {
+        if (auth()->check() && auth()->user()->type == UserTypeEnum::AGENT->value && (! app()->runningInConsole() )) {
+
+            return $builder->where($model->getTable().'.user_code', auth()->user()->code);
+        }
+
+        return $builder;
+    }
+}

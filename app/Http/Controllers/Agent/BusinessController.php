@@ -17,9 +17,7 @@ use App\Models\ExchangePaymentMethod;
 use App\Models\Location;
 use App\Models\LocationUser;
 use App\Utils\StatisticsService;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 use Yajra\DataTables\DataTables;
 use App\Models\Region;
 use App\Models\Role;
@@ -58,9 +56,6 @@ class BusinessController extends Controller
                     return $content;
                 })
                 ->rawColumns(['actions'])
-                ->editColumn('id', function ($method) {
-                    return idNumberDisplay($method->id);
-                })
                 ->addIndexColumn()
                 ->toJson();
         }
@@ -68,6 +63,8 @@ class BusinessController extends Controller
         // DataTable
         $dataTableHtml = $builder->columns([
             ['data' => 'id', 'title' => __('ID')],
+            ['data' => 'business_code', 'title' => __('Business Code')],
+            // ['data' => 'code', 'title' => __('Code')],
             ['data' => 'name', 'title' => __('Name')],
             ['data' => 'description', 'title' => __('Description')],
             ['data' => 'actions', 'title' => __('Actions')],
@@ -102,7 +99,7 @@ class BusinessController extends Controller
     public function rolesEdit(Request $request)
     {
         $request->validate([
-            'edit_id' => 'required|numeric|exists:business_roles,id',
+            'edit_id' => 'required|exists:business_roles,id',
             'edit_name' => 'required|string',
             'edit_description' => 'required|string',
         ]);
@@ -124,7 +121,7 @@ class BusinessController extends Controller
     public function rolesDelete(Request $request)
     {
         $request->validate([
-            'delete_id' => 'required|numeric|exists:business_roles,id',
+            'delete_id' => 'required|exists:business_roles,id',
         ]);
 
         $businessRole = BusinessRole::where('id', $request->delete_id)->first();
@@ -163,23 +160,15 @@ class BusinessController extends Controller
                 })
                 ->rawColumns(['actions'])
                 ->addIndexColumn()
-                ->addColumn('balance_display',function($row){
-                    return number_format($row->balance,2) . ' '.strtoupper($row->balance_currency);
-                })
-                ->editColumn('id', function ($row) {
-                    return idNumberDisplay($row->id);
-                })
-                ->editColumn('created_at', function($row) {
-                    return Carbon::create($row->created_at)->toDateTimeString('minute');
-                })
                 ->toJson();
         }
 
         // Datatable
         $dataTableHtml = $builder->columns([
-            ['data' => 'id', 'title' => __('ID')],
+            ['data' => 'id', 'title' => __('id')],
             ['data' => 'name', 'title' => __("Name")],
-            ['data' => 'balance_display', 'title' => __("Balance")],
+            ['data' => 'balance', 'title' => __("Balance") . ' (' . session('currency') . ')'],
+            ['data' => 'balance_currency', 'title' => __("Balance Currency")], // Removed extra space
             ['data' => 'description', 'title' => __("Description")],
             ['data' => 'actions', 'title' => __("Action")], // Corrected column name
         ])->responsive(true)
@@ -397,7 +386,6 @@ class BusinessController extends Controller
         }
 
         $business->business_name = $request->get('business_name');
-        Session::put('business_name', $business->business_name);
         $business->tax_id = $request->get('tax_id');
         $business->business_regno = $request->get('business_regno');
         $business->business_reg_date = $request->get('business_reg_date');
@@ -441,8 +429,8 @@ class BusinessController extends Controller
         }
         //Datatable
         $dataTableHtml = $builder->columns([
-            ['data' => 'id', 'title' => __('ID')],
-            ['data' => 'fname', 'title' => __("First Name")],
+            ['data' => 'id', 'title' => __('id')],
+            ['data' => 'fname', 'title' => __("Name")],
             ['data' => 'lname', 'title' => __("Last Name")],
             ['data' => 'phone', 'title' => __("Phone Number")],
             ['data' => 'email', 'title' => __("Email")],
@@ -652,14 +640,9 @@ class BusinessController extends Controller
                         return number_format(0,2);
                     }
                     $packageCommission = $user->business->package->price_commission;
-
-                    return number_format($packageCommission,2) . ' '.strtoupper($user->business->country->currency);
-
+                    return number_format($packageCommission,2);
                 })
                 ->rawColumns(['actions'])
-                ->editColumn('id', function ($method) {
-                    return idNumberDisplay($method->id);
-                })
                 ->addIndexColumn()
                 ->toJson();
         }

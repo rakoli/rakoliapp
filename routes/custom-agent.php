@@ -2,6 +2,24 @@
 
 /// This is custom route only for agent routes. All agent routes will be registered in here
 
+use App\Http\Controllers\Agent\Networks\AddNetworkController;
+use App\Http\Controllers\Agent\Networks\DeleteNetworkController;
+use App\Http\Controllers\Agent\Networks\NetworkController;
+use App\Http\Controllers\Agent\Networks\ShowNetworkController;
+use App\Http\Controllers\Agent\Networks\UpdateNetworkController;
+use App\Http\Controllers\Agent\Shift\CloseShiftController;
+use App\Http\Controllers\Agent\Shift\Loans\AddLoanController;
+use App\Http\Controllers\Agent\Shift\Loans\PayLoanController;
+use App\Http\Controllers\Agent\Shift\Loans\ShowLoanController;
+use App\Http\Controllers\Agent\Shift\OpenShiftController;
+use App\Http\Controllers\Agent\Shift\ShowShiftController;
+use App\Http\Controllers\Agent\Shift\ShowShiftLoanController;
+use App\Http\Controllers\Agent\Shift\TillController;
+use App\Http\Controllers\Agent\Shift\Transaction\AddExpenseTransactionController;
+use App\Http\Controllers\Agent\Shift\Transaction\AddIncomeTransactionController;
+use App\Http\Controllers\Agent\Shift\Transaction\AddTransactionController;
+use App\Http\Controllers\Agent\Shift\TransferShiftController;
+use App\Http\Controllers\Agent\Transaction\TransactionsController;
 use Illuminate\Support\Facades\Route;
 
 // All get methods will be loaded with this route
@@ -10,14 +28,53 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('agent.dashboard'); //For Middleware testing and having a special user type dashboard route
 
     //AGENCY MODULE
-    Route::name('agency.')->prefix('agency')->group(function () {
+    Route::group(['prefix' => 'agency', 'route' => 'agency.'], function () {
 
-        Route::get('transactions', [App\Http\Controllers\Agent\AgencyController::class, 'transactions'])->name('transactions');
-        Route::get('shift', [App\Http\Controllers\Agent\AgencyController::class, 'shift'])->name('shift');
-        Route::get('tills', [App\Http\Controllers\Agent\AgencyController::class, 'tills'])->name('tills');
-        Route::get('networks', [App\Http\Controllers\Agent\AgencyController::class, 'networks'])->name('networks');
-        Route::get('loans', [App\Http\Controllers\Agent\AgencyController::class, 'loans'])->name('loans');
-        Route::get('testing', [App\Http\Controllers\Agent\AgencyController::class, 'loans'])->name('tests');
+        Route::get('transactions', TransactionsController::class)->name('agency.transactions');
+
+        // shift groups
+
+        Route::prefix('shift')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Agent\Shift\AgencyController::class, 'shift'])->name('agency.shift');
+            Route::get('/open', [OpenShiftController::class, 'index'])->name('agency.shift.open.index');
+            Route::post('/open', [OpenShiftController::class, 'store'])->name('agency.shift.open.store');
+            Route::get('/transfer/requests', [TransferShiftController::class, 'index'])->name('agency.shift.transfer.request');
+            Route::get('/transfer/{transfer}/{status}', [TransferShiftController::class, 'updateStatus'])->name('agency.shift.transfer.request.update');
+            Route::get('/{shift}/close', [CloseShiftController::class, 'index'])->name('agency.shift.close');
+            Route::post('/{shift}/transfer', [TransferShiftController::class, 'store'])->name('agency.shift.transfer');
+            Route::post('{shift}/close/store', [CloseShiftController::class, 'store'])->name('agency.shift.close.store');
+            Route::any('/{shift}/show', ShowShiftController::class)->name('agency.shift.show');
+            Route::get('{shift}/tills', [TillController::class, 'index'])->name('agency.shift.till');
+            Route::get('{shift}/loans', ShowShiftLoanController::class)->name('agency.shift.show.loans');
+            Route::post('/{shift}/loans/store', AddLoanController::class)->name('agency.loans.store');
+            Route::prefix('/{shift}/loans')->group(function () {
+                Route::get('/{loan}/', ShowLoanController::class)->name('agency.loans.show');
+                Route::post('/{loan}/', PayLoanController::class)->name('agency.loans.pay');
+            });
+            Route::prefix('transactions/{shift}')->group(function () {
+                Route::post('add-transaction', AddTransactionController::class)->name('agency.transactions.add.transaction');
+                Route::post('add-expense', AddExpenseTransactionController::class)->name('agency.transactions.add.expense');
+                Route::post('add-income', AddIncomeTransactionController::class)->name('agency.transactions.add.income');
+            });
+        });
+
+        Route::prefix('networks')->group(function () {
+            Route::get('/', NetworkController::class)->name('agency.networks');
+            Route::post('/', AddNetworkController::class)->name('agency.networks.store');
+            Route::get('{network}/show', ShowNetworkController::class)->name('agency.networks.show');
+            Route::patch('{network}/', UpdateNetworkController::class)->name('agency.networks.update');
+            Route::delete('{network}/', DeleteNetworkController::class)->name('agency.networks.delete');
+
+        });
+
+        Route::prefix('tills')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Agent\Shift\AgencyController::class, 'tills'])->name('agency.tills');
+
+        });
+        Route::prefix('loans')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Agent\Shift\Loans\LoanController::class, 'index'])->name('agency.loans');
+
+        });
 
     });
     //END: AGENCY MODULE
@@ -73,7 +130,11 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
         Route::post('roles/delete', [App\Http\Controllers\Agent\BusinessController::class, 'rolesDelete'])->name('roles.delete');
 
         Route::get('finance', [App\Http\Controllers\Agent\PaymentController::class, 'finance'])->name('finance');
+
         Route::post('finance/withdrawmethod/update', [App\Http\Controllers\Agent\PaymentController::class, 'withdrawmethodUpdate'])->name('finance.withdrawmethod.update');
+
+        Route::post('finance/update', [App\Http\Controllers\Agent\PaymentController::class, 'financeUpdate'])->name('finance.update');
+
         Route::post('finance/withdraw', [App\Http\Controllers\Agent\PaymentController::class, 'financeWithdraw'])->name('finance.withdraw');
         Route::post('finance/check_method', [App\Http\Controllers\Agent\PaymentController::class, 'checkMethod'])->name('finance.check_method');
 
@@ -94,7 +155,6 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
         Route::get('branches/create/arealist', [App\Http\Controllers\Agent\BusinessController::class, 'branchesCreateArealistAjax'])->name('branches.arealistAjax');
 
 
-
         Route::get('users', [App\Http\Controllers\Agent\BusinessController::class, 'users'])->name('users');
         Route::get('users/create', [App\Http\Controllers\Agent\BusinessController::class, 'usersCreate'])->name('users.create');
         Route::post('users/create/submit', [App\Http\Controllers\Agent\BusinessController::class, 'usersCreateSubmit'])->name('users.create.submit');
@@ -102,7 +162,11 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
         Route::post('users/edit/submit', [App\Http\Controllers\Agent\BusinessController::class, 'usersEditSubmit'])->name('users.edit.submit');
         Route::get('users/delete/{id}', [App\Http\Controllers\Agent\BusinessController::class, 'usersDelete'])->name('users.delete');
 
-        Route::get('referrals',[App\Http\Controllers\Agent\BusinessController::class,'referrals'])->name('referrals');
+
+        Route::get('referrals', [App\Http\Controllers\Agent\BusinessController::class, 'referrals'])->name('referrals');
+
+        Route::get('referrals', [App\Http\Controllers\Agent\BusinessController::class, 'referrals'])->name('referrals');
+
         Route::post('referrals.referr', [App\Http\Controllers\Agent\BusinessController::class, 'referr'])->name('referrals.referr');
     });
     //END: BUSINESS MANAGEMENT MODULE

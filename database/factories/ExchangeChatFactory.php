@@ -2,15 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\Business;
-use App\Models\Country;
-use App\Models\ExchangeAds;
 use App\Models\ExchangeTransaction;
-use App\Models\FinancialServiceProvider;
-use App\Models\Transaction;
 use App\Models\User;
-use App\Utils\Enums\ExchangeTransactionStatusEnum;
-use App\Utils\Enums\ExchangeTransactionTypeEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -27,18 +20,18 @@ class ExchangeChatFactory extends Factory
     {
         $transactions = ExchangeTransaction::get('id')->toArray();
         $transactionId = null;
-        if(empty($transactions)){
+        if (empty($transactions)) {
             $transactionId = ExchangeTransaction::factory()->create()->id;
-        }else{
+        } else {
             $transactionId = fake()->randomElement($transactions)['id'];
         }
 
-        $exchangeTransaction = ExchangeTransaction::where('id',$transactionId)->first();
-        $users = User::where('business_code',$exchangeTransaction->owner_business_code)->get('code')->toArray();
+        $exchangeTransaction = ExchangeTransaction::where('id', $transactionId)->first();
+        $users = User::where('business_code', $exchangeTransaction->owner_business_code)->get('code')->toArray();
         $userCode = null;
-        if(empty($users)){
-            $userCode = User::factory()->create(['business_code'=>$exchangeTransaction->owner_business_code])->code;
-        }else{
+        if (empty($users)) {
+            $userCode = User::factory()->create(['business_code' => $exchangeTransaction->owner_business_code])->code;
+        } else {
             $userCode = fake()->randomElement($users)['code'];
         }
 

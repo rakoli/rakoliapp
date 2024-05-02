@@ -3,8 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\Business;
-use App\Utils\Enums\TransactionCategoryEnum;
-use App\Utils\Enums\TransactionTypeEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,15 +19,15 @@ class WithdrawRequestFactory extends Factory
     {
         $businesses = Business::get('code')->toArray();
         $businessCode = null;
-        if(empty($businesses)){
+        if (empty($businesses)) {
             $businessCode = Business::factory()->create()->code;
-        }else{
+        } else {
             $businessCode = fake()->randomElement($businesses)['code'];
         }
 
         return [
             'business_code' => $businessCode,
-            'method_name' => fake()->randomElement(['crdb','nmb']),
+            'method_name' => fake()->randomElement(['crdb', 'nmb']),
             'method_ac_name' => fake()->name(),
             'method_ac_number' => fake()->numerify('############'),
             'amount' => fake()->numberBetween(5000, 25000),

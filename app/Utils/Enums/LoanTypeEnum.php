@@ -19,7 +19,7 @@ enum LoanTypeEnum: string
     public function color(): string
     {
         return match ($this) {
-            self::MONEY_OUT => 'badge badge-warning',
+            self::MONEY_OUT => 'badge badge-danger',
             self::MONEY_IN => 'badge badge-primary',
         };
     }

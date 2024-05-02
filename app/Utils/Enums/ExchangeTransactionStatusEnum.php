@@ -2,17 +2,17 @@
 
 namespace App\Utils\Enums;
 
-enum ExchangeTransactionStatusEnum : string
+enum ExchangeTransactionStatusEnum: string
 {
-    case OPEN = "open";
-    case CANCELLED = "cancelled";
-    case COMPLETED = "completed";
-    case PENDING_RELEASE = "pending_release";
-    case APPEAL = "appeal";
+    case OPEN = 'open';
+    case CANCELLED = 'cancelled';
+    case COMPLETED = 'completed';
+    case PENDING_RELEASE = 'pending_release';
+    case APPEAL = 'appeal';
 
     public function description(): string
     {
-        return match($this) {
+        return match ($this) {
             ExchangeTransactionStatusEnum::OPEN => 'Waiting for Trade Payment',
             ExchangeTransactionStatusEnum::CANCELLED => 'Trade Cancelled',
             ExchangeTransactionStatusEnum::COMPLETED => 'Trade Complete',
@@ -20,6 +20,4 @@ enum ExchangeTransactionStatusEnum : string
             ExchangeTransactionStatusEnum::APPEAL => 'Trade Appealed',
         };
     }
-
-
 }

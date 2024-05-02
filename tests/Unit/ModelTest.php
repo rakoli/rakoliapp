@@ -11,23 +11,12 @@ use App\Models\ExchangePaymentMethod;
 use App\Models\ExchangeStat;
 use App\Models\ExchangeTransaction;
 use App\Models\InitiatedPayment;
-use App\Models\Location;
 use App\Models\Network;
 use App\Models\User;
-use App\Utils\Enums\BusinessStatusEnum;
-use App\Utils\Enums\ExchangePaymentMethodTypeEnum;
-use App\Utils\Enums\ExchangeStatusEnum;
 use App\Utils\Enums\ExchangeTransactionStatusEnum;
 use App\Utils\Enums\InitiatedPaymentStatusEnum;
 use App\Utils\Enums\UserTypeEnum;
-use Database\Factories\ExchangeFeedbackFactory;
-use Database\Seeders\CountrySeeder;
-use Database\Seeders\TZFSPSeeder;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class ModelTest extends TestCase
@@ -40,9 +29,9 @@ class ModelTest extends TestCase
         //Added Country because we are not using Factory to Add Business
         $countries = Country::get('code')->toArray();
         $countryCode = null;
-        if(empty($countries)){
+        if (empty($countries)) {
             $countryCode = Country::factory()->create()->code;
-        }else{
+        } else {
             $countryCode = fake()->randomElement($countries)['code'];
         }
 
@@ -51,7 +40,7 @@ class ModelTest extends TestCase
         $data = [
             'country_code' => $countryCode,
             'type' => UserTypeEnum::AGENT->value,
-            'code'=> generateCode($name),
+            'code' => generateCode($name),
             'business_name' => $name,
         ];
 
@@ -80,9 +69,9 @@ class ModelTest extends TestCase
         //Added Country because we are not using Factory to Add Business
         $countries = Country::get('code')->toArray();
         $countryCode = null;
-        if(empty($countries)){
+        if (empty($countries)) {
             $countryCode = Country::factory()->create()->code;
-        }else{
+        } else {
             $countryCode = fake()->randomElement($countries)['code'];
         }
 
@@ -90,17 +79,17 @@ class ModelTest extends TestCase
         $data = [
             'country_code' => $countryCode,
             'type' => UserTypeEnum::AGENT->value,
-            'code'=> generateCode($name),
+            'code' => generateCode($name),
             'business_name' => $name,
         ];
 
         $business = Business::addBusiness($data);
 
-        $exchangeAd = ExchangeAds::factory()->create(['business_code'=>$business->code]);
+        $exchangeAd = ExchangeAds::factory()->create(['business_code' => $business->code]);
 
-        $user = User::factory()->create(['business_code'=>$business->code]);
+        $user = User::factory()->create(['business_code' => $business->code]);
 
-        $failUser = User::factory()->create(['business_code'=>null]);
+        $failUser = User::factory()->create(['business_code' => null]);
 
         $this->assertTrue($exchangeAd->isUserAllowed($user));
         $this->assertFalse($exchangeAd->isUserAllowed($failUser));
@@ -112,9 +101,9 @@ class ModelTest extends TestCase
         //Added Country because we are not using Factory to Add Business
         $countries = Country::get('code')->toArray();
         $countryCode = null;
-        if(empty($countries)){
+        if (empty($countries)) {
             $countryCode = Country::factory()->create()->code;
-        }else{
+        } else {
             $countryCode = fake()->randomElement($countries)['code'];
         }
 
@@ -122,17 +111,17 @@ class ModelTest extends TestCase
         $data = [
             'country_code' => $countryCode,
             'type' => UserTypeEnum::AGENT->value,
-            'code'=> generateCode($name),
+            'code' => generateCode($name),
             'business_name' => $name,
         ];
 
         $business = Business::addBusiness($data);
 
-        $exchangeAd = ExchangeBusinessMethod::factory()->create(['business_code'=>$business->code]);
+        $exchangeAd = ExchangeBusinessMethod::factory()->create(['business_code' => $business->code]);
 
-        $user = User::factory()->create(['business_code'=>$business->code]);
+        $user = User::factory()->create(['business_code' => $business->code]);
 
-        $failUser = User::factory()->create(['business_code'=>null]);
+        $failUser = User::factory()->create(['business_code' => null]);
 
         $this->assertTrue($exchangeAd->isUserAllowed($user));
         $this->assertFalse($exchangeAd->isUserAllowed($failUser));
@@ -143,7 +132,7 @@ class ModelTest extends TestCase
     {
         $exchangeAcceptedMethods = ExchangePaymentMethod::getAcceptedList('TZ');
 
-        $this->assertContains(["name"=>"CASH",'code'=>'CASH'],$exchangeAcceptedMethods);
+        $this->assertContains(['name' => 'CASH', 'code' => 'CASH'], $exchangeAcceptedMethods);
     }
 
     /** @test */
@@ -152,9 +141,9 @@ class ModelTest extends TestCase
         //Added Country because we are not using Factory to Add Business
         $countries = Country::get('code')->toArray();
         $countryCode = null;
-        if(empty($countries)){
+        if (empty($countries)) {
             $countryCode = Country::factory()->create()->code;
-        }else{
+        } else {
             $countryCode = fake()->randomElement($countries)['code'];
         }
 
@@ -162,13 +151,13 @@ class ModelTest extends TestCase
         $data = [
             'country_code' => $countryCode,
             'type' => UserTypeEnum::AGENT->value,
-            'code'=> generateCode($name),
+            'code' => generateCode($name),
             'business_name' => $name,
         ];
 
         $business = Business::addBusiness($data);
 
-        $stat = ExchangeStat::where('business_code',$business->code)->first(); //Auto added when adding a business
+        $stat = ExchangeStat::where('business_code', $business->code)->first(); //Auto added when adding a business
 
         $this->assertDatabaseHas('exchange_stats', [
             'business_code' => $business->code,
@@ -207,9 +196,9 @@ class ModelTest extends TestCase
         //Added Country because we are not using Factory to Add Business
         $countries = Country::get('code')->toArray();
         $countryCode = null;
-        if(empty($countries)){
+        if (empty($countries)) {
             $countryCode = Country::factory()->create()->code;
-        }else{
+        } else {
             $countryCode = fake()->randomElement($countries)['code'];
         }
 
@@ -217,7 +206,7 @@ class ModelTest extends TestCase
         $data = [
             'country_code' => $countryCode,
             'type' => UserTypeEnum::AGENT->value,
-            'code'=> generateCode($name),
+            'code' => generateCode($name),
             'business_name' => $name,
         ];
         $business = Business::addBusiness($data);
@@ -226,18 +215,18 @@ class ModelTest extends TestCase
         $traderData = [
             'country_code' => $countryCode,
             'type' => UserTypeEnum::AGENT->value,
-            'code'=> generateCode($tradeName),
+            'code' => generateCode($tradeName),
             'business_name' => $tradeName,
         ];
         $traderBusiness = Business::addBusiness($traderData);
 
-        $exchangeAd = ExchangeAds::factory()->has(ExchangePaymentMethod::factory(),'exchange_payment_methods')->create(['business_code'=>$business->code]);
+        $exchangeAd = ExchangeAds::factory()->has(ExchangePaymentMethod::factory(), 'exchange_payment_methods')->create(['business_code' => $business->code]);
         $exchangeTransaction = ExchangeTransaction::factory()->create([
-            'exchange_ads_code'=>$exchangeAd->code,
-            'owner_business_code'=>$business->code,
-            'trader_business_code'=>$traderBusiness->code,
-            'amount'=> 1000,
-            'trader_target_method'=> 'cash',
+            'exchange_ads_code' => $exchangeAd->code,
+            'owner_business_code' => $business->code,
+            'trader_business_code' => $traderBusiness->code,
+            'amount' => 1000,
+            'trader_target_method' => 'cash',
         ]);
         $exchangeTransaction->status = ExchangeTransactionStatusEnum::COMPLETED->value;
         $exchangeTransaction->save();
@@ -246,23 +235,22 @@ class ModelTest extends TestCase
             'business_code' => $business->code,
             'no_of_trades_completed' => 1,
             'volume_traded' => 1000,
-        ]);//Updates owner stats on complete
+        ]); //Updates owner stats on complete
 
         $this->assertDatabaseHas('exchange_stats', [
             'business_code' => $traderBusiness->code,
             'no_of_trades_completed' => 1,
             'volume_traded' => 1000,
-        ]);//Updates trader stats on complete
+        ]); //Updates trader stats on complete
 
-
-        $cancellingUser = User::factory()->create(['business_code'=>$traderBusiness->code]);
+        $cancellingUser = User::factory()->create(['business_code' => $traderBusiness->code]);
         $exchangeTransaction->cancelled_by_user_code = $cancellingUser->code;
         $exchangeTransaction->status = ExchangeTransactionStatusEnum::CANCELLED->value;
         $exchangeTransaction->save();
         $this->assertDatabaseHas('exchange_stats', [
             'business_code' => $traderBusiness->code,
             'no_of_trades_cancelled' => 1,
-        ]);//Updates business stats on cancel trade
+        ]); //Updates business stats on cancel trade
 
     }
 
@@ -272,9 +260,9 @@ class ModelTest extends TestCase
         //Added Country because we are not using Factory to Add Business
         $countries = Country::get('code')->toArray();
         $countryCode = null;
-        if(empty($countries)){
+        if (empty($countries)) {
             $countryCode = Country::factory()->create()->code;
-        }else{
+        } else {
             $countryCode = fake()->randomElement($countries)['code'];
         }
 
@@ -282,26 +270,26 @@ class ModelTest extends TestCase
         $data = [
             'country_code' => $countryCode,
             'type' => UserTypeEnum::AGENT->value,
-            'code'=> generateCode($name),
+            'code' => generateCode($name),
             'business_name' => $name,
         ];
         $business = Business::addBusiness($data);
-        User::factory()->create();//To have a fresh user on db to be used on feedback seeder
+        User::factory()->create(); //To have a fresh user on db to be used on feedback seeder
 
         $tradeName = fake()->company;
         $traderData = [
             'country_code' => $countryCode,
             'type' => UserTypeEnum::AGENT->value,
-            'code'=> generateCode($tradeName),
+            'code' => generateCode($tradeName),
             'business_name' => $tradeName,
         ];
         $traderBusiness = Business::addBusiness($traderData);
 
-        $exchangeAd = ExchangeAds::factory()->has(ExchangePaymentMethod::factory(),'exchange_payment_methods')->create(['business_code'=>$business->code]);
+        $exchangeAd = ExchangeAds::factory()->has(ExchangePaymentMethod::factory(), 'exchange_payment_methods')->create(['business_code' => $business->code]);
         $exchangeTransaction = ExchangeTransaction::factory()->create([
-            'exchange_ads_code'=>$exchangeAd->code,
-            'owner_business_code'=>$business->code,
-            'trader_business_code'=>$traderBusiness->code,
+            'exchange_ads_code' => $exchangeAd->code,
+            'owner_business_code' => $business->code,
+            'trader_business_code' => $traderBusiness->code,
         ]);
 
         //Owner Positive Feedback
@@ -368,9 +356,9 @@ class ModelTest extends TestCase
         //Added Country because we are not using Factory to Add Business
         $countries = Country::get('code')->toArray();
         $countryCode = null;
-        if(empty($countries)){
+        if (empty($countries)) {
             $countryCode = Country::factory()->create()->code;
-        }else{
+        } else {
             $countryCode = fake()->randomElement($countries)['code'];
         }
 
@@ -378,29 +366,29 @@ class ModelTest extends TestCase
         $data = [
             'country_code' => $countryCode,
             'type' => UserTypeEnum::AGENT->value,
-            'code'=> generateCode($name),
+            'code' => generateCode($name),
             'business_name' => $name,
         ];
         $ownerBusiness = Business::addBusiness($data);
-        $ownerUser = User::factory()->create(['business_code'=>$ownerBusiness->code]);
+        $ownerUser = User::factory()->create(['business_code' => $ownerBusiness->code]);
 
         $name = fake()->company;
         $data = [
             'country_code' => $countryCode,
             'type' => UserTypeEnum::AGENT->value,
-            'code'=> generateCode($name),
+            'code' => generateCode($name),
             'business_name' => $name,
         ];
         $traderBusiness = Business::addBusiness($data);
-        $traderUser = User::factory()->create(['business_code'=>$traderBusiness->code]);
+        $traderUser = User::factory()->create(['business_code' => $traderBusiness->code]);
 
-        $failUser = User::factory()->create(['business_code'=>null]);
+        $failUser = User::factory()->create(['business_code' => null]);
 
-        $exchangeAd = ExchangeAds::factory()->has(ExchangePaymentMethod::factory(),'exchange_payment_methods')->create(['business_code'=>$ownerBusiness->code]);
+        $exchangeAd = ExchangeAds::factory()->has(ExchangePaymentMethod::factory(), 'exchange_payment_methods')->create(['business_code' => $ownerBusiness->code]);
         $exchangeTransaction = ExchangeTransaction::factory()->create([
-            'exchange_ads_code'=>$exchangeAd->code,
-            'owner_business_code'=>$ownerBusiness->code,
-            'trader_business_code'=>$traderBusiness->code,
+            'exchange_ads_code' => $exchangeAd->code,
+            'owner_business_code' => $ownerBusiness->code,
+            'trader_business_code' => $traderBusiness->code,
         ]);
 
         //checking
@@ -416,9 +404,9 @@ class ModelTest extends TestCase
         //Added Country because we are not using Factory to Add Business
         $countries = Country::get('code')->toArray();
         $countryCode = null;
-        if(empty($countries)){
+        if (empty($countries)) {
             $countryCode = Country::factory()->create()->code;
-        }else{
+        } else {
             $countryCode = fake()->randomElement($countries)['code'];
         }
 
@@ -426,25 +414,25 @@ class ModelTest extends TestCase
         $data = [
             'country_code' => $countryCode,
             'type' => UserTypeEnum::AGENT->value,
-            'code'=> generateCode($name),
+            'code' => generateCode($name),
             'business_name' => $name,
         ];
         $business = Business::addBusiness($data);
-        $user = User::factory()->create(['business_code'=>$business->code]);
+        $user = User::factory()->create(['business_code' => $business->code]);
 
         InitiatedPayment::factory()->create([
-            'business_code'=>$business->code,
-            'status'=>InitiatedPaymentStatusEnum::INITIATED->value,
+            'business_code' => $business->code,
+            'status' => InitiatedPaymentStatusEnum::INITIATED->value,
         ]);
 
         $this->assertTrue($user->hasPendingPayment());
 
-        $pendingPayment = $user->getBusinessPendingPayments(['business_code','status'])->toArray();
+        $pendingPayment = $user->getBusinessPendingPayments(['business_code', 'status'])->toArray();
 
         $this->assertContains([
-            'business_code'=>$business->code,
-            'status'=>InitiatedPaymentStatusEnum::INITIATED->value,
-        ],$pendingPayment);
+            'business_code' => $business->code,
+            'status' => InitiatedPaymentStatusEnum::INITIATED->value,
+        ], $pendingPayment);
 
     }
 
@@ -456,11 +444,11 @@ class ModelTest extends TestCase
 
         $business->delete();
 
-        $this->assertDatabaseHas('businesses',[
-            'code' => $code
+        $this->assertDatabaseHas('businesses', [
+            'code' => $code,
         ]);
         $this->assertNotNull($business->deleted_at);
-        $this->assertNotContains(['code'=>$code], Business::get()->toArray());
+        $this->assertNotContains(['code' => $code], Business::get()->toArray());
 
     }
 
@@ -472,12 +460,11 @@ class ModelTest extends TestCase
 
         $networkTill->delete();
 
-        $this->assertDatabaseHas('networks',[
-            'code' => $code
+        $this->assertDatabaseHas('networks', [
+            'code' => $code,
         ]);
         $this->assertNotNull($networkTill->deleted_at);
-        $this->assertNotContains(['code'=>$code], Network::get()->toArray());
+        $this->assertNotContains(['code' => $code], Network::get()->toArray());
 
     }
-
 }

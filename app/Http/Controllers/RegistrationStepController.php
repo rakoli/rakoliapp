@@ -8,19 +8,16 @@ use App\Actions\InitiateSubscriptionPayment;
 use App\Actions\RequestEmailVerificationCode;
 use App\Actions\RequestPhoneVerificationCode;
 use App\Actions\SendTelegramNotification;
-use App\Actions\Vas\Registration\DocumentUploads;
 use App\Models\Business;
 use App\Models\InitiatedPayment;
-use App\Models\BusinessVerificationUpload;
 use App\Models\Package;
 use App\Models\User;
 use App\Utils\DPORequestTokenFormat;
 use App\Utils\Enums\InitiatedPaymentStatusEnum;
-use App\Utils\Enums\BusinessUploadDocumentTypeEnums;
 use App\Utils\VerifyOTP;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class RegistrationStepController extends Controller
 {
@@ -381,78 +378,6 @@ class RegistrationStepController extends Controller
         }
 
         return redirect($requestResult['url']);
-    }
-
-    public function registrationUploads(Request $request)
-    {
-        /** @var Business $business */
-        $business = auth()->user()->business;
-
-        $file = $request->file($request->document_name);
-
-        $path = $file->store("uploads/business_verification/{$business->code}", 's3');
-
-        $url = Storage::disk('s3')->url($path);
-
-        DocumentUploads::run(
-            business: $business,
-            documentPath: $url,
-            documentName: $request->document_name,
-            documentType: BusinessUploadDocumentTypeEnums::tryFrom($request->document_type),
-            updateColumns: [
-                $request->column_name => $request->column_value,
-            ],
-
-        );
-
-        return response()->json(['url' => $url], 200);
-
-    }
-
-    public function registrationFinish(Request $request)
-    {
-        try {
-
-            /** @var Business $business */
-            $business = auth()->user()->business;
-
-            if (! filled($business->tax_id)) {
-                throw new \Exception('Business Tax Id is Required');
-            }
-            if (! filled($business->business_regno)) {
-                throw new \Exception('Business Registration No is Required');
-            }
-            if (! BusinessVerificationUpload::query()->where(['document_type' => BusinessUploadDocumentTypeEnums::TAX_ID->value])->exists()) {
-
-                throw new \Exception('Kindly upload your tax certificate Document');
-            }
-
-            if (! BusinessVerificationUpload::query()->where(['document_type' => BusinessUploadDocumentTypeEnums::REGISTRATION->value])->exists()) {
-
-                throw new \Exception('Kindly upload your business Registration certificate Document');
-            }
-
-            if (! BusinessVerificationUpload::query()->where(['document_type' => BusinessUploadDocumentTypeEnums::NAT->value])->exists()) {
-
-                throw new \Exception('Kindly upload your Identification Document');
-            }
-
-            /** @var User $user */
-            $user = auth()->user();
-            $user->registration_step = $user->registration_step + 1;
-            $user->save();
-
-            return [
-                'status' => 200,
-                'message' => 'updated',
-            ];
-
-        } catch (\Exception $e) {
-            return [
-                'status' => 422,
-                'message' => $e->getMessage(),
-            ];
-        }
     }
 
     public function registrationVas()

@@ -24,10 +24,10 @@ return new class extends Migration
             $table->integer('no_of_trades_cancelled')->default(0);
             $table->integer('no_of_positive_feedback')->default(0);
             $table->integer('no_of_negative_feedback')->default(0);
-            $table->decimal('volume_traded',12,2)->default(0);
+            $table->decimal('volume_traded', 12, 2)->default(0);
 
-            $table->decimal('completion',12,2)->default(0);
-            $table->decimal('feedback',12,2)->default(0);
+            $table->decimal('completion', 12, 2)->default(0);
+            $table->decimal('feedback', 12, 2)->default(0);
 
             $table->timestamps();
         });

@@ -15,13 +15,13 @@ class DatabaseSeeder extends Seeder
         $this->call([
             SettingsSeeder::class,
             CountrySeeder::class,
-            PackagesTableSeeder::class,
-            UsersTableSeeder::class,
-            TZFSPSeeder::class,
-            KEFSPSeeder::class,
             TzRegionTableSeeder::class,
             KeRegionTableSeeder::class,
-            WardsSeeder::class,
+            TZFSPSeeder::class,
+            KEFSPSeeder::class,
+            CryptoSeeder::class,
+            PackagesTableSeeder::class,
+            UsersTableSeeder::class,
             SampleDataSeeder::class,
         ]);
     }

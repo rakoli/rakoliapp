@@ -16,11 +16,17 @@ class KEFSPSeeder extends Seeder
 
         foreach ($data as $fsp) {
 
-            FinancialServiceProvider::create([
+            $data = [
                 'country_code' => 'KE',
                 'name' => strtoupper($fsp['name']),
                 'code' => generateCode($fsp['name'], 'ke'),
-            ]);
+            ];
+
+            if(in_array($fsp['name'],FinancialServiceProvider::$keDefaultsFSPs)){
+                $data['is_default'] = true;
+            }
+
+            FinancialServiceProvider::create($data);
 
         }
     }

@@ -18,11 +18,11 @@ return new class extends Migration
                 ->on('exchange_ads')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->string('type');//ExchangePaymentMethodTypeEnum::class
+            $table->string('type'); //ExchangePaymentMethodTypeEnum::class
             $table->string('method_name');
             $table->string('account_number');
             $table->string('account_name');
-            $table->string('other_ref')->nullable();//For future use
+            $table->string('other_ref')->nullable(); //For future use
             $table->boolean('status')->default(1);
 
             $table->timestamps();

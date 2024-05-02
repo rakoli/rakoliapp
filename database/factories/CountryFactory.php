@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Country>
@@ -23,18 +22,21 @@ class CountryFactory extends Factory
                 'name' => 'Tanzania',
                 'currency' => 'TZS',
                 'dialing_code' => '+255',
+                'currency_coincapid' => 'tanzanian-shilling',
             ],
             [
                 'code' => 'UG',
                 'name' => 'Uganda',
                 'currency' => 'UGX',
                 'dialing_code' => '+256',
+                'currency_coincapid' => 'ugandan-shilling',
             ],
             [
                 'code' => 'KE',
                 'name' => 'Kenya',
                 'currency' => 'KES',
                 'dialing_code' => '+254',
+                'currency_coincapid' => 'kenyan-shilling',
             ],
         ]);
 
@@ -43,6 +45,7 @@ class CountryFactory extends Factory
             'name' => $country['name'],
             'currency' => $country['currency'],
             'dialing_code' => $country['dialing_code'],
+            'currency_coincapid' => $country['currency_coincapid'],
         ];
     }
 }

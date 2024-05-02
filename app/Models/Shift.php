@@ -4,16 +4,20 @@ namespace App\Models;
 
 use App\Models\Scopes\BusinessScoped;
 use App\Models\Scopes\LocationScoped;
+use App\Models\Scopes\UserScoped;
 use App\Utils\Enums\ShiftStatusEnum;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Scout\Searchable;
 
 class Shift extends Model
 {
     use HasFactory;
+    use Searchable;
 
     protected $guarded = ['id'];
 
@@ -25,6 +29,7 @@ class Shift extends Model
     {
         static::addGlobalScope(new LocationScoped());
         static::addGlobalScope(new BusinessScoped());
+        static::addGlobalScope(new UserScoped());
     }
 
     public function user(): BelongsTo
@@ -45,6 +50,11 @@ class Shift extends Model
     public function transactions(): HasMany
     {
         return $this->hasMany(ShiftTransaction::class, 'shift_id', 'id');
+    }
+
+    public function cashTransactions(): HasMany
+    {
+        return $this->hasMany(ShiftCashTransaction::class, 'shift_id', 'id');
     }
 
     public function location(): BelongsTo
@@ -72,5 +82,10 @@ class Shift extends Model
     public function shorts(): HasMany
     {
         return $this->hasMany(Short::class);
+    }
+
+    public function scopeOpen(Builder $query)
+    {
+        $query->where('status', ShiftStatusEnum::OPEN);
     }
 }

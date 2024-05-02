@@ -1,5 +1,5 @@
 <!-- Home -->
-<div class="menu-item py-2 {{returnActiveMenuStyle('')}}">
+<div class="menu-item py-2">
     <!--begin:Menu link-->
     <a class="menu-link menu-center" href="{{route('home')}}" target="_self">
         <span class="menu-icon me-0">
@@ -42,40 +42,51 @@
 
             <!--begin:Menu sub-->
             <div class="menu-sub menu-sub-accordion">
-                <a class="menu-link" href="{{route('agency.transactions')}}">
+                <a class="menu-link"  href ="{{route('agency.transactions')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Transactions') }}</span>
                 </a>
 
-                <a class="menu-link" href="{{route('agency.shift')}}">
+                <a class="menu-link"  href ="{{route('agency.shift')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Shift') }}</span>
                 </a>
 
-                <a class="menu-link" href="{{route('agency.tills')}}">
-                    <span class="menu-bullet">
-                        <span class="bullet bullet-dot"></span>
-                    </span>
-                    <span class="menu-title">{{ __('Tills') }}</span>
-                </a>
 
-                <a class="menu-link" href="{{route('agency.networks')}}">
+                <a
+                    class="menu-link"
+                    href ="{{route('agency.networks')}}"
+                >
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Networks') }}</span>
                 </a>
 
-                <a class="menu-link" href="{{route('agency.loans')}}">
+                <a
+                    class="menu-link"
+                    href ="{{route('agency.loans')}}"
+                >
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Loans') }}</span>
                 </a>
+
+                <a
+                    class="menu-link"
+                    href ="{{route('agency.shift.transfer.request')}}"
+                >
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ __('Transfer Request') }}</span>
+                </a>
+
 
             </div>
             <!--end:Menu sub-->
@@ -219,7 +230,7 @@
 </div>
 
 <!-- Business Management -->
-<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('business')}}">
+<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2">
     <!--begin:Menu link-->
     <span class="menu-link menu-center">
         <span class="menu-icon me-0">

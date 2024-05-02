@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Business;
 use App\Models\ExchangeTransaction;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -21,27 +20,26 @@ class ExchangeFeedbackFactory extends Factory
     {
         $transactions = ExchangeTransaction::get('id')->toArray();
         $transactionId = null;
-        if(empty($transactions)){
+        if (empty($transactions)) {
             $transactionId = ExchangeTransaction::factory()->create()->id;
-        }else{
+        } else {
             $transactionId = fake()->randomElement($transactions)['id'];
         }
 
-        $exchangeTransaction = ExchangeTransaction::where('id',$transactionId)->first();
-        $reviewedBusinessCode = fake()->randomElement([$exchangeTransaction->owner_business_code,$exchangeTransaction->trader_business_code]);
+        $exchangeTransaction = ExchangeTransaction::where('id', $transactionId)->first();
+        $reviewedBusinessCode = fake()->randomElement([$exchangeTransaction->owner_business_code, $exchangeTransaction->trader_business_code]);
 
-        $users = User::where('business_code',$reviewedBusinessCode)->get(['code'])->toArray();
-        if(empty($users)){
-            $userCode = User::factory()->create(['business_code'=>$reviewedBusinessCode])->code;
-        }else{
+        $users = User::where('business_code', $reviewedBusinessCode)->get(['code'])->toArray();
+        if (empty($users)) {
+            $userCode = User::factory()->create(['business_code' => $reviewedBusinessCode])->code;
+        } else {
             $userCode = fake()->randomElement($users)['code'];
         }
-
 
         return [
             'exchange_trnx_id' => $transactionId,
             'reviewed_business_code' => $reviewedBusinessCode,
-            'review' => fake()->randomElement([0,1]),
+            'review' => fake()->randomElement([0, 1]),
             'review_comment' => fake()->sentence,
             'reviewer_user_code' => $userCode,
         ];

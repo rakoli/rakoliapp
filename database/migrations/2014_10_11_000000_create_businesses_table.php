@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Country;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -43,7 +42,7 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        Schema::table('businesses', function (Blueprint $table){
+        Schema::table('businesses', function (Blueprint $table) {
             $table->foreign('referral_business_code', 'parent_business_fk')->references('code')
                 ->on('businesses')
                 ->onDelete('cascade')

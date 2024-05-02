@@ -21,17 +21,17 @@ class TownsFactory extends Factory
     {
         $countries = Country::get('code')->toArray();
         $countryCode = null;
-        if(empty($countries)){
+        if (empty($countries)) {
             $countryCode = Country::factory()->create()->code;
-        }else{
+        } else {
             $countryCode = fake()->randomElement($countries)['code'];
         }
 
         $regions = Region::get('code')->toArray();
         $regionCode = null;
-        if(empty($regions)){
+        if (empty($regions)) {
             $regionCode = Region::factory()->create()->code;
-        }else{
+        } else {
             $regionCode = fake()->randomElement($regions)['code'];
         }
 
@@ -39,7 +39,7 @@ class TownsFactory extends Factory
             'country_code' => $countryCode,
             'region_code' => $regionCode,
             'code' => Str::random(5),
-            'name' => "$countryCode $regionCode Town ".random_int(1,100)
+            'name' => "$countryCode $regionCode Town ".random_int(1, 100),
         ];
     }
 }

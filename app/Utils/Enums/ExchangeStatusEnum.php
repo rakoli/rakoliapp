@@ -2,16 +2,16 @@
 
 namespace App\Utils\Enums;
 
-enum ExchangeStatusEnum : string
+enum ExchangeStatusEnum: string
 {
-    case ACTIVE = "active";
-    case PENDING = "pending";
-    case DISABLED = "disabled";
-    case DELETED = "deleted";
+    case ACTIVE = 'active';
+    case PENDING = 'pending';
+    case DISABLED = 'disabled';
+    case DELETED = 'deleted';
 
     public static function userCantSeeArray()
     {
-        return ['pending','deleted'];
+        return ['pending', 'deleted'];
     }
 
     public static function userViewable()
@@ -19,7 +19,7 @@ enum ExchangeStatusEnum : string
         $values = [];
 
         foreach (self::cases() as $props) {
-            if(in_array($props->value, self::userCantSeeArray())){
+            if (in_array($props->value, self::userCantSeeArray())) {
                 continue;
             }
             array_push($values, $props->value);

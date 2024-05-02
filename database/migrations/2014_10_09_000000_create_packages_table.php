@@ -24,7 +24,7 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->string('code')->unique();
-            $table->decimal('price', 12, 2)->default('0.00');
+            $table->decimal('price', 12,2)->default('0.00');
             $table->string('price_currency');
             $table->decimal('price_commission', 12,2)->default('0.00');
             $table->integer('trial_period_hours')->unsigned()->default(0);

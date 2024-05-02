@@ -6,7 +6,6 @@ namespace App\Models;
 use App\Actions\InitiateSubscriptionPayment;
 use App\Utils\Enums\InitiatedPaymentStatusEnum;
 use App\Utils\Traits\BusinessAuthorization;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -19,9 +18,6 @@ use Laravel\Sanctum\HasApiTokens;
 use Rappasoft\LaravelAuthenticationLog\Traits\AuthenticationLoggable;
 use Spatie\Permission\Traits\HasRoles;
 
-/**
- * @property string $full_name
- */
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles, AuthenticationLoggable, SoftDeletes,BusinessAuthorization;
@@ -47,21 +43,11 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
-        'phone_otp_time' => 'datetime',
-        'email_otp_time' => 'datetime',
     ];
 
     public function name()
     {
         return $this->fname .' '.$this->lname;
-    }
-
-    /**  #[AllowDynamicProperties]
-     * private $full_name
-     */
-    public function fullName(): Attribute
-    {
-        return new Attribute(get: fn (): string => $this->name());
     }
 
     public function getEmailOTPCode()
@@ -94,12 +80,20 @@ class User extends Authenticatable
         return $this->hasMany(Loan::class, 'user_code', 'code');
     }
 
-    public function locations() : BelongsToMany
+    public function locations(): BelongsToMany
     {
-        return $this->belongsToMany(Location::class, 'location_users', 'user_code', 'location_code')
+        return $this->belongsToMany(
+            related: Location::class,
+            table: 'location_users',
+            foreignPivotKey: "user_code",
+            relatedPivotKey: "location_code",
+            parentKey: "code",
+            relatedKey: "code",
+        )->using(class: LocationUser::class)
             ->withPivot('id', 'business_code')
             ->withTimestamps();
     }
+
 
     public function shift_transactions() : HasMany
     {

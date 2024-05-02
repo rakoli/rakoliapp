@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
+use App\Models\Crypto;
+use App\Models\ShiftTransaction;
 use App\Models\User;
+use App\Utils\Enums\NetworkTypeEnum;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -32,11 +35,8 @@ if (! function_exists('settings')) {
 }
 
 if (! function_exists('generateCode')) {
-    function generateCode(string|int $name, string|int $prefixText = ''): string
+    function generateCode(string $name, string $prefixText = ''): string
     {
-        $prefixText = (string) $prefixText;
-        $name = (string) $name;
-
         $cleanName = cleanText($name);
         $code = str($cleanName)->trim()->lower()->value();
         $randomNumbers = rand(10, 999);
@@ -59,39 +59,41 @@ if (! function_exists('cleanText')) {
     }
 }
 
-function number_format_short($n, $precision = 1)
-{
+if (! function_exists('number_format_short')) {
+    function number_format_short($n, $precision = 1)
+    {
 
-    if ($n < 900) {
-        // 0 - 900
-        $n_format = number_format($n, $precision);
-        $suffix = '';
-    } elseif ($n < 900000) {
-        // 0.9k-850k
-        $n_format = number_format($n / 1000, $precision);
-        $suffix = 'K';
-    } elseif ($n < 900000000) {
-        // 0.9m-850m
-        $n_format = number_format($n / 1000000, $precision);
-        $suffix = 'M';
-    } elseif ($n < 900000000000) {
-        // 0.9b-850b
-        $n_format = number_format($n / 1000000000, $precision);
-        $suffix = 'B';
-    } else {
-        // 0.9t+
-        $n_format = number_format($n / 1000000000000, $precision);
-        $suffix = 'T';
+        if ($n < 900) {
+            // 0 - 900
+            $n_format = number_format($n, $precision);
+            $suffix = '';
+        } elseif ($n < 900000) {
+            // 0.9k-850k
+            $n_format = number_format($n / 1000, $precision);
+            $suffix = 'K';
+        } elseif ($n < 900000000) {
+            // 0.9m-850m
+            $n_format = number_format($n / 1000000, $precision);
+            $suffix = 'M';
+        } elseif ($n < 900000000000) {
+            // 0.9b-850b
+            $n_format = number_format($n / 1000000000, $precision);
+            $suffix = 'B';
+        } else {
+            // 0.9t+
+            $n_format = number_format($n / 1000000000000, $precision);
+            $suffix = 'T';
+        }
+
+        // Remove unecessary zeroes after decimal. "1.0" -> "1"; "1.00" -> "1"
+        // Intentionally does not affect partials, eg "1.50" -> "1.50"
+        if ($precision > 0) {
+            $dotzero = '.'.str_repeat('0', $precision);
+            $n_format = str_replace($dotzero, '', $n_format);
+        }
+
+        return $n_format.$suffix;
     }
-
-    // Remove unecessary zeroes after decimal. "1.0" -> "1"; "1.00" -> "1"
-    // Intentionally does not affect partials, eg "1.50" -> "1.50"
-    if ($precision > 0) {
-        $dotzero = '.'.str_repeat('0', $precision);
-        $n_format = str_replace($dotzero, '', $n_format);
-    }
-
-    return $n_format.$suffix;
 }
 
 function localeToLanguage($locale): string
@@ -140,8 +142,8 @@ function xmlToArrayConvert($xmlContent)
 function currencyCode(): ?string
 {
 
-    if (auth()->check()) {
-        return auth()->user()->country->currency;
+    if (\session()->has('currency')) {
+        return \session('currency');
     }
 
     return env('DEFAULT_CURRENCY');
@@ -173,46 +175,37 @@ function setupSession(User $user, $isRegisteringUser = false)
     $user->lastSeenUpdate();
 }
 
-function returnActiveMenuStyle($menuSection) : string
+function returnActiveMenuStyle($menuSection): string
 {
-    if($menuSection == cleanText(Request()->route()->getPrefix())){
+    if ($menuSection == cleanText(strstr(Request()->route()->getName(), '.',true))) {
         return 'hover';
     }
+
     return '';
 }
 
-function removeEverythingAfter($text, $needle){
-    $position = strpos($text, $needle);
-    if ($position !== false) {
-        $newText = substr($text, 0, $position + strlen($needle));
-        return $newText; // Output: "This is the text to remove"
-    } else {
-        return $text; // No occurrence of 'apple' found
-    }
-}
-
-function returnActiveSubMenuStyle($subSection) : string
+function returnActiveSubMenuStyle($subSection): string
 {
-    $routeName = removeEverythingAfter(Request()->route()->getName(),$subSection);
-    if($subSection == cleanText(strstr($routeName, '.'))){
+    if ($subSection == cleanText(strstr(Request()->route()->getName(), '.'))) {
         return 'active';
     }
+
     return '';
 }
 
-function str_camelcase($string) : string
+function str_camelcase($string): string
 {
     return ucwords(strtolower($string));
 }
 
-function tradeOrderInvence($type) : string
+function tradeOrderInvence($type): string
 {
-    if($type == "sell"){
-        return "buy";
+    if ($type == 'sell') {
+        return 'buy';
     }
 
-    if($type == "buy"){
-        return "sell";
+    if ($type == 'buy') {
+        return 'sell';
     }
 
     return $type;
@@ -220,7 +213,143 @@ function tradeOrderInvence($type) : string
 
 function idNumberDisplay($number)
 {
-    return str_pad("$number", 5,'0',STR_PAD_LEFT);
+    return str_pad("$number", 5, '0', STR_PAD_LEFT);
+}
+
+function shiftBalances(\App\Models\Shift $shift): array
+{
+    $cash = $shift->loadMissing('location')->location->balance;
+
+    $tills = [];
+
+    foreach ($shift->loadMissing('shiftNetworks.network.agency')->shiftNetworks as $shiftNetworks) {
+        if($shiftNetworks->network->agency){
+            $tills[$shiftNetworks->network->agency?->name] = [
+                'balance' => $shift->transactions()
+                    ->where('network_code', $shiftNetworks->network_code)
+                    ->exists() ? ShiftTransaction::query()->whereBelongsTo($shift, 'shift')
+                    ->where('network_code', $shiftNetworks->network_code)
+                    ->latest('created_at')
+                    ->limit(1)
+                    ->pluck('balance_new')
+                    ->first()
+                :
+                $shiftNetworks->balance_new,
+                'code' => $shiftNetworks->network_code,
+                'balance_new' => $shiftNetworks->balance_new,
+                'balance_old' => $shiftNetworks->balance_old,
+                'type' => NetworkTypeEnum::FINANCE,
+            ];
+        }
+
+        if($shiftNetworks->network->crypto){
+            $tills[$shiftNetworks->network->crypto?->name] = [
+                'balance' => $shift->transactions()
+                    ->where('network_code', $shiftNetworks->network_code)
+                    ->exists() ? ShiftTransaction::query()->whereBelongsTo($shift, 'shift')
+                    ->where('network_code', $shiftNetworks->network_code)
+                    ->latest('created_at')
+                    ->limit(1)
+                    ->pluck('balance_new')
+                    ->first()
+                   :
+                   $shiftNetworks->balance_new,
+                'code' => $shiftNetworks->network_code,
+                'balance_new' => $shiftNetworks->balance_new,
+                'balance_old' => $shiftNetworks->balance_old,
+                'type' => NetworkTypeEnum::CRYPTO,
+                'exchange_rate' => Crypto::convertCryptoToFiat($shiftNetworks->network?->crypto?->symbol,currencyCode()),
+            ];
+        }
+
+    }
+
+    $tillBalances = collect($tills)->sum(function ($item) {
+        return floatval($item['balance']);
+    });
+
+    $expenses = \App\Models\ShiftCashTransaction::query()
+        ->where([
+            'location_code' => $shift->location_code,
+            'user_code' => $shift->user_code,
+            'type' => \App\Utils\Enums\TransactionTypeEnum::MONEY_OUT,
+        ])
+        ->whereBetween('created_at', [
+            $shift->created_at,
+            now(),
+        ])
+        ->sum('amount');
+
+    $tillExpense = \App\Models\ShiftTransaction::query()
+    ->where([
+        'location_code' => $shift->location_code,
+        'user_code' => $shift->user_code,
+        'type' => \App\Utils\Enums\TransactionTypeEnum::MONEY_OUT,
+    ])
+    ->whereBetween('created_at', [
+        $shift->created_at,
+        now(),
+    ])
+    ->sum('amount');
+
+
+    $income = \App\Models\ShiftCashTransaction::query()
+        ->where([
+            'location_code' => $shift->location_code,
+            'user_code' => $shift->user_code,
+            'type' => \App\Utils\Enums\TransactionTypeEnum::MONEY_IN,
+        ])
+        ->whereBetween('created_at', [
+            $shift->created_at,
+            now(),
+        ])
+        ->sum('amount');
+
+    $tillIncome = \App\Models\ShiftTransaction::query()
+    ->where([
+        'location_code' => $shift->location_code,
+        'user_code' => $shift->user_code,
+        'type' => \App\Utils\Enums\TransactionTypeEnum::MONEY_IN,
+    ])
+    ->whereBetween('created_at', [
+        $shift->created_at,
+        now(),
+    ])
+    ->sum('amount');
+
+
+
+    $loanBalances = \App\Models\Loan::query()
+        ->whereBelongsTo($shift,'shift')
+        ->whereBetween('created_at', [
+            $shift->created_at,
+            now(),
+        ])
+        ->get( )
+    ->sum(fn (\App\Models\Loan $loan)  :float => + $loan->balance);
+
+
+    $startCapital = $shift->cash_start + $shift->shiftNetworks->sum('balance_old');
+
+    $endingCapital = ($cash + $income + $tillBalances + $loanBalances) - $expenses;
+
+    $shorts = $startCapital - $endingCapital ;
+
+    $cash = $cash + $income - $expenses;
+
+
+    return [
+        'totalBalance' => $endingCapital,
+        'cashAtHand' => $cash,
+        'tillBalances' => $tillBalances,
+        'expenses' => ($expenses + $tillExpense),
+        'networks' => $tills,
+        'income' => ($income + $tillIncome),
+        'startCapital' => $startCapital,
+        'endCapital' => $endingCapital,
+        'shorts' => $shorts ,
+        'loanBalances' => $loanBalances
+    ];
 }
 
 
@@ -237,6 +366,8 @@ function runDatabaseTransaction(\Closure $closure)
 
         return $result; // Return the result of the closure if needed
     } catch (\Exception $exception) {
+
+
         // If an exception occurs, rollback the transaction
         DB::rollback();
 
@@ -274,5 +405,6 @@ function runDatabaseTransaction(\Closure $closure)
 //            echo "Transaction failed!";
 //        }
     }
+
 
 }

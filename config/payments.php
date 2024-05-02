@@ -1,18 +1,19 @@
 <?php
-return [
-    "accepted_payment_methods" => ['dpopay','pesapal'],
-    "payment_valid_time_hours" => 24,
-    "company_token" => env("DPO_COMPANY_TOKEN", "9F416C11-127B-4DE2-AC7F-D5710E4C5E0A"),
-    "account_type" => env("DPO_ACCOUNT_TYPE", "3854"),
-    'is_test_mode' => env("DPO_IS_TEST_MODE", true),
-    "back_url" => env("DPO_BACK_URL"),
-    "redirect_url" => env("DPO_REDIRECT_URL"),
 
-    "pesapal-env"=>env('PESAPAL_ENV', 'sandbox'),
-    "pesapal_key"=>env("PESAPAL_CONSUMER_KEY"),
-    "pesapal_secret"=>env("PESAPAL_CONSUMER_SECRET"),
-    "pesapal_ipnid"=>env("PESAPAL_CONSUMER_IPN"),
-    "pesapal_istest"=> env("PESAPAL_IS_TEST_MODE"),
+return [
+    'accepted_payment_methods' => ['dpopay', 'pesapal'],
+    'payment_valid_time_hours' => 24,
+    'company_token' => env('DPO_COMPANY_TOKEN', '9F416C11-127B-4DE2-AC7F-D5710E4C5E0A'),
+    'account_type' => env('DPO_ACCOUNT_TYPE', '3854'),
+    'is_test_mode' => env('DPO_IS_TEST_MODE', true),
+    'back_url' => env('DPO_BACK_URL'),
+    'redirect_url' => env('DPO_REDIRECT_URL'),
+
+    'pesapal-env' => env('PESAPAL_ENV', 'sandbox'),
+    'pesapal_key' => env('PESAPAL_CONSUMER_KEY'),
+    'pesapal_secret' => env('PESAPAL_CONSUMER_SECRET'),
+    'pesapal_ipnid' => env('PESAPAL_CONSUMER_IPN'),
+    'pesapal_istest' => env('PESAPAL_IS_TEST_MODE'),
     'pesapal-endpoint' => [
         /*
          * For getting auth token using key and secret

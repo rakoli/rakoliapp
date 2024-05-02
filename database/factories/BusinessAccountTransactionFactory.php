@@ -3,8 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\Business;
-use App\Models\Location;
-use App\Models\User;
 use App\Utils\Enums\TransactionCategoryEnum;
 use App\Utils\Enums\TransactionTypeEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -23,9 +21,9 @@ class BusinessAccountTransactionFactory extends Factory
     {
         $businesses = Business::get('code')->toArray();
         $businessCode = null;
-        if(empty($businesses)){
+        if (empty($businesses)) {
             $businessCode = Business::factory()->create()->code;
-        }else{
+        } else {
             $businessCode = fake()->randomElement($businesses)['code'];
         }
 

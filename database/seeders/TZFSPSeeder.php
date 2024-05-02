@@ -15,12 +15,17 @@ class TZFSPSeeder extends Seeder
         $data = require_once __DIR__.'/seeds/tzfsp.php';
 
         foreach ($data as $fsp) {
-
-            FinancialServiceProvider::create([
+            $data = [
                 'country_code' => 'TZ',
                 'name' => $fsp['name'],
                 'code' => generateCode($fsp['name'], 'tz'),
-            ]);
+            ];
+
+            if(in_array($fsp['name'],FinancialServiceProvider::$tzDefaultsFSPs)){
+                $data['is_default'] = true;
+            }
+
+            FinancialServiceProvider::create($data);
 
         }
 

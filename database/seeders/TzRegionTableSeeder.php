@@ -33,7 +33,7 @@ class TzRegionTableSeeder extends Seeder
             ]);
 
             $districtsData[] = include_once __DIR__.'/seeds/tzlocations.php';
-            //print_r($districtsData[0]);
+            //            print_r($districtsData[0]);
             $districts = $this->getDistrictsByRegion($regionName, $districtsData[0]);
 
             foreach ($districts as $districtName) {

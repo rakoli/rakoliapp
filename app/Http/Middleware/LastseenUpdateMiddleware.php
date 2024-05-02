@@ -16,6 +16,7 @@ class LastseenUpdateMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $request->user()->lastSeenUpdate();
+
         return $next($request);
     }
 }

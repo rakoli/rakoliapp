@@ -2,10 +2,7 @@
 
 namespace App\Events;
 
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -15,13 +12,18 @@ class ExchangeChatEvent implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $chatId;
+
     public $message;
+
     public $usersName;
+
     public $businesssName;
+
     public $textTime;
+
     public $sendUserId;
 
-    public function __construct($chatId,$message,$usersName, $businesssName, $textTime,$sendUserId)
+    public function __construct($chatId, $message, $usersName, $businesssName, $textTime, $sendUserId)
     {
         $this->chatId = $chatId;
         $this->message = $message;

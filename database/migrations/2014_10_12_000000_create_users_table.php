@@ -46,7 +46,6 @@ return new class extends Migration
             $table->timestamp('email_otp_time')->nullable();
             $table->integer('email_otp_count')->nullable();
 
-
             $table->string('iddoc_type')->nullable();
             $table->string('iddoc_id')->nullable()->unique();
             $table->string('iddoc_path')->nullable();

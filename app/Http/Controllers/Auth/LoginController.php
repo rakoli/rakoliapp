@@ -45,7 +45,6 @@ class LoginController extends Controller
     /**
      * Log the user out of the application.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function logout(Request $request)
@@ -60,15 +59,17 @@ class LoginController extends Controller
 
     public function authenticated(Request $request, $user)
     {
-        if ($user->status == UserStatusEnum::BLOCKED){
+        if ($user->status == UserStatusEnum::BLOCKED) {
             $locale = Session::get('locale');
             Auth::logout();
             Session::flush();
             Session::put('locale', $locale);
+
             return 0;
         }
 
         setupSession($user);
+
         return 1;
     }
 

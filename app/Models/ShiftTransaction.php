@@ -23,29 +23,34 @@ class ShiftTransaction extends Model
         'category' => TransactionCategoryEnum::class,
     ];
 
+    protected static function booted()
+    {
+        static::addGlobalScope(new LocationScoped());
+        static::addGlobalScope(new BusinessScoped());
+    }
+
     public function business(): BelongsTo
     {
-        return  $this->belongsTo(Business::class,'business_code','code');
+        return $this->belongsTo(Business::class, 'business_code', 'code');
     }
 
-    public function network() : BelongsTo
+    public function network(): BelongsTo
     {
-        return  $this->belongsTo(Network::class,'network_code','code')->with('agency');
+        return $this->belongsTo(Network::class, 'network_code', 'code')->with('agency');
     }
 
-    public function shift() : BelongsTo
+    public function shift(): BelongsTo
     {
-        return  $this->belongsTo(Shift::class);
+        return $this->belongsTo(Shift::class);
     }
 
-    public function location() : BelongsTo
+    public function location(): BelongsTo
     {
         return $this->belongsTo(Location::class, 'location_code', 'code');
     }
 
-    public function user() : BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_code', 'code');
     }
-
 }

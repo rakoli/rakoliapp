@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\Country;
-use App\Models\PackageName;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -21,9 +20,9 @@ class FinancialServiceProviderFactory extends Factory
     {
         $countries = Country::get('code')->toArray();
         $countryCode = null;
-        if(empty($countries)){
+        if (empty($countries)) {
             $countryCode = Country::factory()->create()->code;
-        }else{
+        } else {
             $countryCode = fake()->randomElement($countries)['code'];
         }
 

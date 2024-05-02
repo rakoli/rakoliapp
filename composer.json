@@ -6,13 +6,15 @@
     "require": {
         "php": "^8.1",
         "ext-simplexml": "*",
+        "ext-intl": "*",
         "africastalking/africastalking": "^3.0",
         "akaunting/laravel-money": "^5.1",
         "bugsnag/bugsnag-laravel": "^2.26",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/fortify": "^1.18",
-        "laravel/framework": "^10.10",
+        "laravel/framework": "^10.40",
         "laravel/sanctum": "^3.2",
+        "laravel/scout": "^10.8",
         "laravel/tinker": "^2.8",
         "laravel/ui": "^4.2",
         "league/flysystem-aws-s3-v3": "^3.19",
@@ -31,6 +33,7 @@
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.9",
         "fakerphp/faker": "^1.9.1",
+        "larastan/larastan": "^2.0",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.18",
         "mockery/mockery": "^1.4.4",
@@ -54,6 +57,8 @@
         }
     },
     "scripts": {
+        "pint" : "./vendor/bin/pint",
+        "phpstan" : "./vendor/bin/phpstan analyse --memory-limit=2G",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"

@@ -5,8 +5,6 @@ namespace Database\Factories;
 use App\Models\Business;
 use App\Models\FinancialServiceProvider;
 use App\Models\Location;
-use App\Utils\Enums\BusinessTypeEnum;
-use App\Utils\Enums\TransactionTypeEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -24,23 +22,21 @@ class NetworkFactory extends Factory
     {
         $businesses = Business::get('code')->toArray();
         $businessCode = null;
-        if(empty($businesses)){
+        if (empty($businesses)) {
             $businessCode = Business::factory()->create()->code;
-        }else{
+        } else {
             $businessCode = fake()->randomElement($businesses)['code'];
         }
-        $business = Business::where('code',$businessCode)->first();
+        $business = Business::where('code', $businessCode)->first();
 
-
-        $locationsModels = Location::where('business_code',$businessCode)->get('code');
-        if($locationsModels->isEmpty()){
+        $locationsModels = Location::where('business_code', $businessCode)->get('code');
+        if ($locationsModels->isEmpty()) {
             $locationsModels = Location::factory()->count(1)->create();
         }
         $locations = $locationsModels->toArray();
 
-
-        $fspModels = FinancialServiceProvider::where('country_code',$business->country_code)->get('code');
-        if($fspModels->isEmpty()){
+        $fspModels = FinancialServiceProvider::where('country_code', $business->country_code)->get('code');
+        if ($fspModels->isEmpty()) {
             $fspModels = FinancialServiceProvider::factory()->count(2)->create();
         }
         $fsps = $fspModels->toArray();
@@ -50,11 +46,12 @@ class NetworkFactory extends Factory
             'business_code' => $businessCode,
             'location_code' => fake()->randomElement($locations)['code'],
             'fsp_code' => fake()->randomElement($fsps)['code'],
+            'type' => 'Finance',
             'code' => Str::random(10),
             'agent_no' => strtoupper(Str::random(5)),
-            'name' => $selectedFsp . ' till',
+            'name' => $selectedFsp.' till',
             'balance' => fake()->numberBetween(500000, 5000000),
-            'balance_currency' => fake()->randomElement(['kes','tzs']),
+            'balance_currency' => fake()->randomElement(['kes', 'tzs']),
             'description' => fake()->sentence,
         ];
     }

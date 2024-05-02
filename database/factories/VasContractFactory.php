@@ -6,8 +6,6 @@ use App\Models\Business;
 use App\Models\Country;
 use App\Models\VasContract;
 use App\Models\VasTask;
-use App\Utils\Enums\BusinessTypeEnum;
-use App\Utils\Enums\TaskTypeEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -22,30 +20,29 @@ class VasContractFactory extends Factory
     {
         $countries = Country::get('code')->toArray();
         $countryCode = null;
-        if(empty($countries)){
+        if (empty($countries)) {
             $countryCode = Country::factory()->create()->code;
-        }else{
+        } else {
             $countryCode = fake()->randomElement($countries)['code'];
         }
 
-        $vasBusinesses = Business::where('type',\App\Utils\Enums\BusinessTypeEnum::VAS->value)->get('code')->toArray();
+        $vasBusinesses = Business::where('type', \App\Utils\Enums\BusinessTypeEnum::VAS->value)->get('code')->toArray();
         $vasBusinessCode = null;
-        if(empty($vasBusinesses)){
-            $vasBusinessCode = Business::factory(['type'=>\App\Utils\Enums\BusinessTypeEnum::VAS->value])->create()->code;
-        }else{
+        if (empty($vasBusinesses)) {
+            $vasBusinessCode = Business::factory(['type' => \App\Utils\Enums\BusinessTypeEnum::VAS->value])->create()->code;
+        } else {
             $vasBusinessCode = fake()->randomElement($vasBusinesses)['code'];
         }
 
-        $agentBusinessArray = Business::where('code','!=',$vasBusinessCode)->where('type',\App\Utils\Enums\BusinessTypeEnum::AGENCY->value)->get(['code']);
+        $agentBusinessArray = Business::where('code', '!=', $vasBusinessCode)->where('type', \App\Utils\Enums\BusinessTypeEnum::AGENCY->value)->get(['code']);
         $agentBusinessCode = null;
-        if(empty($agentBusinessArray)){
-            $agentBusinessCode = Business::factory(['type'=>\App\Utils\Enums\BusinessTypeEnum::AGENCY->value])->create()->code;
-        }else{
+        if (empty($agentBusinessArray)) {
+            $agentBusinessCode = Business::factory(['type' => \App\Utils\Enums\BusinessTypeEnum::AGENCY->value])->create()->code;
+        } else {
             $agentBusinessCode = fake()->randomElement($agentBusinessArray->toArray())['code'];
         }
 
-        $vasTaskCode = VasTask::factory()->create(['vas_business_code'=>$vasBusinessCode])->code;
-
+        $vasTaskCode = VasTask::factory()->create(['vas_business_code' => $vasBusinessCode])->code;
 
         return [
             'code' => Str::random(10),
@@ -54,8 +51,8 @@ class VasContractFactory extends Factory
             'agent_business_code' => $agentBusinessCode,
             'vas_task_code' => $vasTaskCode,
             'title' => fake()->sentence,
-            'time_start' => now()->subHours(random_int(5,24)),
-            'time_end' => fake()->randomElement([now()->addHours(random_int(16,48)), null]),
+            'time_start' => now()->subHours(random_int(5, 24)),
+            'time_end' => fake()->randomElement([now()->addHours(random_int(16, 48)), null]),
         ];
     }
 }
