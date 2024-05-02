@@ -25,7 +25,7 @@ class AddLoan
     {
 
         return runDatabaseTransaction(function () use ($shift, $data) {
-            Log::info($data);
+            
 
             throw_if(condition: $shift->status != ShiftStatusEnum::OPEN,
                 exception: new \Exception('You cannot transact without an open shift')
@@ -44,7 +44,7 @@ class AddLoan
                 'description' => $data['description'],
                 'note' => $data['notes'],
             ]);
-            Log::info($loan);
+            
             $source = FundSourceEnums::tryFrom($data['source']);
             $type = LoanTypeEnum::tryFrom($data['type']);
             if ($source === FundSourceEnums::TILL && $type === LoanTypeEnum::MONEY_IN) {
@@ -57,8 +57,8 @@ class AddLoan
                     LoanTypeEnum::MONEY_IN->value => TransactionTypeEnum::MONEY_IN,
                     LoanTypeEnum::MONEY_OUT->value => TransactionTypeEnum::MONEY_OUT,
                 };
-                Log::info("Till");
-                Log::info($data);
+                
+                
                 $this->createShiftTransaction(
                     shift: $shift,
                     data: $data,
@@ -76,8 +76,8 @@ class AddLoan
                     LoanTypeEnum::MONEY_IN->value => TransactionTypeEnum::MONEY_OUT,
                     LoanTypeEnum::MONEY_OUT->value => TransactionTypeEnum::MONEY_IN,
                 };
-                Log::info("Cash");
-                Log::info($data);
+                
+                
 
 
                 $this->createShiftCashTransaction(

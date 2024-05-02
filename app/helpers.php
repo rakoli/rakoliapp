@@ -176,9 +176,15 @@ function setupSession(User $user, $isRegisteringUser = false)
 }
 
 function returnActiveMenuStyle($menuSection): string
-{
-    if ($menuSection == cleanText(strstr(Request()->route()->getName(), '.',true))) {
-        return 'hover';
+{   
+    if(substr_count(Request()->route()->getName(), '.') > 0){
+        if ($menuSection == cleanText(strstr(Request()->route()->getName(), '.',true))) {
+            return 'hover';
+        }    
+    } else {
+        if ($menuSection == cleanText(Request()->route()->getName())) {
+            return 'hover';
+        }    
     }
 
     return '';
