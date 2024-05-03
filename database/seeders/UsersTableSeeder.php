@@ -95,7 +95,7 @@ class UsersTableSeeder extends Seeder
                 'country_code' => 'TZ',
                 'fname' => 'Felix',
                 'lname' => 'Mihayo',
-                'phone' => '255753464603',
+                'phone' => '255763466080',
                 'email' => 'vas@rakoli.com',
                 'code' => generateCode('Felix Mihayo'),
                 'password' => Hash::make('12345678'),

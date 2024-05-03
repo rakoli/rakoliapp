@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Actions\InitiateSubscriptionPayment;
 use App\Utils\Enums\InitiatedPaymentStatusEnum;
+use App\Utils\Enums\UserTypeEnum;
 use App\Utils\Traits\BusinessAuthorization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -179,6 +180,15 @@ class User extends Authenticatable
     public function businessRoles(): HasManyThrough
     {
         return $this->hasManyThrough( BusinessRole::class,UserRole::class,'user_code','code','code','user_role');
+    }
+
+    public function canAccessMobileApp(): bool
+    {
+        if($this->type != UserTypeEnum::AGENT->value){
+            return false;
+        }
+
+        return true;
     }
 
 }
