@@ -2,21 +2,25 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\User;
+use App\Utils\ValidationRule;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class MobileAppController
 {
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'phone' => ['required', 'numeric'],
+            'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
 
         if (\Auth::attempt($credentials)) {
             $user = \Auth::user();
 
-            if(!$user->canAccessMobileApp()){
+            if (!$user->canAccessMobileApp()) {
                 return responder()->error('unauthorized');
             }
 
@@ -25,6 +29,7 @@ class MobileAppController
             return responder()->success([
                 'token_type' => 'Bearer',
                 'access_token' => $token,
+                'user' => getApiSessionData($user)
             ]);
 
         } else {
@@ -35,11 +40,27 @@ class MobileAppController
     public function logout(Request $request)
     {
 
-        if(!$request->user()->currentAccessToken()->delete()){
+        if (!$request->user()->currentAccessToken()->delete()) {
             return responder()->error('action_failed');
         }
 
-        return responder()->success(['message'=>'logged out successfully']);
+        return responder()->success(['message' => 'logged out successfully']);
+    }
+
+    public function register(Request $request)
+    {
+        $request->validate(ValidationRule::agentRegistration());
+
+        event(new Registered($user = User::addUser($request->all())));
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        User::completedRegistration($user);
+
+        return responder()->success([
+            'token' => $token,
+            'user' => getApiSessionData($user,true)
+        ]);
     }
 
 }

@@ -10,6 +10,7 @@ use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use App\Utils\Enums\UserTypeEnum;
 use App\Utils\TelegramCommunication;
+use App\Utils\ValidationRule;
 use BitFinera\Db\Package;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -98,15 +99,8 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        $validators = [
-            'country_dial_code' => ['exists:countries,dialing_code'],
-            'fname' => ['required', 'string', 'max:20'],
-            'lname' => ['required', 'string', 'max:20'],
-            'phone' => ['required','numeric'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'referral_business_code' => ['nullable', 'string', 'exists:businesses,code'],
-        ];
+        $validators = ValidationRule::agentRegistration();
+
         if (env('APP_ENV') == 'production'){
             $validators['g-recaptcha-response'] = [new GoogleReCaptchaV3ValidationRule('register')];
         }
@@ -121,35 +115,14 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $country_code = Country::where('dialing_code',$data['country_dial_code'])->first()->code;
-        $country_dial_code = substr($data['country_dial_code'], 1);
-        $plainPhone = substr($data['phone'], 1);
-        $fullPhone = $country_dial_code . $plainPhone;
-        $referralBusinessCode = null;
-        if(array_key_exists('referral_business_code', $data)){
-            $referralBusinessCode = $data['referral_business_code'];
-        }
-        return User::create([
-            'country_code' => $country_code,
-            'code' => generateCode($data['fname'].' '.$data['lname'],$country_code),
-            'type' => UserTypeEnum::AGENT->value,
-            'fname' => $data['fname'],
-            'lname' => $data['lname'],
-            'phone' => $fullPhone,
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'referral_business_code' => $referralBusinessCode,
-        ]);
+        return User::addUser($data);
     }
 
     protected function registered(Request $request, $user)
     {
         setupSession($user,true);
 
-        if(env('APP_ENV') == 'production'){
-            $message = "User Registration: A new $user->type user $user->fname $user->lname from $user->country_code. Registration process ongoing.";
-            SendTelegramNotification::dispatch($message);
-        }
+        User::completedRegistration($user);
 
     }
 

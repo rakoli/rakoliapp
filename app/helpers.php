@@ -175,16 +175,41 @@ function setupSession(User $user, $isRegisteringUser = false)
     $user->lastSeenUpdate();
 }
 
+function getApiSessionData(User $user,$isRegisteringUser = false): array
+{
+    $data = [
+        'id'=> $user->id,
+        'code'=> $user->code,
+        'country_code'=> $user->country_code,
+        'currency'=> $user->country->currency,
+        'business_code'=> $user->business_code,
+        'business_name'=> null,
+        'name'=> $user->name(),
+        'phone'=> $user->phone,
+        'email'=> $user->email,
+        'is_super_agent'=> $user->is_super_agent,
+        'last_login'=> $user->last_login,
+        'registration_step'=> $user->registration_step,
+        'status'=> $user->status,
+    ];
+
+    if ($user->type != 'admin' && $user->registration_step == 0 && $isRegisteringUser == false) {
+        $data['business_name'] =  $user->business->business_name;
+    }
+
+    return  $data;
+}
+
 function returnActiveMenuStyle($menuSection): string
-{   
+{
     if(substr_count(Request()->route()->getName(), '.') > 0){
         if ($menuSection == cleanText(strstr(Request()->route()->getName(), '.',true))) {
             return 'hover';
-        }    
+        }
     } else {
         if ($menuSection == cleanText(Request()->route()->getName())) {
             return 'hover';
-        }    
+        }
     }
 
     return '';

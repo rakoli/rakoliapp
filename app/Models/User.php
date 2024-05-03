@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Actions\InitiateSubscriptionPayment;
+use App\Actions\SendTelegramNotification;
 use App\Utils\Enums\InitiatedPaymentStatusEnum;
 use App\Utils\Enums\UserTypeEnum;
 use App\Utils\Traits\BusinessAuthorization;
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 use Rappasoft\LaravelAuthenticationLog\Traits\AuthenticationLoggable;
 use Spatie\Permission\Traits\HasRoles;
@@ -187,8 +189,39 @@ class User extends Authenticatable
         if($this->type != UserTypeEnum::AGENT->value){
             return false;
         }
-
         return true;
+    }
+
+    public static function addUser($data)
+    {
+        $country_code = Country::where('dialing_code',$data['country_dial_code'])->first()->code;
+        $country_dial_code = substr($data['country_dial_code'], 1);
+        $plainPhone = substr($data['phone'], 1);
+        $fullPhone = $country_dial_code . $plainPhone;
+        $referralBusinessCode = null;
+        if(array_key_exists('referral_business_code', $data)){
+            $referralBusinessCode = $data['referral_business_code'];
+        }
+        return User::create([
+            'country_code' => $country_code,
+            'code' => generateCode($data['fname'].' '.$data['lname'],$country_code),
+            'type' => UserTypeEnum::AGENT->value,
+            'fname' => $data['fname'],
+            'lname' => $data['lname'],
+            'phone' => $fullPhone,
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'referral_business_code' => $referralBusinessCode,
+        ]);
+    }
+
+    public static function completedRegistration(User $user)
+    {
+        if(env('APP_ENV') == 'production'){
+            $message = "User Registration: A new $user->type user $user->fname $user->lname from $user->country_code. Registration process ongoing.";
+            SendTelegramNotification::dispatch($message);
+        }
+
     }
 
 }
