@@ -27,8 +27,8 @@ class MobileAppController
             $token = $user->createToken('auth_token')->plainTextToken;
 
             return responder()->success([
-                'token_type' => 'Bearer',
                 'access_token' => $token,
+                'token_type' => 'Bearer',
                 'user' => getApiSessionData($user)
             ]);
 
@@ -59,6 +59,7 @@ class MobileAppController
 
         return responder()->success([
             'token' => $token,
+            'token_type' => 'Bearer',
             'user' => getApiSessionData($user,true)
         ]);
     }
