@@ -160,6 +160,7 @@ return [
         /*
          * Package Service Providers...
          */
+        Bugsnag\BugsnagLaravel\BugsnagServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -171,7 +172,6 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\GlobalFunctionServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
-        Bugsnag\BugsnagLaravel\BugsnagServiceProvider::class,
     ])->toArray(),
 
     /*
