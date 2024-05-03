@@ -19,3 +19,11 @@ Route::any('pesapal/callback', [App\Http\Controllers\PaymentProcessingController
 
 Route::post('login', [App\Http\Controllers\Api\MobileAppController::class, 'login'])->name('login');
 
+Route::middleware(['auth:sanctum'])->group(function () {
+
+    Route::post('logout', [App\Http\Controllers\Api\MobileAppController::class, 'logout'])->name('logout');
+
+});
+
+
+

@@ -32,4 +32,14 @@ class MobileAppController
         }
     }
 
+    public function logout(Request $request)
+    {
+
+        if(!$request->user()->currentAccessToken()->delete()){
+            return responder()->error('action_failed');
+        }
+
+        return responder()->success(['message'=>'logged out successfully']);
+    }
+
 }
