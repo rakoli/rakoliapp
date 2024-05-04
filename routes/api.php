@@ -24,6 +24,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('logout', [App\Http\Controllers\Api\MobileAppController::class, 'logout']);
 
+    Route::get('request/email/code', [App\Http\Controllers\RegistrationStepController::class, 'requestEmailCodeAjax']);
+    Route::get('verify/email/code', [App\Http\Controllers\RegistrationStepController::class, 'verifyEmailCodeAjax']);
+    Route::get('request/phone/code', [App\Http\Controllers\RegistrationStepController::class, 'requestPhoneCodeAjax']);
+    Route::get('verify/phone/code', [App\Http\Controllers\RegistrationStepController::class, 'verifyPhoneCodeAjax']);
+    Route::post('edit/contact/information', [App\Http\Controllers\RegistrationStepController::class, 'editContactInformation'])->name('edit.contact.information');
+
+
 });
 
 

@@ -12,7 +12,7 @@ use App\Models\Business;
 use App\Models\InitiatedPayment;
 use App\Models\Package;
 use App\Models\User;
-use App\Utils\DPORequestTokenFormat;
+use App\Utils\DynamicResponse;
 use App\Utils\Enums\InitiatedPaymentStatusEnum;
 use App\Utils\VerifyOTP;
 use Carbon\Carbon;
@@ -220,14 +220,23 @@ class RegistrationStepController extends Controller
             }
         }
 
+        return responder()->error(__("Email already exist"));
+
         if($emailExist != null){
-            return redirect()->back()->withErrors([__("Email already exist")]);
+            return DynamicResponse::sendResponse(function() {
+                return redirect()->back()->withErrors([__("Email already exist")]);
+            },function() {
+                return responder()->error(__("Email already exist"));
+            });
         }
 
         $user->save();
 
-        return redirect()->back();
-
+        return DynamicResponse::sendResponse(function() {
+            return redirect()->back();
+        },function() {
+            return responder()->success(['message' => 'contact details edited']);
+        });
     }
 
     public function registrationStepConfirmation(Request $request)
