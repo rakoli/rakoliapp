@@ -28,7 +28,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('verify/email/code', [App\Http\Controllers\RegistrationStepController::class, 'verifyEmailCodeAjax']);
     Route::get('request/phone/code', [App\Http\Controllers\RegistrationStepController::class, 'requestPhoneCodeAjax']);
     Route::get('verify/phone/code', [App\Http\Controllers\RegistrationStepController::class, 'verifyPhoneCodeAjax']);
-    Route::post('edit/contact/information', [App\Http\Controllers\RegistrationStepController::class, 'editContactInformation'])->name('edit.contact.information');
+    Route::post('edit/contact/information', [App\Http\Controllers\RegistrationStepController::class, 'editContactInformation']);
+    Route::get('update/business/details', [App\Http\Controllers\RegistrationStepController::class, 'updateBusinessDetails']);
+
 
 
 });
