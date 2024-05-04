@@ -220,8 +220,6 @@ class RegistrationStepController extends Controller
             }
         }
 
-        return responder()->error(__("Email already exist"));
-
         if($emailExist != null){
             return DynamicResponse::sendResponse(function() {
                 return redirect()->back()->withErrors([__("Email already exist")]);
