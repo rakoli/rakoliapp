@@ -192,7 +192,11 @@ class HomeController extends Controller
         $user->password = Hash::make($request->password);
         $user->save();
 
-        return redirect()->route('home')->with('message', 'Password changed successfully');
+        return DynamicResponse::sendResponse(function() {
+            return redirect()->route('home')->with('message', 'Password changed successfully');
+        },function() {
+            return responder()->success(['message' => 'Password changed successfully']);
+        });
     }
 
     public function profile(Request $request)
