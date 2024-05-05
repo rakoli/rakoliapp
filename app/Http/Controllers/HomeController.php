@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Business;
 use App\Models\SystemIncome;
 use App\Models\Transaction;
+use App\Utils\DynamicResponse;
 use App\Utils\Enums\UserTypeEnum;
 use App\Utils\StatisticsService;
 use Carbon\Carbon;
@@ -165,7 +166,11 @@ class HomeController extends Controller
 
             $stats['highlights']['referrals'] = number_format($statisticsService->businessNoOfReferrals());
 
-            return view('dashboard.agent', compact('dataTableHtml', 'stats'));
+            return DynamicResponse::sendResponse(function() use ($dataTableHtml, $stats) {
+                return view('dashboard.agent', compact('dataTableHtml', 'stats'));
+            },function() use ($stats) {
+                return responder()->success( compact( 'stats'));
+            });
         }
 
         return 'INVALID DASHBOARD REQUEST';
