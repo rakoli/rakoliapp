@@ -139,12 +139,15 @@ class InitiateSubscriptionPayment
             $similarPendingPayments = InitiatedPayment::where('business_code', $user->business_code)
                 ->where('expiry_time', '>', now())
                 ->where('description', $package->code)
-                ->where('status', InitiatedPaymentStatusEnum::INITIATED)->get();
+                ->where('status', InitiatedPaymentStatusEnum::INITIATED->value)->get();
 
             if (! $similarPendingPayments->isEmpty()) {
                 foreach ($similarPendingPayments as $similarPendingPayment) {
+                    if($similarPendingPayment->code == $recordResult['payment_code']){
+                        continue;
+                    }
                     $similarPendingPayment->expiry_time = now();
-                    $similarPendingPayment->status = InitiatedPaymentStatusEnum::COMPLETED;
+                    $similarPendingPayment->status = InitiatedPaymentStatusEnum::CANCELLED->value;
                     $similarPendingPayment->save();
                 }
             }
@@ -157,7 +160,7 @@ class InitiateSubscriptionPayment
     public static function recordPayment(User $user, Package $package, $tnxCode, $paymentmethod, $url, $reference, $referenceName)
     {
         try {
-            InitiatedPayment::create([
+            $initiatedPayment = InitiatedPayment::create([
                 'country_code' => $user->country->code,
                 'business_code' => $user->business->code,
                 'code' => $tnxCode,
@@ -179,6 +182,7 @@ class InitiateSubscriptionPayment
                 'success' => false,
                 'result' => 'Initiate Error',
                 'resultExplanation' => 'Unable to setup payment tracking',
+                'payment_code'=> null
             ];
         }
 
@@ -186,6 +190,7 @@ class InitiateSubscriptionPayment
             'success' => true,
             'result' => 'successful',
             'resultExplanation' => 'Recorded transaction successfully',
+            'payment_code'=>$initiatedPayment->code
         ];
     }
 }
