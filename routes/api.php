@@ -34,8 +34,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('registration/step/status', [App\Http\Controllers\Api\MobileAppController::class, 'registrationStepStatus']);
     Route::get('subscription/details', [App\Http\Controllers\Api\MobileAppController::class, 'subscriptionDetails']);
     Route::post('subscription/pay', [App\Http\Controllers\RegistrationStepController::class, 'paySubscription']);
+
     Route::get('dashboard/data', [App\Http\Controllers\HomeController::class, 'index']);
     Route::post('changepassword/submit', [App\Http\Controllers\HomeController::class, 'changepasswordSubmit']);
+    Route::post('profile/submit', [App\Http\Controllers\HomeController::class, 'profileSubmit']);
+
 
 
 

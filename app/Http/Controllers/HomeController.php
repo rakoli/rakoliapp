@@ -235,6 +235,10 @@ class HomeController extends Controller
         }
         $user->save();
 
-        return redirect()->route('home')->with('message', 'Profile Edited Successfully');
+        return DynamicResponse::sendResponse(function() {
+            return redirect()->route('home')->with('message', 'Profile Edited Successfully');
+        },function() {
+            return responder()->success(['message' => 'Profile Edited Successfully']);
+        });
     }
 }
