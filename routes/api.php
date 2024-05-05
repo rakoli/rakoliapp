@@ -39,7 +39,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('changepassword/submit', [App\Http\Controllers\HomeController::class, 'changepasswordSubmit']);
     Route::post('profile/submit', [App\Http\Controllers\HomeController::class, 'profileSubmit']);
 
-
+    //AGENCY MODULE
+    Route::get('agency/transactions', App\Http\Controllers\Agent\Transaction\TransactionsController::class);
+    Route::get('agency/shifts', [\App\Http\Controllers\Agent\Shift\AgencyController::class, 'shift']);
+    Route::get('agency/networks', App\Http\Controllers\Agent\Networks\NetworkController::class);
+    Route::get('agency/loans', [\App\Http\Controllers\Agent\Shift\Loans\LoanController::class, 'index']);
 
 
 });
