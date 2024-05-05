@@ -92,9 +92,16 @@ class MobileAppController
             CheckUserPendingSystemPayments::run($user,$initiatedPayments);
         }
 
+        $paymentMethods = config('payments.accepted_payment_methods');
+
+        if(env("APP_ENV") != "production"){
+            array_push($paymentMethods,'test');
+        }
+
         return responder()->success([
             'registrationStep' => $step,
             'hasPendingPayments' => $hasPendingPayment,
+            'paymentMethods' => $paymentMethods,
             'pendingPayments' => $initiatedPayments,
             'availablePackages' => $packages
         ]);
