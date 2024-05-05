@@ -224,7 +224,7 @@ class RegistrationStepController extends Controller
             return DynamicResponse::sendResponse(function() {
                 return redirect()->back()->withErrors([__("Email already exist")]);
             },function() {
-                return responder()->error(__("Email already exist"));
+                return responder()->error('email_exists',__("Email already exist"));
             });
         }
 
@@ -377,16 +377,28 @@ class RegistrationStepController extends Controller
             ->where('status',InitiatedPaymentStatusEnum::INITIATED)->get();
 
         if(!$similarPendingPayment->isEmpty()){
-            return redirect()->back()->withErrors([__('Duplicate request! Pay existing pending payment')]);
+            return DynamicResponse::sendResponse(function() {
+                return redirect()->back()->withErrors([__('Duplicate request! Pay existing pending payment')]);
+            },function() {
+                return responder()->error('duplicate_payment','Duplicate request! Pay existing pending payment');
+            });
         }
 
         $requestResult = InitiateSubscriptionPayment::run($paymentMethod,$user,$package);
 
         if($requestResult['success'] == false){
-            return redirect()->back()->withErrors([$requestResult['resultExplanation']]);
+            return DynamicResponse::sendResponse(function() use ($requestResult) {
+                return redirect()->back()->withErrors([$requestResult['resultExplanation']]);
+            },function() use ($requestResult) {
+                return responder()->error('payment_request_failed',$requestResult['resultExplanation']);
+            });
         }
 
-        return redirect($requestResult['url']);
+        return DynamicResponse::sendResponse(function() use ($requestResult){
+            return redirect($requestResult['url']);
+        },function() use ($requestResult) {
+            return responder()->success(['message' => 'payment request initiated','paymentUrl'=>$requestResult['url']]);
+        });
     }
 
     public function registrationVas()
