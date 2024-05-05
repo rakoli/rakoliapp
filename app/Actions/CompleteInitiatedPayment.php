@@ -61,7 +61,7 @@ class CompleteInitiatedPayment
         ]);
 
         $initiatedPayment->expiry_time = now();
-        $initiatedPayment->status = InitiatedPaymentStatusEnum::COMPLETED;
+        $initiatedPayment->status = InitiatedPaymentStatusEnum::COMPLETED->value;
         $initiatedPayment->save();
     }
 }
