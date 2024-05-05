@@ -30,6 +30,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('verify/phone/code', [App\Http\Controllers\RegistrationStepController::class, 'verifyPhoneCodeAjax']);
     Route::post('edit/contact/information', [App\Http\Controllers\RegistrationStepController::class, 'editContactInformation']);
     Route::get('update/business/details', [App\Http\Controllers\RegistrationStepController::class, 'updateBusinessDetails']);
+    Route::get('registration/step/confirmation', [App\Http\Controllers\RegistrationStepController::class, 'registrationStepConfirmation']);
+    Route::get('registration/step/status', [App\Http\Controllers\Api\MobileAppController::class, 'registrationStepStatus']);
+    Route::get('subscription/details', [App\Http\Controllers\Api\MobileAppController::class, 'subscriptionDetails']);
 
 
 

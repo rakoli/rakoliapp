@@ -269,7 +269,9 @@ class RegistrationStepController extends Controller
             $user->registration_step = 0;
             $user->save();
 
-            setupSession($user);//Updating User session
+            if(!$request->is('api/*')) {
+                setupSession($user);//Updating User session
+            }
 
             if(env('APP_ENV') == 'production'){
                 $message = "Registration Complete: $user->fname $user->lname ({$user->business->business_name}) has completed registration with {$user->business->package->name}.";

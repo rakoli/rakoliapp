@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\CheckUserPendingSystemPayments;
+use App\Models\Package;
 use App\Models\User;
 use App\Utils\ValidationRule;
 use Illuminate\Auth\Events\Registered;
@@ -61,6 +63,40 @@ class MobileAppController
             'token' => $token,
             'token_type' => 'Bearer',
             'user' => getApiSessionData($user,true)
+        ]);
+    }
+
+    public function registrationStepStatus(Request $request)
+    {
+        $user = $request->user();
+
+        $step = User::where('code',$user->code)->first()->registration_step;
+
+        return responder()->success([
+            'registrationStep' => $step
+        ]);
+
+    }
+
+    public function subscriptionDetails(Request $request)
+    {
+        $user = $request->user();
+        $step = User::where('code',$user->code)->first()->registration_step;
+
+        $packages = Package::where('country_code', $user->country_code)->with(['features'])->get(['id','country_code','code','name','description','price','price_currency','package_interval_days'])->toArray();
+
+        $hasPendingPayment = false;
+        $initiatedPayments = $user->getBusinessPendingPayments();
+        if(!$initiatedPayments->isEmpty()){
+            $hasPendingPayment = true;
+            CheckUserPendingSystemPayments::run($user,$initiatedPayments);
+        }
+
+        return responder()->success([
+            'registrationStep' => $step,
+            'hasPendingPayments' => $hasPendingPayment,
+            'pendingPayments' => $initiatedPayments,
+            'availablePackages' => $packages
         ]);
     }
 
