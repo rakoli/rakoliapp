@@ -7,7 +7,7 @@ class ValidationRule
     public static function agentRegistration(): array
     {
         return [
-            'country_dial_code' => ['exists:countries,dialing_code'],
+            'country_dial_code' => ['required','exists:countries,dialing_code'],
             'fname' => ['required', 'string', 'max:20'],
             'lname' => ['required', 'string', 'max:20'],
             'phone' => ['required','numeric'],
