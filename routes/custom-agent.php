@@ -23,7 +23,7 @@ use App\Http\Controllers\Agent\Transaction\TransactionsController;
 use Illuminate\Support\Facades\Route;
 
 // All get methods will be loaded with this route
-Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(function () {
+Route::middleware(['auth.dynamic', 'should_complete_registration', 'onlyagent'])->group(function () {
 
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('agent.dashboard'); //For Middleware testing and having a special user type dashboard route
 
