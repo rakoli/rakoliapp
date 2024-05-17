@@ -6,6 +6,7 @@ use Closure;
 use Flugg\Responder\Exceptions\Http\HttpException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class DynamicAuthentication
@@ -23,6 +24,10 @@ class DynamicAuthentication
         } elseif (Auth::guard('sanctum')->check()) {
             // Token-based authentication successful
             Auth::shouldUse('sanctum');
+            if (session('id') == null) {
+                session()->start();
+                $request->session()->regenerate();
+            }
             return $next($request);
         } else {
             if ($request->is('api/*') || $request->wantsJson() || $request->hasHeader('Authorization')) {
