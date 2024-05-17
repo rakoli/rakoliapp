@@ -24,9 +24,13 @@ class DynamicAuthentication
         } elseif (Auth::guard('sanctum')->check()) {
             // Token-based authentication successful
             Auth::shouldUse('sanctum');
+            $user = $request->user();
+//            dd($user);
             if (session('id') == null) {
-                session()->start();
-                $request->session()->regenerate();
+                Auth::guard('web')->loginUsingId($user->id);
+//                session()->start();
+//                $request->session()->regenerate();
+                setupSession($user);
             }
             return $next($request);
         } else {
