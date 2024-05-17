@@ -25,14 +25,14 @@ class TransactionDatatable implements HasDatatable
             ->filter(function ($query) {
                 $query->skip(request('start'))->take(request('length'));
             })
-            ->order(function ($query) {
-                return $query->orderBy('created_at', 'desc');
-            })
-            ->startsWithSearch()
-            ->addIndexColumn()
+//            ->order(function ($query) {
+//                return $query->orderBy('created_at', 'desc');
+//            })
+//            ->startsWithSearch()
+//            ->addIndexColumn()
             ->addColumn('created_at', fn (Transaction $transaction) => $transaction->created_at->format('Y-F-d'))
             ->addColumn('balance_old', fn (Transaction $transaction) => money($transaction->balance_old, currencyCode(), true))
-            ->addColumn('user_name', fn (Transaction $transaction) => $transaction->user->full_name)
+            ->addColumn('user_code', fn (Transaction $transaction) => $transaction->user->name())
             ->addColumn('amount', fn (Transaction $transaction) => money($transaction->amount, currencyCode(), true))
             ->addColumn('balance_new', fn (Transaction $transaction) => money($transaction->balance_new, currencyCode(), true))
             ->addColumn('transaction_type', function (Transaction $transaction) {
@@ -47,16 +47,16 @@ class TransactionDatatable implements HasDatatable
 
                 $table = new self();
 
-                return $table->status(
-                    label: $transaction->category->label(),
-                    badgeClass: $transaction->category->color()
-                );
+//                return $table->status(
+//                    label: $transaction->category->label(),
+//                    badgeClass: $transaction->category->color()
+//                );
+                return $transaction->category->label();
             })
             ->addColumn('actions', function (Transaction $transaction) {
 
             })
             ->addColumn('location_name', fn (Transaction $transaction) => $transaction->location->name)
-
             ->rawColumns(['balance_old', 'balance_new', 'transaction_type', 'category_label', 'actions'])
             ->toJson();
     }
@@ -66,15 +66,13 @@ class TransactionDatatable implements HasDatatable
         return $datatableBuilder->columns([
             Column::make('id')->title('#')->searchable(false)->orderable(),
             Column::make('created_at')->title(__('date'))->searchable()->orderable(),
-            Column::make('location.name')->title(__('Location'))->searchable()->orderable(),
-            Column::make('user_name')->title(__('user'))->searchable()->orderable(),
-            Column::make('balance_old')->title(__('Old Balance').' '.strtoupper(session('currency')))->searchable()->orderable(),
-            Column::make('amount')->title(__('Amount Transacted').' '.strtoupper(session('currency')))->searchable()->orderable(),
-            Column::make('balance_new')->title(__('New Balance'))->searchable()->orderable(),
             Column::make('transaction_type')->title(__('Type'))->searchable()->orderable(),
             Column::make('category_label')->title(__('category'))->searchable()->orderable(),
-        ])
-
-            ->orderBy(0);
+            Column::make('location.name')->title(__('Location'))->searchable()->orderable(),
+            Column::make('user_code')->title(__('User'))->searchable()->orderable(),
+            Column::make('balance_old')->title(__('Old Balance').' '.strtoupper(session('currency')))->searchable()->orderable(),
+            Column::make('amount')->title(__('Amount').' '.strtoupper(session('currency')))->searchable()->orderable(),
+            Column::make('balance_new')->title(__('New Balance'))->searchable()->orderable(),
+        ])->orderBy(0, 'desc');
     }
 }
