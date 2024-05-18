@@ -28,7 +28,7 @@ class TransactionDatatable implements HasDatatable
 //            ->order(function ($query) {
 //                return $query->orderBy('created_at', 'desc');
 //            })
-//            ->startsWithSearch()
+            ->startsWithSearch()
 //            ->addIndexColumn()
             ->addColumn('created_at', fn (Transaction $transaction) => $transaction->created_at->format('Y-F-d'))
             ->addColumn('balance_old', fn (Transaction $transaction) => money($transaction->balance_old, currencyCode(), true))

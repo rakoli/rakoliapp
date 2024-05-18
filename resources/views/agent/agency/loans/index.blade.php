@@ -6,15 +6,6 @@
     <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css"/>
 @endpush
 
-@section('breadcrumb')
-    <!--begin::Separator-->
-    <span class="h-20px border-gray-200 border-start ms-3 mx-2"></span>
-    <!--end::Separator-->
-    <!--begin::Description-->
-    <small class="text-muted fs-7 fw-semibold my-1 ms-1">Loans</small>
-    <!--end::Description-->
-@endsection
-
 @section('content')
 
 
@@ -27,15 +18,6 @@
             <div class="flex-lg-row-fluid px-lg-4">
                 <!--begin::Card-->
                 <div class="card pt-4 mb-6 mb-xl-9">
-                    <!--begin::Card header-->
-                    <div class="card-header border-0">
-                        <!--begin::Card title-->
-                        <div class="card-title">
-                            <h2>{{ __('Loans') }}</h2>
-                        </div>
-                        <!--end::Card title-->
-                    </div>
-                    <!--end::Card header-->
 
 
                     <div class="px-lg-4">
@@ -53,7 +35,7 @@
                             <div class="table-responsive">
 
 
-                                {!! $datatableHtml->table(['class' => 'table table-row-bordered table-row-dashed gy-4 align-middle fw-bold' , 'id' => 'loans-table']) !!}
+                                {!! $datatableHtml->table(['class' => 'table table-row-bordered table-row-dashed gy-4' , 'id' => 'loans-table']) !!}
 
 
                             </div>

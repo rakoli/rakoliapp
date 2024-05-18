@@ -22,11 +22,11 @@ class LoanDatatable implements HasDatatable
             ->filter(function ($query) {
                 $query->skip(request('start'))->take(request('length'));
             })
-            ->order(function ($query) {
-                return $query->orderBy('created_at', 'desc');
-            })
+//            ->order(function ($query) {
+//                return $query->orderBy('created_at', 'desc');
+//            })
             ->startsWithSearch()
-            ->addIndexColumn()
+//            ->addIndexColumn()
             ->addColumn('created_at', fn (Loan $record) => $record->created_at->format('Y-F-d'))
             ->addColumn('location_name', fn (Loan $record) => $record->location->name)
             ->addColumn('user_name', fn (Loan $record) => $record->user->full_name)
