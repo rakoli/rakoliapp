@@ -25,7 +25,7 @@ class AddLocationNetwork
             Log::info($data);
 
                 $type = NetworkTypeEnum::tryFrom($data['type']);
-                if($type === NetworkTypeEnum::CRYPTO){
+                if($type === NetworkTypeEnum::CRYPTO->value){
                     Log::info("Crypto");
 
                     $network = Network::create([
@@ -39,7 +39,7 @@ class AddLocationNetwork
                         'exchange_rate' => $data['exchange_rate'],
                         'name' => $data['name'],
                         'description' => $data['description'] ?? null,
-                    ]);    
+                    ]);
                     Log::info($network);
 
                 } else {

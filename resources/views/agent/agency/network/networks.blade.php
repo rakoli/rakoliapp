@@ -65,7 +65,7 @@
                     <!--end::Wrapper-->
 
 
-                    {!! $dataTableHtml->table(['class' => 'table table-row-bordered table-row-dashed gy-4 align-middle fw-bold' , 'id' => 'network-table'],true) !!}
+                    {!! $dataTableHtml->table(['class' => 'table table-row-bordered table-row-dashed gy-4' , 'id' => 'network-table'],true) !!}
 
 
 
