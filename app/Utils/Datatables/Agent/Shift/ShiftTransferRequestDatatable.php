@@ -21,10 +21,10 @@ class ShiftTransferRequestDatatable implements HasDatatable
             ->filter(function ($query) {
                 $query->skip(request('start'))->take(request('length'));
             })
-            ->order(function ($query) {
-                return $query->orderBy('created_at', 'desc');
-            })
-            ->addIndexColumn()
+//            ->order(function ($query) {
+//                return $query->orderBy('created_at', 'desc');
+//            })
+//            ->addIndexColumn()
             ->addColumn('created_at', fn (ShiftTransferRequest $shiftTransferRequest) => $shiftTransferRequest->created_at->format('Y-F-d'))
             ->addColumn('user_name', fn (ShiftTransferRequest $shiftTransferRequest) => $shiftTransferRequest->user->name())
             ->addColumn('branch', fn (ShiftTransferRequest $shiftTransferRequest) => $shiftTransferRequest->location->name)
@@ -64,11 +64,12 @@ class ShiftTransferRequestDatatable implements HasDatatable
     public function columns(Builder $datatableBuilder): Builder
     {
         return $datatableBuilder->columns([
+            Column::make('id')->title('#')->searchable(false)->orderable(),
             Column::make('branch')->title(__('Branch'))->searchable()->orderable(),
             Column::make('user_name')->title(__('user'))->searchable()->orderable(),
             Column::make('status')->title(__('Status'))->searchable()->orderable(),
             Column::make('action')->title(__('Actions'))->searchable()->orderable(),
-        ])
+        ])->orderBy(0, 'desc')
             ->dom('frtilp');
     }
 }
