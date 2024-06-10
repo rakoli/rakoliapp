@@ -665,6 +665,9 @@
                                         <div class="menu-item px-5">
                                             <a href="{{route('changepassword')}}" class="menu-link px-5">{{ __('Change Password') }}</a>
                                         </div>
+                                        <div class="menu-item px-5">
+                                            <a href="{{url('https://support.rakoli.com')}}" target="_blank" class="menu-link px-5">{{ __('Support') }}</a>
+                                        </div>
                                         <div class="separator my-2"></div>
                                             <div class="menu-item px-5"
                                                  data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
