@@ -25,15 +25,6 @@
 
         <!--begin::Table-->
         <div class="card card-flush mt-6 mt-xl-9">
-            <!--begin::Card header-->
-            <div class="card-header mt-5">
-                <!--begin::Card toolbar-->
-                <div class="card-toolbar my-1">
-
-                </div>
-                <!--begin::Card toolbar-->
-            </div>
-            <!--end::Card header-->
 
             <!--begin::Card body-->
             <div class="card-body pt-0">
@@ -62,7 +53,7 @@
                 <!--begin::Table container-->
                 <div class="table-responsive">
 
-                    {!! $dataTableHtml->table(['class' => 'table table-row-bordered table-row-dashed gy-4 align-middle fw-bold' , 'id' => 'shift-table'],true) !!}
+                    {!! $dataTableHtml->table(['class' => 'table table-row-bordered table-row-dashed gy-4 align-middle' , 'id' => 'shift-table'],true) !!}
 
                 </div>
                 <!--end::Table container-->
