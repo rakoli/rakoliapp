@@ -30,23 +30,18 @@
 
                 <!--begin::Nav item-->
                 <li class="nav-item my-1">
-                    <a class="btn btn-color-gray-600 btn-active-secondary btn-active-color-primary fw-bolder fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 {{returnActiveSubMenuStyle('ads')}}"
-                       href="{{route('exchange.ads')}}">{{__('Ads')}}</a>
+                    <a class="btn btn-color-gray-600 btn-active-secondary btn-active-color-primary fw-bolder fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 {{returnActiveSubMenuStyle('loans')}}"
+                       href="{{route('agency.loans')}}">{{__('Loans')}}</a>
                 </li>
                 <!--end::Nav item-->
 
                 <!--begin::Nav item-->
                 <li class="nav-item my-1">
-                    <a class="btn btn-color-gray-600 btn-active-secondary btn-active-color-primary fw-bolder fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 {{returnActiveSubMenuStyle('posts')}}"
-                       href="{{route('exchange.posts')}}">{{__('Posts')}}</a>
+                    <a class="btn btn-color-gray-600 btn-active-secondary btn-active-color-primary fw-bolder fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 {{returnActiveSubMenuStyle('shifttransferrequest')}}"
+                       href="{{route('agency.shift.transfer.request')}}">{{__('Transfer Request')}}</a>
                 </li>
                 <!--end::Nav item-->
-                <!--begin::Nav item-->
-                <li class="nav-item my-1">
-                    <a class="btn btn-color-gray-600 btn-active-secondary btn-active-color-primary fw-bolder fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 {{returnActiveSubMenuStyle('methods')}}"
-                       href="{{route('exchange.methods')}}">{{__('Payment Methods')}}</a>
-                </li>
-                <!--end::Nav item-->
+
             </ul>
             <!--end::Nav-->
             <!--begin::Action-->
