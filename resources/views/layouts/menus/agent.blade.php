@@ -42,12 +42,6 @@
 
             <!--begin:Menu sub-->
             <div class="menu-sub menu-sub-accordion">
-                <a class="menu-link"  href ="{{route('agency.transactions')}}">
-                    <span class="menu-bullet">
-                        <span class="bullet bullet-dot"></span>
-                    </span>
-                    <span class="menu-title">{{ __('Transactions') }}</span>
-                </a>
 
                 <a class="menu-link"  href ="{{route('agency.shift')}}">
                     <span class="menu-bullet">
@@ -65,6 +59,13 @@
                         <span class="bullet bullet-dot"></span>
                     </span>
                     <span class="menu-title">{{ __('Networks') }}</span>
+                </a>
+
+                <a class="menu-link"  href ="{{route('agency.transactions')}}">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ __('Transactions') }}</span>
                 </a>
 
                 <a

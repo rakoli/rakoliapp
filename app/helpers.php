@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\Crypto;
+use App\Models\Shift;
 use App\Models\ShiftTransaction;
 use App\Models\User;
 use App\Utils\Enums\NetworkTypeEnum;
@@ -245,6 +246,16 @@ function tradeOrderInvence($type): string
 function idNumberDisplay($number)
 {
     return str_pad("$number", 5, '0', STR_PAD_LEFT);
+}
+
+function hasOpenShift()
+{
+    return Shift::query()->open()->exists();
+}
+
+function getOpenShift()
+{
+    return Shift::query()->open()->first();
 }
 
 function shiftBalances(\App\Models\Shift $shift): array

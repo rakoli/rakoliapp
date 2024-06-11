@@ -17,6 +17,17 @@
 @endsection
 
 @section('content')
+
+
+    <!--begin::Container-->
+    <div id="kt_content_container" class="container-xxl">
+        @include('agent.agency._submenu_agency')
+
+
+
+    </div>
+    <!--end::Container-->
+
     <div class="docs-content d-flex flex-column flex-column-fluid" id="kt_docs_content">
         <!--begin::Container-->
         <div class="container d-flex flex-column flex-lg-row" id="kt_docs_content_container">

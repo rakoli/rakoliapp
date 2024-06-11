@@ -3,7 +3,7 @@
 @section('title', "Transactions")
 
 @section('header_js')
-    <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css"/>
 @endsection
 
 @section('breadcrumb')
@@ -17,63 +17,57 @@
 
 @section('content')
 
+    <!--begin::Container-->
+    <div id="kt_content_container" class="container-xxl">
 
-    <div class="docs-content d-flex flex-column flex-column-fluid" id="kt_docs_content">
-        <!--begin::Container-->
-        <div class="container d-flex flex-column flex-lg-row" id="kt_docs_content_container">
-            <!--begin::Card-->
-            <div class="card card-docs flex-row-fluid mb-2" id="kt_docs_content_card">
-                <!--begin::Card Body-->
-                <div class="card-body fs-6 py-15 px-10 py-lg-15 px-lg-15 text-gray-700">
-
-                    <!--begin::Wrapper-->
-                    <div class="d-flex flex-stack mb-5">
-                        <!--begin::Search-->
-                        <div class="d-flex align-items-center position-relative my-1">
-
-                        </div>
-                        <!--end::Search-->
-
-                        <!--begin::Toolbar-->
-                        <div class="d-flex justify-content-end gap-2" data-kt-docs-table-toolbar="base">
-                            <!--begin::Filter-->
+        @include('agent.agency._submenu_agency')
 
 
+        <!--begin::Table-->
+        <div class="card card-flush mt-6 mt-xl-9">
+            <!--begin::Card header-->
+            <div class="card-header mt-5">
+                <!--begin::Card toolbar-->
+                <div class="card-toolbar my-1">
 
-                        </div>
-                        <!--end::Toolbar-->
+                </div>
+                <!--begin::Card toolbar-->
+            </div>
+            <!--end::Card header-->
 
-                    </div>
-                    <!--end::Wrapper-->
-
+            <!--begin::Card body-->
+            <div class="card-body pt-0">
+                <!--begin::Table container-->
+                <div class="table-responsive">
 
                     {!! $dataTableHtml->table(['class' => 'table table-row-bordered table-row-dashed gy-4' , 'id' => 'transaction-table'],true) !!}
 
-
                 </div>
+                <!--end::Table container-->
             </div>
+            <!--end::Card body-->
         </div>
+        <!--end::Card-->
+
     </div>
+    <!--end::Container-->
 
-    @push('js')
+@endsection
+
+@section('footer_js')
+    <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}"
+            type="text/javascript"></script>
+    {{ $dataTableHtml->scripts()  }}
+
+    <script src="{{ asset('assets/js/rakoli_ajax.js') }}"></script>
+
+    <script>
+        $(document).ready(function () {
 
 
-        <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}"
-                type="text/javascript"></script>
-        {{ $dataTableHtml->scripts()  }}
-
-        <script src="{{ asset('assets/js/rakoli_ajax.js') }}"></script>
-
-        <script>
-            $(document).ready(function (){
-
-
-
-                window.LaravelDataTables['transaction-table'].on('draw', function () {
-                    KTMenu.createInstances();
-                })
+            window.LaravelDataTables['transaction-table'].on('draw', function () {
+                KTMenu.createInstances();
             })
-        </script>
-
-    @endpush
+        })
+    </script>
 @endsection
