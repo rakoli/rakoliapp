@@ -31,14 +31,14 @@
 
                 <!--begin::Wrapper-->
                 <div class="d-flex flex-stack mb-5">
-                    @if(! $hasOpenShift)
-                        <x-a-button
-                            route="{{ route('agency.shift.open.index') }}"
-                        >
+{{--                    @if(! $hasOpenShift)--}}
+{{--                        <x-a-button--}}
+{{--                            route="{{ route('agency.shift.open.index') }}"--}}
+{{--                        >--}}
 
-                            {{ __('Open Shift') }}
-                        </x-a-button>
-                    @endif
+{{--                            {{ __('Open Shift') }}--}}
+{{--                        </x-a-button>--}}
+{{--                    @endif--}}
                     <!--begin::Search-->
                     <div class="d-flex align-items-center position-relative my-1">
                         {{--<i class="ki-duotone ki-magnifier fs-1 position-absolute ms-6"><span

@@ -21,7 +21,7 @@
                 targetId="add-transaction"
                 label="Add Till Transaction"
                 modalTitle="Fill the form below record a transaction"
-                btnClass="btn btn-facebook"
+                btnClass="btn btn-facebook m-1"
             >
             @include('agent.agency.transaction.add-transaction')
             </x-modal_with_button>
@@ -30,12 +30,13 @@
                 targetId="add-expenses"
                 label="Add Cash Out"
                 modalTitle="Fill the form below record a Cash Out"
-                btnClass="btn btn-youtube"
+                btnClass="btn btn-youtube m-1"
             >
             @include('agent.agency.transaction.add-expense')
             </x-modal_with_button>
 
             <x-modal_with_button
+                btnClass="btn btn-primary m-1"
                 targetId="add-income"
                 label="Add Cash In"
                 modalTitle="Fill the form below record a Cash in"
@@ -44,7 +45,7 @@
             </x-modal_with_button>
 
             <x-modal_with_button
-                btnClass="btn btn-instagram"
+                btnClass="btn btn-instagram m-1"
                 targetId="add-loan"
                 label="Add Loan"
                 modalTitle="Fill the form below record a Loan"
@@ -52,7 +53,7 @@
             @include('agent.agency.loans.add-loan')
             </x-modal_with_button>
 
-            <x-a-button class="btn btn-outline-danger btn-google text-white" route="{{ route('agency.shift.close', $shift) }}">Close Shift</x-a-button>
+            <x-a-button class="btn btn-outline-danger btn-google text-white m-1" route="{{ route('agency.shift.close', $shift) }}">Close Shift</x-a-button>
 
         </div>
     @endif
