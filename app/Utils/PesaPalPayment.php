@@ -122,7 +122,7 @@ class PesaPalPayment
 
             return [
                 'success' => false,
-                'result' => $response,
+                'result' => [],
                 'resultExplanation' => $exception->getMessage(),
             ];
         }

@@ -702,4 +702,12 @@ class BusinessController extends Controller
         return redirect()->route('business.referrals')->with(['message' => 'Referred User Successfully']);
     }
 
+    public function closeAccount(Request $request)
+    {
+        $user = User::find(Auth::user()->id);
+        $user->delete();
+        return redirect()->route('business.users')->with(['message' => 'Account Deleted Successfully']);
+    }
+
+
 }

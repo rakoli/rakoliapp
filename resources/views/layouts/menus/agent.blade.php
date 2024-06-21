@@ -295,6 +295,11 @@
                     </span>
                     <span class="menu-title">{{ __('Branches') }}</span>
                 </a>
+                <a class="menu-link close_account" href="{{route('business.users.close.account')}}"><span class="menu-bullet">
+                    <span class="bullet bullet-dot"></span>
+                </span>
+                <span class="menu-title">{{ __('Close Account') }}</span>
+                </a>
             </div>
             <!--end:Menu sub-->
         </div>
@@ -305,7 +310,7 @@
 
 <!-- Reports -->
 <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('reports')}}">
-    <!--begin:Menu link-->
+    <!--begin:Menu link 
     <span class="menu-link menu-center">
         <span class="menu-icon me-0">
             <i class="ki-outline ki-chart-line-up fs-2x"></i>
@@ -314,7 +319,7 @@
             {{ __('Reports') }}
         </span>
     </span>
-    <!--end:Menu link-->
+    end:Menu link-->
     <!--begin:Menu sub-->
     <div class="menu-sub menu-sub-dropdown px-2 py-4 w-250px mh-75 overflow-auto">
         <!--begin:Menu item-->
