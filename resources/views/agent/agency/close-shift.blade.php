@@ -472,7 +472,8 @@
                         <!--end::Card body-->
                     </div>
                     <!--begin::END Income and Expenses Card-->
-
+                    
+                    @if(validateSubscription("loan management"))
                     <!--begin::Loans Card-->
                     <div class="card pt-4 mb-6 mb-xl-9">
                         <!--begin::Card header-->
@@ -525,7 +526,8 @@
                         <!--end::Card body-->
                     </div>
                     <!--end::Loan sCard-->
-
+                    @endif
+                    @if(validateSubscription("short management"))
                     <!--begin::Shorts-->
                     <div class="card pt-4 mb-6 mb-xl-9">
                         <!--begin::Card header-->
@@ -576,7 +578,7 @@
                         <!--end::Card body-->
                     </div>
                     <!--end::Shorts-->
-
+                    @endif
                 </div>
             </div>
         </form>

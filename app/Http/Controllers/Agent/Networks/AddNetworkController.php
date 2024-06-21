@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Agent\Networks;
 
 use App\Actions\Agent\Shift\Network\AddLocationNetwork;
 use App\Http\Controllers\Controller;
+use App\Models\Network;
 use Illuminate\Http\Request;
 
 class AddNetworkController extends Controller
@@ -13,6 +14,12 @@ class AddNetworkController extends Controller
      */
     public function __invoke(Request $request)
     {
+        if(!validateSubscription("tills",Network::where('location_code', $request->location_code)->count())){
+            return response()->json([
+                'message' => "You have exceeded network limit, Please upgrade your plan",
+            ], 403);
+        }
+
         $validated = $request->validate([
             'name' => 'required|string',
             'type' => 'required',

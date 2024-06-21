@@ -9,6 +9,7 @@ use App\Models\Network;
 use App\Models\Shift;
 use App\Utils\Enums\NetworkTypeEnum;
 use App\Utils\Enums\ShiftStatusEnum;
+use Carbon\Carbon;
 use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Http\Request;
 
@@ -43,6 +44,15 @@ class OpenShiftController extends Controller
 
     public function store(Request $request)
     {
+        $nos = Shift::query()->latest('created_at')
+        ->whereDate('created_at', Carbon::tomorrow())
+        ->first()?->no;
+
+        if(!validateSubscription("shift tracking",$nos)){
+            return response()->json([
+                'message' => "You have exceeded shift limit, Please upgrade your plan",
+            ], 403);
+        }
 
         //validate
 

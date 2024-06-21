@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Models\PackageAvailableFeatures;
+use App\Models\PackageFeature;
 use App\Models\Crypto;
 use App\Models\Shift;
 use App\Models\ShiftTransaction;
@@ -394,6 +396,21 @@ function shiftBalances(\App\Models\Shift $shift): array
     ];
 }
 
+function validateSubscription($feature, $length = 0) {
+    $features = PackageAvailableFeatures::pluck('code','name')->toArray();
+    $feature_details = PackageFeature::where('package_code',auth()->user()->business->package_code)
+                        ->where('feature_code',$features[$feature])
+                        ->where('available', 1)
+                        ->first();
+    if($feature_details){
+        if($length > 0 && $feature_details->access != "unlimited" && $length >= $feature_details->feature_value){
+            return false;
+        }
+        return true;
+    }
+    return false;
+}
+
 
 function runDatabaseTransaction(\Closure $closure)
 {
@@ -447,6 +464,5 @@ function runDatabaseTransaction(\Closure $closure)
 //            echo "Transaction failed!";
 //        }
     }
-
 
 }
