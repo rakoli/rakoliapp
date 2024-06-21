@@ -238,6 +238,9 @@
                                 @if(!hasOpenShift())
                                     <a href="{{route('agency.shift.open.index')}}" class="btn btn-sm btn-dark fw-bold m-1">{{__('Open Shift')}}</a>
                                 @else
+                                    @php
+                                        $shift = getOpenShift();
+                                    @endphp
                                     <a href="{{route('agency.shift.show',$shift->id)}}" class="btn btn-sm btn-dark fw-bold m-1">{{__('View Open Shift')}}</a>
                                 @endif
                                 <a href="{{route('exchange.ads')}}" class="btn btn-sm btn-dark fw-bold m-1">{{__('Exchange Float')}}</a>

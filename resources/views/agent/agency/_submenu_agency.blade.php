@@ -46,13 +46,12 @@
             <!--end::Nav-->
             <!--begin::Action-->
 
-            @php
-                $shift = getOpenShift();
-            @endphp
-
             @if(!hasOpenShift())
                 <a href="{{route('agency.shift.open.index')}}" class="btn btn-primary fw-bold fs-8 fs-lg-base">{{__('Open Shift')}}</a>
             @else
+                @php
+                    $shift = getOpenShift();
+                @endphp
                 <a href="{{route('agency.shift.show',$shift->id)}}" class="btn btn-primary fw-bold fs-8 fs-lg-base">{{__('View Open Shift')}}</a>
             @endif
 
