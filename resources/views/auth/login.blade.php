@@ -61,7 +61,6 @@
         <!--begin::Sign up-->
         <div class="text-gray-500 text-center fw-semibold fs-6">{{ __("Not a Member yet?")}}
             <a href="{{route('register')}}" class="link-primary">{{ __("Sign Up")}}</a></div>
-            <a href="https://hgoebl.github.io/mobile-detect.js/check/" class="link-primary">Browser detect</a></div>
         <!--end::Sign up-->
         <!--begin::Sign up-->
         <div class="text-gray-500 text-center fw-semibold fs-6">{{ __("Need VAS Provider Account?")}}
@@ -74,22 +73,5 @@
 @endsection
 
 @section('js')
-    <script>
-        function isLikelyWebView() {
-            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-            return /(wv|iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(userAgent);
-        }
-
-        function isIOS() {
-            return [
-                'iPad Simulator',
-                'iPhone Simulator',
-                'iPod Simulator',
-                'iPad',
-                'iPhone',
-                'iPod'
-            ].includes(navigator.platform) || (navigator.userAgentData && navigator.userAgentData.brands.some(brand => brand.brand.includes('Apple')));
-        }
-    </script>
     <script src="{{asset('assets/js/custom/authentication/sign-in/general.js')}}"></script>
 @endsection
