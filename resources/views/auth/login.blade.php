@@ -59,12 +59,14 @@
         <!--end::Submit button-->
 
         <!--begin::Sign up-->
-        <div class="text-gray-500 text-center fw-semibold fs-6">{{ __("Not a Member yet?")}}
-            <a href="{{route('register')}}" class="link-primary">{{ __("Sign Up")}}</a></div>
+        <div class="text-gray-500 text-center fw-semibold fs-6" id="agentReg">{{ __("Not a Member yet?")}}
+            <a href="{{route('register')}}" class="link-primary">{{ __("Sign Up")}}</a>
+        </div>
         <!--end::Sign up-->
         <!--begin::Sign up-->
-        <div class="text-gray-500 text-center fw-semibold fs-6">{{ __("Need VAS Provider Account?")}}
-            <a href="{{route('register.vas')}}" class="link-primary">{{ __("Register VAS Account")}}</a></div>
+        <div class="text-gray-500 text-center fw-semibold fs-6" id="vasReg">{{ __("Need VAS Provider Account?")}}
+            <a href="{{route('register.vas')}}" class="link-primary">{{ __("Register VAS Account")}}</a>
+        </div>
         <!--end::Sign up-->
 
     </form>
@@ -73,5 +75,20 @@
 @endsection
 
 @section('js')
+    <script src="{{asset('assets/js/mobile-detect.min.js')}}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const md = new MobileDetect(window.navigator.userAgent);
+            const agentReg = document.getElementById("agentReg");
+            const vasReg = document.getElementById("vasReg");
+            if (md.is("iOS")) {
+                agentReg.style.display = "none";
+                vasReg.style.display = "none";
+            } else {
+                agentReg.style.display = "block";
+                vasReg.style.display = "block";
+            }
+        });
+    </script>
     <script src="{{asset('assets/js/custom/authentication/sign-in/general.js')}}"></script>
 @endsection
