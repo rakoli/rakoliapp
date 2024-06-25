@@ -295,7 +295,7 @@
                     </span>
                     <span class="menu-title">{{ __('Branches') }}</span>
                 </a>
-                <a class="menu-link close_account" href="{{route('business.users.close.account')}}"><span class="menu-bullet">
+                <a class="menu-link close_account" href="{{route('business.users.close_account')}}"><span class="menu-bullet">
                     <span class="bullet bullet-dot"></span>
                 </span>
                 <span class="menu-title">{{ __('Close Account') }}</span>
