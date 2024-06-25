@@ -59,7 +59,7 @@ class UsersTableSeeder extends Seeder
             'business_name' => $name,
             'tax_id' => $faker->unique()->numerify('###-###-###'),
             'business_regno' => $faker->unique()->numerify('#########'),
-            'business_phone_number' => '255739466080',
+            'business_phone_number' => '255655466080',
             'business_email' => 'vas@rakoli.com',
             'business_location' => $faker->address,
             'package_code' => null,
