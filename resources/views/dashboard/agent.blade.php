@@ -235,9 +235,14 @@
                             <!--end::Title-->
                             <!--begin::Action-->
                             <div class="text-center">
-                                <a href='#' class="btn btn-sm btn-dark fw-bold" data-bs-toggle="modal" data-bs-target="#kt_modal_upgrade_plan">Exchange Float</a>
+                                @if(!hasOpenShift())
+                                    <a href="{{route('agency.shift.open.index')}}" class="btn btn-sm btn-dark fw-bold m-1">{{__('Open Shift')}}</a>
+                                @else
+                                    <a href="{{route('agency.shift.show',$shift->id)}}" class="btn btn-sm btn-dark fw-bold m-1">{{__('View Open Shift')}}</a>
+                                @endif
+                                <a href="{{route('exchange.ads')}}" class="btn btn-sm btn-dark fw-bold m-1">{{__('Exchange Float')}}</a>
+                                <a href="{{route('agent.tasks')}}" class="btn btn-sm btn-dark fw-bold m-1">{{__('View Opportunities')}}</a>
                             </div>
-                            <!--begin::Action-->
                         </div>
                         <!--begin::Wrapper-->
                         <!--begin::Illustration-->
