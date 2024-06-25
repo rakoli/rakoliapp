@@ -161,7 +161,7 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
         Route::get('users/edit/{id}', [App\Http\Controllers\Agent\BusinessController::class, 'usersEdit'])->name('users.edit');
         Route::post('users/edit/submit', [App\Http\Controllers\Agent\BusinessController::class, 'usersEditSubmit'])->name('users.edit.submit');
         Route::get('users/delete/{id}', [App\Http\Controllers\Agent\BusinessController::class, 'usersDelete'])->name('users.delete');
-        Route::get('users/close/account', [App\Http\Controllers\Agent\BusinessController::class, 'closeAccount'])->name('users.close.account');
+        Route::any('users/close_account', [App\Http\Controllers\Agent\BusinessController::class, 'closeAccount'])->name('users.close_account');
 
 
         Route::get('referrals', [App\Http\Controllers\Agent\BusinessController::class, 'referrals'])->name('referrals');
