@@ -58,6 +58,16 @@
                     {{__('Branches')}}</a>
                 </li>
                 <!--end::Nav item-->
+                 <!--begin::Nav item-->
+                 <li class="nav-item my-1">
+                    <a class="btn btn-color-gray-600 btn-active-secondary btn-active-color-primary fw-bolder fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 
+                    {{returnActiveSubMenuStyle('close_account')}}
+                    {{ request()->is('business/users/close_account') ? 'active' : '' }}"
+                    href="{{route('business.users.close_account')}}">
+                    {{__('Close Account')}}</a>
+                </li>
+                <!--end::Nav item-->
+
             </ul>
             <!--end::Nav-->
             <!--begin::Action-->

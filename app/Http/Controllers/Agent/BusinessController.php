@@ -711,9 +711,19 @@ class BusinessController extends Controller
 
     public function closeAccount(Request $request)
     {
-        $user = User::find(Auth::user()->id);
-        $user->delete();
-        return redirect()->route('business.users')->with(['message' => 'Account Deleted Successfully']);
+        if($request->isMethod('post')){
+
+            $this->validate($request, [
+                'password' => 'required|current_password',
+            ]);
+    
+            $user = User::withTrashed()->find(Auth::user()->id);
+            // $user->forceDelete();
+            return redirect()->route('business.users')->with(['message' => 'Account Deleted Successfully']);
+    
+        }        
+        return view('agent.business.close_account');
+
     }
 
 
