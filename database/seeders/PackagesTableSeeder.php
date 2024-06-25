@@ -27,6 +27,9 @@ class PackagesTableSeeder extends Seeder
         $elitePackage = PackageName::create([
             'name' => 'elite'
         ]);
+        $testPackage = PackageName::create([
+            'name' => 'test'
+        ]);
 
         $tz_plans = [
             [
@@ -56,6 +59,16 @@ class PackagesTableSeeder extends Seeder
                 'price' => 150000,
                 'price_currency' => 'tzs',
                 'price_commission' => 4500,//3%
+                'package_interval_days' => 365,
+                'description' => "Full control of agency business"
+            ],
+            [
+                'country_code' => "TZ",
+                'name' => $testPackage->name,
+                'code' => generateCode($testPackage->name,"tz"),
+                'price' => 5000,
+                'price_currency' => 'tzs',
+                'price_commission' => 50,//3%
                 'package_interval_days' => 365,
                 'description' => "Full control of agency business"
             ],
@@ -253,6 +266,58 @@ class PackagesTableSeeder extends Seeder
             }
 
             if($package->name == $elitePackage->name){
+                PackageFeature::create([
+                    'package_code' => $package->code,
+                    'feature_code' => $exchangeFeature->code,
+                    'access' => FeatureAccessEnum::AVAILABLE,
+                    'available' => 1
+                ]);
+                PackageFeature::create([
+                    'package_code' => $package->code,
+                    'feature_code' => $vasFeature->code,
+                    'access' => FeatureAccessEnum::AVAILABLE,
+                    'available' => 1
+                ]);
+                PackageFeature::create([
+                    'package_code' => $package->code,
+                    'feature_code' => $branchFeature->code,
+                    'access' => FeatureAccessEnum::UNLIMTED,
+                    'available' => 1
+                ]);
+                PackageFeature::create([
+                    'package_code' => $package->code,
+                    'feature_code' => $tillFeature->code,
+                    'access' => FeatureAccessEnum::UNLIMTED,
+                    'available' => 1
+                ]);
+                PackageFeature::create([
+                    'package_code' => $package->code,
+                    'feature_code' => $shiftFeature->code,
+                    'access' => FeatureAccessEnum::UNLIMTED,
+                    'available' => 1
+                ]);
+                PackageFeature::create([
+                    'package_code' => $package->code,
+                    'feature_code' => $shortFeature->code,
+                    'access' => FeatureAccessEnum::UNLIMTED,
+                    'available' => 1
+                ]);
+                PackageFeature::create([
+                    'package_code' => $package->code,
+                    'feature_code' => $loansFeature->code,
+                    'access' => FeatureAccessEnum::UNLIMTED,
+                    'available' => 1
+                ]);
+                PackageFeature::create([
+                    'package_code' => $package->code,
+                    'feature_code' => $exchangeAdsFeature->code,
+                    'access' => FeatureAccessEnum::UNLIMTED,
+                    'available' => 1
+                ]);
+            }
+
+            if($package->name == $testPackage->name){
+                //ELITE FEATURES TAKEN
                 PackageFeature::create([
                     'package_code' => $package->code,
                     'feature_code' => $exchangeFeature->code,
