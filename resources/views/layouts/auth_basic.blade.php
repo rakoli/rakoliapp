@@ -136,9 +136,9 @@
 <!--begin::Javascript-->
 <script>var hostUrl = "assets/";</script>
 <!--begin::Global Javascript Bundle(mandatory for all pages)-->
-<script src="{{asset('assets/plugins/global/plugins.bundle.js')}}"></script>
-<script src="{{asset('assets/js/scripts.bundle.js')}}"></script>
-<script src="{{asset('assets/js/loader.js')}}"></script>
+<script src="{{asset('assets/plugins/global/plugins.bundle.js')}}" defer></script>
+<script src="{{asset('assets/js/scripts.bundle.js')}}" defer></script>
+<script src="{{asset('assets/js/loader.js')}}" defer></script>
 <!--end::Global Javascript Bundle-->
 <!--begin::Custom Javascript(used for this page only)-->
 @yield('js')
