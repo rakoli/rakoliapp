@@ -59,22 +59,31 @@ class LoginController extends Controller
 
     public function authenticated(Request $request, $user)
     {
-        if ($user->status == UserStatusEnum::BLOCKED) {
+        if ($user->status == UserStatusEnum::BLOCKED->value) {
             $locale = Session::get('locale');
             Auth::logout();
             Session::flush();
             Session::put('locale', $locale);
 
-            return 0;
+            return responder()->error('user_blocked');
+        }
+
+        if ($user->status == UserStatusEnum::DISABLED->value) {
+            $locale = Session::get('locale');
+            Auth::logout();
+            Session::flush();
+            Session::put('locale', $locale);
+
+            return responder()->error('user_disabled');
         }
 
         setupSession($user);
 
-        return 1;
+        return responder()->success(['message' => __('authorised')]);
     }
 
     protected function sendFailedLoginResponse(Request $request)
     {
-        return 0;
+        return responder()->error('unauthorized_login');
     }
 }

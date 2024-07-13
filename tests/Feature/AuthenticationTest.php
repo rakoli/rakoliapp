@@ -6,6 +6,7 @@ use App\Models\Business;
 use App\Models\Country;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use App\Utils\Enums\UserStatusEnum;
 use App\Utils\Enums\UserTypeEnum;
 use Database\Seeders\CountrySeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -54,7 +55,8 @@ class AuthenticationTest extends TestCase
         ]);
 
         // Assert
-        $response->assertContent('1');
+        $responseArray = json_decode($response->content(),true);
+        $this->assertEquals(200,$responseArray['status']);
         $this->assertAuthenticatedAs($user);
     }
 
@@ -73,7 +75,48 @@ class AuthenticationTest extends TestCase
         ]);
 
         // Assert
-        $response->assertContent('0');
+        $responseArray = json_decode($response->content(),true);
+        $this->assertEquals(500,$responseArray['status']);
+        $this->assertGuest();
+    }
+
+    /** @test */
+    public function blocked_user_cannot_login()
+    {
+        // Arrange
+        $user = User::factory()->create([
+            'status' => UserStatusEnum::BLOCKED->value,
+        ]);
+
+        // Act
+        $response = $this->post(route('login'), [
+            'email' => $user->email,
+            'password' => '12345678',
+        ]);
+
+        // Assert
+        $responseArray = json_decode($response->content(),true);
+        $this->assertEquals(500,$responseArray['status']);
+        $this->assertGuest();
+    }
+
+    /** @test */
+    public function disabled_user_cannot_login()
+    {
+        // Arrange
+        $user = User::factory()->create([
+            'status' => UserStatusEnum::DISABLED->value,
+        ]);
+
+        // Act
+        $response = $this->post(route('login'), [
+            'email' => $user->email,
+            'password' => '12345678',
+        ]);
+
+        // Assert
+        $responseArray = json_decode($response->content(),true);
+        $this->assertEquals(500,$responseArray['status']);
         $this->assertGuest();
     }
 
