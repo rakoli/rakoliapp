@@ -51,7 +51,7 @@ class BusinessManagementTest extends TestCase
         $this->actingAs($user);
 
         $response = $this->getJson(route('business.branches'),['X-Requested-With'=>'XMLHttpRequest']);
-        $responseArray = json_decode($response->content(),'true');
+        $responseArray = json_decode($response->content(),true);
 
         $allValuesFound = true;
         $firstArray = $totalBranches->toArray();
@@ -96,7 +96,7 @@ class BusinessManagementTest extends TestCase
 
         $response = $this->get(route('business.branches.townlistAjax',['region_code' => $region->code]));
 
-        $responseArray = json_decode($response->content(),'true');
+        $responseArray = json_decode($response->content(),true);
 
         $allValuesFound = true;
         $firstArray = $towns->toArray();
