@@ -64,12 +64,9 @@ var KTSigninGeneral = function () {
                     // Check axios library docs: https://axios-http.com/docs/intro
                     axios.post(submitButton.closest('form').getAttribute('action'), new FormData(form)).then(function (response) {
 
-                        console.log(response.data);
-                        console.log(response.data.status);
-                        console.log(response.data.error.message);
+                        let responseStatus = parseInt(response.data.status);
 
-
-                        if (parseInt(response.data.status) == 200) {
+                        if (responseStatus === 200) {
                             form.reset();
 
                             // Show message popup. For more info check the plugin's official documentation: https://sweetalert2.github.io/
@@ -103,7 +100,7 @@ var KTSigninGeneral = function () {
 
                     }).catch(function (error) {
                         Swal.fire({
-                            text: "Sorry, looks like there are some errors detected, please try again.",
+                            text: "Sorry, authentication response errors detected, please try again.",
                             icon: "error",
                             buttonsStyling: false,
                             confirmButtonText: "Ok, got it!",
@@ -121,7 +118,7 @@ var KTSigninGeneral = function () {
                 } else {
                     // Show error popup. For more info check the plugin's official documentation: https://sweetalert2.github.io/
                     Swal.fire({
-                        text: "Sorry, looks like there are some errors detected, please try again.",
+                        text: "Sorry, error of submitted data detected, please try again.",
                         icon: "error",
                         buttonsStyling: false,
                         confirmButtonText: "Ok, got it!",
