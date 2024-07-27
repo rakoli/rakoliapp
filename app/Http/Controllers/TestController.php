@@ -86,7 +86,7 @@ class TestController extends Controller
     public function testing2()
     {
         $selcom = new SelcomPayment();
-        $completionStatus = $selcom->isPaymentComplete(63834453);
+        $completionStatus = $selcom->isPaymentComplete('S19601660007');
 
         dd($completionStatus);
     }
