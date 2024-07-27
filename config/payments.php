@@ -1,13 +1,20 @@
 <?php
 
 return [
-    'accepted_payment_methods' => ['dpopay', 'pesapal'],
+    'accepted_payment_methods' => ['dpopay', 'pesapal','selcom'],
     'payment_valid_time_hours' => 24,
+
+
     'company_token' => env('DPO_COMPANY_TOKEN', '9F416C11-127B-4DE2-AC7F-D5710E4C5E0A'),
     'account_type' => env('DPO_ACCOUNT_TYPE', '3854'),
     'is_test_mode' => env('DPO_IS_TEST_MODE', true),
     'back_url' => env('DPO_BACK_URL'),
     'redirect_url' => env('DPO_REDIRECT_URL'),
+
+    'selcom_vendor' => env('SELCOM_VENDOR'),
+    'selcom_baseurl' => env('SELCOM_BASEURL'),
+    'selcom_key' => env('SELCOM_API_KEY'),
+    'selcom_secret' => env('SELCOM_API_SECRET'),
 
     'pesapal-env' => env('PESAPAL_ENV', 'sandbox'),
     'pesapal_key' => env('PESAPAL_CONSUMER_KEY'),
