@@ -68,7 +68,7 @@ class SelcomPayment
         try {
             $orderStatusPath = "/v1/checkout/order-status";
             $orderStatusArray = ["order_id"=>$id];
-            $response = $this->client->postFunc($orderStatusPath,$orderStatusArray);
+            $response = $this->client->getFunc($orderStatusPath,$orderStatusArray);
             $results = $response;
         } catch (\Exception $exception) {
             Log::error($exception);
