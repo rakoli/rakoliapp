@@ -25,7 +25,7 @@ class TestController extends Controller
             "merchant_remarks" => "None",
             "no_of_items" => 1,
 
-            "payment_methods"=>"MOBILEMONEYPULL",
+            "payment_methods"=>"MOBILEMONEYPULL,MASTERPASS",
             "billing.firstname" => "John",
             "billing.lastname" => "Erick",
             "billing.address_1" => "Kinondoni",
@@ -96,7 +96,7 @@ class TestController extends Controller
     public function testing2()
     {
         $selcom = new SelcomPayment();
-        $completionStatus = $selcom->isPaymentComplete('rZdA9');
+        $completionStatus = $selcom->isPaymentComplete('tSYZP');
 
         dd($completionStatus);
     }
