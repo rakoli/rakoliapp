@@ -100,6 +100,8 @@ class SelcomPayment
             ];
         }
 
+        dd($result);
+
         return [
             'success' => false,
             'result' => $result['data'][0]['payment_status'],
