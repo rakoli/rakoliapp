@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'accepted_payment_methods' => ['dpopay', 'pesapal','selcom'],
+    'accepted_payment_methods' => ['pesapal'],
     'payment_valid_time_hours' => 24,
 
 
