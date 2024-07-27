@@ -62,7 +62,7 @@ class TestController extends Controller
         $reference = $apiResponse['payment_token'];
         $referenceName = 'payment_token';
 
-        dd($requestResult,$redirectUrl, $reference,$referenceName);
+        dd($requestResult,$redirectUrl, $reference,$referenceName, $paymentParams['order_id']);
 
 
 
