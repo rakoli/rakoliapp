@@ -228,7 +228,7 @@ class User extends Authenticatable
     public static function completedRegistration(User $user)
     {
         if(env('APP_ENV') == 'production'){
-            $message = "User Registration: A new $user->type user $user->fname $user->lname from $user->country_code. Registration process ongoing.";
+            $message = "User Registration: A new $user->type user $user->fname $user->lname from $user->country_code. (+$user->phone). Registration process ongoing.";
             SendTelegramNotification::dispatch($message);
         }
 
