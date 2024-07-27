@@ -10,20 +10,20 @@ class TestController extends Controller
     public function testing()
     {
 
-//        $paymentParams = [
-//            "vendor" => config('payments.selcom_vendor'),
-//            "order_id" => \Str::random('5'),
-//            "buyer_email" => "john@example.com",
-//            "buyer_name" => "John Erick",
-//            "buyer_phone" => "255763466080",
-//            "amount" => 1000,
-//            "currency" => "TZS",
-//            "redirect_url" => base64_encode(route('home')),
-//            "cancel_url" => base64_encode(route('home')),
-//            "webhook" => base64_encode(route('selcom.callback')),
-//            "buyer_remarks" => "None",
-//            "merchant_remarks" => "None",
-//            "no_of_items" => 1,
+        $paymentParams = [
+            "vendor" => config('payments.selcom_vendor'),
+            "order_id" => \Str::random('5'),
+            "buyer_email" => "john@example.com",
+            "buyer_name" => "John Erick",
+            "buyer_phone" => "255763466080",
+            "amount" => 1000,
+            "currency" => "TZS",
+            "redirect_url" => base64_encode(route('home')),
+            "cancel_url" => base64_encode(route('home')),
+            "webhook" => base64_encode(route('selcom.callback')),
+            "buyer_remarks" => "None",
+            "merchant_remarks" => "None",
+            "no_of_items" => 1,
 
 //            "payment_methods"=>"MOBILEMONEYPULL,MASTERPASS",
 //            "billing.firstname" => "John",
@@ -34,7 +34,7 @@ class TestController extends Controller
 //            "billing.postcode_or_pobox" => "00255",
 //            "billing.country" => "TZ",
 //            "billing.phone" => "255763466080",
-//        ];
+        ];
 
 //        $requestResult = GenerateSelcomPayment::run($paymentParams);
 //        $requestResult = '{
@@ -54,25 +54,25 @@ class TestController extends Controller
 
 
 
-//
-//        $requestResult = GenerateSelcomPayment::run($paymentParams);
-//
-//        if ($requestResult['success'] == false || $requestResult['result']['resultcode'] != 0) {
-//            return [
-//                'success' => false,
-//                'result' => 'Selcom Error',
-//                'resultExplanation' => 'Unable to request payment.' . $requestResult['result']['message'],
-//            ];
-//        }
-//
-//        $apiResponse = $requestResult['result']['data'][0];
-//        $requestResult['url'] = $apiResponse['payment_gateway_url'];
-//
-//        $redirectUrl = $apiResponse['payment_gateway_url'];
-//        $reference = $apiResponse['payment_token'];
-//        $referenceName = 'payment_token';
-//
-//        dd($requestResult,$redirectUrl, $reference,$referenceName, $paymentParams['order_id']);
+
+        $requestResult = GenerateSelcomPayment::run($paymentParams);
+
+        if ($requestResult['success'] == false || $requestResult['result']['resultcode'] != 0) {
+            return [
+                'success' => false,
+                'result' => 'Selcom Error',
+                'resultExplanation' => 'Unable to request payment.' . $requestResult['result']['message'],
+            ];
+        }
+
+        $apiResponse = $requestResult['result']['data'][0];
+        $requestResult['url'] = $apiResponse['payment_gateway_url'];
+
+        $redirectUrl = $apiResponse['payment_gateway_url'];
+        $reference = $apiResponse['payment_token'];
+        $referenceName = 'payment_token';
+
+        dd($requestResult,$redirectUrl, $reference,$referenceName, $paymentParams['order_id']);
 
 
 
