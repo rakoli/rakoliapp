@@ -25,8 +25,7 @@ class TestController extends Controller
             "no_of_items" => 1
         ];
 
-        $requestResult = GenerateSelcomPayment::run($paymentParams);
-
+//        $requestResult = GenerateSelcomPayment::run($paymentParams);
 //        $requestResult = '{
 //  "reference" : "0289999288",
 //  "resultcode" : "000",
@@ -43,13 +42,15 @@ class TestController extends Controller
 //        }
 
 
+
+
         $requestResult = GenerateSelcomPayment::run($paymentParams);
 
         if ($requestResult['success'] == false || $requestResult['result']['resultcode'] != 0) {
             return [
                 'success' => false,
                 'result' => 'Selcom Error',
-                'resultExplanation' => 'Unable to request payment.'.$requestResult['result']['message'] ,
+                'resultExplanation' => 'Unable to request payment.' . $requestResult['result']['message'],
             ];
         }
 
@@ -61,5 +62,22 @@ class TestController extends Controller
         $referenceName = 'payment_token';
 
         dd($requestResult,$redirectUrl, $reference,$referenceName);
+
+
+
+//        $requestResult = '{
+//  "reference" : "0289999288",
+//  "resultcode" : "000",
+//  "result" : "SUCCESS",
+//  "message" : "Order fetch successful",
+//  "data": [{"order_id":"123", "creation_date":"2019-06-06 22:00:00", "amount":"1000", "payment_status":"PENDING","transid":null,"channel":null,"reference":null,"phone":null}]
+//}';
+//        $requestResult = json_decode($requestResult,true);
+//
+//        dd($requestResult,$requestResult['resultcode'],$requestResult['data'][0],$requestResult['data'][0]['amount'],$requestResult['data'][0]['payment_status']);
+//
+
+        return false;
+
     }
 }

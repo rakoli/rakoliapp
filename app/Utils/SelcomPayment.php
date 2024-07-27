@@ -63,13 +63,13 @@ class SelcomPayment
      * */
     public function transactionStatus($id)
     {
-        $this->authenticate();
-        $url = $this->getEndPointUrl(config('payments.pesapal-endpoint')['tsq']);
-        $url .= "?orderTrackingId={$id}";
+        $response = null;
         $results = [];
         try {
-            $response = $this->client->request('GET', $url, ['headers' => $this->headers]);
-            $results = json_decode($response->getBody()->getContents());
+            $orderStatusPath = "/v1/checkout/order-status";
+            $orderStatusArray = ["order_id"=>$id];
+            $response = $this->client->postFunc($orderStatusPath,$orderStatusArray);
+            $results = $response;
         } catch (\Exception $exception) {
             Log::error($exception);
             Bugsnag::notifyException($exception);
@@ -92,18 +92,17 @@ class SelcomPayment
     {
         $response = $this->transactionStatus($id);
         $result = $response['result'];
-
-        if ($result->status == 200 && $result->payment_status_description == 'Completed') {
+        if ($result['resultcode'] == 0 && $result['data'][0]['payment_status'] == 'COMPLETED') {
             return [
                 'success' => true,
-                'result' => $result->payment_status_description,
+                'result' => $result['data'][0]['payment_status'],
                 'resultExplanation' => 'Transaction Paid',
             ];
         }
 
         return [
             'success' => false,
-            'result' => $result->payment_status_description,
+            'result' => $result['data'][0]['payment_status'],
             'resultExplanation' => 'Transaction Not Paid',
         ];
     }
