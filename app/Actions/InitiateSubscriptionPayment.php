@@ -116,6 +116,42 @@ class InitiateSubscriptionPayment
             $referenceName = 'tracking_id';
         }
 
+        if ($paymentmethod == 'selcom') {
+
+            $paymentParams = [
+                "vendor" => config('payments.selcom_vendor'),
+                "order_id" => $tnxCode,
+                "buyer_email" => $user->email,
+                "buyer_name" => $user->name(),
+                "buyer_phone" => $user->phone,
+                "amount" => $package->price,
+                "currency" => $package->price_currency,
+                "redirect_url" => base64_encode(route('home')),
+                "cancel_url" => base64_encode(route('home')),
+                "webhook" => base64_encode(route('selcom.callback')),
+                "buyer_remarks" => "None",
+                "merchant_remarks" => "None",
+                "no_of_items" => 1
+            ];
+
+            $requestResult = GenerateSelcomPayment::run($paymentParams);
+
+            if ($requestResult['success'] == false || $requestResult['result']['resultcode'] != 0) {
+                return [
+                    'success' => false,
+                    'result' => 'Selcom Error',
+                    'resultExplanation' => 'Unable to request payment.'.$requestResult['result']['message'] ,
+                ];
+            }
+
+            $apiResponse = $requestResult['result']['data'][0];
+            $requestResult['url'] = $apiResponse['payment_gateway_url'];
+
+            $redirectUrl = $apiResponse['payment_gateway_url'];
+            $reference = $apiResponse['payment_token'];
+            $referenceName = 'payment_token';
+        }
+
         if ($paymentmethod == 'test' && env('APP_ENV') != 'production') {
             $reference = 'test_'.\Illuminate\Support\Str::random(4);
             $redirectUrl = route('pay.test', $reference);

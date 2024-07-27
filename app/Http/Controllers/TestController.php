@@ -27,7 +27,39 @@ class TestController extends Controller
 
         $requestResult = GenerateSelcomPayment::run($paymentParams);
 
+//        $requestResult = '{
+//  "reference" : "0289999288",
+//  "resultcode" : "000",
+//  "result" : "SUCCESS",
+//  "message" : "Payment notification logged",
+//  "data": [{"gateway_buyer_uuid":"12344321", "payment_token":"80008000", "qr":"QR", "payment_gateway_url":"aHR0cDpleGFtcGxlLmNvbS9wZy90MTIyMjI="}]
+//}';
+//        $requestResult = json_decode($requestResult,true);
+//
+//        $paymentUrl = base64_decode($requestResult['data'][0]['payment_gateway_url']);
+//
+//        if($requestResult['resultcode'] == 0){
+////            dd('tupo');
+//        }
 
-        dd($requestResult);
+
+        $requestResult = GenerateSelcomPayment::run($paymentParams);
+
+        if ($requestResult['success'] == false || $requestResult['result']['resultcode'] != 0) {
+            return [
+                'success' => false,
+                'result' => 'Selcom Error',
+                'resultExplanation' => 'Unable to request payment.'.$requestResult['result']['message'] ,
+            ];
+        }
+
+        $apiResponse = $requestResult['result']['data'][0];
+        $requestResult['url'] = $apiResponse['payment_gateway_url'];
+
+        $redirectUrl = $apiResponse['payment_gateway_url'];
+        $reference = $apiResponse['payment_token'];
+        $referenceName = 'payment_token';
+
+        dd($requestResult,$redirectUrl, $reference,$referenceName);
     }
 }

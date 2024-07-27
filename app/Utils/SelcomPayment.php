@@ -39,7 +39,7 @@ class SelcomPayment
         try {
             $orderPath = "/v1/checkout/create-order-minimal";
             $response = $this->client->postFunc($orderPath,$params);
-            $results = json_encode($response);
+            $results = $response;
         } catch (\Exception $exception) {
             Log::error($exception);
             Bugsnag::notifyException($exception);
