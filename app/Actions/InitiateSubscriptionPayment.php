@@ -145,9 +145,9 @@ class InitiateSubscriptionPayment
             }
 
             $apiResponse = $requestResult['result']['data'][0];
-            $requestResult['url'] = $apiResponse['payment_gateway_url'];
+            $requestResult['url'] = base64_decode($apiResponse['payment_gateway_url']);
 
-            $redirectUrl = $apiResponse['payment_gateway_url'];
+            $redirectUrl = base64_decode($apiResponse['payment_gateway_url']);
             $reference = $apiResponse['payment_token'];
             $referenceName = 'payment_token';
         }
