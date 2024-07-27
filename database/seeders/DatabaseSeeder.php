@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
             CryptoSeeder::class,
             PackagesTableSeeder::class,
             UsersTableSeeder::class,
-            SampleDataSeeder::class,
+//            SampleDataSeeder::class,
         ]);
     }
 }
