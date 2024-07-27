@@ -20,21 +20,22 @@
                     @foreach($initiatedPayments as $initiatedPayment)
                         <tr>
                             <td>{{\Carbon\Carbon::create($initiatedPayment->expiry_time)->diffForHumans()}}</td>
-                            <td>{{\App\Models\Package::where('code',$initiatedPayment->description)->first()->name}} - {{__('annual subscription')}}</td>
+                            <td>{{\App\Models\Package::where('code',$initiatedPayment->description)->first()->name}}
+                                - {{__('annual subscription')}}</td>
                             <td>{{strtoupper($initiatedPayment->amount_currency)}} {{number_format($initiatedPayment->amount)}}</td>
                             <td>{{strtoupper($initiatedPayment->channel)}}</td>
                             <td>
-                                <a href="{{$initiatedPayment->pay_url}}" class="btn btn-bg-light btn-secondary">{{__('Pay Now')}}</a>
-{{--                                <a type="button" class="btn btn-primary" href="{{$initiatedPayment->pay_url}}">--}}
-{{--                                    {{__('Pay Now')}}--}}
-{{--                                </a>--}}
+                                <a href="{{$initiatedPayment->pay_url}}"
+                                   class="btn btn-bg-light btn-secondary">{{__('Pay Now')}}</a>
+                                {{--                                <a type="button" class="btn btn-primary" href="{{$initiatedPayment->pay_url}}">--}}
+                                {{--                                    {{__('Pay Now')}}--}}
+                                {{--                                </a>--}}
                             </td>
                         </tr>
                     @endforeach
                     </tbody>
                 </table>
             </div>
-
 
         @endif
 
@@ -45,7 +46,10 @@
             <h2 class="fw-bold text-dark">{{__('Select Package')}}</h2>
             <!--end::Title-->
             <!--begin::Notice-->
-            <div class="text-muted fw-semibold fs-6">{{__('Choose a subscription package that fits your business needs')}}.</div>
+            <div
+                class="text-muted fw-semibold fs-6">{{__('Choose a subscription package that fits your business needs')}}
+                .
+            </div>
             <!--end::Notice-->
         </div>
         <!--end::Heading-->
@@ -61,11 +65,14 @@
                     <div class="col-xl-4">
                         <div class="d-flex h-100 align-items-center m-2">
                             <!--begin::Option-->
-                            <div class="w-100 d-flex flex-column flex-center rounded-3 py-15 px-10 bg-secondary" id="{{$package->code}}" onclick="selectSubscription('{{$package->code}}','{{strtoupper($package->name)}}', '{{number_format($package->price)}}', '{{strtoupper($package->price_currency)}}')">
+                            <div class="w-100 d-flex flex-column flex-center rounded-3 py-15 px-10 bg-secondary"
+                                 id="{{$package->code}}"
+                                 onclick="selectSubscription('{{$package->code}}','{{strtoupper($package->name)}}', '{{number_format($package->price)}}', '{{strtoupper($package->price_currency)}}')">
                                 <!--begin::Heading-->
                                 <div class="mb-7 text-center">
                                     <!--begin::Title-->
-                                    <h1 class="text-dark mb-5 fw-bolder" id="package_name">{{strtoupper($package->name)}}</h1>
+                                    <h1 class="text-dark mb-5 fw-bolder"
+                                        id="package_name">{{strtoupper($package->name)}}</h1>
                                     <!--end::Title-->
                                     <!--begin::Description-->
                                     <div class="text-gray-600 fw-semibold mb-5">{{$package->description}}</div>
@@ -73,7 +80,8 @@
                                     <!--begin::Price-->
                                     <div class="text-center">
                                         <span class="mb-2 text-primary">{{strtoupper($package->price_currency)}}</span>
-                                        <span class="fs-3x fw-bold text-primary">{{number_format_short($package->price)}}</span>
+                                        <span
+                                            class="fs-3x fw-bold text-primary">{{number_format_short($package->price)}}</span>
                                         <span class="fs-7 fw-semibold opacity-50">/
 																<span data-kt-element="period">{{$package->package_interval_days}} days</span></span>
                                     </div>
@@ -105,7 +113,8 @@
                                 </div>
                                 <!--end::Features-->
                                 <!--begin::Select-->
-                                <button type="button" class="btn btn-sm btn-primary" onclick="selectSubscription('{{$package->code}}','{{strtoupper($package->name)}}', '{{number_format($package->price)}}', '{{strtoupper($package->price_currency)}}')">{{__('Select')}}</button>
+                                <button type="button" class="btn btn-sm btn-primary"
+                                        onclick="selectSubscription('{{$package->code}}','{{strtoupper($package->name)}}', '{{number_format($package->price)}}', '{{strtoupper($package->price_currency)}}')">{{__('Select')}}</button>
                                 <!--end::Select-->
                             </div>
                             <!--end::Option-->
@@ -121,8 +130,9 @@
         <!--end::Plans-->
         <!--begin::Input group-->
         <div class="fv-row">
-{{--            <label for="selected_plan" class="required form-label">Selected Plan</label>--}}
-            <input type="hidden" name="selected_plan" id="selected_plan" class="form-control form-control-solid-bg " readonly/>
+            {{--            <label for="selected_plan" class="required form-label">Selected Plan</label>--}}
+            <input type="hidden" name="selected_plan" id="selected_plan" class="form-control form-control-solid-bg "
+                   readonly/>
         </div>
         <!--end::Input group-->
         <!--begin::Notice-->
@@ -130,9 +140,12 @@
         <!--end::Notice-->
 
         <!--begin::Option-->
-        <input type="radio" class="btn-check" name="selected_payment_method" value="pesapal" id="pesapal" onchange="selectPaymentMethod(this)" checked="checked"/>
-        <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center" for="pesapal">
-            <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/pesapal.png')}}" class="mw-200px mh-70px"></i>
+        <input type="radio" class="btn-check" name="selected_payment_method" value="pesapal" id="pesapal"
+               onchange="selectPaymentMethod(this)" checked="checked"/>
+        <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center"
+               for="pesapal">
+            <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/pesapal.png')}}"
+                                                  class="mw-200px mh-70px"></i>
             <span class="d-block fw-semibold text-start">
             <span class="text-gray-900 fw-bold d-block fs-3">PesaPal</span>
             <span class="text-muted fw-semibold fs-6">Pay with Visa, MasterCard, Bank and Mobile Money like Mpesa, Airtel Money, TigoPesa, MTN MoMo Pay and Orange Money</span>
@@ -141,35 +154,54 @@
         <!--end::Option-->
 
         <!--begin::Option-->
-        <input type="radio" class="btn-check" name="selected_payment_method" value="dpopay" id="dpopay_method" onchange="selectPaymentMethod(this)"/>
-        <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center mb-5" for="dpopay_method">
-            <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/DPOPay.webp')}}" class="mw-200px mh-70px"></i>
+        <input type="radio" class="btn-check" name="selected_payment_method" value="selcom" id="selcom"
+               onchange="selectPaymentMethod(this)" checked="checked"/>
+        <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center"
+               for="selcom">
+            <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/selcom.png')}}"
+                                                  class="mw-200px mh-70px"></i>
             <span class="d-block fw-semibold text-start">
-                <span class="text-gray-900 fw-bold d-block fs-3">DPO Pay</span>
-                <span class="text-muted fw-semibold fs-6">
-                    Pay with Visa, MasterCard, Paypal and Mobile Money like Mpesa (TZ and KE), Airtel Money, TigoPesa, MTN MoMo Pay and Orange Money
-                </span>
-            </span>
+            <span class="text-gray-900 fw-bold d-block fs-3">Selcom Tanzania</span>
+            <span class="text-muted fw-semibold fs-6">Pay with Visa, MasterCard and Mobile Money like Mpesa, Airtel Money, TigoPesa</span>
+        </span>
         </label>
         <!--end::Option-->
 
+        <!--begin::Option-->
+        {{--        <input type="radio" class="btn-check" name="selected_payment_method" value="dpopay" id="dpopay_method" onchange="selectPaymentMethod(this)"/>--}}
+        {{--        <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center mb-5" for="dpopay_method">--}}
+        {{--            <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/DPOPay.webp')}}" class="mw-200px mh-70px"></i>--}}
+        {{--            <span class="d-block fw-semibold text-start">--}}
+        {{--                <span class="text-gray-900 fw-bold d-block fs-3">DPO Pay</span>--}}
+        {{--                <span class="text-muted fw-semibold fs-6">--}}
+        {{--                    Pay with Visa, MasterCard, Paypal and Mobile Money like Mpesa (TZ and KE), Airtel Money, TigoPesa, MTN MoMo Pay and Orange Money--}}
+        {{--                </span>--}}
+        {{--            </span>--}}
+        {{--        </label>--}}
+        <!--end::Option-->
+
         @if(env('APP_ENV') != 'production')
-                <!--begin::Option-->
-                <input type="radio" class="btn-check" name="selected_payment_method" value="test" id="test_method" onchange="selectPaymentMethod(this)"/>
-                <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center mb-5" for="test_method">
-                    <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/test_pay.jpg')}}" class="mw-200px mh-70px"></i>
-                    <span class="d-block fw-semibold text-start">
+            <!--begin::Option-->
+            <input type="radio" class="btn-check" name="selected_payment_method" value="test" id="test_method"
+                   onchange="selectPaymentMethod(this)"/>
+            <label
+                class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center mb-5"
+                for="test_method">
+                <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/test_pay.jpg')}}"
+                                                      class="mw-200px mh-70px"></i>
+                <span class="d-block fw-semibold text-start">
                 <span class="text-gray-900 fw-bold d-block fs-3">TEST Pay</span>
                 <span class="text-muted fw-semibold fs-6">
                     Demo payment for testing. (An auto complete button will be provided).
                 </span>
             </span>
-                </label>
-                <!--end::Option-->
+            </label>
+            <!--end::Option-->
         @endif
 
         <div class="m-5 fv-row">
-            <button id="verify_phone_button" type="button" class="btn btn-primary" onclick="validateSubscriptionAndOpenModal()">
+            <button id="verify_phone_button" type="button" class="btn btn-primary"
+                    onclick="validateSubscriptionAndOpenModal()">
                 {{__('Make Payment')}}
             </button>
         </div>
