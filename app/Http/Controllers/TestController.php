@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\GenerateSelcomPayment;
+use App\Utils\SelcomPayment;
 
 class TestController extends Controller
 {
@@ -79,5 +80,14 @@ class TestController extends Controller
 
         return false;
 
+    }
+
+
+    public function testing2()
+    {
+        $selcom = new SelcomPayment();
+        $completionStatus = $selcom->isPaymentComplete(63834453);
+
+        dd($completionStatus);
     }
 }

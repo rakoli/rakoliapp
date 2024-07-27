@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('testing', [\App\Http\Controllers\TestController::class, 'testing']);
+Route::get('testing2', [\App\Http\Controllers\TestController::class, 'testing2']);
 
 //BASIC ROUTES
 Auth::routes();
