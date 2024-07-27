@@ -125,7 +125,7 @@ class InitiateSubscriptionPayment
                 "buyer_name" => $user->name(),
                 "buyer_phone" => $user->phone,
                 "amount" => $package->price,
-                "currency" => $package->price_currency,
+                "currency" => strtoupper($package->price_currency),
                 "redirect_url" => base64_encode(route('home')),
                 "cancel_url" => base64_encode(route('home')),
                 "webhook" => base64_encode(route('selcom.callback')),
