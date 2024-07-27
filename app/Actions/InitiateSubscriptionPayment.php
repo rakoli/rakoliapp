@@ -148,8 +148,8 @@ class InitiateSubscriptionPayment
             $requestResult['url'] = base64_decode($apiResponse['payment_gateway_url']);
 
             $redirectUrl = base64_decode($apiResponse['payment_gateway_url']);
-            $reference = $apiResponse['payment_token'];
-            $referenceName = 'payment_token';
+            $reference = $paymentParams['order_id'];
+            $referenceName = 'order_id';
         }
 
         if ($paymentmethod == 'test' && env('APP_ENV') != 'production') {
