@@ -25,6 +25,11 @@ return new class extends Migration
                 ->onUpdate('cascade');
             $table->string('type');
             $table->string('code')->nullable()->unique();
+            $table->string('referral_business_code')->nullable();
+            $table->foreign('referral_business_code')->references('code')
+                ->on('businesses')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->string('fname');
             $table->string('lname');
             $table->string('phone')->index();
@@ -50,12 +55,6 @@ return new class extends Migration
             $table->string('iddoc_id')->nullable()->unique();
             $table->string('iddoc_path')->nullable();
             $table->boolean('iddoc_verified')->default(0);
-
-            $table->string('referral_business_code')->nullable();
-            $table->foreign('referral_business_code')->references('code')
-                ->on('businesses')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
 
             $table->string('password');
             $table->rememberToken();
