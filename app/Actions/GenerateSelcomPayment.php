@@ -13,7 +13,7 @@ class GenerateSelcomPayment
     {
         $selcom = new SelcomPayment();
 
-        $result = $selcom->paymentRequest($data);
+        $result = $selcom->paymentRequestFull($data);
 
         return $result;
     }

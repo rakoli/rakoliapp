@@ -58,6 +58,33 @@ class SelcomPayment
         ];
     }
 
+    public function paymentRequestFull($params)
+    {
+        $results = [];
+        $response = null;
+
+        try {
+            $orderPath = "/v1/checkout/create-order";
+            $response = $this->client->postFunc($orderPath,$params);
+            $results = $response;
+        } catch (\Exception $exception) {
+            Log::error($exception);
+            Bugsnag::notifyException($exception);
+
+            return [
+                'success' => false,
+                'result' => $response,
+                'resultExplanation' => $exception->getMessage(),
+            ];
+        }
+
+        return [
+            'success' => true,
+            'result' => $results,
+            'resultExplanation' => 'Payment Request Sent Successfully',
+        ];
+    }
+
     /*
      * Get transaction status from Selcom using OrderTrackingId
      * */

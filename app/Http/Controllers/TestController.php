@@ -23,7 +23,17 @@ class TestController extends Controller
             "webhook" => base64_encode(route('selcom.callback')),
             "buyer_remarks" => "None",
             "merchant_remarks" => "None",
-            "no_of_items" => 1
+            "no_of_items" => 1,
+
+            "payment_methods"=>"MOBILEMONEYPULL",
+            "billing.firstname" => "John",
+            "billing.lastname" => "Erick",
+            "billing.address_1" => "Kinondoni",
+            "billing.city" => "Dar es salaam",
+            "billing.state_or_region" => "Dar es salaam",
+            "billing.postcode_or_pobox" => "00255",
+            "billing.country" => "TZ",
+            "billing.phone" => "255763466080",
         ];
 
 //        $requestResult = GenerateSelcomPayment::run($paymentParams);
