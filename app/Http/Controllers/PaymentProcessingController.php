@@ -71,6 +71,19 @@ class PaymentProcessingController extends Controller
         ];
     }
 
+    public function selcomCallback(Request $request)
+    {
+        $response = $request->getContent();
+        Log::info($response);
+
+        return [
+            'success' => true,
+            'result' => 'okay',
+            'resultExplanation' => 'data received successfully',
+        ];
+
+    }
+
     public function completePendingTestPayment(Request $request, $reference)
     {
         $initiatedPayment = InitiatedPayment::where('channel', 'test')
