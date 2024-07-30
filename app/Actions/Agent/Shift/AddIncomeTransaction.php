@@ -51,6 +51,7 @@ class AddIncomeTransaction
             $balance = $location->balance;
 
             $data['location_new_balance'] = $balance;
+            $data['till_cash'] = true;
 
             //record a location balance for this expense transaction
 

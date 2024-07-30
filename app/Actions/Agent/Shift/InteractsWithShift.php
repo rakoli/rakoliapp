@@ -29,6 +29,7 @@ trait InteractsWithShift
             'user_code' => auth()->user()->code,
             'amount' => $data['amount'],
             'amount_currency' => currencyCode(),
+            'till_cash' => isset($data['till_cash']) ? true : false,
             'type' => $data['type'],
             'category' => $data['category'],
             'balance_old' => $oldBalance,

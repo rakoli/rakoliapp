@@ -349,11 +349,25 @@ function shiftBalances(\App\Models\Shift $shift): array
         ])
         ->sum('amount');
 
+    $cashIncome = \App\Models\ShiftCashTransaction::query()
+        ->where([
+            'location_code' => $shift->location_code,
+            'user_code' => $shift->user_code,
+            'type' => \App\Utils\Enums\TransactionTypeEnum::MONEY_IN,
+            'network_code' => null,
+        ])
+        ->whereBetween('created_at', [
+            $shift->created_at,
+            now(),
+        ])
+        ->sum('amount');
+
     $tillIncome = \App\Models\ShiftTransaction::query()
     ->where([
         'location_code' => $shift->location_code,
         'user_code' => $shift->user_code,
         'type' => \App\Utils\Enums\TransactionTypeEnum::MONEY_IN,
+        'till_cash' => true,
     ])
     ->whereBetween('created_at', [
         $shift->created_at,
@@ -388,7 +402,7 @@ function shiftBalances(\App\Models\Shift $shift): array
         'tillBalances' => $tillBalances,
         'expenses' => ($expenses + $tillExpense),
         'networks' => $tills,
-        'income' => ($income + $tillIncome),
+        'income' => ($cashIncome + $tillIncome),
         'startCapital' => $startCapital,
         'endCapital' => $endingCapital,
         'shorts' => $shorts ,
