@@ -254,6 +254,8 @@
           const validations = [
               {"name" : "name", "errors" : "Network name is required", "validators" : {}},
               {"name" : "location_code", "errors" : "Location Code is required", "validators" : {}},
+              {"name" : "agent_no", "errors" : "agent_no is required", "validators" : {}},
+              {"name" : "balance", "errors" : "balance is required", "validators" : {}},
           ];
 
           const form = document.getElementById('add-network-form');
