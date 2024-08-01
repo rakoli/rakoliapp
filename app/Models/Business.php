@@ -32,7 +32,7 @@ class Business extends Model
         'referral_business_code',
     ];
 
-    public static function addBusiness($data)
+    public static function addBusiness($data,$user=null)
     {
         DB::beginTransaction();
 
@@ -63,7 +63,26 @@ class Business extends Model
                 'name'=>'Admin',
                 'description'=>'Administrator',
             ]);
+            BusinessRole::create([
+                'business_code'=>$businessInstance->code,
+                'code'=> generateCode('Manager', $businessInstance->code),
+                'name'=>'Manager',
+                'description'=>'Manager',
+            ]);
+            BusinessRole::create([
+                'business_code'=>$businessInstance->code,
+                'code'=> generateCode('Cashier', $businessInstance->code),
+                'name'=>'Cashier',
+                'description'=>'Cashier',
+            ]);
             Network::addBusinessDefaultTills($businessInstance, $locationInstance);
+            if($user){
+                LocationUser::create([
+                    'business_code'=>$businessInstance->code,
+                    'user_code'=>$user->code,
+                    'location_code'=>$locationInstance->code,
+                ]);
+            }
             DB::commit();
         }catch (\Exception $exception) {
             DB::rollback();

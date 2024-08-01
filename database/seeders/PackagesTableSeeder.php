@@ -179,7 +179,7 @@ class PackagesTableSeeder extends Seeder
                     'package_code' => $package->code,
                     'feature_code' => $tillFeature->code,
                     'access' => FeatureAccessEnum::AVAILABLE,
-                    'feature_value' => 5,
+                    'feature_value' => 3,
                     'available' => 1
                 ]);
                 PackageFeature::create([

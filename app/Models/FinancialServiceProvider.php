@@ -11,8 +11,8 @@ class FinancialServiceProvider extends Model
 {
     use HasFactory;
 
-    public static $tzDefaultsFSPs = ['M-PESA','TIGOPESA','AIRTELMONEY','HALOPESA','T-PESA','CRDB BANK','NMB BANK'];
-    public static $keDefaultsFSPs = ['M-PESA','AIRTELMONEY','YUCASH','ORANGE MONEY','KCB Bank','Equity Bank Kenya','Cooperative Bank of Kenya'];
+    public static $tzDefaultsFSPs = ['M-PESA','TIGOPESA','AIRTELMONEY'];
+    public static $keDefaultsFSPs = ['M-PESA','AIRTELMONEY','ORANGE MONEY'];
 
     public function country(): BelongsTo
     {

@@ -334,7 +334,7 @@ class RegistrationStepController extends Controller
             $addBusinessData['referral_business_code'] = $user->referral_business_code;
         }
 
-        $response = Business::addBusiness($addBusinessData);
+        $response = Business::addBusiness($addBusinessData,$user);
 
         if($response === false){
             return [
