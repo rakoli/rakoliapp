@@ -323,7 +323,7 @@ class PackagesTableSeeder extends Seeder
                 ]);
             }
 
-            if($package->name == $testPackage->name){
+            if(config('app.env') != 'production' && $package->name == $testPackage->name){
                 //ELITE FEATURES TAKEN
                 PackageFeature::create([
                     'package_code' => $package->code,
