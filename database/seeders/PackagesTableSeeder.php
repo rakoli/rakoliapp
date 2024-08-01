@@ -27,9 +27,12 @@ class PackagesTableSeeder extends Seeder
         $elitePackage = PackageName::create([
             'name' => 'elite'
         ]);
-        $testPackage = PackageName::create([
-            'name' => 'test'
-        ]);
+
+        if(config('app.env') != 'production') {
+            $testPackage = PackageName::create([
+                'name' => 'test'
+            ]);
+        }
 
         $tz_plans = [
             [
@@ -62,7 +65,11 @@ class PackagesTableSeeder extends Seeder
                 'package_interval_days' => 365,
                 'description' => "Full control of agency business"
             ],
-            [
+        ];
+
+
+        if(config('app.env') != 'production') {
+            $tz_plans[] = [
                 'country_code' => "TZ",
                 'name' => $testPackage->name,
                 'code' => generateCode($testPackage->name,"tz"),
@@ -71,8 +78,8 @@ class PackagesTableSeeder extends Seeder
                 'price_commission' => 50,//3%
                 'package_interval_days' => 365,
                 'description' => "Full control of agency business"
-            ],
-        ];
+            ];
+        }
 
 
         $ke_plans = [
