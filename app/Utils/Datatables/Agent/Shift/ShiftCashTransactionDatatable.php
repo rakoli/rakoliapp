@@ -64,6 +64,7 @@ class ShiftCashTransactionDatatable implements HasDatatable
                 Column::make('transaction_type')->title(__('Type'))->orderable(),
             ])
             ->lengthMenu([[5, 10, 20, -1], [5, 10, 20, 'All']])
+            ->responsive(true)
             ->orderBy(0);
     }
 }

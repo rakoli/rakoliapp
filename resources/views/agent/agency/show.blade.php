@@ -508,6 +508,7 @@
 
                 $("table#shift-loan-table").DataTable({
                     sort: false,
+                    responsive: true,
                     perPage: 2
                 })
 

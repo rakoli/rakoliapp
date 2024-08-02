@@ -73,6 +73,8 @@ class TransactionDatatable implements HasDatatable
             Column::make('balance_old')->title(__('Old Balance').' '.strtoupper(session('currency')))->searchable()->orderable(),
             Column::make('amount')->title(__('Amount').' '.strtoupper(session('currency')))->searchable()->orderable(),
             Column::make('balance_new')->title(__('New Balance'))->searchable()->orderable(),
-        ])->orderBy(0, 'desc');
+        ])
+        ->responsive(true)
+        ->orderBy(0, 'desc');
     }
 }
