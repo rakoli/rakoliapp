@@ -50,6 +50,7 @@ class LoanPaymentDatatable implements HasDatatable
             Column::make('amount')->title(__('amount').' '.strtoupper(session('currency')))->searchable()->orderable(),
 
         ])
+            ->responsive(true)
             ->orderBy(0);
     }
 }

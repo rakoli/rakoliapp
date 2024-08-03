@@ -27,7 +27,7 @@ class ShowShiftController extends Controller
             }
         }
 
-        $dataTableHtml = $transactionDatatable->columns(datatableBuilder: $datatableBuilder);
+        $dataTableHtml = $transactionDatatable->columns(datatableBuilder: $datatableBuilder)->responsive(true);
 
         $tills = ShiftNetwork::query()->where('shift_networks.shift_id', $shift->id)->with(['network.agency','network.crypto']);
 

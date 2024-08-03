@@ -70,6 +70,7 @@ class ShiftTransferRequestDatatable implements HasDatatable
             Column::make('status')->title(__('Status'))->searchable()->orderable(),
             Column::make('action')->title(__('Actions'))->searchable()->orderable(),
         ])->orderBy(0, 'desc')
+        ->responsive(true)
             ->dom('frtilp');
     }
 }

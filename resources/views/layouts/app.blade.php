@@ -418,6 +418,13 @@
         }
 
     </script>
+    <script>
+        jQuery(document).ready(function(){
+            jQuery(document).on("click",".action_btn",function(){
+                jQuery(this).siblings(".action_menu").toggleClass("show");
+            });
+        });
+    </script>
 
     @yield('footer_js')
     @stack('js')

@@ -70,7 +70,7 @@ class NetworkDatatable implements HasDatatable
             Column::make('balance_combined')->title(__('Balance').' '.strtoupper(session('currency')))->searchable()->orderable(),
             Column::make('actions')->title('Actions'),
         ])
-
+            ->responsive(true)
             ->orderBy(0);
     }
 }
