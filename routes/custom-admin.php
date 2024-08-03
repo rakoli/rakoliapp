@@ -14,6 +14,7 @@ Route::name('admin.')->prefix('admin')->middleware(['auth', 'onlyadmin'])->group
 
         Route::get('listbusiness', [App\Http\Controllers\Admin\BusinessController::class, 'listbusiness'])->name('business.listbusiness');
         Route::get('listusers', [App\Http\Controllers\Admin\BusinessController::class, 'listusers'])->name('business.listusers');
+        Route::get('registeringuser', [App\Http\Controllers\Admin\BusinessController::class, 'registeringuser'])->name('business.registeringuser');
 
     });
     //END: EXCHANGE MODULE
