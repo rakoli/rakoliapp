@@ -206,7 +206,13 @@ class User extends Authenticatable
     {
         $country_code = Country::where('dialing_code',$data['country_dial_code'])->first()->code;
         $country_dial_code = substr($data['country_dial_code'], 1);
-        $plainPhone = substr($data['phone'], 1);
+        $plainPhone = null;
+        if ($data['phone'] === '0') {
+            $plainPhone = substr($data['phone'], 1);
+        } else {
+            $plainPhone = $data['phone'];
+        }
+
         $fullPhone = $country_dial_code . $plainPhone;
         $referralBusinessCode = null;
         if(array_key_exists('referral_business_code', $data)){
