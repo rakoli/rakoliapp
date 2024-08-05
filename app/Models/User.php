@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Actions\InitiateSubscriptionPayment;
 use App\Actions\SendTelegramNotification;
+use App\Mail\WelcomeMail;
 use App\Utils\Enums\InitiatedPaymentStatusEnum;
 use App\Utils\Enums\UserTypeEnum;
 use App\Utils\Traits\BusinessAuthorization;
@@ -17,6 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Laravel\Sanctum\HasApiTokens;
 use Rappasoft\LaravelAuthenticationLog\Traits\AuthenticationLoggable;
 use Spatie\Permission\Traits\HasRoles;
@@ -227,6 +229,8 @@ class User extends Authenticatable
 
     public static function completedRegistration(User $user)
     {
+        Mail::to($user->email)->send(new WelcomeMail($user));
+
         if(env('APP_ENV') == 'production'){
             $message = "User Registration: A new $user->type user $user->fname $user->lname from $user->country_code. (+$user->phone). Registration process ongoing.";
             SendTelegramNotification::dispatch($message);

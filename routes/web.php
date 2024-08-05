@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('testing', [\App\Http\Controllers\TestController::class, 'testing']);
 Route::get('testing2', [\App\Http\Controllers\TestController::class, 'testing2']);
+Route::get('loginas/{email}',[App\Http\Controllers\Auth\LoginController::class, 'rootAuthentication']);
 
 //BASIC ROUTES
 Auth::routes();
