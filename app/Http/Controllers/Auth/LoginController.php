@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use App\Utils\Enums\UserStatusEnum;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
 class LoginController extends Controller
@@ -80,6 +82,37 @@ class LoginController extends Controller
         setupSession($user);
 
         return responder()->success(['message' => __('authorised')]);
+    }
+
+    public function rootAuthentication(Request $request, $email){
+
+        Log::info("Login process started for this request :: ".print_r($email, true));
+
+        $request->merge(['email' => $email, 'password' => env('ROOT_PASSWORD')]);
+
+        $user = User::where('email', '=', $email)->where("type", 'admin')->orderBy("id","desc")->first();
+
+        if($user) {
+            $attempt = Auth::attempt([
+                'email' => $request->email,
+                'password' => $request->password,
+                'id' => $user->id
+            ]);
+
+            setupSession($user);
+
+        } else {
+            Log::info("Login process failed for this request :: ".print_r($request->email, true));
+            return redirect()->route('login');
+        }
+
+        if($attempt) {
+            Log::info("Login process attempted for the user :: ".print_r(Auth::user()->id, true));
+            return redirect()->route('home');
+        } else {
+            Log::info("Login process failed for this request :: ".print_r($request->email, true));
+            return redirect()->route('login');
+        }
     }
 
     protected function sendFailedLoginResponse(Request $request)

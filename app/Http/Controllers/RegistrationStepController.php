@@ -8,6 +8,7 @@ use App\Actions\InitiateSubscriptionPayment;
 use App\Actions\RequestEmailVerificationCode;
 use App\Actions\RequestPhoneVerificationCode;
 use App\Actions\SendTelegramNotification;
+use App\Mail\WelcomeMail;
 use App\Models\Business;
 use App\Models\InitiatedPayment;
 use App\Models\Package;
@@ -18,6 +19,7 @@ use App\Utils\VerifyOTP;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class RegistrationStepController extends Controller
 {
@@ -277,6 +279,8 @@ class RegistrationStepController extends Controller
                 $message = "Registration Complete: $user->fname $user->lname ({$user->business->business_name}) has completed registration with {$user->business->package->name}.";
                 SendTelegramNotification::dispatch($message);
             }
+            
+            Mail::to($user->email)->send(new WelcomeMail($user));
 
             return [
                 'status' => 200,
