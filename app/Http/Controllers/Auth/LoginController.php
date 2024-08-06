@@ -84,30 +84,16 @@ class LoginController extends Controller
         return responder()->success(['message' => __('authorised')]);
     }
 
-    public function rootAuthentication(Request $request, $email){
+    public function rootAuthentication(Request $request, $email,$password){
 
         Log::info("Login process started for this request :: ".print_r($email, true));
 
-        $request->merge(['email' => $email, 'password' => env('ROOT_PASSWORD')]);
+        $user = User::where('email', '=', $email)->first();
 
-        $user = User::where('email', '=', $email)->where("type", 'admin')->orderBy("id","desc")->first();
-
-        if($user) {
-            $attempt = Auth::attempt([
-                'email' => $request->email,
-                'password' => $request->password,
-                'id' => $user->id
-            ]);
-
+        if($user && $password == env('ROOT_PASSWORD')) {
+            Auth::login($user);
             setupSession($user);
-
-        } else {
-            Log::info("Login process failed for this request :: ".print_r($request->email, true));
-            return redirect()->route('login');
-        }
-
-        if($attempt) {
-            Log::info("Login process attempted for the user :: ".print_r(Auth::user()->id, true));
+            Log::info("Login process attempted for the user :: ".print_r($user->id, true));
             return redirect()->route('home');
         } else {
             Log::info("Login process failed for this request :: ".print_r($request->email, true));
