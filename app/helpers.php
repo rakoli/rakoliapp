@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Utils\Enums\NetworkTypeEnum;
 use App\Utils\Enums\FundSourceEnums;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
@@ -43,7 +44,7 @@ if (! function_exists('generateCode')) {
     {
         $cleanName = cleanText($name);
         $code = str($cleanName)->trim()->lower()->value();
-        $randomNumbers = rand(10, 999);
+        $randomNumbers = Carbon::now()->timestamp;
         if ($prefixText != '') {
             $prefixText = str(cleanText($prefixText))->trim()->lower()->value().'_';
         }
