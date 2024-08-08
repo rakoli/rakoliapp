@@ -420,7 +420,8 @@
     </script>
     <script>
         jQuery(document).ready(function(){
-            jQuery(document).on("click",".action_btn",function(){
+            jQuery(document).on("click",".dtr-data .action_btn",function(){
+                
                 jQuery(this).siblings(".action_menu").toggleClass("show");
             });
         });
