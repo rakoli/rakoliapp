@@ -209,7 +209,7 @@ class User extends Authenticatable
         $country_code = Country::where('dialing_code',$data['country_dial_code'])->first()->code;
         $country_dial_code = substr($data['country_dial_code'], 1);
         $plainPhone = null;
-        if ($data['phone'] === '0') {
+        if (str_starts_with($data['phone'], '0')) {
             $plainPhone = substr($data['phone'], 1);
         } else {
             $plainPhone = $data['phone'];
