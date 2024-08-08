@@ -27,6 +27,8 @@ class AddExpenseTransactionController extends Controller
 
             throw_if(! $shift->created_at->isToday(), new \Exception('You must close previous Day shift to make this Transaction'));
 
+            throw_if(! checkBalance($shift, $request), new \Exception('Insuffcient balance'));
+
             $validated['category'] = TransactionCategoryEnum::EXPENSE;
 
             $validated['type'] = TransactionTypeEnum::MONEY_OUT->value;

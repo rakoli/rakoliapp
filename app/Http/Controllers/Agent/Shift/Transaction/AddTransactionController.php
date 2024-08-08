@@ -32,6 +32,8 @@ class AddTransactionController extends Controller
 
             throw_if(! $shift->created_at->isToday(), new \Exception('You must close previous Day shift to make this Transaction'));
 
+            throw_if(! checkBalance($shift, $request), new \Exception('Insuffcient balance'));
+
             \App\Actions\Agent\Shift\AddTransaction::run(shift: $shift, data: $validated);
             
             return response()

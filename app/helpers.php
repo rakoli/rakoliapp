@@ -9,6 +9,7 @@ use App\Models\Shift;
 use App\Models\ShiftTransaction;
 use App\Models\User;
 use App\Utils\Enums\NetworkTypeEnum;
+use App\Utils\Enums\FundSourceEnums;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -408,6 +409,38 @@ function shiftBalances(\App\Models\Shift $shift): array
         'shorts' => $shorts ,
         'loanBalances' => $loanBalances
     ];
+}
+
+function checkBalance(\App\Models\Shift $shift, $request)
+{
+    $balance_data = shiftBalances($shift);
+
+    if($request->source == "CASH"){
+        Log::info("Current balance ::".print_r($balance_data,true));
+        if($balance_data['cashAtHand'] >= $request->amount){
+            return true;
+        }
+    } else if($request->source == "TILL"){
+        foreach($balance_data['networks'] as $network){
+            Log::info("Network data ::".print_r($network,true));
+            if($network["code"] == $request->network_code && $network["balance"] >= $request->amount){
+                return true;
+            }
+        }
+    }
+
+    if($request->type == "IN"){
+        foreach($balance_data['networks'] as $network){
+            Log::info("Network data ::".print_r($network,true));
+            if($network["code"] == $request->network_code && $network["balance"] >= $request->amount){
+                return true;
+            }
+        }
+    } else if($request->type == "OUT"){
+        return true;
+    }
+
+    return false;
 }
 
 function validateSubscription($feature, $length = 0) {
