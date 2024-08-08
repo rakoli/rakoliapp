@@ -64,9 +64,9 @@
         </div>
         <!--end::Sign up-->
         <!--begin::Sign up-->
-        <div class="text-gray-500 text-center fw-semibold fs-6" id="vasReg">{{ __("Need VAS Provider Account?")}}
+        {{-- <div class="text-gray-500 text-center fw-semibold fs-6" id="vasReg">{{ __("Need VAS Provider Account?")}}
             <a href="{{route('register.vas')}}" class="link-primary">{{ __("Register VAS Account")}}</a>
-        </div>
+        </div> --}}
         <!--end::Sign up-->
 
     </form>
@@ -82,8 +82,8 @@
             const agentReg = document.getElementById("agentReg");
             const vasReg = document.getElementById("vasReg");
             if (md.is("iOS")) {
-                agentReg.style.display = "none";
-                vasReg.style.display = "none";
+                agentReg.style.display = "block";
+                vasReg.style.display = "block";
             } else {
                 agentReg.style.display = "block";
                 vasReg.style.display = "block";
