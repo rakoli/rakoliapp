@@ -3,7 +3,22 @@
 @section('title', __('Account Login'))
 
 @section('body')
+<style>
+    .playstore-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: 12px;
+    margin-top:20px;
+}
+.playstore-btn a {
+    display: inline-block;
+    max-width: 190px;
+}
+.playstore-btn a img{width:100%}
 
+
+</style>
     <!--begin::Form-->
     <form class="form w-100" novalidate="novalidate" id="kt_sign_in_form" data-kt-redirect-url="{{route('home')}}" action="{{route('login')}}" method="post">
 
@@ -62,6 +77,10 @@
         <div class="text-gray-500 text-center fw-semibold fs-6" id="agentReg">{{ __("Not a Member yet?")}}
             <a href="{{route('register')}}" class="link-primary">{{ __("Sign Up")}}</a>
         </div>
+        <div class="playstore-btn" id="playbtn">
+            <a href="https://apps.apple.com/tz/app/rakoli/id6457264938" target="_blank"><img src="{{asset('assets/media/app-store.png')}}"></a>
+            <a href="https://play.google.com/store/apps/details?id=com.rakolisystems" target="_blank"><img src="{{asset('assets/media/play-store.png')}}"></a>
+        </div>
         <!--end::Sign up-->
         <!--begin::Sign up-->
         {{-- <div class="text-gray-500 text-center fw-semibold fs-6" id="vasReg">{{ __("Need VAS Provider Account?")}}
@@ -80,13 +99,13 @@
         document.addEventListener('DOMContentLoaded', () => {
             const md = new MobileDetect(window.navigator.userAgent);
             const agentReg = document.getElementById("agentReg");
-            const vasReg = document.getElementById("vasReg");
+            const playbtn = document.getElementById("playbtn");
             if (md.is("iOS")) {
                 agentReg.style.display = "block";
-                vasReg.style.display = "block";
+                playbtn.style.display = "flex";
             } else {
                 agentReg.style.display = "block";
-                vasReg.style.display = "block";
+                playbtn.style.display = "none";
             }
         });
     </script>
