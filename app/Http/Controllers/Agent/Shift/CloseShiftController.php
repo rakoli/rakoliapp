@@ -51,7 +51,7 @@ class CloseShiftController extends Controller
             'expenses' => 'nullable',
             'income' => 'nullable',
             'description' => 'required',
-            'tills' => 'required',
+            'tills' => 'sometimes|required',
             'short_type' =>[
                 'nullable',
                 Rule::requiredIf(fn () => $request->has('total_shorts') && $request->total_shorts > 0),

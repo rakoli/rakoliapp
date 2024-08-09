@@ -52,32 +52,34 @@ class CloseShift
 
                 $shiftBalances = shiftBalances(shift: $shift);
 
-                foreach ($data['tills'] as $tillCode => $amount) {
+                if(isset($data['tills'])){
+                    foreach ($data['tills'] as $tillCode => $amount) {
 
-                    Network::query()
-                        ->where('location_code', $shift->location_code)
-                        ->where([
-                            'code' => $tillCode,
-                        ])
-                        ->first()
-                        ->updateQuietly([
-                            'balance' => floatval($amount),
+                        Network::query()
+                            ->where('location_code', $shift->location_code)
+                            ->where([
+                                'code' => $tillCode,
+                            ])
+                            ->first()
+                            ->updateQuietly([
+                                'balance' => floatval($amount),
+                            ]);
+
+
+
+                        $shiftNetwork = ShiftNetwork::query()
+                            ->where('network_code', $tillCode)
+                            ->whereBelongsTo($shift, 'shift')
+                            ->first();
+
+                        $shiftNetwork->updateQuietly([
+                            'balance_new' => $amount
                         ]);
 
 
-
-                    $shiftNetwork = ShiftNetwork::query()
-                        ->where('network_code', $tillCode)
-                        ->whereBelongsTo($shift, 'shift')
-                        ->first();
-
-                    $shiftNetwork->updateQuietly([
-                        'balance_new' => $amount
-                    ]);
-
-
+                    }
                 }
-
+                
                 if ($data['total_shorts']) {
 
                     $code = $data['short_network_code'] ?? "Cash";
