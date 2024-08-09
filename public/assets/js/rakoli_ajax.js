@@ -52,7 +52,7 @@ var submitFormAction = function submitForm(form, url, submitButton, redirect_url
 }
 
 
-function lakoriValidation(validation, form, submitButton, formMethod, url, redirect_url= "") {
+function lakoriValidation(validation, form, submitButton, formMethod, url, redirect_url= "",trigger_btn=false) {
 
     var validationsArray = [];
 
@@ -90,11 +90,7 @@ function lakoriValidation(validation, form, submitButton, formMethod, url, redir
         }
     );
 
-
-    submitButton.addEventListener('click', function (e) {
-        // Prevent default button action
-        e.preventDefault();
-        // Validate form before submit
+    if(trigger_btn){
         if (validator) {
 
             validator.validate().then(function (status) {
@@ -116,6 +112,32 @@ function lakoriValidation(validation, form, submitButton, formMethod, url, redir
                 }
             });
         }
-    });
-
+    } else {
+        submitButton.addEventListener('click', function (e) {
+            // Prevent default button action
+            e.preventDefault();
+            // Validate form before submit
+            if (validator) {
+    
+                validator.validate().then(function (status) {
+    
+                    if (status === 'Valid') {
+                        // Show loading indication
+                        submitButton.setAttribute('data-kt-indicator', 'on');
+    
+                        // Disable button to avoid multiple click
+                        submitButton.disabled = true;
+    
+                        submitFormAction(
+                            form,
+                            url,
+                            submitButton,
+                            redirect_url
+                        );
+    
+                    }
+                });
+            }
+        });
+    }
 }
