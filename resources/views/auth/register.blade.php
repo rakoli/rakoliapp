@@ -3,6 +3,22 @@
 @section('title', __('Agent Registration'))
 
 @section('body')
+<style>
+    .playstore-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: 12px;
+    margin-top:20px;
+}
+.playstore-btn a {
+    display: inline-block;
+    max-width: 190px;
+}
+.playstore-btn a img{width:100%}
+
+
+</style>
 
     <!--begin::Form-->
     <form class="form w-100" novalidate="novalidate" id="kt_sign_up_form" data-kt-redirect-url="{{route('registration.agent')}}" action="{{route('register')}}">
@@ -138,6 +154,10 @@
         <!--begin::Sign up-->
         <div class="text-gray-500 text-center fw-semibold fs-6">{{ __("Already have an Account?") }}
             <a href="{{route('login')}}" class="link-primary fw-semibold">{{ __("Sign In") }}</a></div>
+            <div class="playstore-btn" id="playbtn">
+                <a href="https://apps.apple.com/tz/app/rakoli/id6457264938" target="_blank"><img src="{{asset('assets/media/app-store.png')}}"></a>
+                <a href="https://play.google.com/store/apps/details?id=com.rakolisystems" target="_blank"><img src="{{asset('assets/media/play-store.png')}}"></a>
+            </div>
         <!--end::Sign up-->
     </form>
     <!--end::Form-->
@@ -145,6 +165,18 @@
 @endsection
 
 @section('js')
+<script src="{{asset('assets/js/mobile-detect.min.js')}}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const md = new MobileDetect(window.navigator.userAgent);
+            const playbtn = document.getElementById("playbtn");
+            if (md.is("iOS")) {
+                playbtn.style.display = "flex";
+            } else {
+                playbtn.style.display = "none";
+            }
+        });
+    </script>
     {!!  GoogleReCaptchaV3::init() !!}
     <script src="{{asset('assets/js/custom/authentication/sign-up/general.js')}}"></script>
 
