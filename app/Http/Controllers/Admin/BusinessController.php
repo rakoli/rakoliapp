@@ -3,22 +3,34 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Utils\Datatables\Admin\BusinessDataTable;
+use App\Utils\Datatables\Admin\RegistingUserDataTable;
 use App\Utils\Datatables\Admin\UserDataTable;
 use Yajra\DataTables\Html\Builder;
 
 class BusinessController extends Controller
 {
-    public function listbusiness()
+    public function listbusiness(Builder $datatableBuilder, BusinessDataTable $businessDataTable)
     {
-
-        return view('admin.business.listbusiness');
+        if (\request()->ajax()) {
+            return ($businessDataTable->index());
+        }
+        return view('admin.business.listbusiness',[
+            'dataTableHtml' => $businessDataTable->columns(datatableBuilder: $datatableBuilder),
+        ]);
     }
 
-    public function listusers()
+    public function listusers(Builder $datatableBuilder, UserDataTable $userDatatable)
     {
-        return view('admin.business.listusers');
+        if (\request()->ajax()) {
+            return ($userDatatable->index());
+        }
+        return view('admin.business.listusers',[
+            'dataTableHtml' => $userDatatable->columns(datatableBuilder: $datatableBuilder),
+        ]);
+
     }
-    public function registeringuser(Builder $datatableBuilder, UserDataTable $userDatatable)
+    public function registeringuser(Builder $datatableBuilder, RegistingUserDataTable $userDatatable)
     {
         if (\request()->ajax()) {
             return ($userDatatable->index());
