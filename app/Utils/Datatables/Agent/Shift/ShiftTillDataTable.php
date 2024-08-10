@@ -35,7 +35,6 @@ class ShiftTillDataTable
                 ]);
             })
             ->rawColumns(['created_at', 'action'])
-            ->responsive(true)
             ->toJson();
     }
 }

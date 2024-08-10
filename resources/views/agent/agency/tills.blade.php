@@ -90,6 +90,7 @@
                         sort: false,
                         "processing": true,
                         "serverSide": true,
+                        responsive: true,
                         ajax: {
                             url: "{{ route('agency.shift.till', $shift) }}",
                         },
