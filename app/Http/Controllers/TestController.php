@@ -3,90 +3,112 @@
 namespace App\Http\Controllers;
 
 use App\Actions\GenerateSelcomPayment;
+use App\Models\Package;
+use App\Models\PackageAvailableFeatures;
+use App\Models\PackageFeature;
+use App\Models\PackageName;
+use App\Utils\Enums\FeatureAccessEnum;
 use App\Utils\SelcomPayment;
 
 class TestController extends Controller
 {
     public function testing()
     {
+        $trialPackage = PackageName::create([
+            'name' => 'trial'
+        ]);
 
-        $paymentParams = [
-            "vendor" => config('payments.selcom_vendor'),
-            "order_id" => \Str::random('5'),
-            "buyer_email" => "john@example.com",
-            "buyer_name" => "John Erick",
-            "buyer_phone" => "255763466080",
-            "amount" => 1000,
-            "currency" => "TZS",
-            "redirect_url" => base64_encode(route('home')),
-            "cancel_url" => base64_encode(route('home')),
-            "webhook" => base64_encode(route('selcom.callback')),
-            "buyer_remarks" => "None",
-            "merchant_remarks" => "None",
-            "no_of_items" => 1,
+        Package::create([
+            'country_code' => "TZ",
+            'name' => $trialPackage->name,
+            'code' => generateCode($trialPackage->name,"tz"),
+            'price' => 0,
+            'price_currency' => 'tzs',
+            'price_commission' => 0,//0%
+            'package_interval_days' => 14,
+            'description' => "Trial of our agency business"
+        ]);
 
-//            "payment_methods"=>"MOBILEMONEYPULL,MASTERPASS",
-//            "billing.firstname" => "John",
-//            "billing.lastname" => "Erick",
-//            "billing.address_1" => "Kinondoni",
-//            "billing.city" => "Dar es salaam",
-//            "billing.state_or_region" => "Dar es salaam",
-//            "billing.postcode_or_pobox" => "00255",
-//            "billing.country" => "TZ",
-//            "billing.phone" => "255763466080",
-        ];
+        Package::create([
+            'country_code' => "KE",
+            'name' => $trialPackage->name,
+            'code' => generateCode($trialPackage->name,"ke"),
+            'price' => 0,
+            'price_currency' => 'kes',
+            'price_commission' => 0,//0%
+            'package_interval_days' => 14,
+            'description' => "Trial of our agency business"
+        ]);
 
-//        $requestResult = GenerateSelcomPayment::run($paymentParams);
-//        $requestResult = '{
-//  "reference" : "0289999288",
-//  "resultcode" : "000",
-//  "result" : "SUCCESS",
-//  "message" : "Payment notification logged",
-//  "data": [{"gateway_buyer_uuid":"12344321", "payment_token":"80008000", "qr":"QR", "payment_gateway_url":"aHR0cDpleGFtcGxlLmNvbS9wZy90MTIyMjI="}]
-//}';
-//        $requestResult = json_decode($requestResult,true);
-//
-//        $paymentUrl = base64_decode($requestResult['data'][0]['payment_gateway_url']);
-//
-//        if($requestResult['resultcode'] == 0){
-////            dd('tupo');
-//        }
+        $branchFeature = PackageAvailableFeatures::where('name','branches')->first();
+        $tillFeature = PackageAvailableFeatures::where('name','tills')->first();
+        $shiftFeature = PackageAvailableFeatures::where('name','shift tracking')->first();
+        $shortFeature = PackageAvailableFeatures::where('name','short management')->first();
+        $loansFeature = PackageAvailableFeatures::where('name','loan management')->first();
+        $exchangeFeature = PackageAvailableFeatures::where('name','float exchange')->first();
+        $exchangeAdsFeature = PackageAvailableFeatures::where('name','post exchange ads')->first();
+        $vasFeature = PackageAvailableFeatures::where('name','VAS opportunity')->first();
+
+        foreach (Package::get() as $package) {
+
+            if($package->name == $trialPackage->name){
+
+                PackageFeature::create([
+                    'package_code' => $package->code,
+                    'feature_code' => $exchangeFeature->code,
+                    'access' => FeatureAccessEnum::AVAILABLE->value,
+                    'available' => 1
+                ]);
+                PackageFeature::create([
+                    'package_code' => $package->code,
+                    'feature_code' => $vasFeature->code,
+                    'access' => FeatureAccessEnum::AVAILABLE->value,
+                    'available' => 1
+                ]);
+                PackageFeature::create([
+                    'package_code' => $package->code,
+                    'feature_code' => $branchFeature->code,
+                    'access' => FeatureAccessEnum::AVAILABLE->value,
+                    'feature_value' => 1,
+                    'available' => 1
+                ]);
+                PackageFeature::create([
+                    'package_code' => $package->code,
+                    'feature_code' => $tillFeature->code,
+                    'access' => FeatureAccessEnum::AVAILABLE->value,
+                    'feature_value' => 1,
+                    'available' => 1
+                ]);
+                PackageFeature::create([
+                    'package_code' => $package->code,
+                    'feature_code' => $shiftFeature->code,
+                    'access' => FeatureAccessEnum::AVAILABLE->value,
+                    'feature_value' => 1,
+                    'available' => 0
+                ]);
+                PackageFeature::create([
+                    'package_code' => $package->code,
+                    'feature_code' => $shortFeature->code,
+                    'access' => FeatureAccessEnum::NOTAVAILABLE->value,
+                    'available' => 0
+                ]);
+                PackageFeature::create([
+                    'package_code' => $package->code,
+                    'feature_code' => $loansFeature->code,
+                    'access' => FeatureAccessEnum::NOTAVAILABLE->value,
+                    'available' => 0
+                ]);
+                PackageFeature::create([
+                    'package_code' => $package->code,
+                    'feature_code' => $exchangeAdsFeature->code,
+                    'access' => FeatureAccessEnum::NOTAVAILABLE->value,
+                    'available' => 0
+                ]);
 
 
+            }
 
-
-        $requestResult = GenerateSelcomPayment::run($paymentParams);
-
-        if ($requestResult['success'] == false || $requestResult['result']['resultcode'] != 0) {
-            return [
-                'success' => false,
-                'result' => 'Selcom Error',
-                'resultExplanation' => 'Unable to request payment.' . $requestResult['result']['message'],
-            ];
         }
-
-        $apiResponse = $requestResult['result']['data'][0];
-        $requestResult['url'] = $apiResponse['payment_gateway_url'];
-
-        $redirectUrl = $apiResponse['payment_gateway_url'];
-        $reference = $apiResponse['payment_token'];
-        $referenceName = 'payment_token';
-
-        dd($requestResult,$redirectUrl, $reference,$referenceName, $paymentParams['order_id']);
-
-
-
-//        $requestResult = '{
-//  "reference" : "0289999288",
-//  "resultcode" : "000",
-//  "result" : "SUCCESS",
-//  "message" : "Order fetch successful",
-//  "data": [{"order_id":"123", "creation_date":"2019-06-06 22:00:00", "amount":"1000", "payment_status":"PENDING","transid":null,"channel":null,"reference":null,"phone":null}]
-//}';
-//        $requestResult = json_decode($requestResult,true);
-//
-//        dd($requestResult,$requestResult['resultcode'],$requestResult['data'][0],$requestResult['data'][0]['amount'],$requestResult['data'][0]['payment_status']);
-//
 
         return false;
 
@@ -95,9 +117,7 @@ class TestController extends Controller
 
     public function testing2()
     {
-//        $selcom = new SelcomPayment();
-//        $completionStatus = $selcom->isPaymentComplete('tSYZP');
-//
-//        dd($completionStatus);
+
+
     }
 }

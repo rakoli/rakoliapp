@@ -10,6 +10,10 @@ class PackageFeature extends Model
 {
     use HasFactory;
 
+    protected $guarded = [
+        'id',
+    ];
+
     public function package(): BelongsTo
     {
         return $this->belongsTo(Package::class, 'package_code', 'code');
