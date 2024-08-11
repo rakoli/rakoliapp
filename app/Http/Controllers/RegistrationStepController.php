@@ -269,6 +269,7 @@ class RegistrationStepController extends Controller
             }
         }elseif($currentRegistrationStep == 4 && $nextStep == 5){
             $user->registration_step = 0;
+            $user->isowner = 1;
             $user->save();
 
             if(!$request->is('api/*')) {
@@ -279,7 +280,7 @@ class RegistrationStepController extends Controller
                 $message = "Registration Complete: $user->fname $user->lname ({$user->business->business_name}) has completed registration with {$user->business->package->name}.";
                 SendTelegramNotification::dispatch($message);
             }
-            
+
             Mail::to($user->email)->send(new WelcomeMail($user));
 
             return [

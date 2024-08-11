@@ -30,6 +30,7 @@ return new class extends Migration
                 ->on('businesses')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
+            $table->tinyInteger('isowner')->default(0);//On an independent migration
             $table->string('fname');
             $table->string('lname');
             $table->string('phone')->index();
