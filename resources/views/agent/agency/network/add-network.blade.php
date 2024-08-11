@@ -251,20 +251,27 @@
             }).change();
         });
             
-          const validations = [
-              {"name" : "name", "errors" : "Network name is required", "validators" : {}},
-              {"name" : "location_code", "errors" : "Location Code is required", "validators" : {}},
-              {"name" : "agent_no", "errors" : "agent_no is required", "validators" : {}},
-              {"name" : "balance", "errors" : "balance is required", "validators" : {}},
-          ];
+        jQuery(document).on("click","#add-network-button", function(){
+            if(jQuery("#type").val() == "Crypto"){
+                var validations = [
+                    {"name" : "name", "validators" : {}},
+                    {"name" : "location_code", "validators" : {}},
+                    {"name" : "crypto_balance", "validators" : {}},
+                    {"name" : "exchange_rate", "validators" : {}},
+                ];
+            } else {
+                var validations = [
+                    {"name" : "name", "validators" : {}},
+                    {"name" : "location_code", "validators" : {}},
+                    {"name" : "agent_no", "validators" : {}},
+                    {"name" : "balance", "validators" : {}},
+                ];
+            }
 
-          const form = document.getElementById('add-network-form');
-
-
-          const submitButton = document.getElementById('add-network-button');
-
-
-          lakoriValidation(validations, form, submitButton, 'post', '{{  route('agency.networks.store') }}');
+            const form = document.getElementById('add-network-form');
+            const submitButton = document.getElementById('add-network-button');
+            lakoriValidation(validations, form, submitButton, 'post', '{{  route('agency.networks.store') }}',"",true);
+        });
         </script>
     @endpush
 
