@@ -197,7 +197,7 @@ class BusinessController extends Controller
         if(!validateSubscription("branches",Location::where('business_code', auth()->user()->business_code)->count())){
             return redirect()->back()->withErrors(['message' => 'You have exceeded branch limit, Please upgrade your plan']);
         }
-        
+
         $request->validate([
             'name' => 'required',
             'balance' => 'required|numeric',
@@ -482,6 +482,7 @@ class BusinessController extends Controller
             'password' => Hash::make($request->password),
             'business_code' => $request->user()->business_code,
             'code' => generateCode($request->fname, $request->user()->business_code),
+            'registration_step' => 0,
         ];
         $newUser = User::create($usersData);
 
@@ -716,12 +717,12 @@ class BusinessController extends Controller
             $this->validate($request, [
                 'password' => 'required|current_password',
             ]);
-    
+
             $user = User::withTrashed()->find(Auth::user()->id);
             // $user->forceDelete();
             return redirect()->route('business.users')->with(['message' => 'Account Deleted Successfully']);
-    
-        }        
+
+        }
         return view('agent.business.close_account');
 
     }
