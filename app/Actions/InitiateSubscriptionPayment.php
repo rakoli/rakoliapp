@@ -37,7 +37,7 @@ class InitiateSubscriptionPayment
         $reference = null;
         $referenceName = null;
 
-        if ($paymentmethod == 'dpopay') {
+        if ($paymentmethod == 'dpopay' && $package->price > 0) {
 
             $data = [
                 'paymentAmount' => $package->price,
@@ -73,7 +73,7 @@ class InitiateSubscriptionPayment
             $referenceName = 'token';
         }
 
-        if ($paymentmethod == 'pesapal') {
+        if ($paymentmethod == 'pesapal' && $package->price > 0) {
 
             $paymentParams = [
                 'id' => $tnxCode,
@@ -116,7 +116,7 @@ class InitiateSubscriptionPayment
             $referenceName = 'tracking_id';
         }
 
-        if ($paymentmethod == 'selcom') {
+        if ($paymentmethod == 'selcom' && $package->price > 0) {
 
             $paymentParams = [
                 "vendor" => config('payments.selcom_vendor'),
@@ -156,6 +156,15 @@ class InitiateSubscriptionPayment
             $reference = 'test_'.\Illuminate\Support\Str::random(4);
             $redirectUrl = route('pay.test', $reference);
             $referenceName = 'test_reference';
+            $requestResult['url'] = $redirectUrl;
+            $requestResult['success'] = true;
+        }
+
+        if($package->price == 0){
+            $reference = $package->name.'_'.\Illuminate\Support\Str::random(8);
+            $redirectUrl = route('pay.trial', $reference);
+            $referenceName = 'trial_reference';
+
             $requestResult['url'] = $redirectUrl;
             $requestResult['success'] = true;
         }

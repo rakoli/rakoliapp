@@ -34,7 +34,7 @@ return new class extends Migration
             $table->timestamp('expiry_time');
             $table->string('pay_code')->nullable(); //Reference needed to pay
             $table->string('pay_url')->nullable(); //Reference needed to pay
-            $table->string('status')->default(\App\Utils\Enums\InitiatedPaymentStatusEnum::INITIATED);
+            $table->string('status')->default(\App\Utils\Enums\InitiatedPaymentStatusEnum::INITIATED->value);
             $table->string('channel_ref_name');
             $table->string('channel_ref');
             $table->text('data')->invisible()->nullable();

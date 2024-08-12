@@ -100,4 +100,20 @@ class PaymentProcessingController extends Controller
         }
 
     }
+
+    public function completePendingTrialPayment(Request $request, $reference)
+    {
+        $initiatedPayment = InitiatedPayment::where('channel_ref', $reference)
+            ->where('status', InitiatedPaymentStatusEnum::INITIATED->value)->first();
+
+        if ($initiatedPayment != null) {
+
+            CompleteInitiatedPayment::dispatch($initiatedPayment);
+
+            return redirect()->route('registration.agent')->with(['message' => 'Trial Payment Completion Done']);
+        } else {
+            return redirect()->route('registration.agent')->withErrors(['Unable to retrieve Initiated Payment with given reference.'.$reference]);
+        }
+
+    }
 }

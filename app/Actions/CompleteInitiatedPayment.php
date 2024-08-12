@@ -37,7 +37,7 @@ class CompleteInitiatedPayment
                 $userToComplete->registration_step = $userToComplete->registration_step + 1;
                 $userToComplete->save();
 
-                if($userToComplete->referral_business_code != null){
+                if($userToComplete->referral_business_code != null && $initiatedPayment->amount > 0){
                     $uplineBusiness = Business::where('code',$userToComplete->referral_business_code)->first();
                     $description = $userToComplete->name()." referral commission";
                     $uplineBusiness->addBusinessAccountTransaction(TransactionTypeEnum::MONEY_IN->value,TransactionCategoryEnum::INCOME->value,$package->price_commission,$description);
@@ -48,17 +48,19 @@ class CompleteInitiatedPayment
         }
         //END:: COMPLETE SUBSCRIPTION PAYMENT
 
-        SystemIncome::create([
-            'country_code' => $initiatedPayment->country_code,
-            'category' => $initiatedPayment->income_category,
-            'amount' => $initiatedPayment->amount,
-            'amount_currency' => $initiatedPayment->amount_currency,
-            'channel' => $initiatedPayment->channel,
-            'channel_reference' => $initiatedPayment->code,
-            'channel_timestamp' => now(),
-            'description' => $description,
-            'status' => SystemIncomeStatusEnum::RECEIVED->value,
-        ]);
+        if($initiatedPayment->amount > 0){
+            SystemIncome::create([
+                'country_code' => $initiatedPayment->country_code,
+                'category' => $initiatedPayment->income_category,
+                'amount' => $initiatedPayment->amount,
+                'amount_currency' => $initiatedPayment->amount_currency,
+                'channel' => $initiatedPayment->channel,
+                'channel_reference' => $initiatedPayment->code,
+                'channel_timestamp' => now(),
+                'description' => $description,
+                'status' => SystemIncomeStatusEnum::RECEIVED->value,
+            ]);
+        }
 
         $initiatedPayment->expiry_time = now();
         $initiatedPayment->status = InitiatedPaymentStatusEnum::COMPLETED->value;

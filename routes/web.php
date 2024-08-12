@@ -31,6 +31,7 @@ Route::post('edit/contact/information', [App\Http\Controllers\RegistrationStepCo
 Route::get('update/business/details', [App\Http\Controllers\RegistrationStepController::class, 'updateBusinessDetails'])->name('update.business.details');
 Route::post('pay/subscription', [App\Http\Controllers\RegistrationStepController::class, 'paySubscription'])->name('pay.subscription');
 Route::get('pay/test/{reference}', [App\Http\Controllers\PaymentProcessingController::class, 'completePendingTestPayment'])->name('pay.test');
+Route::get('pay/trial/{reference}', [App\Http\Controllers\PaymentProcessingController::class, 'completePendingTrialPayment'])->name('pay.trial');
 
 Route::get('register/vas', [App\Http\Controllers\Auth\RegisterVasController::class, 'showRegistrationForm'])->name('register.vas');
 Route::post('register/vas/submit', [App\Http\Controllers\Auth\RegisterVasController::class, 'register'])->name('register.vas.submit');
