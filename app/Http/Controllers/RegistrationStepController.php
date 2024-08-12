@@ -277,7 +277,9 @@ class RegistrationStepController extends Controller
             }
 
             if(env('APP_ENV') == 'production'){
-                $message = "Registration Complete: $user->fname $user->lname ({$user->business->business_name}) has completed registration with {$user->business->package->name}.";
+                $message = "Registration Complete: $user->fname $user->lname ({$user->business->business_name}) has
+                completed registration with ". strtoupper($user->business->package->name)." package for
+                {$user->business->package->price} {$user->business->package->price_currency}).";
                 SendTelegramNotification::dispatch($message);
             }
 
