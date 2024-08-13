@@ -65,8 +65,19 @@ if (! function_exists('cleanText')) {
 }
 
 if (! function_exists('number_format_short')) {
+
+    function isFloat($value) {
+        return is_float($value) || (is_numeric($value) && strpos((string) $value, '.') !== false);
+    }
+
+}
+
+if (! function_exists('number_format_short')) {
     function number_format_short($n, $precision = 1)
     {
+        if($n <= 0 || !isFloat($n)){
+            return $n;
+        };
 
         if ($n < 900) {
             // 0 - 900
