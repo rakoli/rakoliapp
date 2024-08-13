@@ -17,22 +17,31 @@ class TestController extends Controller
 {
     public function testing()
     {
-//        $users = User::where('registration_step',3)->get();
-//
-//        foreach ($users as $user) {
-//
-//            $text = "Ndugu {$user->fname}, Rakoli sasa ina package ya bure (trial) unayoweza kutumia kwa mwaka moja. Malizia usajili wako na package hii kuimarisha biashara yako ya uwakala. Rakoli - Thamani kwa Wakala";
-//
-//            if(env('APP_ENV') == 'production'){
+        echo "<pre>";
+        $users = User::where('registration_step',1)->orWhere('registration_step',2)->get();
+
+        $lastMessage = "";
+        foreach ($users as $user) {
+
+            echo "$user->full_name | $user->registration_step \n";
+            $text = "Ndugu {$user->full_name}, Kamilisha usajili wako wa mfumo wa mawakala wa Rakoli. Lipia au jaribu kifurushi chetu cha bure (trial) kwa mwaka moja. Kwa msaada piga 0743283839. Rakoli - Thamani kwa Wakala";
+            echo "$text\n";
+            if(env('APP_ENV') == 'production'){
 //                SMS::sendToUser($user, $text);
-//            }else{
-//                Log::debug("SMS: $text");
-//            }
-//
-//        }
+            }else{
+                Log::debug("SMS: $text");
+            }
+            echo "\n";
+            $lastMessage = $text;
+        }
 
+        if(env('APP_ENV') == 'production'){
+            SMS::nextSMSSendSingleText('255763466080', $lastMessage);
+        }
 
-        return false;
+        echo "</pre>";
+
+//        return false;
 
     }
 
