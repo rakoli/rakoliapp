@@ -3,6 +3,7 @@
 namespace App\Utils;
 
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
+use Exception;
 use Selcom\ApigwClient\Client;
 use Illuminate\Support\Facades\Log;
 
@@ -96,9 +97,10 @@ class SelcomPayment
             $orderStatusPath = "/v1/checkout/order-status";
             $orderStatusArray = ["order_id"=>$id];
             $response = $this->client->getFunc($orderStatusPath,$orderStatusArray);
+            Log::info("SelcomPayment :: transactionStatus :: API RESPONSE :: ".print_r($response,true));
             $results = $response;
-        } catch (\Exception $exception) {
-            Log::error($exception);
+        } catch (Exception $exception) {
+            Log::info("SelcomPayment :: isPaymentComplete :: Exception :: ".print_r($exception->getMessage(),true));
             Bugsnag::notifyException($exception);
 
             return [
@@ -117,21 +119,36 @@ class SelcomPayment
 
     public function isPaymentComplete($id)
     {
-        $response = $this->transactionStatus($id);
-        $result = $response['result'];
-        if ($result['resultcode'] == 0 && $result['data'][0]['payment_status'] == 'COMPLETED') {
-            return [
-                'success' => true,
-                'result' => $result['data'][0]['payment_status'],
-                'resultExplanation' => 'Transaction Paid',
-            ];
-        }
-
-        return [
+        $response = [
             'success' => false,
-            'result' => $result['data'][0]['payment_status'],
-            'resultExplanation' => 'Transaction Not Paid',
+            'result' => "",
+            'resultExplanation' => "",
         ];
+
+        try {
+            Log::info("Payment Request id :: ".print_r($id,true));
+            
+            $response = $this->transactionStatus($id);
+
+            Log::info("Payment Response :: ".print_r($response,true));
+            $result = $response['result'];
+            if ($result['resultcode'] == 0 && $result['data'][0]['payment_status'] == 'COMPLETED') {
+                
+                Log::info("Payment Completed Successfully.");
+                $response['success'] = true;
+                $response['result'] = 'COMPLETED';
+                $response['resultExplanation'] = 'Transaction Paid';
+                return $response;
+            }
+
+            Log::info("Payment failed.");
+            $response['result'] = isset($result['data'][0]['payment_status']) ? $result['data'][0]['payment_status'] : "";
+            return $response;
+        } catch (Exception $e){
+            Log::info("SelcomPayment :: isPaymentComplete :: Exception :: ".print_r($e->getMessage(),true));
+            $response['resultExplanation'] = 'Something went wrong';
+            return $response;
+        }
     }
 
 }
