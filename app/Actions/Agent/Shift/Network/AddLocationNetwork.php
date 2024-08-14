@@ -25,7 +25,7 @@ class AddLocationNetwork
             Log::info($data);
 
                 $type = NetworkTypeEnum::tryFrom($data['type']);
-                if($type === NetworkTypeEnum::CRYPTO->value){
+                if($type === NetworkTypeEnum::CRYPTO){
                     Log::info("Crypto");
 
                     $network = Network::create([
@@ -61,8 +61,8 @@ class AddLocationNetwork
                         'type' => $type,
                         'fsp_code' => $data['fsp_code'],
                         'code' => generateCode(name: $data['name'], prefixText: $data['fsp_code']),
-                        'agent_no' => $data['agent_no'],
-                        'balance' => $data['balance'],
+                        'agent_no' => $data['agent_no'] ?? null,
+                        'balance' => $data['balance'] ?? null,
                         'balance_currency' => currencyCode(),
                         'name' => $data['name'],
                         'description' => $data['description'] ?? null,
