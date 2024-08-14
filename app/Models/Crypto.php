@@ -67,7 +67,7 @@ class Crypto extends Model
     {
         $cryptoModel = Crypto::where('symbol',$cryptoTypeSymbol)->first();
         $cryptoUsdRate = $cryptoModel->usd_rate;
-        $usdToFiatCurrencyConvesion = (1/Country::where('currency',$fiatCurrencySymbol)->first());
+        $usdToFiatCurrencyConvesion = Country::where('currency',$fiatCurrencySymbol)->first();
         $usdToFiatCurrencyConvesion = $usdToFiatCurrencyConvesion->currency_usdrate ?? 1;
         return ($cryptoAmount * $cryptoUsdRate * $usdToFiatCurrencyConvesion);
     }
@@ -76,7 +76,7 @@ class Crypto extends Model
     {
         $cryptoModel = Crypto::where('symbol',$cryptoTypeSymbol)->first();
         $cryptoUsdRate = $cryptoModel->usd_rate;
-        $usdToFiatCurrencyConvesion = (1/Country::where('currency',$fiatCurrencySymbol)->first());
+        $usdToFiatCurrencyConvesion = Country::where('currency',$fiatCurrencySymbol)->first();
         $usdToFiatCurrencyConvesion = $usdToFiatCurrencyConvesion->currency_usdrate ?? 1;
         return ($fiatAmount/($cryptoUsdRate * $usdToFiatCurrencyConvesion));
     }
