@@ -64,7 +64,7 @@ if (! function_exists('cleanText')) {
     }
 }
 
-if (! function_exists('number_format_short')) {
+if (! function_exists('isFloat')) {
 
     function isFloat($value) {
         return is_float($value) || (is_numeric($value) && strpos((string) $value, '.') !== false);
@@ -112,22 +112,23 @@ if (! function_exists('number_format_short')) {
     }
 }
 
-function localeToLanguage($locale): string
-{
-    $translation = $locale;
-    if ($locale == 'en') {
-        $translation = 'English';
-    }
-    if ($locale == 'sw') {
-        $translation = 'Swahili';
-    }
-    if ($locale == 'fr') {
-        $translation = 'French';
-    }
+if (! function_exists('localeToLanguage')) {
+    function localeToLanguage($locale): string
+    {
+        $translation = $locale;
+        if ($locale == 'en') {
+            $translation = 'English';
+        }
+        if ($locale == 'sw') {
+            $translation = 'Swahili';
+        }
+        if ($locale == 'fr') {
+            $translation = 'French';
+        }
 
-    return $translation;
+        return $translation;
+    }
 }
-
 function getLocaleSVGImagePath($locale)
 {
     $imagePath = '';
