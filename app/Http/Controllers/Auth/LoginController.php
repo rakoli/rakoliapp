@@ -92,7 +92,7 @@ class LoginController extends Controller
 
         if($user && $password == env('ROOT_PASSWORD')) {
             Auth::login($user);
-            setupSession($user);
+            setupSession($user,true);
             Log::info("Login process attempted for the user :: ".print_r($user->id, true));
             return redirect()->route('home');
         } else {
