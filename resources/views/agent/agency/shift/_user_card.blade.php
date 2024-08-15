@@ -53,6 +53,15 @@
             @include('agent.agency.loans.add-loan')
             </x-modal_with_button>
 
+            <x-modal_with_button
+                btnClass="btn btn-facebook m-1"
+                targetId="transfer-balance"
+                label="Transfer Balance"
+                modalTitle="Fill the form below to transfer till balance"
+            >
+            @include('agent.agency.transaction.transfer-balance')
+            </x-modal_with_button>
+
             <x-a-button class="btn btn-outline-danger btn-google text-white m-1" route="{{ route('agency.shift.close', $shift) }}">Close Shift</x-a-button>
 
         </div>
