@@ -16,7 +16,7 @@ class AddExpenseTransactionController extends Controller
         $validated = $request->validate([
             'amount' => 'required',
             'source' => 'required',
-            'network_code' => 'nullable',
+            'network_code' => 'required_if:source,TILL',
             'description' => 'required|string',
             'notes' => 'nullable|string',
             'crypto' => 'nullable|numeric',

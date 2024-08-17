@@ -18,6 +18,7 @@ use App\Utils\Enums\ExchangeStatusEnum;
 use App\Utils\Enums\ExchangeTransactionStatusEnum;
 use App\Utils\Enums\ShiftStatusEnum;
 use App\Utils\Enums\TransactionCategoryEnum;
+use App\Utils\Enums\TransactionTypeEnum;
 use App\Utils\Enums\VasTaskStatusEnum;
 
 class StatisticsService
@@ -79,6 +80,32 @@ class StatisticsService
             'business_code' => $this->user->business_code,
             'category' => TransactionCategoryEnum::EXPENSE,
         ])->where('created_at','>=',now()->subDays(30))->get()->sum('amount');
+    }
+
+    public function businessTotalTransaction()
+    {
+        return Transaction::where([
+            'business_code' => $this->user->business_code,
+        ])->count();
+
+    }
+
+    public function businessTotalDepositTransaction()
+    {
+        return Transaction::where([
+            'business_code' => $this->user->business_code,
+            'type' => TransactionTypeEnum::MONEY_IN,
+        ])->sum('amount');
+
+    }
+
+    public function businessTotalWithdrawalTransaction()
+    {
+        return Transaction::where([
+            'business_code' => $this->user->business_code,
+            'type' => TransactionTypeEnum::MONEY_OUT,
+        ])->sum('amount');
+
     }
 
     public function businessNoOfReferrals()

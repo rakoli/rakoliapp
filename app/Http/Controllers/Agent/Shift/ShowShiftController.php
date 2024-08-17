@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Agent\Shift;
 use App\Http\Controllers\Controller;
 use App\Models\Loan;
 use App\Models\Location;
+use App\Models\Network;
 use App\Models\Shift;
 use App\Models\ShiftNetwork;
 use App\Utils\Datatables\Agent\Shift\ShiftCashTransactionDatatable;
@@ -33,6 +34,8 @@ class ShowShiftController extends Controller
 
         $locations = Location::query()->where('code', $shift->location_code)->cursor();
 
+        $till_networks = Network::query()->where('type', NetworkTypeEnum::FINANCE)->get();
+
         $loans = Loan::query()
             ->latest()
             ->whereBelongsTo($shift, 'shift')
@@ -47,6 +50,7 @@ class ShowShiftController extends Controller
             ...shiftBalances(shift: $shift),
             'tills' => $tills->cursor(),
             'shift' => $shift->loadMissing('user', 'location'),
+            'till_networks' => $till_networks,
         ]);
     }
 

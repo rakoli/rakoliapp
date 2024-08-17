@@ -84,20 +84,20 @@
                 @endif
             </div>
             <div class="row fv-row py-2">
-                <div class="col-12">
-                    <x-label class="" label="{{ __('Agent No') }}" for="agent_no"/>
-                    <x-input
-                        class="form-control-solid   @error('agent_no') form-control-feedback @enderror"
-                        name="agent_no"
-                        value="{{ $network->agent_no }}"
-                        placeholder="{{ __('agent_no') }}" id="agent_no"/>
-                    @error('agent_no')
-                    <div class="help-block text-danger">
-                        {{ $message }}
-                    </div>
-                    @enderror
-                </div>
                 @if($network->type == "Finance")
+                    <div class="col-12">
+                        <x-label class="" label="{{ __('Agent No') }}" for="agent_no"/>
+                        <x-input
+                            class="form-control-solid   @error('agent_no') form-control-feedback @enderror"
+                            name="agent_no"
+                            value="{{ $network->agent_no }}"
+                            placeholder="{{ __('agent_no') }}" id="agent_no"/>
+                        @error('agent_no')
+                        <div class="help-block text-danger">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
                     <div class="col-12">
                         <x-label class="" label="{{ __('Balance') }}" for="balance"/>
                         <x-input
@@ -190,11 +190,21 @@
 
         <script>
 
-            const validations = [
-                {"name" : "name", "errors" : "Network name is required", "validators" : {}},
-                {"name" : "location_code", "errors" : "Location Code is required", "validators" : {}},
-            ];
-
+            if(jQuery("#type").val() == "Crypto"){
+                var validations = [
+                    {"name" : "name", "validators" : {}},
+                    {"name" : "location_code", "validators" : {}},
+                    {"name" : "crypto_balance", "validators" : {}},
+                    {"name" : "exchange_rate", "validators" : {}},
+                ];
+            } else {
+                var validations = [
+                    {"name" : "name", "validators" : {}},
+                    {"name" : "location_code", "validators" : {}},
+                    {"name" : "agent_no", "validators" : {}},
+                    {"name" : "balance", "validators" : {}},
+                ];
+            }
             const form = document.getElementById('update-network-form');
 
 

@@ -18,12 +18,21 @@
             <x-back :route="route('agency.shift')" class="py-md-4"/>
 
             <x-modal_with_button
-                targetId="add-transaction"
-                label="Add Till Transaction"
-                modalTitle="Fill the form below record a transaction"
+                targetId="deposit-till-transaction"
+                label="Deposit Till Transaction"
+                modalTitle="Fill the form below record a deposit till transaction"
                 btnClass="btn btn-facebook m-1"
             >
-            @include('agent.agency.transaction.add-transaction')
+            @include('agent.agency.transaction.deposit-till-transaction')
+            </x-modal_with_button>
+
+            <x-modal_with_button
+                targetId="withdraw-till-transaction"
+                label="Withdraw Till Transaction"
+                modalTitle="Fill the form below record a withdraw till transaction"
+                btnClass="btn btn-instagram m-1"
+            >
+            @include('agent.agency.transaction.withdraw-till-transaction')
             </x-modal_with_button>
 
             <x-modal_with_button
@@ -51,6 +60,15 @@
                 modalTitle="Fill the form below record a Loan"
             >
             @include('agent.agency.loans.add-loan')
+            </x-modal_with_button>
+
+            <x-modal_with_button
+                btnClass="btn btn-facebook m-1"
+                targetId="transfer-balance"
+                label="Transfer Balance"
+                modalTitle="Fill the form below to transfer till balance"
+            >
+            @include('agent.agency.transaction.transfer-balance')
             </x-modal_with_button>
 
             <x-a-button class="btn btn-outline-danger btn-google text-white m-1" route="{{ route('agency.shift.close', $shift) }}">Close Shift</x-a-button>

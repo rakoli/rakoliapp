@@ -18,6 +18,7 @@ use App\Http\Controllers\Agent\Shift\TillController;
 use App\Http\Controllers\Agent\Shift\Transaction\AddExpenseTransactionController;
 use App\Http\Controllers\Agent\Shift\Transaction\AddIncomeTransactionController;
 use App\Http\Controllers\Agent\Shift\Transaction\AddTransactionController;
+use App\Http\Controllers\Agent\Shift\Transaction\TransferBalanceController;
 use App\Http\Controllers\Agent\Shift\TransferShiftController;
 use App\Http\Controllers\Agent\Transaction\TransactionsController;
 use Illuminate\Support\Facades\Route;
@@ -56,6 +57,7 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
                 Route::post('add-expense', AddExpenseTransactionController::class)->name('agency.transactions.add.expense');
                 Route::post('add-income', AddIncomeTransactionController::class)->name('agency.transactions.add.income');
             });
+            Route::post('/{shift}/transfer-balance',TransferBalanceController::class)->name('agency.shift.transfer.balance');
         });
 
         Route::prefix('networks')->group(function () {

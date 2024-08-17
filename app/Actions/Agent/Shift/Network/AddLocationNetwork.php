@@ -22,11 +22,11 @@ class AddLocationNetwork
 
         try {
             return runDatabaseTransaction(function () use ($data) {
-            Log::info($data);
+                Log::info("AddLocationNetwork :: Request Data :: ".print_r($data,true));
 
                 $type = NetworkTypeEnum::tryFrom($data['type']);
-                if($type === NetworkTypeEnum::CRYPTO->value){
-                    Log::info("Crypto");
+                if($type === NetworkTypeEnum::CRYPTO){
+                    Log::info("AddLocationNetwork :: Crypto Network");
 
                     $network = Network::create([
                         'business_code' => auth()->user()->business_code,
@@ -40,10 +40,9 @@ class AddLocationNetwork
                         'name' => $data['name'],
                         'description' => $data['description'] ?? null,
                     ]);
-                    Log::info($network);
 
                 } else {
-                    Log::info("Till");
+                    Log::info("AddLocationNetwork :: Till Network");
 
                     $networkCheck = Network::query()
                     ->where([
@@ -61,20 +60,20 @@ class AddLocationNetwork
                         'type' => $type,
                         'fsp_code' => $data['fsp_code'],
                         'code' => generateCode(name: $data['name'], prefixText: $data['fsp_code']),
-                        'agent_no' => $data['agent_no'],
-                        'balance' => $data['balance'],
+                        'agent_no' => $data['agent_no'] ?? null,
+                        'balance' => $data['balance'] ?? null,
                         'balance_currency' => currencyCode(),
                         'name' => $data['name'],
                         'description' => $data['description'] ?? null,
                     ]);
-                    Log::info($network);
-
                 }
+                Log::info("AddLocationNetwork :: Added Network :: ".print_r($network,true));
 
                 // event(new NetworkCreatedEvent(network: $network));
             });
         }catch (\Exception $exception)
         {
+            Log::info("AddLocationNetwork :: Exception :: ".print_r($exception->getMessage(),true));
             throw new \Exception($exception->getMessage());
         }
 

@@ -27,11 +27,11 @@ class UpdateNetworkController extends Controller
                         ->where('fsp_code', $network->fsp_code)
                         ->ignore($network->id,'id'),
             ],
-            'fsp_code' => 'sometimes|required',
-            'crypto_code' => 'sometimes|required',
-            'balance' => 'sometimes|required|numeric',
-            'crypto_balance' => 'sometimes|required|numeric',
-            'exchange_rate' => 'sometimes|required|numeric',
+            'fsp_code' => 'required_if:type,Finance',
+            'crypto_code' => 'required_if:type,Crypto',
+            'balance' => 'required_if:type,Finance|nullable|numeric',
+            'crypto_balance' => 'required_if:type,Crypto|nullable|numeric',
+            'exchange_rate' => 'required_if:type,Crypto|nullable|numeric',
             'description' => 'nullable|string',
             'location_code' => 'required|exists:locations,code',
         ], [
