@@ -18,12 +18,8 @@
                         id="network_code">
                         <option value="">  </option>
 
-                        @foreach($networks as $name =>  $network)
-                            @if($network['type'] == App\Utils\Enums\NetworkTypeEnum::FINANCE)
-                                <option
-                                value="{{ $network['code'] }}" class="{!! $network['balance'] > 0 ? 'balance' : 'nobalance' !!}" data-type="{{ $network['type'] }}"
-                                >{{ str($name)->title()->value()  }} - {{ number_format($network['balance'],2) }}</option>
-                            @endif
+                        @foreach($till_networks as $network)
+                            <option value="{{ $network->code }}">{{ str($network->name)  }} - {{ number_format($network->balance,2) }}</option>
                         @endforeach
                     </x-select2>
                     @error('network_code')
@@ -46,12 +42,8 @@
                     >
                         <option value="">  </option>
 
-                        @foreach($networks as $name =>  $network)
-                            @if($network['type'] == App\Utils\Enums\NetworkTypeEnum::FINANCE)
-                                <option
-                                value="{{ $network['code'] }}" class="{!! $network['balance'] > 0 ? 'balance' : 'nobalance' !!}" data-type="{{ $network['type'] }}"
-                                >{{ str($name)->title()->value()  }} - {{ number_format($network['balance'],2) }}</option>
-                            @endif
+                        @foreach($till_networks as $network)
+                            <option value="{{ $network->code }}">{{ str($network->name)  }} - {{ number_format($network->balance,2) }}</option>
                         @endforeach
                     </x-select2>
                     @error('destination_till')
