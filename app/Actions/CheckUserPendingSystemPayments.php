@@ -36,7 +36,7 @@ class CheckUserPendingSystemPayments
             if ($initiatedPayment->channel == 'selcom') {
                 $selcom = new SelcomPayment();
                 $completionStatus = $selcom->isPaymentComplete($initiatedPayment->channel_ref);
-                if ($completionStatus['success']) {
+                if ($completionStatus['success'] && $completionStatus['result'] == 'COMPLETED') {
                     CompleteInitiatedPayment::run($initiatedPayment);
                 }
             }
