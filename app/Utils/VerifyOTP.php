@@ -11,7 +11,7 @@ class VerifyOTP
 {
 
 //    public int $validtime = 300; //seconds
-    public static int $validtime = 300; //seconds
+    public static int $validtime = 60; //seconds
     public static int $shouldLockCount = 5; //no of trials
 
     public static function generateOTPCode(){
