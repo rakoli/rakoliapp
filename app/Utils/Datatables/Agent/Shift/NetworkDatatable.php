@@ -32,7 +32,7 @@ class NetworkDatatable implements HasDatatable
             ->addColumn('created_at', fn (Network $network) => $network->created_at->format('Y-F-d'))
             ->addColumn('type', fn (Network $network) => $network->type)
             ->addColumn('location_name', fn (Network $network) => $network->location->name)
-            ->addColumn('name', fn (Network $network) => $network->type == NetworkTypeEnum::CRYPTO->value ? $network->crypto?->name  : $network->agency?->name)
+            ->addColumn('network_name', fn (Network $network) => $network->type == NetworkTypeEnum::CRYPTO->value ? $network->crypto?->name  : $network->agency?->name)
 //            ->addColumn('crypto_balance', fn (Network $network) => $network->crypto_balance)
 //            ->addColumn('exchange_rate', fn (Network $network) => $network->exchange_rate)
 //            ->addColumn('balance', fn (Network $network) => $network->type == NetworkTypeEnum::CRYPTO->value ? "~".money($network->crypto_balance * $network->exchange_rate, currencyCode(), true) : money($network->balance, currencyCode(), true))
@@ -62,7 +62,8 @@ class NetworkDatatable implements HasDatatable
             Column::make('created_at')->title(__('Date'))->searchable()->orderable(),
             Column::make('location_name')->title(__('Location'))->searchable()->orderable(),
             Column::make('type')->title(__('Type'))->searchable()->orderable(),
-            Column::make('name')->title(__('Agency'))->searchable()->orderable(),
+            Column::make('name')->title(__('Till Name'))->searchable()->orderable(),
+            Column::make('network_name')->title(__('Agency'))->searchable()->orderable(),
             Column::make('agent_no')->title(__('Agent No'))->searchable()->orderable(),
 //            Column::make('crypto_balance')->title(__('Crypto Balance'))->searchable()->orderable(),
 //            Column::make('exchange_rate')->title(__('Exchange Rate'))->searchable()->orderable(),

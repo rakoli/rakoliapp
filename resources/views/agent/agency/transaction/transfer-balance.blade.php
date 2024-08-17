@@ -104,17 +104,6 @@
 
              $(document).ready(() => {
 
-                $("select#transaction_type").on("change", function () {
-                    var selectedOption = $(this).find(":selected").val();
-
-                    if(selectedOption == "IN"){
-                        $(".nobalance").attr("disabled", true);
-                    } else  {
-                        $(".nobalance").attr("disabled", false);
-                    }
-
-                });
-
                  const validations = [
                      {
                          "name": "amount",
