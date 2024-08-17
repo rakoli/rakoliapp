@@ -20,7 +20,7 @@ class ValidateSubscriptionMiddleware
             return $next($request);
         }
         if (empty($request->user()->business->package_code) || $request->user()->business->package_expiry_at < Carbon::now()) {
-            return redirect()->route('home')->withErrors("You don't have permission to access it, Please upgrade you plan.");
+            return redirect()->route('business.subscription')->withErrors("You don't have permission to access it, Please upgrade you plan.");
         } else {
             if(request()->is('exchange/*')){
                 if(!validateSubscription('float exchange')){
