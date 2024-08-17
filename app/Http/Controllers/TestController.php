@@ -49,6 +49,11 @@ class TestController extends Controller
     public function testing2()
     {
 
+        $selcom = new SelcomPayment();
+        $completionStatus = $selcom->isPaymentComplete('growth_140_1723930795');
+
+        dd($completionStatus, );
+
 
     }
 }

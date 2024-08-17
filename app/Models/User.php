@@ -235,7 +235,6 @@ class User extends Authenticatable
 
     public static function completedRegistration(User $user)
     {
-        Mail::to($user->email)->send(new WelcomeMail($user));
 
         if(env('APP_ENV') == 'production'){
             $message = "User Registration: A new $user->type user $user->fname $user->lname from $user->country_code. (+$user->phone). Registration process ongoing.";
