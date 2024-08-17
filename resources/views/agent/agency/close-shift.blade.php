@@ -308,7 +308,7 @@
 
                                         </tr> --}}
                                         <tr class="border-1">
-                                            <td class="border-top-1"> {{ __('Total Incomes') }}</td>
+                                            <td class="border-top-1"> {{ __('Total Cash In') }}</td>
                                             <td class="fw-bolder border-dashed">
                                                 <span
                                                     class="ending-balance income"
@@ -332,7 +332,7 @@
                                         </tr>
 
                                         <tr class="border-1">
-                                            <td class="border-top-1"> {{ __('Total Expenses') }}</td>
+                                            <td class="border-top-1"> {{ __('Total Cash Out') }}</td>
                                             <td class=" border-dashed">{{ \Illuminate\Support\Number::currency(0, currencyCode()) }}</td>
                                             <td class="fw-bolder border-dashed">
                                                 <span
@@ -399,7 +399,7 @@
                                             <td colspan="4">
                                                 <x-helpertext class="text-sm">
                                                     <span
-                                                        style=""> {{ __( "Total Cash + Total Tills + Expenses + Shorts + Loans balance - Income ") }}</span>
+                                                        style=""> {{ __( "Total Cash + Total Tills + Cash Out + Shorts + Loans balance - Cash In ") }}</span>
                                                 </x-helpertext>
                                             </td>
                                         </tr>
@@ -423,7 +423,7 @@
                         <div class="card-header border-0">
                             <!--begin::Card title-->
                             <div class="card-title">
-                                <h2>{{ __('Income and Expenses') }}</h2>
+                                <h2>{{ __('Cash Flow') }}</h2>
                             </div>
                             <!--end::Card title-->
                         </div>
@@ -450,13 +450,13 @@
                                         <tbody>
 
                                         <tr>
-                                            <td>{{ __('Income') }}</td>
+                                            <td>{{ __('Cash In') }}</td>
                                             <td>{{ Number::currency($income, currencyCode()) }}</td>
 
                                         </tr>
 
                                         <tr>
-                                            <td>{{ __('Expenses') }}</td>
+                                            <td>{{ __('Cash Out') }}</td>
                                             <td>{{ Number::currency($expenses, currencyCode()) }}</td>
 
                                         </tr>
