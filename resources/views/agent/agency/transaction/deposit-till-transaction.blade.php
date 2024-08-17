@@ -1,36 +1,10 @@
 <div>
-    <form method="post" id="add-transaction-form">
+    <form method="post" id="deposit-transaction-form">
         @csrf
-
+        <input type="hidden" name="type" id="transaction_type" value="IN">
         <div class="modal-body">
 
             <div class="row fv-row py-2">
-
-                <div class="col-6 py-3">
-                    <x-label class="" label="Client Action(Transaction Type)" for="transaction_type"/>
-
-                    <x-select2
-
-                        class=" @error('transaction_type') form-control-error @enderror"
-                        name="type"
-                        modalId="add-transaction"
-                        placeholder="{{ __('Select a Transaction Type') }}"
-                        id="transaction_type">
-                        <option value="">  </option>
-
-                        @foreach(\App\Utils\Enums\TransactionTypeEnum::cases() as $transactionType)
-                            <option value="{{ $transactionType->value }}">{{ $transactionType->label() }}</option>
-                        @endforeach
-                    </x-select2>
-
-                    <x-helpertext>{{ __("Type of Transaction, either deposit or withdraw") }}</x-helpertext>
-                    @error('type')
-                    <div class="help-block text-danger">
-                        {{ $message }}
-                    </div>
-                    @enderror
-
-                </div>
 
                 <div class="col-6 py-3" id="allNetwork">
                     <x-label class="" label="Select Till" for="till_code"/>
@@ -38,15 +12,15 @@
                     <x-select2
                         class=" @error('network_code') form-control-error @enderror"
                         name="network_code"
-                        modalId="add-transaction"
-                        placeholder="{{ __('Select a Transaction Type') }}"
+                        modalId="deposit-transaction"
+                        placeholder="{{ __('Select a Till') }}"
                         id="network_code"
                     >
                         <option value="">  </option>
 
                         @foreach($networks as $name =>  $network)
                                 <option
-                                value="{{ $network['code'] }}" class="{!! $network['balance'] > 0 ? 'balance' : 'nobalance' !!}" data-type="{{ $network['type'] }}" data-rate="{{ isset($network['exchange_rate']) ? $network['exchange_rate'] : '' }}"
+                                value="{{ $network['code'] }}" {!! $network['balance'] < 1 ? 'disabled' : '' !!} data-type="{{ $network['type'] }}" data-rate="{{ isset($network['exchange_rate']) ? $network['exchange_rate'] : '' }}"
                                 >{{ str($name)->title()->value()  }} - {{ number_format($network['balance'],2) }}</option>
                         @endforeach
                     </x-select2>
@@ -64,8 +38,6 @@
                     @enderror
 
                 </div>
-            </div>
-            <div class="row fv-row">
 
                 <div class="col-6">
                     <x-label class="" label="{{ __('Amount') }}" for="amount"/>
@@ -84,23 +56,6 @@
                     </div>
                     @enderror
                 </div>
-
-                <div class="col-6 crypto-data">
-                    <x-label class="" label="{{ __('Fee') }}" for="fee"/>
-                    <x-input
-                        type="number"
-                        class="form-control-solid   @error('fee') form-control-feedback @enderror"
-                        name="fee"
-                        placeholder="{{ __('fee') }}"
-                        id="fee"
-                    />
-                    @error('fee')
-                    <div class="help-block text-danger">
-                        {{ $message }}
-                    </div>
-                    @enderror
-                </div>
-
             </div>
             <div class="row fv-row py-3 hidden">
                 <div class="col-6 crypto-data">
@@ -135,6 +90,26 @@
                 </div>
             </div>
 
+            <div class="row fv-row hidden">
+
+                <div class="col-6 crypto-data">
+                    <x-label class="" label="{{ __('Fee') }}" for="fee"/>
+                    <x-input
+                        type="number"
+                        class="form-control-solid   @error('fee') form-control-feedback @enderror"
+                        name="fee"
+                        placeholder="{{ __('fee') }}"
+                        id="fee"
+                    />
+                    @error('fee')
+                    <div class="help-block text-danger">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </div>
+
+            </div>
+
             <div class="row fv-row py-3">
                 <div class="col-12">
                     <x-label label="Description" class="" for="description"/>
@@ -167,7 +142,7 @@
 
 
         <div class="modal-footer my-4 py-2">
-            <x-submit-button  id="add-transaction-button" label="Record Transaction"/>
+            <x-submit-button  id="deposit-transaction-button" label="Record Transaction"/>
 
         </div>
 
@@ -182,37 +157,26 @@
 
                 jQuery(".crypto-data").hide();
 
-                $("select#transaction_type").on("change", function () {
-                    var selectedOption = $(this).find(":selected").val();
-
-                    if(selectedOption == "IN"){
-                        $(".nobalance").attr("disabled", true);
-                    } else  {
-                        $(".nobalance").attr("disabled", false);
-                    }
-
-                });
-
                 jQuery('select#network_code').on("change", function(){
                     var selectedOption = $(this).find(":selected");
                     if(selectedOption.data('type') == "Crypto"){
                         jQuery(".crypto-data").show();
-                        jQuery("#add-transaction-form #exchange_rate").val(selectedOption.data('rate'));
+                        jQuery("#deposit-transaction-form #exchange_rate").val(selectedOption.data('rate'));
 
                     } else {
                         jQuery(".crypto-data").hide();
                     }
                 });
 
-                jQuery("#add-transaction-form #amount, #add-transaction-form #crypto, #add-transaction-form #exchange_rate").on("change",function(){
-                    var amount = jQuery("#add-transaction-form #amount").val();
-                    var crypto = jQuery("#add-transaction-form #crypto").val();
-                    var exchange_rate = jQuery("#add-transaction-form #exchange_rate").val();
+                jQuery("#deposit-transaction-form #amount, #deposit-transaction-form #crypto, #deposit-transaction-form #exchange_rate").on("change",function(){
+                    var amount = jQuery("#deposit-transaction-form #amount").val();
+                    var crypto = jQuery("#deposit-transaction-form #crypto").val();
+                    var exchange_rate = jQuery("#deposit-transaction-form #exchange_rate").val();
 
                     if(crypto > 0){
-                        jQuery("#add-transaction-form #amount").val(crypto * exchange_rate)
+                        jQuery("#deposit-transaction-form #amount").val(crypto * exchange_rate)
                     }else if(amount > 0){
-                        jQuery("#add-transaction-form #crypto").val(amount / exchange_rate)
+                        jQuery("#deposit-transaction-form #crypto").val(amount / exchange_rate)
                     }
                 });
 
@@ -228,12 +192,6 @@
                          "validators" : {}
                      },
                      {
-                         "name": "type",
-                         "error": "Transaction Type is Required",
-                         "validators" : {}
-                     },
-
-                     {
                          "name": "description",
                          "error": "Description Type is Required",
                          "validators" : {}
@@ -242,10 +200,10 @@
                  ];
 
 
-                 const form = document.getElementById('add-transaction-form');
+                 const form = document.getElementById('deposit-transaction-form');
 
 
-                 const submitTransactionButton = document.getElementById('add-transaction-button');
+                 const submitTransactionButton = document.getElementById('deposit-transaction-button');
 
 
                  console.log("form =>", form)

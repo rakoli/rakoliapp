@@ -66,9 +66,10 @@
                         placeholder="{{ __('source: e.g Till ') }}"
                         id="till_source_code"
                         >
+                        <option value="">  </option>
+
                         @foreach($networks as $name =>  $network)
-                                <option
-                                value="{{ $network['code'] }}" data-type="{{ $network['type'] }}" data-rate="{{ isset($network['exchange_rate']) ? $network['exchange_rate'] : '' }}"
+                            <option value="{{ $network['code'] }}" {!! $network['balance'] < 1 ? 'disabled' : '' !!} data-type="{{ $network['type'] }}" data-rate="{{ isset($network['exchange_rate']) ? $network['exchange_rate'] : '' }}"
                                 >{{ str($name)->title()->value()  }} - {{ number_format($network['balance'],2) }}</option>
                         @endforeach
                     </x-select2>
@@ -201,45 +202,60 @@
                     }
                 });
 
-                const expenseValidations = [
-                    {
-                        "name": "amount",
-                        "error": "Amount is Required",
-                        "validators": {}
-                    },
+                jQuery(document).on("click","#add-expense-button", function(){
 
-                    {
-                        "name": "source",
-                        "error": "Fund Source is Required",
-                        "validators": {}
-                    },
+                    if(jQuery("#source").val() == "TILL"){
+                        var expenseValidations = [
+                            {
+                                "name": "amount",
+                                "error": "Amount is Required",
+                                "validators": {}
+                            },
 
-                    // {
-                    //     "name": "network_code",
-                    //     "error": "Till is Required",
-                    //     "validators": {}
-                    // },
+                            {
+                                "name": "source",
+                                "error": "Fund Source is Required",
+                                "validators": {}
+                            },
 
-                    {
-                        "name": "description",
-                        "error": "Description Type is Required",
-                        "validators": {}
-                    },
+                            {
+                                "name": "network_code",
+                                "error": "Till is Required",
+                                "validators": {}
+                            },
 
-                ];
+                            {
+                                "name": "description",
+                                "error": "Description Type is Required",
+                                "validators": {}
+                            },
 
+                        ];
+                    } else {
+                        var expenseValidations = [
+                            {
+                                "name": "amount",
+                                "error": "Amount is Required",
+                                "validators": {}
+                            },
+                            {
+                                "name": "source",
+                                "error": "Fund Source is Required",
+                                "validators": {}
+                            },
+                            {
+                                "name": "description",
+                                "error": "Description Type is Required",
+                                "validators": {}
+                            },
 
-                const expenseForm = document.getElementById('add-expense-form');
+                        ];
+                    }
 
-
-                const submitIncomeButton = document.getElementById('add-expense-button');
-
-
-                console.log("form =>", expenseForm)
-                console.log("button =>", submitIncomeButton)
-
-
-                lakoriValidation(expenseValidations, expenseForm, submitIncomeButton, 'post', '{{  route('agency.transactions.add.expense', $shift) }}');
+                    const expenseForm = document.getElementById('add-expense-form');
+                    const submitIncomeButton = document.getElementById('add-expense-button');
+                    lakoriValidation(expenseValidations, expenseForm, submitIncomeButton, 'post', '{{  route('agency.transactions.add.expense', $shift) }}',"",true);
+                })
             })
 
 
