@@ -100,7 +100,7 @@
                         <option value=""></option>
 
                         @foreach($networks as $name =>  $network)
-                            @if($network['type'] != NetworkTypeEnum::CRYPTO)
+                            @if($network['type'] != NetworkTypeEnum::CRYPTO->value)
                                 <option value="{{ $network['code'] }}" class="{!! $network['balance'] > 0 ? 'balance' : 'nobalance' !!}">{{ $name }} - {{ number_format($network['balance'],2) }}</option>
                             @endif
                         @endforeach
@@ -114,7 +114,7 @@
 
                 </div>
 
-                <div class="col-6 mt-md-4">
+                <div class="col-6 mt-md-4 till-source">
 
                     <x-helpertext>
 
@@ -210,41 +210,60 @@
 
                 });
 
+                jQuery(document).on("click","#add-loan-button", function(){
 
+                    if(jQuery("#add-loan-form #source").val() == "TILL"){
+                        var loanValidations = [
+                            {
+                                "name": "amount",
+                                "error": "Amount is Required",
+                                "validators": {}
+                            },
+                            {
+                                "name": "source",
+                                "error": "Fund Source is Required",
+                                "validators": {}
+                            },
+                            {
+                                "name": "type",
+                                "error": "Transaction Type is Required",
+                                "validators": {}
+                            },
+                            {
+                                "name": "network_code",
+                                "error": "Till is Required",
+                                "validators": {}
+                            },
+                            {
+                                "name": "description",
+                                "error": "Description Type is Required",
+                                "validators": {}
+                            },
+                        ];
+                    } else {
+                        var loanValidations = [
+                            {
+                                "name": "amount",
+                                "error": "Amount is Required",
+                                "validators" : {}
+                            },
+                            {
+                                "name": "source",
+                                "error": "Fund Source is Required",
+                                "validators" : {}
+                            },
+                            {
+                                "name": "description",
+                                "error": "Description Type is Required",
+                                "validators" : {}
+                            },
+                        ];
+                    }
 
-                const loanValidations = [
-                    {
-                        "name": "amount",
-                        "error": "Amount is Required",
-                        "validators": {}
-                    },
-
-                    {
-                        "name": "description",
-                        "error": "Description  is Required",
-                        "validators": {}
-                    },
-
-                    {
-                        "name": "source",
-                        "error": "Fund Source is Required",
-                        "validators": {}
-                    },
-
-                ];
-
-
-                const loanForm = document.getElementById('add-loan-form');
-
-
-                const submitLoanButton = document.getElementById('add-loan-button');
-
-
-                console.log("form =>", loanForm)
-                console.log("button =>", submitLoanButton)
-
-
-                lakoriValidation(loanValidations, loanForm, submitLoanButton, 'post', '{{  route('agency.loans.store', $shift) }}');
+                    const loanForm = document.getElementById('add-loan-form');
+                    const submitLoanButton = document.getElementById('add-loan-button');
+                    lakoriValidation(loanValidations, loanForm, submitLoanButton, 'post', '{{  route('agency.loans.store', $shift) }}',"",true);
+                });
             })
 
         </script>
