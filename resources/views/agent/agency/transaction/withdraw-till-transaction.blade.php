@@ -25,12 +25,7 @@
                         @endforeach
                     </x-select2>
                     <x-helpertext>{{ __("Till you want to transact from") }}</x-helpertext>
-                    <x-helpertext>
-                        <ul class="list-style-none">
-                            <li>{{ __('Deposit') }}: {{ __('Increases Cash Balance and Reduces Till Balance') }}</li>
-                            <li>{{ __('Withdraw') }}: {{ __('Increases Till Balance and Reduces Cash Balance') }}</li>
-                        </ul>
-                    </x-helpertext>
+                    <x-helpertext>{{ __('Withdraw') }}: {{ __('Increases Till Balance and Reduces Cash Balance') }}</x-helpertext>
                     @error('location_code')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -157,7 +152,7 @@
 
                 jQuery(".crypto-data").hide();
 
-                jQuery('select#network_code').on("change", function(){
+                jQuery(document).on("change","#withdraw-transaction-form #network_code", function(){
                     var selectedOption = $(this).find(":selected");
                     if(selectedOption.data('type') == "Crypto"){
                         jQuery(".crypto-data").show();
@@ -167,6 +162,7 @@
                         jQuery(".crypto-data").hide();
                     }
                 });
+
 
                 jQuery("#withdraw-transaction-form #amount, #withdraw-transaction-form #crypto, #withdraw-transaction-form #exchange_rate").on("change",function(){
                     var amount = jQuery("#withdraw-transaction-form #amount").val();
@@ -181,36 +177,65 @@
                 });
 
 
-                 const validations = [
-                     {
-                         "name": "amount",
-                         "error": "Amount is Required",
-                         "validators" : {}
-                     }, {
-                         "name": "network_code",
-                         "error": "Till/Network is Required",
-                         "validators" : {}
-                     },
-                     {
-                         "name": "description",
-                         "error": "Description Type is Required",
-                         "validators" : {}
-                     },
+                jQuery(document).on("click","#withdraw-transaction-button", function(){
 
-                 ];
+                    if(jQuery("#withdraw-transaction-form #network_code").find(":selected").data('type') == "Crypto"){
+                        var validations = [
+                            {
+                                "name": "amount",
+                                "error": "Amount is Required",
+                                "validators" : {}
+                            }, {
+                                "name": "network_code",
+                                "error": "Till/Network is Required",
+                                "validators" : {}
+                            },
+                            {
+                                "name": "crypto",
+                                "error": "Crypto is Required",
+                                "validators" : {}
+                            },
+                            {
+                                "name": "exchange_rate",
+                                "error": "Exchange Rate is Required",
+                                "validators" : {}
+                            },
+                            {
+                                "name": "fee",
+                                "error": "Fee is Required",
+                                "validators" : {}
+                            },
+                            {
+                                "name": "description",
+                                "error": "Description Type is Required",
+                                "validators" : {}
+                            },
+                        ];
+                    } else {
+                        var validations = [
+                            {
+                                "name": "amount",
+                                "error": "Amount is Required",
+                                "validators" : {}
+                            }, {
+                                "name": "network_code",
+                                "error": "Till/Network is Required",
+                                "validators" : {}
+                            },
+                            {
+                                "name": "description",
+                                "error": "Description Type is Required",
+                                "validators" : {}
+                            },
+
+                        ];
+                    }
 
 
-                 const form = document.getElementById('withdraw-transaction-form');
-
-
-                 const submitTransactionButton = document.getElementById('withdraw-transaction-button');
-
-
-                 console.log("form =>", form)
-                 console.log("button =>", submitTransactionButton)
-
-
-                 lakoriValidation(validations, form, submitTransactionButton, 'post', '{{  route('agency.transactions.add.transaction', $shift) }}');
+                    const form = document.getElementById('withdraw-transaction-form');
+                    const submitTransactionButton = document.getElementById('withdraw-transaction-button');
+                    lakoriValidation(validations, form, submitTransactionButton, 'post', '{{  route('agency.transactions.add.transaction', $shift) }}',"",true);                    
+                });
              })
 
 
