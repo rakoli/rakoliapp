@@ -25,12 +25,7 @@
                         @endforeach
                     </x-select2>
                     <x-helpertext>{{ __("Till you want to transact from") }}</x-helpertext>
-                    <x-helpertext>
-                        <ul class="list-style-none">
-                            <li>{{ __('Deposit') }}: {{ __('Increases Cash Balance and Reduces Till Balance') }}</li>
-                            <li>{{ __('Withdraw') }}: {{ __('Increases Till Balance and Reduces Cash Balance') }}</li>
-                        </ul>
-                    </x-helpertext>
+                    <x-helpertext>{{ __('Deposit') }}: {{ __('Increases Cash Balance and Reduces Till Balance') }}</x-helpertext>
                     @error('location_code')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -57,7 +52,7 @@
                     @enderror
                 </div>
             </div>
-            <div class="row fv-row py-3 hidden">
+            <div class="row fv-row py-3">
                 <div class="col-6 crypto-data">
                     <x-label class="" label="{{ __('Crypto Amount') }}" for="crypto"/>
                     <x-input
@@ -90,7 +85,7 @@
                 </div>
             </div>
 
-            <div class="row fv-row hidden">
+            <div class="row fv-row">
 
                 <div class="col-6 crypto-data">
                     <x-label class="" label="{{ __('Fee') }}" for="fee"/>
@@ -157,7 +152,7 @@
 
                 jQuery(".crypto-data").hide();
 
-                jQuery('select#network_code').on("change", function(){
+                jQuery(document).on("change","#deposit-transaction-form #network_code", function(){
                     var selectedOption = $(this).find(":selected");
                     if(selectedOption.data('type') == "Crypto"){
                         jQuery(".crypto-data").show();
@@ -181,36 +176,65 @@
                 });
 
 
-                 const validations = [
-                     {
-                         "name": "amount",
-                         "error": "Amount is Required",
-                         "validators" : {}
-                     }, {
-                         "name": "network_code",
-                         "error": "Till/Network is Required",
-                         "validators" : {}
-                     },
-                     {
-                         "name": "description",
-                         "error": "Description Type is Required",
-                         "validators" : {}
-                     },
+                jQuery(document).on("click","#deposit-transaction-button", function(){
 
-                 ];
+                    if(jQuery("#network_code").find(":selected").data('type') == "Crypto"){
+                        var validations = [
+                            {
+                                "name": "amount",
+                                "error": "Amount is Required",
+                                "validators" : {}
+                            }, {
+                                "name": "network_code",
+                                "error": "Till/Network is Required",
+                                "validators" : {}
+                            },
+                            {
+                                "name": "crypto",
+                                "error": "Crypto is Required",
+                                "validators" : {}
+                            },
+                            {
+                                "name": "exchange_rate",
+                                "error": "Exchange Rate is Required",
+                                "validators" : {}
+                            },
+                            {
+                                "name": "fee",
+                                "error": "Fee is Required",
+                                "validators" : {}
+                            },
+                            {
+                                "name": "description",
+                                "error": "Description Type is Required",
+                                "validators" : {}
+                            },
+                        ];
+                    } else {
+                        var validations = [
+                            {
+                                "name": "amount",
+                                "error": "Amount is Required",
+                                "validators" : {}
+                            }, {
+                                "name": "network_code",
+                                "error": "Till/Network is Required",
+                                "validators" : {}
+                            },
+                            {
+                                "name": "description",
+                                "error": "Description Type is Required",
+                                "validators" : {}
+                            },
+
+                        ];
+                    }
 
 
-                 const form = document.getElementById('deposit-transaction-form');
-
-
-                 const submitTransactionButton = document.getElementById('deposit-transaction-button');
-
-
-                 console.log("form =>", form)
-                 console.log("button =>", submitTransactionButton)
-
-
-                 lakoriValidation(validations, form, submitTransactionButton, 'post', '{{  route('agency.transactions.add.transaction', $shift) }}');
+                    const form = document.getElementById('deposit-transaction-form');
+                    const submitTransactionButton = document.getElementById('deposit-transaction-button');
+                    lakoriValidation(validations, form, submitTransactionButton, 'post', '{{  route('agency.transactions.add.transaction', $shift) }}',"",true);
+                });
              })
 
 
