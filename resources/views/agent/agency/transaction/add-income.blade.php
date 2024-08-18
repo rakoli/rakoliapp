@@ -62,6 +62,8 @@
                         name="network_code"
                         placeholder="{{ __('source: e.g Mpesa ') }}"
                         id="network_code_income">
+
+                        <option value="">  </option>
                         @foreach($networks as $name =>  $network)
                                 <option
                                     value="{{ $network['code'] }}" data-type="{{ $network['type'] }}" data-rate="{{ isset($network['exchange_rate']) ? $network['exchange_rate'] : '' }}"
@@ -203,45 +205,91 @@
                     }
                 });
 
+                jQuery(document).on("click","#add-income-button", function(){
 
-                const incomeValidations = [
-                    {
-                        "name": "amount",
-                        "error": "Amount is Required",
-                        "validators" : {}
-                    },
-                    {
-                        "name": "income_type",
-                        "error": "Amount is Required",
-                        "validators" : {}
-                    },
+                    if(jQuery("#income_type").val() == "TILL"){
 
-                    {
-                        "name": "description",
-                        "error": "Description Type is Required",
-                        "validators" : {}
-                    },
+                        if(jQuery("#network_code_income").find(":selected").data('type') == "Crypto"){
+                            var incomeValidations = [
+                                {
+                                    "name": "amount",
+                                    "error": "Amount is Required",
+                                    "validators": {}
+                                },
+                                {
+                                    "name": "income_type",
+                                    "error": "Income type is Required",
+                                    "validators": {}
+                                },
+                                {
+                                    "name": "network_code",
+                                    "error": "Till is Required",
+                                    "validators": {}
+                                },
+                                {
+                                    "name": "crypto",
+                                    "error": "Crypto is Required",
+                                    "validators" : {}
+                                },
+                                {
+                                    "name": "exchange_rate",
+                                    "error": "Exchange Rate is Required",
+                                    "validators" : {}
+                                },
+                                {
+                                    "name": "description",
+                                    "error": "Description Type is Required",
+                                    "validators": {}
+                                },
+                            ];
+                        } else {
+                            var incomeValidations = [
+                                {
+                                    "name": "amount",
+                                    "error": "Amount is Required",
+                                    "validators": {}
+                                },
+                                {
+                                    "name": "income_type",
+                                    "error": "Income type is Required",
+                                    "validators": {}
+                                },
+                                {
+                                    "name": "network_code",
+                                    "error": "Till is Required",
+                                    "validators": {}
+                                },
+                                {
+                                    "name": "description",
+                                    "error": "Description Type is Required",
+                                    "validators": {}
+                                },
+                            ];
+                        }
+                    } else {
+                        var incomeValidations = [
+                            {
+                                "name": "amount",
+                                "error": "Amount is Required",
+                                "validators" : {}
+                            },
+                            {
+                                "name": "income_type",
+                                "error": "Income type is Required",
+                                "validators" : {}
+                            },
+                            {
+                                "name": "description",
+                                "error": "Description Type is Required",
+                                "validators" : {}
+                            },
+                        ];
+                    }
 
-                    {
-                        "name": "network_code",
-                        "error": "Network Type is Required",
-                        "validators" : {}
-                    },
-
-                ];
-
-
-                const incomeForm = document.getElementById('add-income-form');
-
-
-                const submitIncomeButton = document.getElementById('add-income-button');
-
-
-                console.log("form =>", incomeForm)
-                console.log("button =>", submitIncomeButton)
-
-
-                lakoriValidation(incomeValidations, incomeForm, submitIncomeButton, 'post', '{{  route('agency.transactions.add.income', $shift) }}');
+                    const incomeForm = document.getElementById('add-income-form');
+                    const submitIncomeButton = document.getElementById('add-income-button');
+                    lakoriValidation(incomeValidations, incomeForm, submitIncomeButton, 'post', '{{  route('agency.transactions.add.income', $shift) }}',"",true);
+                });
             })
 
 

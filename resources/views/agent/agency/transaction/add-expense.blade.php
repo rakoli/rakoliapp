@@ -205,32 +205,64 @@
                 jQuery(document).on("click","#add-expense-button", function(){
 
                     if(jQuery("#source").val() == "TILL"){
-                        var expenseValidations = [
-                            {
-                                "name": "amount",
-                                "error": "Amount is Required",
-                                "validators": {}
-                            },
 
-                            {
-                                "name": "source",
-                                "error": "Fund Source is Required",
-                                "validators": {}
-                            },
-
-                            {
-                                "name": "network_code",
-                                "error": "Till is Required",
-                                "validators": {}
-                            },
-
-                            {
-                                "name": "description",
-                                "error": "Description Type is Required",
-                                "validators": {}
-                            },
-
-                        ];
+                        if(jQuery("#till_source_code").find(":selected").data('type') == "Crypto"){
+                            var expenseValidations = [
+                                {
+                                    "name": "amount",
+                                    "error": "Amount is Required",
+                                    "validators": {}
+                                },
+                                {
+                                    "name": "source",
+                                    "error": "Fund Source is Required",
+                                    "validators": {}
+                                },
+                                {
+                                    "name": "network_code",
+                                    "error": "Till is Required",
+                                    "validators": {}
+                                },
+                                {
+                                    "name": "crypto",
+                                    "error": "Crypto is Required",
+                                    "validators" : {}
+                                },
+                                {
+                                    "name": "exchange_rate",
+                                    "error": "Exchange Rate is Required",
+                                    "validators" : {}
+                                },
+                                {
+                                    "name": "description",
+                                    "error": "Description Type is Required",
+                                    "validators": {}
+                                },
+                            ];
+                        } else {
+                            var expenseValidations = [
+                                {
+                                    "name": "amount",
+                                    "error": "Amount is Required",
+                                    "validators": {}
+                                },
+                                {
+                                    "name": "source",
+                                    "error": "Fund Source is Required",
+                                    "validators": {}
+                                },
+                                {
+                                    "name": "network_code",
+                                    "error": "Till is Required",
+                                    "validators": {}
+                                },
+                                {
+                                    "name": "description",
+                                    "error": "Description Type is Required",
+                                    "validators": {}
+                                },
+                            ];
+                        }
                     } else {
                         var expenseValidations = [
                             {
