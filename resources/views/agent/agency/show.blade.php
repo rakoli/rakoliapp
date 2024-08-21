@@ -383,6 +383,11 @@
         {{ $dataTableHtml->scripts()  }}
 
         <script>
+            const { format } = new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: "{{ currencyCode() }}",
+                maximumFractionDigits: 2,
+            });
             $(document).ready(function () {
 
                 datatable = $('#cash-transaction-table').DataTable({

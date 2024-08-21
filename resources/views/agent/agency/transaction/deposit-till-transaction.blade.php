@@ -1,9 +1,22 @@
 <div>
+    <style>
+
+.current-balance .balance-label {
+    display: block;
+    max-width: max-content;
+    font-size: 20px;
+    font-weight: 700;
+}
+.current-balance .balance-amount{color:#409992;font-size: 30px;font-weight:700}
+    </style>
     <form method="post" id="deposit-transaction-form">
         @csrf
         <input type="hidden" name="type" id="transaction_type" value="IN">
         <div class="modal-body">
-
+            <div class="current-balance">
+                <span class="balance-label">Balance</span>
+                <span class="balance-amount" data-till="{{ number_format($tillBalances , 2) }}">{{ currencyCode() }} {{ number_format($tillBalances , 2) }}</span>
+            </div>
             <div class="row fv-row py-2">
 
                 <div class="col-6 py-3" id="allNetwork">
@@ -147,7 +160,6 @@
 
         <script>
 
-
              $(document).ready(() => {
 
                 jQuery(".crypto-data").hide();
@@ -167,12 +179,16 @@
                     var amount = jQuery("#deposit-transaction-form #amount").val();
                     var crypto = jQuery("#deposit-transaction-form #crypto").val();
                     var exchange_rate = jQuery("#deposit-transaction-form #exchange_rate").val();
+                    var balance_amount = jQuery("#deposit-transaction-form .balance-amount").data('till');
+                    var balance_amount = Number(balance_amount.replace(/[^0-9.-]+/g,""));           
 
                     if(crypto > 0){
                         jQuery("#deposit-transaction-form #amount").val(crypto * exchange_rate)
                     }else if(amount > 0){
                         jQuery("#deposit-transaction-form #crypto").val(amount / exchange_rate)
                     }
+
+                    jQuery("#deposit-transaction-form .balance-amount").text(format(parseFloat(balance_amount,2) - parseFloat(amount,2)));
                 });
 
 

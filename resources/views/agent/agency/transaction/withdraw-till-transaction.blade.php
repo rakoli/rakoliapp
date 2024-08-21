@@ -3,7 +3,10 @@
         @csrf
         <input type="hidden" name="type" id="transaction_type" value="OUT">
         <div class="modal-body">
-
+            <div class="current-balance">
+                <span class="balance-label">Balance</span>
+                <span class="balance-amount" data-till="{{ number_format($tillBalances , 2) }}">{{ currencyCode() }} {{ number_format($tillBalances , 2) }}</span>
+            </div>
             <div class="row fv-row py-2">
 
                 <div class="col-6 py-3" id="allNetwork">
@@ -168,12 +171,16 @@
                     var amount = jQuery("#withdraw-transaction-form #amount").val();
                     var crypto = jQuery("#withdraw-transaction-form #crypto").val();
                     var exchange_rate = jQuery("#withdraw-transaction-form #exchange_rate").val();
+                    var balance_amount = jQuery("#withdraw-transaction-form .balance-amount").data("till");
+                    var balance_amount = Number(balance_amount.replace(/[^0-9.-]+/g,""));
+
 
                     if(crypto > 0){
                         jQuery("#withdraw-transaction-form #amount").val(crypto * exchange_rate)
                     }else if(amount > 0){
                         jQuery("#withdraw-transaction-form #crypto").val(amount / exchange_rate)
                     }
+                    jQuery("#withdraw-transaction-form .balance-amount").text(format(parseFloat(balance_amount,2) + parseFloat(amount,2)));
                 });
 
 
