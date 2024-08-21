@@ -167,6 +167,7 @@ class BusinessController extends Controller
         $dataTableHtml = $builder->columns([
             ['data' => 'id', 'title' => __('id')],
             ['data' => 'name', 'title' => __("Name")],
+            ['data' => 'capital', 'title' => __("Capital") . ' (' . session('currency') . ')'],
             ['data' => 'balance', 'title' => __("Balance") . ' (' . session('currency') . ')'],
             ['data' => 'balance_currency', 'title' => __("Balance Currency")], // Removed extra space
             ['data' => 'description', 'title' => __("Description")],
@@ -200,6 +201,7 @@ class BusinessController extends Controller
 
         $request->validate([
             'name' => 'required',
+            'capital' => 'required|numeric',
             'balance' => 'required|numeric',
             'availability_desc' => 'sometimes|string|max:255|nullable',
         ]);
@@ -213,6 +215,7 @@ class BusinessController extends Controller
         $branchesData = [
             'business_code' => $request->user()->business_code,
             'name' => $request->name,
+            'capital' => $request->capital,
             'balance' => $request->balance,
             'balance_currency' => $currency,
             'description' => $request->availability_desc,
@@ -276,6 +279,7 @@ class BusinessController extends Controller
         $request->validate([
             'branches_id' => 'required|exists:locations,id',
             'name' => 'required',
+            'capital' => 'required|numeric',
             'balance' => 'required|numeric',
             'availability_desc' => 'sometimes|string|max:255|nullable',
         ]);
@@ -288,6 +292,7 @@ class BusinessController extends Controller
 
         $branchesData = [
             'name' => $request->name,
+            'capital' => $request->capital,
             'balance' => $request->balance,
             'balance_currency' => $currency,
             'description' => $request->availability_desc,

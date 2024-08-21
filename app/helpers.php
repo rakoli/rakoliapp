@@ -302,7 +302,9 @@ if (! function_exists('getOpenShift')) {
 if (! function_exists('shiftBalances')) {
     function shiftBalances(\App\Models\Shift $shift): array
     {
+        $capital = $shift->loadMissing('location')->location->capital;
         $cash = $shift->loadMissing('location')->location->balance;
+
 
         $tills = [];
 
@@ -447,7 +449,9 @@ if (! function_exists('shiftBalances')) {
             'startCapital' => $startCapital,
             'endCapital' => $endingCapital,
             'shorts' => $shorts ,
-            'loanBalances' => $loanBalances
+            'loanBalances' => $loanBalances,
+            'total_capital' => $capital,
+            'remaining_capital' => ($capital - $endingCapital)
         ];
     }
 }
