@@ -3,7 +3,10 @@
 
         @csrf
         <div class="modal-body">
-
+            <div class="current-balance">
+                <span class="balance-label">Balance</span>
+                <span class="balance-amount" data-till="{{ number_format($tillBalances , 2) }}" data-cash="{{ number_format($cashAtHand , 2) }}">{{ currencyCode() }} {{ number_format($cashAtHand , 2) }}</span>
+            </div>
             <div class="row fv-row py-2">
 
                 <div class="col-6">
@@ -173,10 +176,15 @@
                     if ("TILL" === source) {
                         $("div#till-source").show();
                         jQuery('select#till_source_code').change();
+                        var balance_amount = jQuery("#add-expense-form .balance-amount").data('till');
                     } else {
                         $("div#till-source").hide();
                         jQuery(".crypto-data").hide();
+                        var balance_amount = jQuery("#add-expense-form .balance-amount").data('cash');
                     }
+                    var balance_amount = Number(balance_amount.replace(/[^0-9.-]+/g,""));
+                    jQuery("#add-expense-form .balance-amount").text(format(balance_amount));
+
                 });
 
                 jQuery('select#till_source_code').on("change", function(){
@@ -194,12 +202,19 @@
                     var amount = jQuery("#add-expense-form #amount").val();
                     var crypto = jQuery("#add-expense-form #crypto").val();
                     var exchange_rate = jQuery("#add-expense-form #exchange_rate").val();
+                    if(jQuery('select#source').val() == "TILL"){
+                        var balance_amount = jQuery("#add-expense-form .balance-amount").data('till');
+                    } else {
+                        var balance_amount = jQuery("#add-expense-form .balance-amount").data('cash');
+                    }
+                    var balance_amount = Number(balance_amount.replace(/[^0-9.-]+/g,""));
 
                     if(crypto > 0){
                         jQuery("#add-expense-form #amount").val(crypto * exchange_rate)
                     }else if(amount > 0){
                         jQuery("#add-expense-form #crypto").val(amount / exchange_rate)
                     }
+                    jQuery("#add-expense-form .balance-amount").text(format(parseFloat(balance_amount,2) - parseFloat(amount,2)));
                 });
 
                 jQuery(document).on("click","#add-expense-button", function(){
