@@ -479,7 +479,10 @@ if (! function_exists('checkBalance')) {
                 }
             }
         } else if($request->type == "OUT"){
-            return true;
+            Log::info("Current balance ::".print_r($balance_data,true));
+            if($balance_data['cashAtHand'] >= $request->amount){
+                return true;
+            }
         }
 
         return false;
