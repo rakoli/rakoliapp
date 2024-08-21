@@ -20,6 +20,7 @@ class Location extends Model
         'business_code',
         'code',
         'name',
+        'capital',
         'balance',
         'balance_currency',
         'region_code',

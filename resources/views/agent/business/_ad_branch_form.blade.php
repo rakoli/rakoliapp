@@ -134,6 +134,13 @@
                 </div>
                 <div class="mb-5 fv-row">
                     <!--end::Label-->
+                    <label class="form-label">{{__('Capital')}}</label>
+                    <!--begin::Input-->
+                    <input type="text" class="form-control mb-2" id="capital" name="capital"value="@if($isEdit){{$branches->capital}}@endif" placeholder="{{__("Enter Capital")}}">
+
+                </div>
+                <div class="mb-5 fv-row">
+                    <!--end::Label-->
                     <label class="form-label">{{__('Balance')}}</label>
                     <!--begin::Input-->
                     <input type="text" class="form-control mb-2" id="balance" name="balance"value="@if($isEdit){{$branches->balance}}@endif" placeholder="{{__("Enter Balance")}}">
