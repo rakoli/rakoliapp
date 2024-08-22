@@ -94,14 +94,14 @@
                         class=" @error('network_code') form-control-error @enderror"
                         name="network_code"
                         modalId="add-loan"
-                        id="network_code"
+                        id="network_code_loan"
                         placeholder="{{ __('Select a Till') }}"
                     >
                         <option value=""></option>
 
                         @foreach($networks as $name =>  $network)
                             @if($network['type'] != NetworkTypeEnum::CRYPTO->value)
-                                <option value="{{ $network['code'] }}" class="{!! $network['balance'] > 0 ? 'balance' : 'nobalance' !!}">{{ $name }} - {{ number_format($network['balance'],2) }}</option>
+                                <option title={{ $network['logo'] }} value="{{ $network['code'] }}" class="{!! $network['balance'] > 0 ? 'balance' : 'nobalance' !!}">{{ $name }} - {{ number_format($network['balance'],2) }}</option>
                             @endif
                         @endforeach
                     </x-select2>
@@ -184,9 +184,9 @@
                     var selectedOption = $(this).find(":selected").val();
                     console.log(selectedOption);
                     if(selectedOption == "money_in"){
-                        $("#network_code .nobalance").attr("disabled", true);
+                        $("#network_code_loan .nobalance").attr("disabled", true);
                     } else  {
-                        $("#network_code .nobalance").attr("disabled", false);
+                        $("#network_code_loan .nobalance").attr("disabled", false);
                     }
 
                 });
@@ -263,6 +263,12 @@
                     const loanForm = document.getElementById('add-loan-form');
                     const submitLoanButton = document.getElementById('add-loan-button');
                     lakoriValidation(loanValidations, loanForm, submitLoanButton, 'post', '{{  route('agency.loans.store', $shift) }}',"",true);
+                });
+
+                $('#network_code_loan').select2({
+                    templateResult: formatOption,
+                    templateSelection: formatOption,
+                    minimumResultsForSearch: Infinity
                 });
             })
 

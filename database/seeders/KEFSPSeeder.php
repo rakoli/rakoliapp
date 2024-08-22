@@ -19,6 +19,7 @@ class KEFSPSeeder extends Seeder
             $data = [
                 'country_code' => 'KE',
                 'name' => strtoupper($fsp['name']),
+                'logo' => cleanText($fsp['name']).".jpg",
                 'code' => generateCode($fsp['name'], 'ke'),
             ];
 

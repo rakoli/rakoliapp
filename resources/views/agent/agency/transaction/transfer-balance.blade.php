@@ -15,11 +15,13 @@
                         name="network_code"
                         modalId="transfer-balance"
                         placeholder="{{ __('Select Source Till') }}"
-                        id="network_code">
+                        id="source_till">
                         <option value="">  </option>
 
-                        @foreach($till_networks as $network)
-                            <option value="{{ $network->code }}">{{ str($network->name)  }} - {{ number_format($network->balance,2) }}</option>
+                        @foreach($networks as $name =>  $network)
+                            @if($network['type'] != App\Utils\Enums\NetworkTypeEnum::CRYPTO->value)
+                                <option title={{ $network['logo'] }} value="{{ $network['code'] }}">{{ $name }} - {{ number_format($network['balance'],2) }}</option>
+                            @endif
                         @endforeach
                     </x-select2>
                     @error('network_code')
@@ -42,8 +44,10 @@
                     >
                         <option value="">  </option>
 
-                        @foreach($till_networks as $network)
-                            <option value="{{ $network->code }}">{{ str($network->name)  }} - {{ number_format($network->balance,2) }}</option>
+                        @foreach($networks as $name =>  $network)
+                            @if($network['type'] != App\Utils\Enums\NetworkTypeEnum::CRYPTO->value)
+                                <option title={{ $network['logo'] }} value="{{ $network['code'] }}">{{ $name }} - {{ number_format($network['balance'],2) }}</option>
+                            @endif
                         @endforeach
                     </x-select2>
                     @error('destination_till')
@@ -140,7 +144,20 @@
 
 
                  lakoriValidation(validations, form, submitTransactionButton, 'post', '{{  route('agency.shift.transfer.balance', $shift) }}');
-             })
+
+                $('#source_till').select2({
+                    templateResult: formatOption,
+                    templateSelection: formatOption,
+                    minimumResultsForSearch: Infinity
+                });
+
+                $('#destination_till').select2({
+                    templateResult: formatOption,
+                    templateSelection: formatOption,
+                    minimumResultsForSearch: Infinity
+                });
+             });
+
 
 
 

@@ -52,7 +52,7 @@
                         id="fsp_code">
 
                         @foreach($agencies as $agency)
-                            <option
+                            <option title={{ $agency->getLogo() }}
                                 @selected($agency->code == $network->fsp_code)
                                 value="{{ $agency->code }}">{{ $agency->name }}</option>
                         @endforeach
@@ -212,6 +212,25 @@
 
 
             lakoriValidation(validations, form, submitButton, 'post', '{{  route('agency.networks.update', $network) }}');
+
+
+            $(document).ready(function() {
+            function formatOption(option) {
+                    if (!option.id) {
+                        return option.text;
+                    }
+                    var optionWithImage = $(
+                        '<span><img src="' + option.title + '" class="img-flag" /> ' + option.text + '</span>'
+                    );
+                    return optionWithImage;
+                }
+
+                $('#fsp_code').select2({
+                    templateResult: formatOption,
+                    templateSelection: formatOption,
+                    minimumResultsForSearch: Infinity
+                });
+            });
 
         </script>
     @endpush

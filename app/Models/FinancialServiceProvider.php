@@ -28,4 +28,12 @@ class FinancialServiceProvider extends Model
     {
         return $this->hasMany(Network::class, 'fsp_code', 'code');
     }
+
+    public function getLogo(){
+        if (file_exists( public_path() . '/assets/media/fsp_logos/'.$this->logo)) {
+            return asset('/assets/media/fsp_logos/'.$this->logo);
+        } else {
+            return asset('/assets/media/fsp_logos/default.jpg');
+        } 
+    }
 }

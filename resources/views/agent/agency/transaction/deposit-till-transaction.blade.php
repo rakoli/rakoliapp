@@ -23,23 +23,21 @@
                     <x-label class="" label="Select Till" for="till_code"/>
 
                     <x-select2
-                        class=" @error('network_code') form-control-error @enderror"
                         name="network_code"
-                        modalId="deposit-transaction"
                         placeholder="{{ __('Select a Till') }}"
                         id="network_code"
                     >
                         <option value="">  </option>
 
                         @foreach($networks as $name =>  $network)
-                                <option
+                                <option title={{ $network['logo'] }}
                                 value="{{ $network['code'] }}" {!! $network['balance'] < 1 ? 'disabled' : '' !!} data-type="{{ $network['type'] }}" data-rate="{{ isset($network['exchange_rate']) ? $network['exchange_rate'] : '' }}"
                                 >{{ str($name)->title()->value()  }} - {{ number_format($network['balance'],2) }}</option>
                         @endforeach
                     </x-select2>
                     <x-helpertext>{{ __("Till you want to transact from") }}</x-helpertext>
                     <x-helpertext>{{ __('Deposit') }}: {{ __('Increases Cash Balance and Reduces Till Balance') }}</x-helpertext>
-                    @error('location_code')
+                    @error('network_code')
                     <div class="help-block text-danger">
                         {{ $message }}
                     </div>
@@ -194,7 +192,7 @@
 
                 jQuery(document).on("click","#deposit-transaction-button", function(){
 
-                    if(jQuery("#network_code").find(":selected").data('type') == "Crypto"){
+                    if(jQuery("#deposit-transaction-form #network_code").find(":selected").data('type') == "Crypto"){
                         var validations = [
                             {
                                 "name": "amount",
@@ -250,6 +248,12 @@
                     const form = document.getElementById('deposit-transaction-form');
                     const submitTransactionButton = document.getElementById('deposit-transaction-button');
                     lakoriValidation(validations, form, submitTransactionButton, 'post', '{{  route('agency.transactions.add.transaction', $shift) }}',"",true);
+                });
+
+                $('#deposit-transaction-form #network_code').select2({
+                    templateResult: formatOption,
+                    templateSelection: formatOption,
+                    minimumResultsForSearch: Infinity
                 });
              })
 

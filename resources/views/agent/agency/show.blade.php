@@ -571,6 +571,17 @@
                     $(this).find('form').trigger('reset');
                 });
             })
+
+            //Function used to add images in select2
+            function formatOption(option) {
+                    if (!option.id) {
+                        return option.text;
+                    }
+                    var optionWithImage = $(
+                        '<span><img src="' + option.title + '" class="img-flag" /> ' + option.text + '</span>'
+                    );
+                    return optionWithImage;
+                }
         </script>
 
     @endpush

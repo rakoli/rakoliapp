@@ -13,23 +13,21 @@
                     <x-label class="" label="Select Till" for="till_code"/>
 
                     <x-select2
-                        class=" @error('network_code') form-control-error @enderror"
                         name="network_code"
-                        modalId="withdraw-transaction"
                         placeholder="{{ __('Select a Till') }}"
                         id="network_code"
                     >
                         <option value="">  </option>
 
                         @foreach($networks as $name =>  $network)
-                                <option
+                                <option title={{ $network['logo'] }}
                                 value="{{ $network['code'] }}" data-type="{{ $network['type'] }}" data-rate="{{ isset($network['exchange_rate']) ? $network['exchange_rate'] : '' }}"
                                 >{{ str($name)->title()->value()  }} - {{ number_format($network['balance'],2) }}</option>
                         @endforeach
                     </x-select2>
                     <x-helpertext>{{ __("Till you want to transact from") }}</x-helpertext>
                     <x-helpertext>{{ __('Withdraw') }}: {{ __('Increases Till Balance and Reduces Cash Balance') }}</x-helpertext>
-                    @error('location_code')
+                    @error('network_code')
                     <div class="help-block text-danger">
                         {{ $message }}
                     </div>
@@ -243,6 +241,13 @@
                     const submitTransactionButton = document.getElementById('withdraw-transaction-button');
                     lakoriValidation(validations, form, submitTransactionButton, 'post', '{{  route('agency.transactions.add.transaction', $shift) }}',"",true);                    
                 });
+
+                $('#withdraw-transaction-form #network_code').select2({
+                    templateResult: formatOption,
+                    templateSelection: formatOption,
+                    minimumResultsForSearch: Infinity
+                });
+
              })
 
 
