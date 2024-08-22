@@ -32,7 +32,13 @@ class NetworkDatatable implements HasDatatable
             ->addColumn('created_at', fn (Network $network) => $network->created_at->format('Y-F-d'))
             ->addColumn('type', fn (Network $network) => $network->type)
             ->addColumn('location_name', fn (Network $network) => $network->location->name)
-            ->addColumn('network_name', fn (Network $network) => $network->type == NetworkTypeEnum::CRYPTO->value ? $network->crypto?->name  : $network->agency?->name)
+            ->addColumn('network_name', function (Network $network) { 
+                if($network->type == NetworkTypeEnum::CRYPTO->value){
+                    return $network->crypto?->name;
+                } else {
+                    return '<img src="'.$network->agency?->getLogo().'" class="img-flag"> '.$network->agency?->name;
+                }
+            })
 //            ->addColumn('crypto_balance', fn (Network $network) => $network->crypto_balance)
 //            ->addColumn('exchange_rate', fn (Network $network) => $network->exchange_rate)
 //            ->addColumn('balance', fn (Network $network) => $network->type == NetworkTypeEnum::CRYPTO->value ? "~".money($network->crypto_balance * $network->exchange_rate, currencyCode(), true) : money($network->balance, currencyCode(), true))
@@ -51,7 +57,7 @@ class NetworkDatatable implements HasDatatable
                         ],
                     ]);
             })
-            ->rawColumns(['balance', 'agency_name', 'location_name', 'actions','balance_combined'])
+            ->rawColumns(['balance', 'network_name', 'location_name', 'actions','balance_combined'])
             ->toJson();
     }
 

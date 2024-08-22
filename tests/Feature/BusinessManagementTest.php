@@ -165,6 +165,7 @@ class BusinessManagementTest extends TestCase
         $editData = [
             'business_code' => $business->code,
             'name' => $business->code . ' branch',
+            'capital' => fake()->numberBetween(500000, 5000000),
             'balance' => fake()->numberBetween(500000, 5000000),
             'balance_currency' => 'TZS',
             'ad_region' => $region->code,
@@ -177,6 +178,7 @@ class BusinessManagementTest extends TestCase
         $data = [
             'business_code' => $editData['business_code'],
             'name' => $editData['name'],
+            'capital' => $editData['capital'],
             'balance' => $editData['balance'],
             'balance_currency' => $editData['balance_currency'],
             'region_code' => $editData['ad_region'],

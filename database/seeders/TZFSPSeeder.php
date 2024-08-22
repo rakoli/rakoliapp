@@ -18,6 +18,7 @@ class TZFSPSeeder extends Seeder
             $data = [
                 'country_code' => 'TZ',
                 'name' => $fsp['name'],
+                'logo' => cleanText($fsp['name']).".jpg",
                 'code' => generateCode($fsp['name'], 'tz'),
             ];
 

@@ -54,3 +54,11 @@ include 'custom-admin.php';
 include 'custom-agent.php';
 include 'custom-vas.php';
 
+Route::get('updatefsp',function(){
+    $fsps = App\Models\FinancialServiceProvider::all();
+    foreach($fsps as $fsp){
+        $fsp->logo = cleanText($fsp->name).".jpg";
+        $fsp->save();
+    }
+});
+

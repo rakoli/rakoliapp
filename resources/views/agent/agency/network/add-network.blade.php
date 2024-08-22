@@ -61,7 +61,7 @@
                         id="fsp_code"
                     >
                         @foreach($agencies as $agency)
-                            <option value="{{ $agency->code }}">{{ $agency->name }}</option>
+                            <option title="{{ $agency->getLogo() }}" value="{{ $agency->code }}">{{ $agency->name }}</option>
                         @endforeach
                     </x-select2>
                     <x-helpertext>{{ __('Till Provider E.G: Equity Bank') }}</x-helpertext>
@@ -272,6 +272,24 @@
             const submitButton = document.getElementById('add-network-button');
             lakoriValidation(validations, form, submitButton, 'post', '{{  route('agency.networks.store') }}',"",true);
         });
+
+        $(document).ready(function() {
+            function formatOption(option) {
+                    if (!option.id) {
+                        return option.text;
+                    }
+                    var optionWithImage = $(
+                        '<span><img src="' + option.title + '" class="img-flag" /> ' + option.text + '</span>'
+                    );
+                    return optionWithImage;
+                }
+
+                $('#fsp_code').select2({
+                    templateResult: formatOption,
+                    templateSelection: formatOption,
+                    minimumResultsForSearch: Infinity
+                });
+            });
         </script>
     @endpush
 

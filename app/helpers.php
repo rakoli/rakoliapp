@@ -325,6 +325,7 @@ if (! function_exists('shiftBalances')) {
                     'balance_new' => $shiftNetworks->balance_new,
                     'balance_old' => $shiftNetworks->balance_old,
                     'type' => $shiftNetworks->network->type,
+                    'logo' => $shiftNetworks->network->agency?->getLogo(),
                     'exchange_rate' => $shiftNetworks->network->type == NetworkTypeEnum::CRYPTO->value ? Crypto::convertCryptoToFiat($shiftNetworks->network?->crypto?->symbol,currencyCode()) : '',
                 ];
             }

@@ -72,7 +72,7 @@
                         <option value="">  </option>
 
                         @foreach($networks as $name =>  $network)
-                            <option value="{{ $network['code'] }}" {!! $network['balance'] < 1 ? 'disabled' : '' !!} data-type="{{ $network['type'] }}" data-rate="{{ isset($network['exchange_rate']) ? $network['exchange_rate'] : '' }}"
+                            <option title="{{ $network['logo'] }}"value="{{ $network['code'] }}" {!! $network['balance'] < 1 ? 'disabled' : '' !!} data-type="{{ $network['type'] }}" data-rate="{{ isset($network['exchange_rate']) ? $network['exchange_rate'] : '' }}"
                                 >{{ str($name)->title()->value()  }} - {{ number_format($network['balance'],2) }}</option>
                         @endforeach
                     </x-select2>
@@ -302,7 +302,13 @@
                     const expenseForm = document.getElementById('add-expense-form');
                     const submitIncomeButton = document.getElementById('add-expense-button');
                     lakoriValidation(expenseValidations, expenseForm, submitIncomeButton, 'post', '{{  route('agency.transactions.add.expense', $shift) }}',"",true);
-                })
+                });
+                
+                $('#till_source_code').select2({
+                    templateResult: formatOption,
+                    templateSelection: formatOption,
+                    minimumResultsForSearch: Infinity
+                });
             })
 
 

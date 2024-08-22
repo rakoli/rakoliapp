@@ -68,7 +68,7 @@
 
                         <option value="">  </option>
                         @foreach($networks as $name =>  $network)
-                                <option
+                                <option title={{ $network['logo'] }}
                                     value="{{ $network['code'] }}" data-type="{{ $network['type'] }}" data-rate="{{ isset($network['exchange_rate']) ? $network['exchange_rate'] : '' }}"
                                 >{{ str($name)->title()->value()  }} - {{ number_format($network['balance'],2) }}</option>
                         @endforeach
@@ -302,6 +302,12 @@
                     const incomeForm = document.getElementById('add-income-form');
                     const submitIncomeButton = document.getElementById('add-income-button');
                     lakoriValidation(incomeValidations, incomeForm, submitIncomeButton, 'post', '{{  route('agency.transactions.add.income', $shift) }}',"",true);
+                });
+
+                $('#network_code_income').select2({
+                    templateResult: formatOption,
+                    templateSelection: formatOption,
+                    minimumResultsForSearch: Infinity
                 });
             })
 
