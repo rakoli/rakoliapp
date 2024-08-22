@@ -31,7 +31,7 @@ class SubscriptionController extends Controller
         // dd($balance[0]->package->featuresAvailable[0]->feature);
         $country_code = session('country_code');
         $currency = session('currency');
-        $packages = Package::where('country_code', $country_code)->get();
+        $packages = Package::where('country_code', $country_code)->where('status',1)->get();
         $existingData = BusinessWithdrawMethod::where('business_code', $user->business_code)->get();
 
         if (request()->ajax()) {

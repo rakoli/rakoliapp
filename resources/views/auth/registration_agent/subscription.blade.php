@@ -59,7 +59,7 @@
             <!--begin::Row-->
             <div class="row">
 
-                @foreach(\App\Models\Package::where('country_code', auth()->user()->country_code)->get() as $package )
+                @foreach(\App\Models\Package::where('country_code', auth()->user()->country_code)->where('status',1)->get() as $package )
 
                     <!--begin::Col-->
                     <div class="col-xl-4">
