@@ -167,7 +167,7 @@
                                           data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">{{number_format($remaining_capital , 2)}}</span>
                                     <!--end::Amount-->
                                     <!--begin::Subtitle-->
-                                    <span class="text-white pt-1 fw-semibold fs-6">{{ __('Remaining Capital') }} in {{currencyCode()}}</span>
+                                    <span class="text-white pt-1 fw-semibold fs-6">{{ __('Differ') }} in {{currencyCode()}}</span>
                                     <!--end::Subtitle-->
                                 </div>
                                 <!--end::Title-->
