@@ -247,6 +247,15 @@ class BusinessController extends Controller
             }
         }
         $branches = Location::create($branchesData);
+
+        $branchUserData = [
+            'business_code' => $request->user()->business_code,
+            'user_code' => $request->user()->code,
+            'location_code' => $branches->code,
+        ];
+
+        $branchUser = LocationUser::create($branchUserData);
+
         return redirect()->route('business.branches')->with(['message' => 'branches Submitted']);
     }
     public function branchesEdit(Request $request, $id)
