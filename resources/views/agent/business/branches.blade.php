@@ -5,7 +5,10 @@
 @section('header_js')
     <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css" />
 @endsection
-
+<style>div#swal2-html-container {
+    color: #d9214e;
+    font-weight: 700;
+}</style>
 @section('content')
 
     <!--begin::Container-->
@@ -50,11 +53,11 @@
     <script>
         function deleteClicked(trnId){
             Swal.fire({
-                // title: 'Your Title',
-                text: '{{__('You cannot reverse this action')}}',
+                 title: '{{('This will also delete All branch?')}}',
+                text: "{{('It will remove shift Transactions, Networks and Other Information.')}}",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonText: '{{__('Ok')}}',
+                confirmButtonText: '{{__('Confirm')}}',
                 cancelButtonText: '{{__('Cancel')}}',
                 allowOutsideClick: false,
                 showCloseButton: true,
