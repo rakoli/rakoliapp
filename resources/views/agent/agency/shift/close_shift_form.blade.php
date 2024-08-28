@@ -85,10 +85,7 @@
 
 
     @push('js')
-        <script src="{{ asset('assets/js/rakoli_ajax.js') }}"></script>
-
         <script>
-
             const validations = [
                 {"name": "description", "error": "Description Field is Required", "validators": {}},
                 {"name": "location_code", "error": "Location Field is Required", "validators": {}},

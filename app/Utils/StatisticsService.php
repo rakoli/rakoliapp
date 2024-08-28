@@ -5,6 +5,7 @@ namespace App\Utils;
 use App\Models\Business;
 use App\Models\ExchangeAds;
 use App\Models\ExchangeTransaction;
+use App\Models\Loan;
 use App\Models\Location;
 use App\Models\Network;
 use App\Models\Shift;
@@ -48,6 +49,11 @@ class StatisticsService
     public function businessTotalTillBalance()
     {
         return Network::where('business_code',$this->user->business_code)->get()->sum('balance');
+    }
+
+    public function businessTotalLoanBalance()
+    {
+        return Loan::where('business_code',$this->user->business_code)->get()->sum('balance');
     }
 
     public function agentNoOfAwardedVasContract()

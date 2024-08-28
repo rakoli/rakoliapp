@@ -364,8 +364,26 @@
     <script src="{{ asset('assets/plugins/global/plugins.bundle.js') }}"></script>
     <script src="{{ asset('assets/js/scripts.bundle.js') }}"></script>
     <script src="{{ asset('assets/js/language.js') }}"></script>
-
+    <script src="{{ asset('assets/js/rakoli_ajax.js') }}"></script>
     <script>
+        const { format } = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: "{{ currencyCode() }}",
+            maximumFractionDigits: 2,
+        });
+
+        // Function used to add images in select2
+        function formatOption(option) {
+            if (!option.id) {
+                return option.text;
+            }
+            var optionWithImage = $(
+                '<span><img src="' + option.title + '" class="img-flag" /> ' + option.text + '</span>'
+            );
+            return optionWithImage;
+        }
+
+
         const SwalModal = (icon, title, html) => {
             Swal.fire({
                 icon,

@@ -226,20 +226,15 @@
         </div>
 
         @push('js')
-            <script src="{{ asset('assets/js/rakoli_ajax.js') }}"></script>
-
             <script>
                 $("button#delete-network-button").click(function (event) {
                     event.preventDefault();
-
-
                     submitFormAction(
                         document.getElementById('delete-network-form'),
                         "{{ route('agency.networks.delete', $network) }}",
                         document.getElementById('delete-network-button'),
                         "delete"
                     );
-
                 });
             </script>
         @endpush

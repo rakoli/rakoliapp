@@ -274,6 +274,19 @@
                                 <!--end::Stats-->
                             </div>
                             <!--end::Label-->
+                            <!--begin::Label-->
+                            <div class="d-flex fw-semibold align-items-center my-3">
+                                <!--begin::Bullet-->
+                                <div class="bullet w-8px h-3px rounded-2 bg-primary me-3"></div>
+                                <!--end::Bullet-->
+                                <!--begin::Label-->
+                                <div class="text-gray-500 flex-grow-1 me-4">{{__('Loan Balance')}}</div>
+                                <!--end::Label-->
+                                <!--begin::Stats-->
+                                <div class="fw-bolder text-gray-700 text-xxl-end">{{session('currency').' '.$stats['loan_balance']}}</div>
+                                <!--end::Stats-->
+                            </div>
+                            <!--end::Label-->
                         </div>
                         <!--end::Labels-->
                     </div>

@@ -164,6 +164,10 @@ class HomeController extends Controller
             $stats['withdraw_transaction'] = number_format($withdrawTransaction);
             $stats['total_transaction'] = number_format($totalTransaction);
 
+            $totalTransaction = $statisticsService->businessTotalLoanBalance();
+            $stats['loan_balance'] = number_format($totalTransaction);
+
+
 
             $stats['awarded_vas'] = $statisticsService->agentNoOfAwardedVasContract();
             $stats['pending_exchange'] = $statisticsService->agentNoOfPendingExchange(); // where (trader_business_code AND status) OR (owner_business_code AND status)

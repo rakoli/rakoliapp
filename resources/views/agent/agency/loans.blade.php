@@ -99,9 +99,6 @@
 
 
     @push('js')
-
-
-        <script src="{{ asset('assets/js/rakoli_ajax.js') }}"></script>
         <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}"
                 type="text/javascript"></script>
         {{ $datatableHtml->scripts()  }}

@@ -588,12 +588,6 @@
 
     @push('js')
         <script>
-            const { format } = new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: "{{ currencyCode() }}",
-                maximumFractionDigits: 2,
-            });
-
             $(document).ready(() => {
                 var closing_text = "You are closing the {!! $shift->no !!} of the {!! $shift->created_at->format('d-m-Y') !!}.";
                 var short_text = "";

@@ -121,20 +121,11 @@
         {{ $datatableHtml->scripts()  }}
 
         <script>
-
-
             $(document).ready(function () {
-
                 window.LaravelDataTables['loans-payment-table'].on('draw', function () {
                     KTMenu.createInstances();
                 })
             })
-
-
-            // // Re-init functions on every table re-draw -- more info: https://datatables.net/reference/event/draw
-            // dt.on('draw', function () {
-            //     KTMenu.createInstances();
-            // });
         </script>
 
     @endpush
