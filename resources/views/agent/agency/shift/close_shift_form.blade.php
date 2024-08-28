@@ -85,10 +85,7 @@
 
 
     @push('js')
-        <script src="{{ asset('assets/js/rakoli_ajax.js') }}"></script>
-
         <script>
-
             jQuery(document).on("click","#close-shift-button", function(){
 
                 if(jQuery("body").hasClass('has_short')){

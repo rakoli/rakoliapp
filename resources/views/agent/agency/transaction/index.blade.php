@@ -58,9 +58,6 @@
     <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}"
             type="text/javascript"></script>
     {{ $dataTableHtml->scripts()  }}
-
-    <script src="{{ asset('assets/js/rakoli_ajax.js') }}"></script>
-
     <script>
         $(document).ready(function () {
 

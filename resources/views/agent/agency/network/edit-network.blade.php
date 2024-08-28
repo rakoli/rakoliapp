@@ -186,44 +186,26 @@
 
 
     @push('js')
-        <script src="{{ asset('assets/js/rakoli_ajax.js') }}"></script>
-
         <script>
-
-            if(jQuery("#type").val() == "Crypto"){
-                var validations = [
-                    {"name" : "name", "validators" : {}},
-                    {"name" : "location_code", "validators" : {}},
-                    {"name" : "crypto_balance", "validators" : {}},
-                    {"name" : "exchange_rate", "validators" : {}},
-                ];
-            } else {
-                var validations = [
-                    {"name" : "name", "validators" : {}},
-                    {"name" : "location_code", "validators" : {}},
-                    {"name" : "agent_no", "validators" : {}},
-                    {"name" : "balance", "validators" : {}},
-                ];
-            }
-            const form = document.getElementById('update-network-form');
-
-
-            const submitButton = document.getElementById('update-network-button');
-
-
-            lakoriValidation(validations, form, submitButton, 'post', '{{  route('agency.networks.update', $network) }}');
-
-
             $(document).ready(function() {
-            function formatOption(option) {
-                    if (!option.id) {
-                        return option.text;
-                    }
-                    var optionWithImage = $(
-                        '<span><img src="' + option.title + '" class="img-flag" /> ' + option.text + '</span>'
-                    );
-                    return optionWithImage;
+                if(jQuery("#type").val() == "Crypto"){
+                    var validations = [
+                        {"name" : "name", "validators" : {}},
+                        {"name" : "location_code", "validators" : {}},
+                        {"name" : "crypto_balance", "validators" : {}},
+                        {"name" : "exchange_rate", "validators" : {}},
+                    ];
+                } else {
+                    var validations = [
+                        {"name" : "name", "validators" : {}},
+                        {"name" : "location_code", "validators" : {}},
+                        {"name" : "agent_no", "validators" : {}},
+                        {"name" : "balance", "validators" : {}},
+                    ];
                 }
+                const form = document.getElementById('update-network-form');
+                const submitButton = document.getElementById('update-network-button');
+                lakoriValidation(validations, form, submitButton, 'post', '{{  route('agency.networks.update', $network) }}');
 
                 $('#fsp_code').select2({
                     templateResult: formatOption,

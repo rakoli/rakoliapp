@@ -25,7 +25,7 @@
                     <x-select2
                         name="network_code"
                         placeholder="{{ __('Select a Till') }}"
-                        id="network_code"
+                        id="deposit_network_code"
                     >
                         <option value="">  </option>
 
@@ -250,12 +250,12 @@
                     lakoriValidation(validations, form, submitTransactionButton, 'post', '{{  route('agency.transactions.add.transaction', $shift) }}',"",true);
                 });
 
-                $('#deposit-transaction-form #network_code').select2({
+                $('#deposit_network_code').select2({
                     templateResult: formatOption,
                     templateSelection: formatOption,
                     minimumResultsForSearch: Infinity
                 });
-             })
+             });    
 
 
 

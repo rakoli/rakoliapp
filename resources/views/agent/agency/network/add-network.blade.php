@@ -226,10 +226,7 @@
 
 
     @push('js')
-        <script src="{{ asset('assets/js/rakoli_ajax.js') }}"></script>
-
         <script>
-            
         jQuery(document).ready(function() {
             
             jQuery(".finance_data").show();
@@ -249,47 +246,35 @@
                 var rate = jQuery("#crypto_code option:selected").data('rate');
                 jQuery("#exchange_rate").val(rate);
             }).change();
-        });
             
-        jQuery(document).on("click","#add-network-button", function(){
-            if(jQuery("#type").val() == "Crypto"){
-                var validations = [
-                    {"name" : "name", "validators" : {}},
-                    {"name" : "location_code", "validators" : {}},
-                    {"name" : "crypto_balance", "validators" : {}},
-                    {"name" : "exchange_rate", "validators" : {}},
-                ];
-            } else {
-                var validations = [
-                    {"name" : "name", "validators" : {}},
-                    {"name" : "location_code", "validators" : {}},
-                    {"name" : "agent_no", "validators" : {}},
-                    {"name" : "balance", "validators" : {}},
-                ];
-            }
-
-            const form = document.getElementById('add-network-form');
-            const submitButton = document.getElementById('add-network-button');
-            lakoriValidation(validations, form, submitButton, 'post', '{{  route('agency.networks.store') }}',"",true);
-        });
-
-        $(document).ready(function() {
-            function formatOption(option) {
-                    if (!option.id) {
-                        return option.text;
-                    }
-                    var optionWithImage = $(
-                        '<span><img src="' + option.title + '" class="img-flag" /> ' + option.text + '</span>'
-                    );
-                    return optionWithImage;
+            jQuery(document).on("click","#add-network-button", function(){
+                if(jQuery("#type").val() == "Crypto"){
+                    var validations = [
+                        {"name" : "name", "validators" : {}},
+                        {"name" : "location_code", "validators" : {}},
+                        {"name" : "crypto_balance", "validators" : {}},
+                        {"name" : "exchange_rate", "validators" : {}},
+                    ];
+                } else {
+                    var validations = [
+                        {"name" : "name", "validators" : {}},
+                        {"name" : "location_code", "validators" : {}},
+                        {"name" : "agent_no", "validators" : {}},
+                        {"name" : "balance", "validators" : {}},
+                    ];
                 }
 
-                $('#fsp_code').select2({
-                    templateResult: formatOption,
-                    templateSelection: formatOption,
-                    minimumResultsForSearch: Infinity
-                });
+                const form = document.getElementById('add-network-form');
+                const submitButton = document.getElementById('add-network-button');
+                lakoriValidation(validations, form, submitButton, 'post', '{{  route('agency.networks.store') }}',"",true);
             });
+
+            $('#fsp_code').select2({
+                templateResult: formatOption,
+                templateSelection: formatOption,
+                minimumResultsForSearch: Infinity
+            });
+        });
         </script>
     @endpush
 

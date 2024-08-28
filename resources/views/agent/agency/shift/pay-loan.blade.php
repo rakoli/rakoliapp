@@ -78,14 +78,14 @@
                             class=" @error('network_code') form-control-error @enderror"
                             name="network_code"
                             modalId="receive-loan-payment"
-                            id="network_code"
+                            id="pay_network_code"
                             placeholder="{{ __('Select a Till') }}"
                         >
                             <option value=""></option>
 
                             @foreach($networks as $name =>  $network)
                                 @if($network['type'] != NetworkTypeEnum::CRYPTO)
-                                    <option value="{{ $network['code'] }}" class="{!! $network['balance'] > 0 ? 'balance' : 'nobalance' !!}">{{ $name }} - {{ number_format($network['balance'],2) }}</option>
+                                    <option title={{ $network['logo'] }} value="{{ $network['code'] }}" class="{!! $network['balance'] > 0 ? 'balance' : 'nobalance' !!}">{{ $name }} - {{ number_format($network['balance'],2) }}</option>
                                 @endif
                             @endforeach
                         </x-select2>
@@ -144,56 +144,80 @@
 
 
         @push('js')
-            <script src="{{ asset('assets/js/rakoli_ajax.js') }}"></script>
-
             <script>
-
-
-
-
                 $(document).ready(() => {
+                    jQuery(document).on("click","#pay-loan-button", function(){
+                        if(jQuery("#pay-loan-form #source").val() == "TILL"){
+                            var loanValidations = [
+                                {
+                                    "name": "amount",
+                                    "error": "Amount is Required",
+                                    "validators" : {}
+                                }, 
 
+                                {
+                                    "name": "deposited_at",
+                                    "error": "Date is Required",
+                                    "validators" : {}
+                                },
 
+                                {
+                                    "name": "source",
+                                    "error": "Fund Source is Required",
+                                    "validators": {}
+                                },
 
-                    const loanValidations = [
-                        {
-                            "name": "amount",
-                            "error": "Amount is Required",
-                            "validators" : {}
-                        }, 
+                                {
+                                    "name": "network_code",
+                                    "error": "Till is Required",
+                                    "validators": {}
+                                },
 
-                        {
-                            "name": "deposited_at",
-                            "error": "Date is Required",
-                            "validators" : {}
-                        },
+                                {
+                                    "name": "description",
+                                    "error": "Description is Required",
+                                    "validators" : {}
+                                },
 
-                        {
-                            "name": "source",
-                            "error": "Fund Source is Required",
-                            "validators": {}
-                        },
+                            ];
+                        } else {
+                            var loanValidations = [
+                                {
+                                    "name": "amount",
+                                    "error": "Amount is Required",
+                                    "validators" : {}
+                                }, 
 
-                        {
-                            "name": "description",
-                            "error": "Description is Required",
-                            "validators" : {}
-                        },
+                                {
+                                    "name": "deposited_at",
+                                    "error": "Date is Required",
+                                    "validators" : {}
+                                },
 
-                    ];
+                                {
+                                    "name": "source",
+                                    "error": "Fund Source is Required",
+                                    "validators": {}
+                                },
 
+                                {
+                                    "name": "description",
+                                    "error": "Description is Required",
+                                    "validators" : {}
+                                },
 
-                    const loanForm = document.getElementById('pay-loan-form');
-
-
-                    const submitLoanButton = document.getElementById('pay-loan-button');
-
-
-                    lakoriValidation(loanValidations, loanForm, submitLoanButton, 'post', '{{  route('agency.loans.pay', ["shift" => $shift , "loan" => $loan]) }}');
-                })
-
-
-
+                            ];
+                        }
+                        const loanForm = document.getElementById('pay-loan-form');
+                        const submitLoanButton = document.getElementById('pay-loan-button');
+                        lakoriValidation(loanValidations, loanForm, submitLoanButton, 'post', '{{  route('agency.loans.pay', ["shift" => $shift , "loan" => $loan]) }}',"",true);
+                    });
+                    $('#pay_network_code').select2({
+                        templateResult: formatOption,
+                        templateSelection: formatOption,
+                        minimumResultsForSearch: Infinity
+                    });
+                });
             </script>
         @endpush
 

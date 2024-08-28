@@ -162,11 +162,7 @@
     </div>
 
     @push('js')
-        <script src="{{ asset('assets/js/rakoli_ajax.js') }}"></script>
-
         <script>
-
-
             $("select#location_code").on("change", function () {
 
                 let selectedOption = $(this).find(":selected");
