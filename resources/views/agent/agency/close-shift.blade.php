@@ -656,10 +656,12 @@
                     $("span#total-balance").text(total + totalShort + income)
 
                     if (totalShort > 0) {
+                        $("body").addClass("has_short");
                         $("div#has_short").show();
                         $("div.shift-has-shorts").show();
                         short_text = "The total transacted volume is "+ jQuery("#total_balance").text()+" with a short of "+ format(totalShort)+".";
                     } else {
+                        $("body").removeClass("has_short");
                         $("div#has_short").hide();
                         $("div.shift-has-shorts").hide();
                         short_text = "The total transacted volume is "+ jQuery("#total_balance").text()+" with no short.";
