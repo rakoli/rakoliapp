@@ -87,8 +87,15 @@ function lakoriValidation(validation, form, submitButton, formMethod, url, redir
                     eleValidClass: ''
                 })
             }
-        }
-    );
+        }).on('plugins.message.displayed', function(e) {
+            const messages = [].slice.call(form.querySelectorAll('[data-field="' + e.field + '"][data-validator]'));
+            messages.forEach((messageEle,i) => {
+                const validator = messageEle.getAttribute('data-validator');
+                if(i > 0){
+                    messageEle.style.display = 'none';
+                }
+            }); 
+        });
 
     if(trigger_btn){
         if (validator) {
