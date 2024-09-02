@@ -35,10 +35,21 @@ var submitFormAction = function submitForm(form, url, submitButton, redirect_url
 
             // Enable button
             submitButton.disabled = false;
+            var error_msg = "Something went wrong, please try again.";
+            var error_html = "";
+            if ('error' in error.response.data){
+                error_msg = error.response.data.error.message;
+                $.each(error.response.data.error.fields, function(i,msg){
+                    error_html = error_html + msg + "<br>";
+                });
+            } else if('message' in error.response.data) {
+                error_msg = error.response.data.message;
+            }
 
             SwalAlert(
                 "warning",
-                error.response.data.message
+                error_msg,
+                error_html
             );
         })
         .finally(() => {

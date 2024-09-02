@@ -433,26 +433,25 @@ if (! function_exists('shiftBalances')) {
 
         $startCapital = $shift->cash_start + $shift->shiftNetworks->sum('balance_old');
 
-        $endingCapital = ($cash + $income + $tillBalances + $loanBalances) - $expenses;
-
-        $shorts = $startCapital - $endingCapital ;
-
         $cash = $cash + $income - $expenses;
 
+        $totalBalance = $cash + $tillBalances;
+
+        $shorts = $startCapital - $totalBalance ;
 
         return [
-            'totalBalance' => $endingCapital,
+            'totalBalance' => $totalBalance,
             'cashAtHand' => $cash,
             'tillBalances' => $tillBalances,
             'expenses' => ($expenses + $tillExpense),
             'networks' => $tills,
             'income' => ($cashIncome + $tillIncome),
             'startCapital' => $startCapital,
-            'endCapital' => $endingCapital,
+            'endCapital' => $totalBalance,
             'shorts' => $shorts ,
             'loanBalances' => $loanBalances,
             'total_capital' => $capital,
-            'remaining_capital' => ($capital - $endingCapital)
+            'remaining_capital' => ($totalBalance - $capital)
         ];
     }
 }

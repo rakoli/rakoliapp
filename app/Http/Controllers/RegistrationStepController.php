@@ -52,9 +52,14 @@ class RegistrationStepController extends Controller
 
     public function requestEmailCodeAjax(Request $request)
     {
+        Log::channel('agent_registration')->info("RegistrationStepController :: requestEmailCodeAjax :: Start Email Verification");
+
         $user = $request->user();
 
+        Log::channel('agent_registration')->info("RegistrationStepController :: requestEmailCodeAjax :: User Email Verification :: ".$user->email);
+
         if($user->email_verified_at != null){
+            Log::channel('agent_registration')->info("RegistrationStepController :: requestEmailCodeAjax :: Email already Verification at :: ".$user->email_verified_at);
             return [
                 'status' => 200,
                 'message' => 'Email already verified'
@@ -62,6 +67,7 @@ class RegistrationStepController extends Controller
         }
 
         if(VerifyOTP::hasActiveEmailOTP($user)){
+            Log::channel('agent_registration')->info("RegistrationStepController :: requestEmailCodeAjax :: Email otp isn't expired.");
             return [
                 'status' => 201,
                 'message' => __('Email already sent try again in '). Carbon::create($user->email_otp_time)->addSeconds(VerifyOTP::$validtime)->diffForHumans()
@@ -69,6 +75,7 @@ class RegistrationStepController extends Controller
         }
 
         if (VerifyOTP::shouldLockEmailOTP($user)) {
+            Log::channel('agent_registration')->info("RegistrationStepController :: requestEmailCodeAjax :: Account locked due to multiple try.");
             return [
                 'status' => 201,
                 'message' => __('Account locked! Reached trial limit')
@@ -76,6 +83,8 @@ class RegistrationStepController extends Controller
         }
 
         RequestEmailVerificationCode::dispatch($request->user());
+
+        Log::channel('agent_registration')->info("RegistrationStepController :: requestEmailCodeAjax :: Otp sent in email.");
 
         return [
             'status' => 200,
@@ -85,6 +94,7 @@ class RegistrationStepController extends Controller
 
     public function verifyEmailCodeAjax(Request $request)
     {
+
         $user = $request->user();
 
         if($user->email_verified_at != null){
@@ -126,9 +136,14 @@ class RegistrationStepController extends Controller
 
     public function requestPhoneCodeAjax(Request $request)
     {
+        Log::channel('agent_registration')->info("RegistrationStepController :: requestPhoneCodeAjax :: Start Phone Verification");
+
         $user = $request->user();
 
+        Log::channel('agent_registration')->info("RegistrationStepController :: requestPhoneCodeAjax :: User Email Verification :: ".$user->phone);
+
         if($user->phone_verified_at != null){
+            Log::channel('agent_registration')->info("RegistrationStepController :: requestPhoneCodeAjax :: Email already Verification at :: ".$user->phone_verified_at);
             return [
                 'status' => 200,
                 'message' => 'Phone already verified'
@@ -136,6 +151,7 @@ class RegistrationStepController extends Controller
         }
 
         if(VerifyOTP::hasActivePhoneOTP($user)){
+            Log::channel('agent_registration')->info("RegistrationStepController :: requestPhoneCodeAjax :: Phone otp isn't expired.");
             return [
                 'status' => 201,
                 'message' => __('SMS already sent try again in '). Carbon::create($user->phone_otp_time)->addSeconds(VerifyOTP::$validtime)->diffForHumans()
@@ -143,6 +159,7 @@ class RegistrationStepController extends Controller
         }
 
         if (VerifyOTP::shouldLockPhoneOTP($user)) {
+            Log::channel('agent_registration')->info("RegistrationStepController :: requestPhoneCodeAjax :: Account locked due to multiple try.");
             return [
                 'status' => 201,
                 'message' => __('Account locked! Reached trial limit')
@@ -150,6 +167,7 @@ class RegistrationStepController extends Controller
         }
 
         RequestPhoneVerificationCode::dispatch($request->user());
+        Log::channel('agent_registration')->info("RegistrationStepController :: requestPhoneCodeAjax :: Otp sent on phone.");
 
         return [
             'status' => 200,
