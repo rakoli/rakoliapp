@@ -86,22 +86,44 @@
 
     @push('js')
         <script>
-            const validations = [
-                {"name": "description", "error": "Description Field is Required", "validators": {}},
-                {"name": "location_code", "error": "Location Field is Required", "validators": {}},
-                {"name": "description", "error": "Description Field is Required", "validators": {}},
-            ];
+            jQuery(document).on("click","#close-shift-button", function(){
 
-            const form = document.getElementById('close-shift');
+                if(jQuery("body").hasClass('has_short')){
+                    var validations = [
+                        {"name": "description", "error": "Description Field is Required", "validators": {}},
+                        {"name": "location_code", "error": "Location Field is Required", "validators": {}},
+                        {"name": "short_description", "error": "Short Description Field is Required", "validators": {}},
+                    ];
+                } else {
+                    var validations = [
+                        {"name": "description", "error": "Description Field is Required", "validators": {}},
+                        {"name": "location_code", "error": "Location Field is Required", "validators": {}},
+                    ];
 
+                }
 
-            const closeShiftButton = document.getElementById('close-shift-button');
+                const closeShiftForm = document.getElementById('close-shift');
+                const closeShiftButton = document.getElementById('close-shift-button');
+                lakoriValidation(validations, closeShiftForm, closeShiftButton, 'post', '{{  route('agency.shift.close.store', $shift) }}', '{{ route('agency.shift') }}',true);
+            });
+            jQuery(document).on("click","#transfer-shift-button", function(){
+                if(jQuery("body").hasClass('has_short')){
+                    var validations = [
+                        {"name": "description", "error": "Description Field is Required", "validators": {}},
+                        {"name": "location_code", "error": "Location Field is Required", "validators": {}},
+                        {"name": "short_description", "error": "Short Description Field is Required", "validators": {}},
+                    ];
+                } else {
+                    var validations = [
+                        {"name": "description", "error": "Description Field is Required", "validators": {}},
+                        {"name": "location_code", "error": "Location Field is Required", "validators": {}},
+                    ];
 
-            lakoriValidation(validations, form, closeShiftButton, 'post', '{{  route('agency.shift.close.store', $shift) }}', '{{ route('agency.shift') }}');
-
-
-            const transferShiftButton = document.getElementById('transfer-shift-button');
-            lakoriValidation(validations, form, transferShiftButton, 'post', '{{  route('agency.shift.transfer', $shift) }}', '{{ route('agency.shift') }}');
+                }
+                const transferShiftForm = document.getElementById('close-shift');
+                const transferShiftButton = document.getElementById('transfer-shift-button');
+                lakoriValidation(validations, transferShiftForm, transferShiftButton, 'post', '{{  route('agency.shift.transfer', $shift) }}', '{{ route('agency.shift') }}',true);
+            });
         </script>
 
     @endpush
