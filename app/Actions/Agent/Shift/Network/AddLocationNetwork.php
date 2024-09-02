@@ -33,7 +33,7 @@ class AddLocationNetwork
                         'location_code' => $data['location_code'],
                         'type' => $type,
                         'crypto_code' => $data['crypto_code'],
-                        'code' => generateCode(name: $data['name'], prefixText: $data['fsp_code']),
+                        'code' => generateCode(name: $data['name'], prefixText: $data['crypto_code']),
                         'agent_no' => generateCode(name: $data['name'], prefixText: $data['crypto_code']),
                         'crypto_balance' => $data['crypto_balance'],
                         'exchange_rate' => $data['exchange_rate'],
@@ -52,22 +52,25 @@ class AddLocationNetwork
                     ])
                     ->exists();
 
-                    throw_if($networkCheck, new \Exception('Network exists with the same details in this location'));
+                    Log::info("AddLocationNetwork :: Network already exists.");
 
-                    $network = Network::create([
-                        'business_code' => auth()->user()->business_code,
-                        'location_code' => $data['location_code'],
-                        'type' => $type,
-                        'fsp_code' => $data['fsp_code'],
-                        'code' => generateCode(name: $data['name'], prefixText: $data['fsp_code']),
-                        'agent_no' => $data['agent_no'] ?? null,
-                        'balance' => $data['balance'] ?? null,
-                        'balance_currency' => currencyCode(),
-                        'name' => $data['name'],
-                        'description' => $data['description'] ?? null,
-                    ]);
+                    if($networkCheck){
+                        $network = Network::create([
+                            'business_code' => auth()->user()->business_code,
+                            'location_code' => $data['location_code'],
+                            'type' => $type,
+                            'fsp_code' => $data['fsp_code'],
+                            'code' => generateCode(name: $data['name'], prefixText: $data['fsp_code']),
+                            'agent_no' => $data['agent_no'] ?? null,
+                            'balance' => $data['balance'] ?? null,
+                            'balance_currency' => currencyCode(),
+                            'name' => $data['name'],
+                            'description' => $data['description'] ?? null,
+                        ]);
+                        
+                        Log::info("AddLocationNetwork :: Added Network :: ".print_r($network,true));
+                    }
                 }
-                Log::info("AddLocationNetwork :: Added Network :: ".print_r($network,true));
 
                 // event(new NetworkCreatedEvent(network: $network));
             });

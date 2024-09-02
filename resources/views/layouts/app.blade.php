@@ -427,12 +427,12 @@
 
         }
 
-        const SwalAlert = (icon, title, timeout = 7000) => {
+        const SwalAlert = (icon, title, html = "", timeout = 5000) => {
             Swal.fire({
-                text: title,
+                title: title,
+                html: html,
                 icon: icon,
-                buttonsStyling: false,
-                timeout: title
+                timer: timeout
             });
         }
 
