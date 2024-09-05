@@ -9,6 +9,7 @@ use App\Http\Controllers\Agent\Networks\ShowNetworkController;
 use App\Http\Controllers\Agent\Networks\UpdateNetworkController;
 use App\Http\Controllers\Agent\Shift\CloseShiftController;
 use App\Http\Controllers\Agent\Shift\Loans\AddLoanController;
+use App\Http\Controllers\Agent\Shift\Loans\LoanController;
 use App\Http\Controllers\Agent\Shift\Loans\PayLoanController;
 use App\Http\Controllers\Agent\Shift\Loans\ShowLoanController;
 use App\Http\Controllers\Agent\Shift\OpenShiftController;
@@ -51,6 +52,7 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
             Route::prefix('/{shift}/loans')->group(function () {
                 Route::get('/{loan}/', ShowLoanController::class)->name('agency.loans.show');
                 Route::post('/{loan}/', PayLoanController::class)->name('agency.loans.pay');
+                Route::get('{loan}/statement',[LoanController::class,'exportStatement'])->name('agency.loans.statement');
             });
             Route::prefix('transactions/{shift}')->group(function () {
                 Route::post('add-transaction', AddTransactionController::class)->name('agency.transactions.add.transaction');
