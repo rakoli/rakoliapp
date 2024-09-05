@@ -178,6 +178,13 @@ class HomeController extends Controller
 
             $stats['highlights']['referrals'] = number_format($statisticsService->businessNoOfReferrals());
 
+
+            //Branch Overview Dashboard
+            $summary = $statisticsService->businessOverview();
+            $stats['bussiness_summary'] = $summary['bussiness'];
+            $stats['branch_summary'] = $summary['branches'];
+
+
             return DynamicResponse::sendResponse(function() use ($dataTableHtml, $stats) {
                 return view('dashboard.agent', compact('dataTableHtml', 'stats'));
             },function() use ($stats) {

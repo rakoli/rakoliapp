@@ -150,8 +150,6 @@
 
             <!--begin::Col-->
             <div class="col-md-6 col-lg-6 col-xl-6 col-xxl-3 mb-md-5 mb-xl-10">
-
-
                 <!--begin::Card widget 3-->
                 <div class="card card-flush h-md-50 mb-5 mb-xl-10">
                     <!--begin::Header-->
@@ -309,7 +307,6 @@
                                                     <span class="me-2">Welcome to the leading
                                                     <br />
                                                     <span class="position-relative d-inline-block text-danger">
-    {{--													<a href="../../demo6/dist/pages/user-profile/overview.html" class="text-danger opacity-75-hover">Pro Plan</a>--}}
                                                         <!--begin::Separator-->
                                                         <span class="position-absolute opacity-15 bottom-0 start-0 border-4 border-danger border-bottom w-100"></span>
                                                         <!--end::Separator-->
@@ -341,6 +338,111 @@
             </div>
             <!--end::Col-->
 
+        </div>
+        <!--end::Row-->
+
+        <!--begin::Row-->
+        <div class="row g-5 gx-xl-10 mb-5 mb-xl-10 align-start">
+            <!--begin::Table widget 1-->
+            <div class="card card-flush mb-xxl-10">
+                <!--begin::Header-->
+                <div class="card-header pt-5">
+                    <!--begin::Title-->
+                    <h3 class="card-title align-items-start flex-column">
+                        <span class="card-label fw-bold text-dark">Summary</span>
+                    </h3>
+                    <!--end::Title-->
+                </div>
+                <!--end::Header-->
+                <!--begin::Body-->
+                <div class="card-body">
+                    <!--begin::Tab Content-->
+                    <div class="tab-content">
+                        <!--begin::Tap pane-->
+                        <div class="tab-pane fade show active">
+                            <!--begin::Table container-->
+                            <div class="table-responsive">
+                                <!--begin::Table-->
+                                <table class="table align-middle gs-0 gy-4 my-0">
+                                    <!--begin::Table head-->
+                                    <thead>
+                                        @foreach ($stats['bussiness_summary'] as $key => $branch)
+                                        <tr>
+                                            <td>
+                                                <span class="text-gray-800 fs-7 fw-bold">{!! $branch['name'] !!}</span>
+                                            </td>
+                                            <td>
+                                                <span class="text-gray-800 fs-7 fw-bold">{{session('currency').' '.number_format($branch['physical_balance'],2)}}</span>
+                                            </td>
+                                            <td>
+                                                <span class="text-gray-800 fs-7 fw-bold">{{session('currency').' '.number_format($branch['credit'],2)}}</span>
+                                            </td>
+                                            <td>
+                                                <span class="text-gray-800 fs-7 fw-bold">{{session('currency').' '.number_format($branch['debit'],2)}}</span>
+                                            </td>
+                                            <td>
+                                                <span class="text-gray-800 fs-7 fw-bold">{{session('currency').' '.number_format($branch['total_balance'],2)}}</span>
+                                            </td>
+                                            <td>
+                                                <span class="text-gray-800 fs-7 fw-bold">{{session('currency').' '.number_format($branch['capital'],2)}}</span>
+                                            </td>
+                                            <td>
+                                                <span class="text-gray-800 fs-7 fw-bold">{{session('currency').' '.number_format($branch['differ'],2)}}</span>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                        <tr class="fs-7 fw-bold text-gray-500">
+                                            <th class="pe-0 min-w-120px pt-3">branch Name</th>
+                                            <th class="pe-0 min-w-120px pt-3">Physical Balance (Cash + Till)</th>
+                                            <th class="pe-0 min-w-120px pt-3">Credit</th>
+                                            <th class="pe-0 min-w-120px pt-3">Debit</th>
+                                            <th class="pe-0 min-w-120px pt-3">Total Balance</th>
+                                            <th class="pe-0 min-w-120px pt-3">Captial</th>
+                                            <th class="pe-0 min-w-120px pt-3">Differ</th>
+                                        </tr>
+                                    </thead>
+                                    <!--end::Table head-->
+                                    <!--begin::Table body-->
+                                    <tbody>
+                                        @foreach ($stats['branch_summary'] as $key => $branch)
+                                            <tr>
+                                                <td>
+                                                    <span class="text-gray-800 fs-7">{!! $branch['name'] !!}</span>
+                                                </td>
+                                                <td>
+                                                    <span class="text-gray-800 fs-7">{{session('currency').' '.number_format($branch['physical_balance'],2)}}</span>
+                                                </td>
+                                                <td>
+                                                    <span class="text-gray-800 fs-7">{{session('currency').' '.number_format($branch['credit'],2)}}</span>
+                                                </td>
+                                                <td>
+                                                    <span class="text-gray-800 fs-7">{{session('currency').' '.number_format($branch['debit'],2)}}</span>
+                                                </td>
+                                                <td>
+                                                    <span class="text-gray-800 fs-7">{{session('currency').' '.number_format($branch['total_balance'],2)}}</span>
+                                                </td>
+                                                <td>
+                                                    <span class="text-gray-800 fs-7">{{session('currency').' '.number_format($branch['capital'],2)}}</span>
+                                                </td>
+                                                <td>
+                                                    <span class="text-gray-800 fs-7">{{session('currency').' '.number_format($branch['differ'],2)}}</span>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                    <!--end::Table body-->
+                                </table>
+                                <!--end::Table-->
+                            </div>
+                            <!--end::Table container-->
+                        </div>
+                        <!--end::Tap pane-->
+                    </div>
+                    <!--end::Tab Content-->
+                </div>
+                <!--end: Card Body-->
+            </div>
+            <!--end::Table widget 1-->
         </div>
         <!--end::Row-->
 
