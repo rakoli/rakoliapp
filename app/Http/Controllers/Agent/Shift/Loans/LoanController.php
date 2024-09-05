@@ -45,6 +45,6 @@ class LoanController extends Controller
         Log::info('generate_receipt_pdf starts');
         $loan = Loan::with(['payments'])->where('id',$id)->first()->toArray();
         $pdf = Pdf::loadView('agent.agency.loans.statement', array('loan' => $loan));
-        return $pdf->download($loan['code'].".pdf");
+        return $pdf->stream($loan['code'].".pdf");
     }
 }
