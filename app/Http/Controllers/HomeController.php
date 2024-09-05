@@ -182,7 +182,7 @@ class HomeController extends Controller
             //Branch Overview Dashboard
             $summary = $statisticsService->businessOverview();
             $stats['bussiness_summary'] = $summary['bussiness'];
-            $stats['branch_summary'] = $summary['branches'];
+            $stats['branch_summary'] = $summary['branches'] ?? [];
 
 
             return DynamicResponse::sendResponse(function() use ($dataTableHtml, $stats) {

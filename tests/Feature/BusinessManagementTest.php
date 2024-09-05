@@ -219,6 +219,7 @@ class BusinessManagementTest extends TestCase
         $editPostData = [
             'branches_id' => $location->id,
             'name' => 'edited name',
+            'capital' => 10000,
             'balance' => 10000,
             'availability_desc' => fake()->sentence.'_edited',
             'ad_region' => $region->code,
@@ -234,6 +235,7 @@ class BusinessManagementTest extends TestCase
             'code' => $location->code,
             'business_code' => $user->business_code,
             'name' => $editPostData['name'],
+            'capital' =>$editPostData['capital'],
             'balance' => $editPostData['balance'],
             'balance_currency' => $location->balance_currency,
             'region_code' => $region->code,
