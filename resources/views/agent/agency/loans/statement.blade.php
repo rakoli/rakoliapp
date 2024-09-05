@@ -33,9 +33,9 @@
         <div style="width: 100%">
             <table cellpadding="0" cellspacing="0" class="header-table" style="width: 100%; font-size: 9pt">
                 <tbody>
-                    <tr style="background-color:#000">
-                        <td colspan="4" style="text-align: center; border-bottom: 1px solid #000; padding: 5px;">
-                            <img src="{{ public_path().'/assets/media/logo-rakoli/logo_white.svg' }}" alt="BNB" style="max-height: 80px; background-color:#000" />
+                    <tr>
+                        <td colspan="4" style="text-align: center; border-bottom: 1px solid #000; padding: 5px;font-size:30px;font-weight:700">
+                            {{ Auth::user()->business->business_name}}
                         </td>
                     </tr>
                     @php
