@@ -3,12 +3,17 @@
 namespace App\Http\Controllers\Agent\Shift\Loans;
 
 use App\Http\Controllers\Controller;
+use App\Models\Loan;
 use App\Models\Location;
 use App\Models\Network;
 use App\Models\Shift;
 use App\Utils\Datatables\Agent\Shift\LoanDatatable;
 use App\Utils\Enums\ShiftStatusEnum;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Html\Builder;
 
 class LoanController extends Controller
@@ -34,5 +39,12 @@ class LoanController extends Controller
             'networks' => $networks,
             'hasOpenShift' => $hasOpenShift,
         ]);
+    }
+
+    public function exportStatement($shift,$id) {
+        Log::info('generate_receipt_pdf starts');
+        $loan = Loan::with(['payments'])->where('id',$id)->first()->toArray();
+        $pdf = Pdf::loadView('agent.agency.loans.statement', array('loan' => $loan));
+        return $pdf->stream($loan['code'].".pdf");
     }
 }

@@ -51,8 +51,15 @@ class LoanDatatable implements HasDatatable
             })
             ->addColumn('action', fn (Loan $loan) => (new self())->buttons([
 
-                'pay' => [
+                'Pay' => [
                     'route' => route('agency.loans.show', [
+                        'shift' => $loan->shift,
+                        'loan' => $loan,
+                    ]),
+                    'attributes' => '',
+                ],
+                'Statement' => [
+                    'route' => route('agency.loans.statement', [
                         'shift' => $loan->shift,
                         'loan' => $loan,
                     ]),

@@ -9,6 +9,7 @@
         "ext-simplexml": "*",
         "africastalking/africastalking": "^3.0",
         "akaunting/laravel-money": "^5.1",
+        "barryvdh/laravel-dompdf": "^3.0",
         "bugsnag/bugsnag-laravel": "^2.26",
         "flugger/laravel-responder": "^3.4",
         "guzzlehttp/guzzle": "^7.2",
