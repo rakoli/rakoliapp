@@ -436,11 +436,14 @@ if (! function_exists('shiftBalances')) {
         $cash = $cash + $income - $expenses;
 
         $totalBalance = $cash + $tillBalances;
+        
+        $netBalance = $totalBalance + $loanBalances;
 
         $shorts = $startCapital - $totalBalance ;
 
         return [
             'totalBalance' => $totalBalance,
+            'netBalance' => $netBalance,
             'cashAtHand' => $cash,
             'tillBalances' => $tillBalances,
             'expenses' => ($expenses + $tillExpense),
@@ -450,8 +453,10 @@ if (! function_exists('shiftBalances')) {
             'endCapital' => $totalBalance,
             'shorts' => $shorts ,
             'loanBalances' => $loanBalances,
-            'total_capital' => $capital,
-            'remaining_capital' => ($totalBalance - $capital)
+            'capital' => $capital,
+            'differ' => ($totalBalance - $capital),
+            'netDiffer' => ($netBalance - $capital)
+
         ];
     }
 }

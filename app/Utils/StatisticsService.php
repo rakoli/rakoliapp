@@ -17,6 +17,7 @@ use App\Models\VasPayment;
 use App\Models\VasTask;
 use App\Utils\Enums\ExchangeStatusEnum;
 use App\Utils\Enums\ExchangeTransactionStatusEnum;
+use App\Utils\Enums\LoanTypeEnum;
 use App\Utils\Enums\ShiftStatusEnum;
 use App\Utils\Enums\TransactionCategoryEnum;
 use App\Utils\Enums\TransactionTypeEnum;
@@ -54,6 +55,16 @@ class StatisticsService
     public function businessTotalLoanBalance()
     {
         return Loan::where('business_code',$this->user->business_code)->get()->sum('balance');
+    }
+    
+    public function locationTotalCreditLoan($location_code)
+    {
+        return Loan::where('location_code',$location_code)->where('type',LoanTypeEnum::MONEY_IN)->get()->sum('balance');
+    }
+
+    public function locationTotalDebitLoan($location_code)
+    {
+        return Loan::where('location_code',$location_code)->where('type',LoanTypeEnum::MONEY_OUT)->get()->sum('balance');
     }
 
     public function agentNoOfAwardedVasContract()
@@ -203,6 +214,28 @@ class StatisticsService
             }
         }
         return $totalInactive;
+    }
+
+    public function businessOverview()
+    {
+        $data['bussiness'][0]['name'] = $this->user->business->business_name;
+        $data['bussiness'][0]['physical_balance'] = 0;
+        $data['bussiness'][0]['credit'] = 0;
+        $data['bussiness'][0]['debit'] = 0;
+        $data['bussiness'][0]['total_balance'] = 0;
+        $data['bussiness'][0]['capital'] = 0;
+        $data['bussiness'][0]['differ'] = 0;
+
+        foreach($this->user->business->locations as $key => $location) {
+            $data['branches'][$key]['name'] = $location->name;
+            $data['bussiness'][0]['physical_balance'] += $data['branches'][$key]['physical_balance'] = $location->balance + $location->networks->sum('balance');
+            $data['bussiness'][0]['credit'] += $data['branches'][$key]['credit'] = $this->locationTotalCreditLoan($location->code);
+            $data['bussiness'][0]['debit'] += $data['branches'][$key]['debit'] = $this->locationTotalDebitLoan($location->code);
+            $data['bussiness'][0]['total_balance'] += $data['branches'][$key]['total_balance'] = $data['branches'][$key]['physical_balance'] + $data['branches'][$key]['credit'] - $data['branches'][$key]['debit'] ;
+            $data['bussiness'][0]['capital'] += $data['branches'][$key]['capital'] = $location->capital;
+            $data['bussiness'][0]['differ'] += $data['branches'][$key]['differ'] = $data['branches'][$key]['total_balance'] - $location->capital;
+        }
+        return $data;
     }
 
 }

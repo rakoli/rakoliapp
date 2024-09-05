@@ -138,8 +138,8 @@
                                 <div class="card-title d-flex flex-column">
                                     <!--begin::Amount-->
                                     <span class="fs-2hx fw-bold text-white me-2 lh-1 ls-n2"  data-kt-countup="true"
-                                          data-kt-countup-value="{{ number_format($total_capital , 2) }}"
-                                          data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">{{number_format($total_capital , 2)}}</span>
+                                          data-kt-countup-value="{{ number_format($capital , 2) }}"
+                                          data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">{{number_format($capital , 2)}}</span>
                                     <!--end::Amount-->
                                     <!--begin::Subtitle-->
                                     <span class="text-white pt-1 fw-semibold fs-6">{{ __('Total Capital') }} in {{currencyCode()}}</span>
@@ -163,8 +163,8 @@
                                 <div class="card-title d-flex flex-column">
                                     <!--begin::Amount-->
                                     <span class="fs-2hx fw-bold text-white me-2 lh-1 ls-n2"  data-kt-countup="true"
-                                          data-kt-countup-value="{{ number_format($remaining_capital , 2) }}"
-                                          data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">{{number_format($remaining_capital , 2)}}</span>
+                                          data-kt-countup-value="{{ number_format($differ , 2) }}"
+                                          data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">{{number_format($differ , 2)}}</span>
                                     <!--end::Amount-->
                                     <!--begin::Subtitle-->
                                     <span class="text-white pt-1 fw-semibold fs-6">{{ __('Differ') }} in {{currencyCode()}}</span>
@@ -178,6 +178,55 @@
                     </div>
                     <!--end::Col-->
 
+                    {{-- <!--begin::Col-->
+                    <div class="col-md-3 col-xl-3 mb-md-5 mb-xl-5 mt-0">
+                        <!--begin::Card widget-->
+                        <div class="card bg-primary">
+                            <!--begin::Header-->
+                            <div class="card-header">
+                                <!--begin::Title-->
+                                <div class="card-title d-flex flex-column">
+                                    <!--begin::Amount-->
+                                    <span class="fs-2hx fw-bold text-white me-2 lh-1 ls-n2"  data-kt-countup="true"
+                                          data-kt-countup-value="{{ number_format($netBalance , 2) }}"
+                                          data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">{{number_format($netBalance , 2)}}</span>
+                                    <!--end::Amount-->
+                                    <!--begin::Subtitle-->
+                                    <span class="text-white pt-1 fw-semibold fs-6">{{ __('Net Balance') }} in {{currencyCode()}}</span>
+                                    <!--end::Subtitle-->
+                                </div>
+                                <!--end::Title-->
+                            </div>
+                            <!--end::Header-->
+                        </div>
+                        <!--end::Card widget-->
+                    </div>
+                    <!--end::Col-->
+
+                    <!--begin::Col-->
+                    <div class="col-md-3 col-xl-3 mb-md-5 mb-xl-5 mt-0">
+                        <!--begin::Card widget-->
+                        <div class="card bg-primary">
+                            <!--begin::Header-->
+                            <div class="card-header">
+                                <!--begin::Title-->
+                                <div class="card-title d-flex flex-column">
+                                    <!--begin::Amount-->
+                                    <span class="fs-2hx fw-bold text-white me-2 lh-1 ls-n2"  data-kt-countup="true"
+                                          data-kt-countup-value="{{ number_format($netDiffer , 2) }}"
+                                          data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">{{number_format($netDiffer , 2)}}</span>
+                                    <!--end::Amount-->
+                                    <!--begin::Subtitle-->
+                                    <span class="text-white pt-1 fw-semibold fs-6">{{ __('Net Differ') }} in {{currencyCode()}}</span>
+                                    <!--end::Subtitle-->
+                                </div>
+                                <!--end::Title-->
+                            </div>
+                            <!--end::Header-->
+                        </div>
+                        <!--end::Card widget-->
+                    </div>
+                    <!--end::Col--> --}}
                 </div>
                 <!--end::Row-->
             </div>

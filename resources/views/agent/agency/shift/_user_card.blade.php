@@ -169,7 +169,7 @@
                 @endforeach
                 <div
                     class="text-gray-600 mt-15 fw-bold text-lg-end  border-bottom-3 border-dashed py-lg-2 px-lg-3 border-primary">
-                    <span>{{ money(amount: $totalBalance , convert: true, currency: currencyCode()) }}</span>
+                    <span>{{ money(amount: $netBalance , convert: true, currency: currencyCode()) }}</span>
                 </div>
             </div>
         </div>
