@@ -65,6 +65,8 @@
                                 @include('layouts.menus.vas')
                             @elseif(session('type') == 'agent')
                                 @include('layouts.menus.agent')
+                            @elseif(session('type') == 'sales')
+                                @include('layouts.menus.sales')
                             @endif
                         </div>
                         <!--end::Menu-->

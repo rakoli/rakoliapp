@@ -206,8 +206,15 @@ var KTSignupGeneral = function() {
                         })
                     })).catch((function(e) {
                         console.log('shida',e.response.data.message,e)
+                        var error_msg = "Something went wrong, please try again.";
+                        if ('error' in e.response.data){
+                            error_msg = e.response.data.error.message;
+                        } else if('message' in e.response.data) {
+                            error_msg = e.response.data.message;
+                        }
+                    
                         Swal.fire({
-                            text: e.response.data.message,
+                            text: error_msg,
                             icon: "error",
                             buttonsStyling: !1,
                             confirmButtonText: "Ok, got it!",

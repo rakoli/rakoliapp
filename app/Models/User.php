@@ -9,6 +9,7 @@ use App\Mail\WelcomeMail;
 use App\Utils\Enums\InitiatedPaymentStatusEnum;
 use App\Utils\Enums\UserTypeEnum;
 use App\Utils\Traits\BusinessAuthorization;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -38,6 +39,11 @@ class User extends Authenticatable
         'phone',
         'code', // Add the 'code' attribute for user registration
         'referral_business_code',
+        'isowner',
+        'registration_step',
+        'phone_verified_at',
+        'email_verified_at',
+        'id_verified_at',
     ];
 
     protected $hidden = [
@@ -46,7 +52,7 @@ class User extends Authenticatable
     ];
 
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'email_verified_at',
         'password' => 'hashed',
     ];
 
@@ -206,8 +212,12 @@ class User extends Authenticatable
 
     public static function addUser($data)
     {
-        $country_code = Country::where('dialing_code',$data['country_dial_code'])->first()->code;
-        $country_dial_code = substr($data['country_dial_code'], 1);
+        if(array_key_exists('country_code', $data)){
+            $country = Country::where('code',$data['country_code'])->first();
+        } else {
+            $country = Country::where('dialing_code',$data['country_dial_code'])->first();
+        }
+        $country_dial_code = substr($country->dialing_code,1);
         $plainPhone = null;
         if (str_starts_with($data['phone'], '0')) {
             $plainPhone = substr($data['phone'], 1);
@@ -221,15 +231,20 @@ class User extends Authenticatable
             $referralBusinessCode = $data['referral_business_code'];
         }
         return User::create([
-            'country_code' => $country_code,
-            'code' => generateCode($data['fname'].' '.$data['lname'],$country_code),
-            'type' => UserTypeEnum::AGENT->value,
+            'country_code' => $country->code,
+            'code' => generateCode($data['fname'].' '.$data['lname'],$country->code),
+            'type' => isset($data['type']) ? $data['type'] : UserTypeEnum::AGENT->value,
             'fname' => $data['fname'],
             'lname' => $data['lname'],
             'phone' => $fullPhone,
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'referral_business_code' => $referralBusinessCode,
+            'isowner' => isset($data['type']) ? 1 : 0,
+            'registration_step' => isset($data['type']) ? 0 : 1,
+            'phone_verified_at' => isset($data['type'])  ? Carbon::now() : NULL,
+            'email_verified_at' => isset($data['type']) ? Carbon::now() : NULL,
+            'id_verified_at' => isset($data['type']) ? Carbon::now() : NULL,
         ]);
     }
 

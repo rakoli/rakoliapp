@@ -7,4 +7,6 @@ enum UserTypeEnum: string
     case ADMIN = 'admin';
     case AGENT = 'agent';
     case VAS = 'vas';
+    case SALES = 'sales';
+
 }
