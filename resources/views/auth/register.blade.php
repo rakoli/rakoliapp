@@ -114,12 +114,21 @@
             <!--end::Repeat Password-->
         </div>
         <!--end::Input group=-->
-        <div class="fv-row mb-8">
-            <!--begin::Hint-->
-            <div class="text-muted">{{ __("You have been referred by")." \"$referrerName\"" }}</div>
-            <!--end::Hint-->
-            <input name="referral_business_code" placeholder="{{ __("Referral Code") }}" class="form-control bg-transparent" type="text" value="{{$referrer}}" />
-        </div>
+        @if($hasReferral)
+            <div class="fv-row mb-8">
+                <!--begin::Hint-->
+                <div class="text-muted">{{ __("You have been referred by")." \"$referrerName\"" }}</div>
+                <!--end::Hint-->
+            </div>
+            <input name="referral_business_code" type="hidden" value="{{$referrer}}" />
+        @else
+            <div class="fv-row mb-8">
+                <!--begin::Hint-->
+                <div class="text-muted">{{ __("You have been referred by")." \"$referrerName\"" }}</div>
+                <!--end::Hint-->
+                <input name="referral_business_code" placeholder="{{ __("Referral Code") }}" class="form-control bg-transparent" type="text" />
+            </div>
+        @endif
         <!--begin::Accept-->
         <div class="fv-row mb-8">
             <label class="form-check form-check-inline">
