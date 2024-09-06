@@ -20,6 +20,7 @@ class Business extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'type',
         'country_code',
         'code',
         'business_name',
@@ -30,6 +31,9 @@ class Business extends Model
         'business_email',
         'business_location',
         'referral_business_code',
+        'is_verified',
+        'package_code',
+        'package_expiry_at'
     ];
 
     public static function addBusiness($data,$user=null)

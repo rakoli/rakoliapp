@@ -10,11 +10,17 @@ Route::name('admin.')->prefix('admin')->middleware(['auth', 'onlyadmin'])->group
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard'); //For Middleware testing and having a special user type dashboard route
 
     //BUSINESS MODDULE
-    Route::group(['prefix' => 'business', 'route' => 'business.'], function () {
+    Route::name('business.')->prefix('business')->group(function () {
 
-        Route::get('listbusiness', [App\Http\Controllers\Admin\BusinessController::class, 'listbusiness'])->name('business.listbusiness');
-        Route::get('listusers', [App\Http\Controllers\Admin\BusinessController::class, 'listusers'])->name('business.listusers');
-        Route::get('registeringuser', [App\Http\Controllers\Admin\BusinessController::class, 'registeringuser'])->name('business.registeringuser');
+        Route::get('listbusiness', [App\Http\Controllers\Admin\BusinessController::class, 'listbusiness'])->name('listbusiness');
+        Route::get('listusers', [App\Http\Controllers\Admin\BusinessController::class, 'listusers'])->name('listusers');
+        Route::get('registeringuser', [App\Http\Controllers\Admin\BusinessController::class, 'registeringuser'])->name('registeringuser');
+
+        Route::name('users.')->prefix('users')->group(function () {
+            Route::get('sales', [App\Http\Controllers\Admin\BusinessController::class, 'salesUsers'])->name('sales');
+            Route::get('create', [App\Http\Controllers\Admin\BusinessController::class, 'CreateUser'])->name('create');
+            Route::post('store', [App\Http\Controllers\Admin\BusinessController::class, 'storeUser'])->name('store');
+        });
 
     });
     //END: EXCHANGE MODULE
