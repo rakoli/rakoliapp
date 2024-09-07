@@ -52,9 +52,8 @@ class AddLocationNetwork
                     ])
                     ->exists();
 
-                    Log::info("AddLocationNetwork :: Network already exists.");
 
-                    if($networkCheck){
+                    if(!$networkCheck){
                         $network = Network::create([
                             'business_code' => auth()->user()->business_code,
                             'location_code' => $data['location_code'],
@@ -69,6 +68,8 @@ class AddLocationNetwork
                         ]);
                         
                         Log::info("AddLocationNetwork :: Added Network :: ".print_r($network,true));
+                    } else {
+                        Log::info("AddLocationNetwork :: Network already exists.");
                     }
                 }
 
