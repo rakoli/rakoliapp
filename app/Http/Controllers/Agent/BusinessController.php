@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use App\Utils\VerifyOTP;
+use Carbon\Carbon;
 use TimeHunter\LaravelGoogleReCaptchaV3\Validations\GoogleReCaptchaV3ValidationRule;
 
 class BusinessController extends Controller
@@ -497,6 +498,9 @@ class BusinessController extends Controller
             'business_code' => $request->user()->business_code,
             'code' => generateCode($request->fname, $request->user()->business_code),
             'registration_step' => 0,
+            'phone_verified_at' => Carbon::now(),
+            'email_verified_at' => Carbon::now(),
+            'id_verified_at' => Carbon::now(),
         ];
         $newUser = User::create($usersData);
 

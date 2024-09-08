@@ -38,6 +38,10 @@ class User extends Authenticatable
         'phone',
         'code', // Add the 'code' attribute for user registration
         'referral_business_code',
+        'registration_step',
+        'phone_verified_at',
+        'email_verified_at',
+        'id_verified_at',
     ];
 
     protected $hidden = [
