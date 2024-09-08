@@ -131,7 +131,7 @@ class BusinessController extends Controller
             DB::rollback();
             Log::debug("SALES USER ERROR: ".$exception->getMessage());
             Bugsnag::notifyException($exception);
-            return false;
+            return redirect()->back()->withError(['message' => 'Something went wrong, please try after sometime.']);
         }
     }
 }
