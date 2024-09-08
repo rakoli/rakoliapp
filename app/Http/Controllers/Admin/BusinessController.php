@@ -76,7 +76,7 @@ class BusinessController extends Controller
             'fname' => 'required',
             'lname' => 'required',
             'business_phone_number' => 'required|numeric',
-            'business_email' => 'required|string|email|unique:businesses',
+            'business_email' => 'required|string|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
             'business_location' => 'required',
         ], [
