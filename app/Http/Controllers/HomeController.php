@@ -192,6 +192,11 @@ class HomeController extends Controller
             });
         }
 
+        //Sales DASHBOARD
+        if ($user->type == UserTypeEnum::SALES->value) {
+            return view('dashboard.sales');
+        }
+
         return 'INVALID DASHBOARD REQUEST';
     }
 

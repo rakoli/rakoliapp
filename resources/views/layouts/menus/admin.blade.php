@@ -59,6 +59,12 @@
                     </span>
                     <span class="menu-title">{{__('Registering Users')}}</span>
                 </a>
+                <a class="menu-link" href="{{route('admin.business.users.sales')}}">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{__('Sales User')}}</span>
+                </a>
             </div>
             <!--end:Menu sub-->
         </div>
