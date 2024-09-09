@@ -29,7 +29,7 @@ class Shift extends Model
     {
         static::addGlobalScope(new LocationScoped());
         static::addGlobalScope(new BusinessScoped());
-        static::addGlobalScope(new UserScoped());
+        // static::addGlobalScope(new UserScoped());
     }
 
     public function user(): BelongsTo

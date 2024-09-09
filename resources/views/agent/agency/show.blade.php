@@ -92,7 +92,7 @@
                                           data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">{{number_format($income , 2)}}</span>
                                     <!--end::Amount-->
                                     <!--begin::Subtitle-->
-                                    <span class="text-white pt-1 fw-semibold fs-6">{{ __('Cash IN') }} in {{currencyCode()}}</span>
+                                    <span class="text-white pt-1 fw-semibold fs-6">{{ __('Debit (cash in)') }} in {{currencyCode()}}</span>
                                     <!--end::Subtitle-->
                                 </div>
                                 <!--end::Title-->
@@ -117,7 +117,7 @@
                                           data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">-{{number_format($expenses , 2)}}</span>
                                     <!--end::Amount-->
                                     <!--begin::Subtitle-->
-                                    <span class="text-white pt-1 fw-semibold fs-6">{{ __('Cash OUT') }} in {{currencyCode()}}</span>
+                                    <span class="text-white pt-1 fw-semibold fs-6">{{ __('Credit (cash out)') }} in {{currencyCode()}}</span>
                                     <!--end::Subtitle-->
                                 </div>
                                 <!--end::Title-->
