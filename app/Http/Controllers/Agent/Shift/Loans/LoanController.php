@@ -43,7 +43,7 @@ class LoanController extends Controller
 
     public function exportStatement($shift,$id) {
         Log::info('generate_receipt_pdf starts');
-        $loan = Loan::with(['payments'])->where('id',$id)->first()->toArray();
+        $loan = Loan::with(['network','payments','payments.network'])->where('id',$id)->first()->toArray();
         $pdf = Pdf::loadView('agent.agency.loans.statement', array('loan' => $loan));
         return $pdf->stream($loan['code'].".pdf");
     }

@@ -34,7 +34,7 @@
             <table cellpadding="0" cellspacing="0" class="header-table" style="width: 100%; font-size: 9pt">
                 <tbody>
                     <tr>
-                        <td colspan="4" style="text-align: center; border-bottom: 1px solid #000; padding: 5px;font-size:30px;font-weight:700">
+                        <td colspan="5" style="text-align: center; border-bottom: 1px solid #000; padding: 5px;font-size:30px;font-weight:700">
                             {{ Auth::user()->business->business_name}}
                         </td>
                     </tr>
@@ -46,12 +46,14 @@
                     <tr style="border-bottom:1px solid #000">
                         <th>Date</th>
                         <th>Name</th>
+                        <th>Type</th>
                         <th>Credit</th>
                         <th>Paid </th>
                     </tr>
                     <tr style="text-align:center;">
                         <td>{!! Carbon\Carbon::parse($loan['created_at'])->format('d.m.Y') !!}</td>
                         <td>paid</td>
+                        <td>{!! $loan['network'] ? $loan['network']['name'] : "Cash" !!}</td>
                         <td>0</td>
                         <td>{!! money($loan['amount'], currencyCode(), true) !!}</td>
                     </tr>
@@ -60,18 +62,18 @@
                         <tr style="text-align:center;">
                             <td>{!! Carbon\Carbon::parse($payment['created_at'])->format('d.m.Y') !!}</td>
                             <td>Payment</td>
+                            <td>{!! $payment['network'] ? $payment['network']['name'] : "Cash" !!}</td>
                             <td>{!! money($payment['amount'], currencyCode(), true) !!}</td>
                             <td>0</td>
                         </tr>
                     @endforeach
                     <tr style="text-align:center;border-top:1px solid #000">
-                        <td></td>
-                        <td></td>
+                        <td colspan=3></td>
                         <td>{!! money($totalcredit, currencyCode(), true) !!}</td>
                         <td>{!! money($totalpaid, currencyCode(), true) !!}</td>
                     </tr>
                     <tr style="text-align:center;border-top:1px solid #000">
-                        <td colspan="2" style="font-size:18px">Statement</td>
+                        <td colspan="3" style="font-size:18px">Statement</td>
                         <td colspan="2" style="font-size:30px;font-weight:700">{!! money(($totalpaid - $totalcredit), currencyCode(), true) !!}</td>
                     </tr>
                 </tbody>
