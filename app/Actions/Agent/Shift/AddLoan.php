@@ -30,7 +30,6 @@ class AddLoan
             throw_if(condition: $shift->status != ShiftStatusEnum::OPEN,
                 exception: new \Exception('You cannot transact without an open shift')
             );
-            $data['type'] = isset($data['type']) ? $data['type'] : "money_out";
             $loan = Loan::create([
                 'business_code' => auth()->user()->business_code,
                 'location_code' => $shift->location_code,
@@ -47,7 +46,7 @@ class AddLoan
             
             $source = FundSourceEnums::tryFrom($data['source']);
             $type = LoanTypeEnum::tryFrom($data['type']);
-            if ($source === FundSourceEnums::TILL && $type === LoanTypeEnum::MONEY_IN) {
+            if ($source === FundSourceEnums::TILL) {
                 [$newBalance, $oldBalance] = match ($data['type']) {
                     LoanTypeEnum::MONEY_IN->value => AddLoan::moneyIn(shift: $shift, data: $data, isLoan: true),
                     LoanTypeEnum::MONEY_OUT->value => AddLoan::moneyOut(shift: $shift, data: $data, isLoan: true),
@@ -66,7 +65,6 @@ class AddLoan
                     newBalance: $newBalance
                 );
             }else {
-                $data['type'] = LoanTypeEnum::MONEY_IN->value;
                 [$newBalance, $oldBalance] = match ($data['type']) {
                     LoanTypeEnum::MONEY_IN->value => AddLoan::cashMoneyIn(shift: $shift, data: $data, isLoan: true),
                     LoanTypeEnum::MONEY_OUT->value => AddLoan::cashMoneyOut(shift: $shift, data: $data, isLoan: true),
@@ -77,9 +75,6 @@ class AddLoan
                     LoanTypeEnum::MONEY_OUT->value => TransactionTypeEnum::MONEY_IN,
                 };
                 
-                
-
-
                 $this->createShiftCashTransaction(
                     shift: $shift,
                     data: $data,

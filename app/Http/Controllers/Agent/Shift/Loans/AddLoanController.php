@@ -6,6 +6,7 @@ use App\Actions\Agent\Shift\AddLoan;
 use App\Http\Controllers\Controller;
 use App\Models\Loan;
 use App\Models\Shift;
+use App\Utils\Enums\ShiftStatusEnum;
 use App\Utils\Enums\TransactionCategoryEnum;
 use Illuminate\Http\Request;
 
@@ -26,8 +27,8 @@ class AddLoanController extends Controller
         $validated = $request->validate([
             'amount' => 'required',
             'source' => 'required',
+            'type' => 'required',
             'network_code' => 'required_if:source,TILL',
-            'type' => 'required_if:source,TILL',
             'notes' => 'nullable|string|max:255',
             'description' => 'required|string|max:255',
         ], [
@@ -40,6 +41,11 @@ class AddLoanController extends Controller
             throw_if(
                 ! $shift->created_at->isToday(),
                 new \Exception('You must close previous Day shift to make this Transaction')
+            );
+
+            throw_if(
+                $shift->status != ShiftStatusEnum::OPEN, 
+                new \Exception('You cannot transact without an open shift')
             );
 
             $validated['category'] = TransactionCategoryEnum::GENERAL;
