@@ -29,41 +29,7 @@
                     @enderror
                 </div>
 
-                
                 <div class="col-6 mt-md-4">
-                    <x-label class="" label="{{ __('Fund Source') }}" for="source"/>
-                    <x-select2
-                        modalId="add-loan"
-                        name="source"
-                        placeholder="{{ __('source: e.g Cash ') }}"
-                        id="source"
-                    >
-                        @foreach(\App\Utils\Enums\FundSourceEnums::cases() as $source)
-                            <option
-                                value="{{ $source->value }}"
-                                data-source="{{ $source->value }}"
-                            >{{ str($source->name)->title()->value()  }}</option>
-                        @endforeach
-                    </x-select2>
-                    <x-helpertext>
-
-                        <ul class="list-style-none">
-                            <li class="py-md-1 text-primary">{{ __("Select the source of funds for this transaction") }}</li>
-                            <li>{{ __('Cash Source') }}: {{ __('Transaction will reduce cash balances') }}</li>
-                            <li>{{ __('Till Source') }}: {{ __('Transaction will reduce Till balances') }}</li>
-
-                        </ul>
-                    </x-helpertext>
-
-                    @error('source')
-                    <div class="help-block text-danger">
-                        {{ $message }}
-                    </div>
-                    @enderror
-                </div>
-
-
-                <div class="col-6 mt-md-4 till-source">
                     <x-label class="" label="Transaction Type" for="type"/>
 
                     <x-select2
@@ -81,6 +47,43 @@
                     <x-helpertext>{{ __("Type of Transaction, either deposit or withdraw") }}</x-helpertext>
 
                     @error('type')
+                    <div class="help-block text-danger">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </div>
+                
+                <div class="col-6 mt-md-4">
+                    <x-label class="" label="{{ __('Fund Source') }}" for="source"/>
+                    <x-select2
+                        modalId="add-loan"
+                        name="source"
+                        placeholder="{{ __('source: e.g Cash ') }}"
+                        id="source"
+                    >
+                        @foreach(\App\Utils\Enums\FundSourceEnums::cases() as $source)
+                            <option
+                                value="{{ $source->value }}"
+                                data-source="{{ $source->value }}"
+                            >{{ str($source->name)->title()->value()  }}</option>
+                        @endforeach
+                    </x-select2>
+                    <x-helpertext>
+                        <ul class="list-style-none">
+                            <li class="py-md-1 text-primary">{{ __("Select the source of funds for this transaction") }}</li>
+                            <li>{{ __('Cash Source') }}: {{ __('Transaction will reduce cash balances') }}</li>
+                            <li>{{ __('Till Source') }}: {{ __('Transaction will reduce Till balances') }}</li>
+
+                        </ul>
+                        <ul class="list-style-none">
+                            <li class="py-md-1 text-primary">{{ __("Transaction Effects") }}</li>
+                            <li>{{ __('Deposit') }}: {{ __('Reduces Till Balance, Cash Balance will increase upon Loan payments') }}</li>
+                            <li  class="pt-md-3">{{ __('Withdraw') }}: {{ __('Reduce the Cash Balance, Till Balance will increase upon Loan payments') }}</li>
+
+                        </ul>
+                    </x-helpertext>
+
+                    @error('source')
                     <div class="help-block text-danger">
                         {{ $message }}
                     </div>
@@ -111,20 +114,6 @@
                         {{ $message }}
                     </div>
                     @enderror
-
-                </div>
-
-                <div class="col-6 mt-md-4 till-source">
-
-                    <x-helpertext>
-
-                        <ul class="list-style-none">
-                            <li class="py-md-1 text-primary">{{ __("Transaction Effects") }}</li>
-                            <li>{{ __('Deposit') }}: {{ __('Reduces Till Balance, Cash Balance will increase upon Loan payments') }}</li>
-                            <li  class="pt-md-3">{{ __('Withdraw') }}: {{ __('Reduce the Cash Balance, Till Balance will increase upon Loan payments') }}</li>
-
-                        </ul>
-                    </x-helpertext>
 
                 </div>
             </div>
@@ -251,6 +240,11 @@
                                 "name": "source",
                                 "error": "Fund Source is Required",
                                 "validators" : {}
+                            },
+                            {
+                                "name": "type",
+                                "error": "Transaction Type is Required",
+                                "validators": {}
                             },
                             {
                                 "name": "description",

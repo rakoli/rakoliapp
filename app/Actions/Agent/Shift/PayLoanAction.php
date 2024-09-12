@@ -64,7 +64,7 @@ class PayLoanAction
 
             $shift = $currentShift->first();
             $source = FundSourceEnums::tryFrom($data['source']);
-            $data['type'] = LoanTypeEnum::MONEY_OUT->value;
+            $data['type'] = $loan->type == LoanTypeEnum::MONEY_IN->value ? LoanTypeEnum::MONEY_OUT->value : LoanTypeEnum::MONEY_IN->value ;
 
             if ($source === FundSourceEnums::TILL) {
                 [$newBalance, $oldBalance] = match ($data['type']) {
@@ -85,7 +85,6 @@ class PayLoanAction
                     newBalance: $newBalance
                 );
             }else {
-                $data['type'] = LoanTypeEnum::MONEY_OUT->value;
                 [$newBalance, $oldBalance] = match ($data['type']) {
                     LoanTypeEnum::MONEY_IN->value => AddLoan::cashMoneyIn(shift: $shift, data: $data, isLoan: true),
                     LoanTypeEnum::MONEY_OUT->value => AddLoan::cashMoneyOut(shift: $shift, data: $data, isLoan: true),

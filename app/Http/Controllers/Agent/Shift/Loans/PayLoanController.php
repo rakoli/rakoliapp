@@ -6,6 +6,7 @@ use App\Actions\Agent\Shift\PayLoanAction;
 use App\Http\Controllers\Controller;
 use App\Models\Loan;
 use App\Models\Shift;
+use App\Utils\Enums\ShiftStatusEnum;
 use App\Utils\Enums\TransactionCategoryEnum;
 use Illuminate\Http\Request;
 
@@ -27,6 +28,12 @@ class PayLoanController extends Controller
 
         try {
             throw_if($loan->shift_id != $shift->id, new \Exception('Loan does not belong to this Shift'));
+
+            throw_if(
+                $shift->status != ShiftStatusEnum::OPEN, 
+                new \Exception('You cannot transact without an open shift')
+            );
+
 
             $validated['category'] = TransactionCategoryEnum::GENERAL;
 
