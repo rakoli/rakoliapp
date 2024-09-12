@@ -37,7 +37,7 @@
                         <!--begin::Item-->
                         <div class="d-flex flex-stack">
                             <!--begin::Section-->
-                            <div class="text-gray-700 fw-semibold fs-6 me-2">{{__('Income')}}</div>
+                            <div class="text-gray-700 fw-semibold fs-6 me-2">{{__('Debit (cash in)')}}</div>
                             <!--end::Section-->
                             <!--begin::Statistics-->
                             <div class="d-flex align-items-senter">
@@ -53,7 +53,7 @@
                         <!--begin::Item-->
                         <div class="d-flex flex-stack">
                             <!--begin::Section-->
-                            <div class="text-gray-700 fw-semibold fs-6 me-2">{{__('Expenses')}}</div>
+                            <div class="text-gray-700 fw-semibold fs-6 me-2">{{__('Credit (cash out)')}}</div>
                             <!--end::Section-->
                             <!--begin::Statistics-->
                             <div class="d-flex align-items-senter">
