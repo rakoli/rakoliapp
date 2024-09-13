@@ -29,10 +29,10 @@ class PayLoanController extends Controller
         try {
             throw_if($loan->shift_id != $shift->id, new \Exception('Loan does not belong to this Shift'));
 
-            throw_if(
-                $shift->status != ShiftStatusEnum::OPEN, 
-                new \Exception('You cannot transact without an open shift')
-            );
+            // throw_if(
+            //     $shift->status != ShiftStatusEnum::OPEN, 
+            //     new \Exception('You cannot transact without an open shift')
+            // );
 
 
             $validated['category'] = TransactionCategoryEnum::GENERAL;
