@@ -45,9 +45,6 @@ class ShiftTransactionDatatable implements HasDatatable
                     badgeClass: $transaction->type->color()
                 );
             })
-            ->addColumn('actions', function (ShiftTransaction $transaction) {
-
-            })
             ->addColumn('network_name', fn (ShiftTransaction $transaction) => $transaction->network->agency ? $transaction->network?->agency?->name : $transaction->network?->crypto?->name)
 
             ->rawColumns(['balance_old', 'balance_new', 'transaction_type', 'actions'])
