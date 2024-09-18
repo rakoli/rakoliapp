@@ -420,6 +420,26 @@ if (! function_exists('shiftBalances')) {
         ->sum('amount');
 
 
+        $loanIn = \App\Models\Loan::query()
+            ->whereBelongsTo($shift,'shift')
+            ->where('type', \App\Utils\Enums\LoanTypeEnum::MONEY_OUT)
+            ->whereBetween('created_at', [
+                $shift->created_at,
+                now(),
+            ])
+            ->get( )
+            ->sum(fn (\App\Models\Loan $loan)  :float => + $loan->amount);
+
+        $loanOut = \App\Models\Loan::query()
+            ->whereBelongsTo($shift,'shift')
+            ->where('type', \App\Utils\Enums\LoanTypeEnum::MONEY_IN)
+            ->whereBetween('created_at', [
+                $shift->created_at,
+                now(),
+            ])
+            ->get( )
+            ->sum(fn (\App\Models\Loan $loan)  :float => + $loan->amount);
+
 
         $loanBalances = \App\Models\Loan::query()
             ->whereBelongsTo($shift,'shift')
@@ -438,6 +458,7 @@ if (! function_exists('shiftBalances')) {
         $totalBalance = $cash + $tillBalances;
         
         $netBalance = $totalBalance + $loanBalances;
+        $differ = $totalBalance + $loanBalances - $capital - $expenses;
 
         $shorts = $startCapital - $totalBalance ;
 
@@ -452,11 +473,11 @@ if (! function_exists('shiftBalances')) {
             'startCapital' => $startCapital,
             'endCapital' => $totalBalance,
             'shorts' => $shorts ,
+            'loanIn' => $loanIn,
+            'loanOut' => $loanOut,
             'loanBalances' => $loanBalances,
             'capital' => $capital,
-            'differ' => ($totalBalance - $capital),
-            'netDiffer' => ($netBalance - $capital)
-
+            'differ' => $differ,
         ];
     }
 }

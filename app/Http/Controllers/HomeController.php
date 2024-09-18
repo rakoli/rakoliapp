@@ -265,4 +265,11 @@ class HomeController extends Controller
             return responder()->success(['message' => 'Profile Edited Successfully']);
         });
     }
+
+    public function report(Request $request)
+    {     
+        $user = auth()->user();
+        return view('agent.reports.index',compact('user'));
+    }
+
 }

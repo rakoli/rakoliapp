@@ -62,6 +62,11 @@ class StatisticsService
         return Loan::where('location_code',$location_code)->where('type',LoanTypeEnum::MONEY_IN)->get()->sum('balance');
     }
 
+    public function locationTotalExpense($location_code)
+    {
+        return Transaction::where('location_code',$location_code)->where('category', TransactionCategoryEnum::EXPENSE)->get()->sum('amount');
+    }
+
     public function locationTotalDebitLoan($location_code)
     {
         return Loan::where('location_code',$location_code)->where('type',LoanTypeEnum::MONEY_OUT)->get()->sum('balance');
@@ -224,6 +229,7 @@ class StatisticsService
         $data['bussiness'][0]['debit'] = 0;
         $data['bussiness'][0]['total_balance'] = 0;
         $data['bussiness'][0]['capital'] = 0;
+        $data['bussiness'][0]['expense'] = 0;
         $data['bussiness'][0]['differ'] = 0;
 
         foreach($this->user->business->locations as $key => $location) {
@@ -233,7 +239,8 @@ class StatisticsService
             $data['bussiness'][0]['debit'] += $data['branches'][$key]['debit'] = $this->locationTotalDebitLoan($location->code);
             $data['bussiness'][0]['total_balance'] += $data['branches'][$key]['total_balance'] = $data['branches'][$key]['physical_balance'] + $data['branches'][$key]['credit'] - $data['branches'][$key]['debit'] ;
             $data['bussiness'][0]['capital'] += $data['branches'][$key]['capital'] = $location->capital;
-            $data['bussiness'][0]['differ'] += $data['branches'][$key]['differ'] = $data['branches'][$key]['total_balance'] - $location->capital;
+            $data['bussiness'][0]['expense'] += $data['branches'][$key]['expense'] = $this->locationTotalExpense($location->code);
+            $data['bussiness'][0]['differ'] += $data['branches'][$key]['differ'] = $data['branches'][$key]['total_balance'] - $data['branches'][$key]['expense'] - $location->capital;
         }
         return $data;
     }

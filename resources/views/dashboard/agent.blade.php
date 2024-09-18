@@ -285,6 +285,14 @@
                                 <!--end::Stats-->
                             </div>
                             <!--end::Label-->
+                            <!--begin::Label-->
+                            <div class="d-flex fw-semibold align-items-center my-3">
+                                <div class="m-0">
+                                    <a href="{{ route('agent.report') }}" class="btn btn-sm btn-primary mb-2">See More</a>
+                                </div>
+                            </div>
+                            <!--end::Label-->
+                            
                         </div>
                         <!--end::Labels-->
                     </div>
@@ -387,6 +395,9 @@
                                                 <span class="text-gray-800 fs-7 fw-bold">{{session('currency').' '.number_format($branch['capital'],2)}}</span>
                                             </td>
                                             <td>
+                                                <span class="text-gray-800 fs-7 fw-bold">{{session('currency').' '.number_format($branch['expense'],2)}}</span>
+                                            </td>
+                                            <td>
                                                 <span class="text-gray-800 fs-7 fw-bold">{{session('currency').' '.number_format($branch['differ'],2)}}</span>
                                             </td>
                                         </tr>
@@ -398,6 +409,7 @@
                                             <th class="pe-0 min-w-120px pt-3">Debit</th>
                                             <th class="pe-0 min-w-120px pt-3">Total Balance</th>
                                             <th class="pe-0 min-w-120px pt-3">Captial</th>
+                                            <th class="pe-0 min-w-120px pt-3">Expense</th>
                                             <th class="pe-0 min-w-120px pt-3">Differ</th>
                                         </tr>
                                     </thead>
@@ -423,6 +435,9 @@
                                                 </td>
                                                 <td>
                                                     <span class="text-gray-800 fs-7">{{session('currency').' '.number_format($branch['capital'],2)}}</span>
+                                                </td>
+                                                <td>
+                                                    <span class="text-gray-800 fs-7">{{session('currency').' '.number_format($branch['expense'],2)}}</span>
                                                 </td>
                                                 <td>
                                                     <span class="text-gray-800 fs-7">{{session('currency').' '.number_format($branch['differ'],2)}}</span>
