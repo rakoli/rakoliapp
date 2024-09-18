@@ -28,7 +28,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(function () {
 
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('agent.dashboard'); //For Middleware testing and having a special user type dashboard route
-
+    Route::get('/report',[App\Http\Controllers\HomeController::class, 'report'])->name('agent.report');
     //AGENCY MODULE
     Route::group(['middleware' => 'validateSubscription','prefix' => 'agency', 'route' => 'agency.'], function () {
 
