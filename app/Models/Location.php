@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Scopes\BusinessScoped;
 use App\Models\Scopes\LocationScoped;
+use App\Utils\Enums\LoanPaymentStatusEnum;
 use App\Utils\Traits\BusinessAuthorization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -76,6 +77,11 @@ class Location extends Model
     public function loans() : HasMany
     {
         return $this->hasMany(Loan::class, 'location_code', 'code');
+    }
+
+    public function activeLoans() : HasMany
+    {
+        return $this->hasMany(Loan::class, 'location_code', 'code')->where('status','!=',LoanPaymentStatusEnum::FULL_PAID);
     }
 
     public function shift_networks() : HasMany

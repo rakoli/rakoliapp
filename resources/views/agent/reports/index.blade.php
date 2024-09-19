@@ -20,7 +20,8 @@
         .rightBorder {
             border-right: 1px solid #000;
         }
-        tr td{padding:5px 0;}
+        tr td{padding:5px;text-transform: uppercase;border-bottom:1px solid #000;font-style: italic;font-weight:600;font-size:16px;text-align: center;border-right:1px solid #000;}
+        tr td:last-child{border-right:0}
         tr th{padding:5px 0}      
   
     </style>
@@ -34,20 +35,143 @@
             <table cellpadding="0" cellspacing="0" class="header-table" style="width: 100%; font-size: 9pt">
                 <tbody>
                     <tr>
-                        <td colspan="6" style="text-align: center; border-bottom: 1px solid #000; padding: 5px;font-size:30px;font-weight:700">
+                        <td colspan="6" style=" font-size:30px;font-weight:700; ">
                             {{ Auth::user()->business->business_name}} Report
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: center; border-bottom: 1px solid #000; padding: 5px;font-size:30px;font-weight:700">
-                            PHYSICAL BALANCES
-                        </td>
-                        {{-- <td>{{ $totalBalance }} </td> --}}
-                        <td style="text-align: center; border-bottom: 1px solid #000; padding: 5px;font-size:30px;font-weight:700">
-                            credit
-                        </td>
-                        {{-- <td colspan=3>{{ number_format($expenses , 2) }} </td> --}}
+                        <td style="border-right:0">PHYSICAL BALANCES</td>
+                        <td style="border-right:0">1000</td>
+                        <td style="border-right:0;font-size:22px;text-transform:capitalize">credit</td>
+                        <td colspan=3 style="font-size:22px;text-transform:capitalize">85,000</td>
 
+                    </tr>
+                    <tr>
+                        <td style="border-right:0">Capital</td>
+                        <td style="border-right:0">1000 </td>
+                        <td style="border-right:0;font-size:22px;text-transform:capitalize">debit</td>
+                        <td colspan=3 style="border-right:0;font-size:22px;text-transform:capitalize">0</td>
+
+                    </tr>
+                    <tr>
+                        <td style="font-size:22px;font-weight:700;border-right:0">Differ</td>
+                        <td style="font-size:22px;font-weight:700;  border-right:0">17187</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Companies</td>
+                        <td>physical balances</td>
+                        <td>CAPITAL BALANCES</td>
+                        <td>DIFFER </td>
+                        <td>jina</td>
+                        <td>nadai</td>
+                    </tr>
+                    <tr>
+                        <td>cash</td>
+                        <td>92,000</td>
+                        <td>5,00,000</td>
+                        <td>-4,95,000 </td>
+                        <td>kalthium</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>selcom super</td>
+                        <td></td>
+                        <td>3,00,000</td>
+                        <td>-3,00,000 </td>
+                        <td>tgshop</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>tigopesa normal</td>
+                        <td>4035</td>
+                        <td>1,00,000</td>
+                        <td> -9,95,965 </td>
+                        <td>taylor</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>tigopesa super</td>
+                        <td>0</td>
+                        <td>1,00,000</td>
+                        <td> -1,00,000 </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>mpesa super</td>
+                        <td>40,837</td>
+                        <td>5,00,000</td>
+                        <td>-4,59,163 </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>halopesa Normal</td>
+                        <td>4268</td>
+                        <td>3,00,000</td>
+                        <td>-2,95,732 </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>halopesa super</td>
+                        <td>0</td>
+                        <td>2,00,000</td>
+                        <td>-2,00,000 </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="height:24px"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style=" height:24px"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style=" height:24px"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="height:24px"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>1,59,881</td>
+                        <td>4,500,000</td>
+                        <td>4,434,009 </td>
+                        <td></td>
+                        <td>300,000</td>
+                    </tr>
+                    <tr>
+                        <td style="border-bottom:0"></td>
+                        <td style="border-bottom:0">332,921</td>
+                        <td style="border-bottom:0">11,261,000</td>
+                        <td style="border-bottom:0"> -2,153,951 </td>
+                        <td style="border-bottom:0"></td>
+                        <td style="border-bottom:0"></td>
                     </tr>
 
                     {{-- @php
