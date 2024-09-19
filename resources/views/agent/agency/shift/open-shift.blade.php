@@ -48,6 +48,7 @@
                                                 value="{{ $location['code'] }}"
                                                 data-balance="{{  $location['balance'] }}"
                                                 data-networks="{{ json_encode($location['networks'] , true) }}"
+                                                data-loans="{{ json_encode($location['loans'] , true) }}"
                                             >{{ $location['name'] }}</option>
                                         @endforeach
                                     </x-select2>
@@ -89,22 +90,30 @@
                                             {{ __("Tills") }}
                                         </legend>
                                         <table class="table table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th width="75%">Name</th>
+                                                <th>Balance</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="shift-till-table-body"></tbody>
+                                        </table>
+                                    </fieldset>
+
+                                    <fieldset class="table-responsive">
+                                        <legend>
+                                            {{ __("Loans") }}
+                                        </legend>
+                                        <table class="table table-striped">
 
 
                                             <thead>
                                             <tr>
-                                                <th>Name</th>
+                                                <th width="75%">Loan</th>
                                                 <th>Balance</th>
                                             </tr>
                                             </thead>
-                                            <tbody id="shift-table-body">
-                                            {{-- @foreach($tills as $till)
-                                                 <tr>
-                                                     <td>{{ $till->agency?->name }}</td>
-                                                     <td>{{ number_format($till->balance , 2) }}</td>
-                                                 </tr>
-                                             @endforeach--}}
-                                            </tbody>
+                                            <tbody id="shift-loan-table-body"></tbody>
                                         </table>
                                     </fieldset>
 
@@ -170,12 +179,12 @@
 
                 let networks = selectedOption.data('networks');
 
-                let tableBody = "";
+                let tillTableBody = "";
 
-                $("#shift-table-body").empty();
+                $("#shift-till-table-body").empty();
 
                 $.each(networks, (index, network) => {
-                    tableBody += "<tr>" +
+                    tillTableBody += "<tr>" +
                         " <td>" + network.name + "</td> " +
                         "<td>" + network.balance.toLocaleString('en-US', {maximumFractionDigits: 2}) + "</td>" +
                         " </tr>"
@@ -183,7 +192,24 @@
                 });
 
 
-                $("table>tbody#shift-table-body").append(tableBody);
+                $("table>tbody#shift-till-table-body").append(tillTableBody);
+
+                let loans = selectedOption.data('loans');
+
+                let loanTableBody = "";
+
+                $("#shift-loan-table-body").empty();
+
+                $.each(loans, (index, loan) => {
+                    loanTableBody += "<tr>" +
+                        " <td>" + loan.source + " - " + loan.type + "</td> " +
+                        "<td>" + loan.balance.toLocaleString('en-US', {maximumFractionDigits: 2}) + "</td>" +
+                        " </tr>"
+
+                });
+
+
+                $("table>tbody#shift-loan-table-body").append(loanTableBody);
 
 
                 $("input#amount").val(balance);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Agent\Shift;
 
 use App\Actions\Agent\Shift\OpenShift;
 use App\Http\Controllers\Controller;
+use App\Models\Loan;
 use App\Models\Location;
 use App\Models\Network;
 use App\Models\Shift;
@@ -25,7 +26,7 @@ class OpenShiftController extends Controller
         $locations = Location::query()
             ->whereHas('users', fn($query) => $query->where('user_code', auth()->user()->code))
             ->with([
-                'networks.agency'])
+                'networks.agency','activeLoans'])
             ->get()
         ->map( fn(Location $location) : array => [
             'name' => $location->name,
@@ -35,6 +36,12 @@ class OpenShiftController extends Controller
                 'name' => $network->type == NetworkTypeEnum::FINANCE->value ? $network->agency?->name : $network->crypto?->name,
                 'balance' => $network->balance
             ]),
+            'loans' => $location->activeLoans->map(fn(Loan $loan) : array => [
+                'source' => $loan_source = $loan->network ? $loan->network->agency?->name : "Cash",
+                'type' => $loan->type->label(),
+                'balance' => $loan->balance
+            ]),
+
         ]);
 
         return view('agent.agency.shift.open-shift', [
