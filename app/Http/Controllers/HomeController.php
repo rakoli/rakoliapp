@@ -269,7 +269,11 @@ class HomeController extends Controller
     public function report(Request $request)
     {     
         $user = auth()->user();
-        return view('agent.reports.index',compact('user'));
+        $statisticsService = new StatisticsService($user);
+        $summary = $statisticsService->businessOverview();
+        $bussiness_summary = $summary['bussiness'][0];
+        $branch_summary = $summary['branches'] ?? [];
+        return view('agent.reports.index',compact('user','bussiness_summary','branch_summary'));
     }
 
 }
