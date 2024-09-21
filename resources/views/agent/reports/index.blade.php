@@ -54,7 +54,6 @@
                         <td style="border-right:0">{{session('currency').' '.number_format($bussiness_summary['capital'],2)}}</td>
                         <td style="border-right:0;font-size:22px;text-transform:capitalize">debit</td>
                         <td colspan=3 style="border-right:0;font-size:22px;text-transform:capitalize">{{session('currency').' '.number_format($bussiness_summary['debit'],2)}}</td>
-
                     </tr>
                     <tr>
                         <td style="font-size:22px;font-weight:700;border-right:0">Differ</td>
