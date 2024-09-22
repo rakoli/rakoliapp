@@ -39,6 +39,10 @@ class AddExpenseTransaction
                 $data['network_code'] = NULL;
                 $this->cashTransaction(shift: $shift, data: $data);
             }
+
+            $location = Location::where('code',$shift->location_code)->first();
+            $location->capital = $location->capital - $data['amount'];
+            $location->save();
         });
     }
 
