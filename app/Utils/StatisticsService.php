@@ -56,6 +56,12 @@ class StatisticsService
     {
         return Loan::where('business_code',$this->user->business_code)->get()->sum('balance');
     }
+
+    public function locationTotalLoanBalance($location_code)
+    {
+        return Loan::where('location_code',$location_code)->get()->sum('balance');
+    }
+
     
     public function locationTotalCreditLoan($location_code)
     {
@@ -237,7 +243,7 @@ class StatisticsService
             $data['bussiness'][0]['physical_balance'] += $data['branches'][$key]['physical_balance'] = $location->balance + $location->networks->sum('balance');
             $data['bussiness'][0]['credit'] += $data['branches'][$key]['credit'] = $this->locationTotalCreditLoan($location->code);
             $data['bussiness'][0]['debit'] += $data['branches'][$key]['debit'] = $this->locationTotalDebitLoan($location->code);
-            $data['bussiness'][0]['total_balance'] += $data['branches'][$key]['total_balance'] = $data['branches'][$key]['physical_balance'] + $data['branches'][$key]['credit'] - $data['branches'][$key]['debit'] ;
+            $data['bussiness'][0]['total_balance'] += $data['branches'][$key]['total_balance'] = $data['branches'][$key]['physical_balance'] - $this->locationTotalLoanBalance($location->code) ;
             $data['bussiness'][0]['capital'] += $data['branches'][$key]['capital'] = $location->capital;
             $data['bussiness'][0]['expense'] += $data['branches'][$key]['expense'] = $this->locationTotalExpense($location->code);
             $data['bussiness'][0]['differ'] += $data['branches'][$key]['differ'] = $data['branches'][$key]['total_balance'] - $location->capital;
