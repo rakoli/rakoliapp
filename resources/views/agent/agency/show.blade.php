@@ -229,7 +229,7 @@
                     <!--end::Col-->
 
                     <!--begin::Col-->
-                    {{-- <div class="col-md-3 col-xl-3 mb-md-5 mb-xl-5 mt-0">
+                    <div class="col-md-3 col-xl-3 mb-md-5 mb-xl-5 mt-0">
                         <!--begin::Card widget-->
                         <div class="card bg-primary">
                             <!--begin::Header-->
@@ -250,7 +250,7 @@
                             <!--end::Header-->
                         </div>
                         <!--end::Card widget-->
-                    </div> --}}
+                    </div>
                     <!--end::Col-->
 
                     <!--begin::Col-->
