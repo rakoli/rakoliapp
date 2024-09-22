@@ -240,7 +240,7 @@ class StatisticsService
             $data['bussiness'][0]['total_balance'] += $data['branches'][$key]['total_balance'] = $data['branches'][$key]['physical_balance'] + $data['branches'][$key]['credit'] - $data['branches'][$key]['debit'] ;
             $data['bussiness'][0]['capital'] += $data['branches'][$key]['capital'] = $location->capital;
             $data['bussiness'][0]['expense'] += $data['branches'][$key]['expense'] = $this->locationTotalExpense($location->code);
-            $data['bussiness'][0]['differ'] += $data['branches'][$key]['differ'] = $data['branches'][$key]['total_balance'] + $data['branches'][$key]['expense'] - $location->capital;
+            $data['bussiness'][0]['differ'] += $data['branches'][$key]['differ'] = $data['branches'][$key]['total_balance'] - $location->capital;
         }
         return $data;
     }
