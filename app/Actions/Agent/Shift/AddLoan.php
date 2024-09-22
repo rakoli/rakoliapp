@@ -38,6 +38,7 @@ class AddLoan
                 'network_code' => $data['network_code'],
                 'type' => LoanTypeEnum::tryFrom($data['type']),
                 'status' => LoanPaymentStatusEnum::UN_PAID,
+                'shift_id' => $shift->id,
                 'code' => generateCode(name: time(), prefixText: !empty($data['network_code']) ? $data['network_code'] : "CASH"),
                 'description' => $data['description'],
                 'note' => $data['notes'],
