@@ -458,7 +458,7 @@ if (! function_exists('shiftBalances')) {
         $totalBalance = $cash + $tillBalances;
         
         $netBalance = $totalBalance + $loanBalances;
-        $differ = $totalBalance + $loanBalances - $capital - $expenses;
+        $differ = $totalBalance + $loanBalances + ($expenses + $tillExpense) - $capital;
 
         $shorts = $startCapital - $totalBalance ;
 
