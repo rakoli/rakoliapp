@@ -428,7 +428,7 @@ if (! function_exists('shiftBalances')) {
                 now(),
             ])
             ->get( )
-            ->sum(fn (\App\Models\Loan $loan)  :float => + $loan->amount);
+            ->sum(fn (\App\Models\Loan $loan)  :float => + $loan->balance);
 
         $loanOut = \App\Models\Loan::query()
             ->whereBelongsTo($shift,'shift')
@@ -438,18 +438,10 @@ if (! function_exists('shiftBalances')) {
                 now(),
             ])
             ->get( )
-            ->sum(fn (\App\Models\Loan $loan)  :float => + $loan->amount);
+            ->sum(fn (\App\Models\Loan $loan)  :float => + $loan->balance);
 
 
-        $loanBalances = \App\Models\Loan::query()
-            ->whereBelongsTo($shift,'shift')
-            ->whereBetween('created_at', [
-                $shift->created_at,
-                now(),
-            ])
-            ->get( )
-        ->sum(fn (\App\Models\Loan $loan)  :float => + $loan->balance);
-
+        $loanBalances = $loanOut - $loanIn;
 
         $startCapital = $shift->cash_start + $shift->shiftNetworks->sum('balance_old');
 
