@@ -181,7 +181,7 @@ class HomeController extends Controller
 
             //Branch Overview Dashboard
             $summary = $statisticsService->businessOverview();
-            $stats['bussiness_summary'] = $summary['bussiness'];
+            $stats['bussiness_summary'] = $summary['bussiness'] ?? [];
             $stats['branch_summary'] = $summary['branches'] ?? [];
 
 
@@ -271,7 +271,7 @@ class HomeController extends Controller
         $user = auth()->user();
         $statisticsService = new StatisticsService($user);
         $summary = $statisticsService->businessOverview();
-        $bussiness_summary = $summary['bussiness'][0];
+        $bussiness_summary = isset($summary['bussiness'][0]) ? $summary['bussiness'][0] : [];
         $branch_summary = $summary['branches'] ?? [];
         return view('agent.reports.index',compact('user','bussiness_summary','branch_summary'));
     }

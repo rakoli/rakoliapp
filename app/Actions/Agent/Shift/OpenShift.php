@@ -3,10 +3,13 @@
 namespace App\Actions\Agent\Shift;
 
 use App\Events\Shift\ShiftOpened;
+use App\Models\Loan;
 use App\Models\Network;
 use App\Models\Shift;
+use App\Utils\Enums\LoanPaymentStatusEnum;
 use App\Utils\Enums\ShiftStatusEnum;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class OpenShift
@@ -50,6 +53,11 @@ class OpenShift
                         'balance_old' => $network->balance,
                         'balance_new' => $network->balance,
                     ]);
+                }
+
+                foreach (Loan::query()->where('location_code', $shift->location_code)->where('status','!=',value: LoanPaymentStatusEnum::FULL_PAID)->cursor() as $loan) {
+                    Log::info($loan);
+                    $loan->update(['shift_id' => $shift->id]);
                 }
 
                 event(new ShiftOpened(shift: $shift));
