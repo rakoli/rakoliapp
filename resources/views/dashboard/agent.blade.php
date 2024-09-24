@@ -389,27 +389,27 @@
                                                 <span class="text-gray-800 fs-7 fw-bold">{{session('currency').' '.number_format($branch['debit'],2)}}</span>
                                             </td>
                                             <td>
+                                                <span class="text-gray-800 fs-7 fw-bold">{{session('currency').' '.number_format($branch['expense'],2)}}</span>
+                                            </td>
+                                            <td>
                                                 <span class="text-gray-800 fs-7 fw-bold">{{session('currency').' '.number_format($branch['total_balance'],2)}}</span>
                                             </td>
                                             <td>
                                                 <span class="text-gray-800 fs-7 fw-bold">{{session('currency').' '.number_format($branch['capital'],2)}}</span>
                                             </td>
-                                            {{-- <td>
-                                                <span class="text-gray-800 fs-7 fw-bold">{{session('currency').' '.number_format($branch['expense'],2)}}</span>
-                                            </td> --}}
                                             <td>
                                                 <span class="text-gray-800 fs-7 fw-bold">{{session('currency').' '.number_format($branch['differ'],2)}}</span>
                                             </td>
                                         </tr>
                                     @endforeach
                                         <tr class="fs-7 fw-bold text-gray-500">
-                                            <th class="pe-0 min-w-120px pt-3">branch Name</th>
+                                            <th class="pe-0 min-w-120px pt-3">Branch Name</th>
                                             <th class="pe-0 min-w-120px pt-3">Physical Balance (Cash + Till)</th>
-                                            <th class="pe-0 min-w-120px pt-3">Credit</th>
-                                            <th class="pe-0 min-w-120px pt-3">Debit</th>
+                                            <th class="pe-0 min-w-120px pt-3">Credit (Money In)</th>
+                                            <th class="pe-0 min-w-120px pt-3">Debit (Money Out)</th>
+                                            <th class="pe-0 min-w-120px pt-3">Expense</th>
                                             <th class="pe-0 min-w-120px pt-3">Total Balance</th>
                                             <th class="pe-0 min-w-120px pt-3">Captial</th>
-                                            {{-- <th class="pe-0 min-w-120px pt-3">Expense</th> --}}
                                             <th class="pe-0 min-w-120px pt-3">Differ</th>
                                         </tr>
                                     </thead>
@@ -431,14 +431,14 @@
                                                     <span class="text-gray-800 fs-7">{{session('currency').' '.number_format($branch['debit'],2)}}</span>
                                                 </td>
                                                 <td>
+                                                    <span class="text-gray-800 fs-7">{{session('currency').' '.number_format($branch['expense'],2)}}</span>
+                                                </td>
+                                                <td>
                                                     <span class="text-gray-800 fs-7">{{session('currency').' '.number_format($branch['total_balance'],2)}}</span>
                                                 </td>
                                                 <td>
                                                     <span class="text-gray-800 fs-7">{{session('currency').' '.number_format($branch['capital'],2)}}</span>
                                                 </td>
-                                                {{-- <td>
-                                                    <span class="text-gray-800 fs-7">{{session('currency').' '.number_format($branch['expense'],2)}}</span>
-                                                </td> --}}
                                                 <td>
                                                     <span class="text-gray-800 fs-7">{{session('currency').' '.number_format($branch['differ'],2)}}</span>
                                                 </td>

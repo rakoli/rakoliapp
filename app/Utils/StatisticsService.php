@@ -229,26 +229,38 @@ class StatisticsService
 
     public function businessOverview()
     {
-        $data['bussiness'][0]['name'] = $this->user->business->business_name;
-        $data['bussiness'][0]['physical_balance'] = 0;
-        $data['bussiness'][0]['credit'] = 0;
-        $data['bussiness'][0]['debit'] = 0;
-        $data['bussiness'][0]['total_balance'] = 0;
-        $data['bussiness'][0]['capital'] = 0;
-        $data['bussiness'][0]['expense'] = 0;
-        $data['bussiness'][0]['differ'] = 0;
-
-        foreach($this->user->business->locations as $key => $location) {
-            $data['branches'][$key]['name'] = $location->name;
-            $data['bussiness'][0]['physical_balance'] += $data['branches'][$key]['physical_balance'] = $location->balance + $location->networks->sum('balance');
-            $data['bussiness'][0]['credit'] += $data['branches'][$key]['credit'] = $this->locationTotalCreditLoan($location->code);
-            $data['bussiness'][0]['debit'] += $data['branches'][$key]['debit'] = $this->locationTotalDebitLoan($location->code);
-            $data['bussiness'][0]['total_balance'] += $data['branches'][$key]['total_balance'] = $data['branches'][$key]['physical_balance'] + ($data['branches'][$key]['debit'] - $data['branches'][$key]['credit']);
-            $data['bussiness'][0]['capital'] += $data['branches'][$key]['capital'] = $location->capital;
-            $data['bussiness'][0]['expense'] += $data['branches'][$key]['expense'] = $this->locationTotalExpense($location->code);
-            $data['bussiness'][0]['differ'] += $data['branches'][$key]['differ'] = $data['branches'][$key]['total_balance'] - $location->capital;
+        if($this->user->isowner){
+            $data['bussiness'][0]['name'] = $this->user->business->business_name;
+            $data['bussiness'][0]['physical_balance'] = 0;
+            $data['bussiness'][0]['credit'] = 0;
+            $data['bussiness'][0]['debit'] = 0;
+            $data['bussiness'][0]['expense'] = 0;
+            $data['bussiness'][0]['total_balance'] = 0;
+            $data['bussiness'][0]['capital'] = 0;
+            $data['bussiness'][0]['differ'] = 0;    
+            foreach($this->user->locations as $key => $location) {
+                $data['branches'][$key]['name'] = $location->name;
+                $data['bussiness'][0]['physical_balance'] += $data['branches'][$key]['physical_balance'] = $location->balance + $location->networks->sum('balance');
+                $data['bussiness'][0]['credit'] += $data['branches'][$key]['credit'] = $this->locationTotalCreditLoan($location->code);
+                $data['bussiness'][0]['debit'] += $data['branches'][$key]['debit'] = $this->locationTotalDebitLoan($location->code);
+                $data['bussiness'][0]['expense'] += $data['branches'][$key]['expense'] = $this->locationTotalExpense($location->code);
+                $data['bussiness'][0]['total_balance'] += $data['branches'][$key]['total_balance'] = $data['branches'][$key]['physical_balance'] + ($data['branches'][$key]['credit'] - $data['branches'][$key]['debit']) + $data['branches'][$key]['expense'];
+                $data['bussiness'][0]['capital'] += $data['branches'][$key]['capital'] = $location->capital;
+                $data['bussiness'][0]['differ'] += $data['branches'][$key]['differ'] = $data['branches'][$key]['total_balance'] - $location->capital;
+            }
+        } else {
+            foreach($this->user->locations as $key => $location) {
+                $data['branches'][$key]['name'] = $location->name;
+                $data['branches'][$key]['physical_balance'] = $location->balance + $location->networks->sum('balance');
+                $data['branches'][$key]['credit'] = $this->locationTotalCreditLoan($location->code);
+                $data['branches'][$key]['debit'] = $this->locationTotalDebitLoan($location->code);
+                $data['branches'][$key]['expense'] = $this->locationTotalExpense($location->code);
+                $data['branches'][$key]['total_balance'] = $data['branches'][$key]['physical_balance'] + ($data['branches'][$key]['credit'] - $data['branches'][$key]['debit']) + $data['branches'][$key]['expense'];
+                $data['branches'][$key]['capital'] = $location->capital;
+                $data['branches'][$key]['differ'] = $data['branches'][$key]['total_balance'] - $location->capital;
+            }
         }
-        return $data;
+            return $data;
     }
 
 }

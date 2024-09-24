@@ -420,28 +420,28 @@ if (! function_exists('shiftBalances')) {
         ->sum('amount');
 
 
-        $loanIn = \App\Models\Loan::query()
-            ->whereBelongsTo($shift,'shift')
-            ->where('type', \App\Utils\Enums\LoanTypeEnum::MONEY_OUT)
-            ->whereBetween('created_at', [
-                $shift->created_at,
-                now(),
-            ])
-            ->get( )
-            ->sum(fn (\App\Models\Loan $loan)  :float => + $loan->balance);
-
-        $loanOut = \App\Models\Loan::query()
+        $creditLoan = \App\Models\Loan::query()
             ->whereBelongsTo($shift,'shift')
             ->where('type', \App\Utils\Enums\LoanTypeEnum::MONEY_IN)
-            ->whereBetween('created_at', [
-                $shift->created_at,
-                now(),
-            ])
+            // ->whereBetween('created_at', [
+            //     $shift->created_at,
+            //     now(),
+            // ])
+            ->get( )
+            ->sum(fn (\App\Models\Loan $loan)  :float => + $loan->balance);
+
+        $debitLoan = \App\Models\Loan::query()
+            ->whereBelongsTo($shift,'shift')
+            ->where('type', \App\Utils\Enums\LoanTypeEnum::MONEY_OUT)
+            // ->whereBetween(column: 'created_at', [
+            //     $shift->created_at,
+            //     now(),
+            // ])
             ->get( )
             ->sum(fn (\App\Models\Loan $loan)  :float => + $loan->balance);
 
 
-        $loanBalances = $loanOut - $loanIn;
+        $loanBalances = $creditLoan - $debitLoan;
 
         $startCapital = $shift->cash_start + $shift->shiftNetworks->sum('balance_old');
 
@@ -450,7 +450,7 @@ if (! function_exists('shiftBalances')) {
         $totalBalance = $cash + $tillBalances;
         
         $netBalance = $totalBalance + $loanBalances;
-        $differ = $totalBalance + $loanBalances - $capital;
+        $differ = $totalBalance + $loanBalances + ($expenses + $tillExpense) - $capital;
 
         $shorts = $startCapital - $totalBalance ;
 
@@ -465,8 +465,8 @@ if (! function_exists('shiftBalances')) {
             'startCapital' => $startCapital,
             'endCapital' => $totalBalance,
             'shorts' => $shorts ,
-            'loanIn' => $loanIn,
-            'loanOut' => $loanOut,
+            'loanIn' => $creditLoan,
+            'loanOut' => $debitLoan,
             'loanBalances' => $loanBalances,
             'capital' => $capital,
             'differ' => $differ,
