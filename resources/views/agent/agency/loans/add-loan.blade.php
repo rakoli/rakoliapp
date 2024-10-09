@@ -1,4 +1,4 @@
-@php use App\Utils\Enums\LoanTypeEnum;
+@php use App\Utils\Enums\TransactionTypeEnum;
      use App\Utils\Enums\NetworkTypeEnum;
 @endphp
 <div>
@@ -40,7 +40,7 @@
                         id="type">
                         <option value="">{{ __('Select a Transaction Type') }}</option>
 
-                        @foreach(LoanTypeEnum::cases() as $transactionType)
+                        @foreach(TransactionTypeEnum::cases() as $transactionType)
                             <option value="{{ $transactionType->value }}">{{ $transactionType->label() }}</option>
                         @endforeach
                     </x-select2>

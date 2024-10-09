@@ -41,12 +41,12 @@ class CloseShift
                     'notes' => str($data['notes'])->append("-------<br/> {$shift->note}")->toString(),
                 ]);
 
-                Location::query()
-                    ->where('code', $shift->location_code)
-                    ->first()
-                    ->updateQuietly([
-                        'balance' => $data['closing_balance']
-                    ]);
+                // Location::query()
+                //     ->where('code', $shift->location_code)
+                //     ->first()
+                //     ->updateQuietly([
+                //         'balance' => $data['closing_balance']
+                //     ]);
 
 
 
@@ -55,15 +55,15 @@ class CloseShift
                 if(isset($data['tills'])){
                     foreach ($data['tills'] as $tillCode => $amount) {
 
-                        Network::query()
-                            ->where('location_code', $shift->location_code)
-                            ->where([
-                                'code' => $tillCode,
-                            ])
-                            ->first()
-                            ->updateQuietly([
-                                'balance' => floatval($amount),
-                            ]);
+                        // Network::query()
+                        //     ->where('location_code', $shift->location_code)
+                        //     ->where([
+                        //         'code' => $tillCode,
+                        //     ])
+                        //     ->first()
+                        //     ->updateQuietly([
+                        //         'balance' => floatval($amount),
+                        //     ]);
 
 
 
@@ -100,29 +100,29 @@ class CloseShift
 
                 }
 
-                $data['location_code'] = $shift->location_code;
-                $data['business_code'] = $shift->business_code;
-                $data['location_new_balance'] = $data['closing_balance'];
+                // $data['location_code'] = $shift->location_code;
+                // $data['business_code'] = $shift->business_code;
+                // $data['location_new_balance'] = $data['closing_balance'];
 
 
-                if ($shiftBalances['expenses'] != $data['expenses'])
-                {
-                    $data['amount'] = $data['expenses'] - $shiftBalances['expenses'] ;
+                // if ($shiftBalances['expenses'] != $data['expenses'])
+                // {
+                //     $data['amount'] = $data['expenses'] - $shiftBalances['expenses'] ;
 
-                    $this->addExpense(
-                        location: $shift->location,
-                        data: $data
-                    );
-                }
-                if ($shiftBalances['income'] != $data['income'])
-                {
-                    $data['amount'] = $data['income'] - $shiftBalances['income'] ;
+                //     $this->addExpense(
+                //         location: $shift->location,
+                //         data: $data
+                //     );
+                // }
+                // if ($shiftBalances['income'] != $data['income'])
+                // {
+                //     $data['amount'] = $data['income'] - $shiftBalances['income'] ;
 
-                    $this->addIncome(
-                        location: $shift->location,
-                        data: $data
-                    );
-                }
+                //     $this->addIncome(
+                //         location: $shift->location,
+                //         data: $data
+                //     );
+                // }
 
 
                 event(new ShiftClosedEvent(shift: $shift));

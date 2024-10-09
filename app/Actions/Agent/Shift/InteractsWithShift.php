@@ -3,11 +3,14 @@
 namespace App\Actions\Agent\Shift;
 
 use App\Models\Location;
+use App\Models\Network;
 use App\Models\Shift;
 use App\Models\ShiftCashTransaction;
 use App\Models\ShiftNetwork;
 use App\Models\ShiftTransaction;
 use App\Models\Transaction;
+use App\Utils\Enums\FundSourceEnums;
+use App\Utils\Enums\TransactionTypeEnum;
 use Illuminate\Support\Facades\Log;
 
 trait InteractsWithShift
@@ -232,5 +235,33 @@ trait InteractsWithShift
             $lastTransaction->balance_new, // old balance
 
         ];
+    }
+
+
+    public function updateBalance(Shift $shift, array $data)
+    {
+        try {
+            $source = FundSourceEnums::tryFrom($data['source']);
+            $type = TransactionTypeEnum::tryFrom($data['type']);
+
+            if($source === FundSourceEnums::TILL){
+                $module = Network::query()->where('location_code', $shift->location_code)->where('code', $data['network_code'])->first();
+            } else {
+                $module = Location::query()->where('code', $shift->location_code)->first();
+            }
+
+            if($type === TransactionTypeEnum::MONEY_IN){
+                $data['new_balance'] = $module->balance + floatval($data['amount']);
+            } else {
+                $data['new_balance'] = $module->balance - floatval($data['amount']);
+            }
+
+            return $module->updateQuietly([
+                'balance' => $data['new_balance']
+            ]);
+
+        } catch (\Exception $exception) {
+            throw new \Exception($exception);
+        }
     }
 }

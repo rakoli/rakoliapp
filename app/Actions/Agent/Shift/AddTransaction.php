@@ -4,6 +4,7 @@ namespace App\Actions\Agent\Shift;
 
 use App\Models\Shift;
 use App\Utils\Enums\TransactionTypeEnum;
+use Illuminate\Support\Facades\Log;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class AddTransaction
@@ -18,13 +19,16 @@ class AddTransaction
      */
     public function handle(Shift $shift, array $data)
     {
-
+        Log::info("AddTransaction :: Request Data".print_r($data,true));
         return runDatabaseTransaction(function () use ($shift, $data) {
 
             [$newBalance, $oldBalance] = match ($data['type']) {
                 TransactionTypeEnum::MONEY_IN->value => AddTransaction::moneyIn(shift: $shift, data: $data),
                 TransactionTypeEnum::MONEY_OUT->value => AddTransaction::moneyOut(shift: $shift, data: $data),
             };
+
+            $data['source'] = "TILL";
+            $data['type'] = $data['type'] == "IN" ? "OUT" : "IN";
 
             $this->createShiftTransaction(
                 shift: $shift,
@@ -33,6 +37,11 @@ class AddTransaction
                 newBalance: $newBalance,
             );
 
+            $this->updateBalance(shift: $shift, data: $data);
+
+            $data['source'] = "CASH";
+            $data['type'] = $data['type'] == "IN" ? "OUT" : "IN";
+            
             [$newCashBalance, $oldCashBalance] = match ($data['type']) {
                 TransactionTypeEnum::MONEY_IN->value => AddTransaction::cashMoneyOut(shift: $shift, data: $data),
                 TransactionTypeEnum::MONEY_OUT->value => AddTransaction::cashMoneyIn(shift: $shift, data: $data),
@@ -44,6 +53,9 @@ class AddTransaction
                 oldBalance: $oldCashBalance,
                 newBalance: $newCashBalance,
             );
+
+            $this->updateBalance(shift: $shift, data: $data);
+
 
         });
 

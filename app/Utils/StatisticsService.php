@@ -9,6 +9,8 @@ use App\Models\Loan;
 use App\Models\Location;
 use App\Models\Network;
 use App\Models\Shift;
+use App\Models\ShiftCashTransaction;
+use App\Models\ShiftTransaction;
 use App\Models\SystemIncome;
 use App\Models\Transaction;
 use App\Models\User;
@@ -17,7 +19,6 @@ use App\Models\VasPayment;
 use App\Models\VasTask;
 use App\Utils\Enums\ExchangeStatusEnum;
 use App\Utils\Enums\ExchangeTransactionStatusEnum;
-use App\Utils\Enums\LoanTypeEnum;
 use App\Utils\Enums\ShiftStatusEnum;
 use App\Utils\Enums\TransactionCategoryEnum;
 use App\Utils\Enums\TransactionTypeEnum;
@@ -65,17 +66,20 @@ class StatisticsService
     
     public function locationTotalCreditLoan($location_code)
     {
-        return Loan::where('location_code',$location_code)->where('type',LoanTypeEnum::MONEY_IN)->get()->sum('balance');
+        return Loan::where('location_code',$location_code)->where('type',TransactionTypeEnum::MONEY_IN)->get()->sum('balance');
     }
 
     public function locationTotalExpense($location_code)
     {
-        return Transaction::where('location_code',$location_code)->where('category', TransactionCategoryEnum::EXPENSE)->get()->sum('amount');
+        $openShifts =  Shift::where(['status'=>ShiftStatusEnum::OPEN,'business_code'=>$this->user->business_code])->pluck('id')->toArray();
+        $cashExpense = ShiftCashTransaction::whereIn('shift_id',$openShifts)->where('location_code',$location_code)->where('type', TransactionTypeEnum::MONEY_OUT)->where('category', TransactionCategoryEnum::EXPENSE)->get()->sum('amount');
+        $tillExpense = ShiftTransaction::whereIn('shift_id',$openShifts)->where('location_code',operator: $location_code)->where('type', TransactionTypeEnum::MONEY_OUT)->where('category', TransactionCategoryEnum::EXPENSE)->get()->sum('amount');
+        return $cashExpense + $tillExpense;
     }
 
     public function locationTotalDebitLoan($location_code)
     {
-        return Loan::where('location_code',$location_code)->where('type',LoanTypeEnum::MONEY_OUT)->get()->sum('balance');
+        return Loan::where('location_code',$location_code)->where('type',TransactionTypeEnum::MONEY_OUT)->get()->sum('balance');
     }
 
     public function agentNoOfAwardedVasContract()
@@ -96,44 +100,65 @@ class StatisticsService
 
     public function businessIncomeTotalof30days()
     {
-        return Transaction::where([
+        $cash_income = ShiftCashTransaction::where([
             'business_code' => $this->user->business_code,
             'category' => TransactionCategoryEnum::INCOME,
         ])->where('created_at','>=',now()->subDays(30))->get()->sum('amount');
+        
+        $till_income = ShiftTransaction::where([
+            'business_code' => $this->user->business_code,
+            'category' => TransactionCategoryEnum::INCOME,
+        ])->where('created_at','>=',now()->subDays(30))->get()->sum('amount');
+
+        return $cash_income + $till_income;
     }
 
     public function businessExpenseTotalof30days()
     {
-        return Transaction::where([
+        $cash_expense = ShiftCashTransaction::where([
             'business_code' => $this->user->business_code,
             'category' => TransactionCategoryEnum::EXPENSE,
         ])->where('created_at','>=',now()->subDays(30))->get()->sum('amount');
+        
+        $till_expense = ShiftTransaction::where([
+            'business_code' => $this->user->business_code,
+            'category' => TransactionCategoryEnum::EXPENSE,
+        ])->where('created_at','>=',now()->subDays(30))->get()->sum('amount');
+
+        return $cash_expense + $till_expense;
     }
 
     public function businessTotalTransaction()
     {
-        return Transaction::where([
+        $cash_txns = ShiftCashTransaction::where([
             'business_code' => $this->user->business_code,
-        ])->count();
+        ])->get()->sum('amount');
+        
+        $till_txns = ShiftTransaction::where([
+            'business_code' => $this->user->business_code,
+        ])->get()->sum('amount');
+        
+        return $cash_txns + $till_txns;
 
     }
 
     public function businessTotalDepositTransaction()
     {
-        return Transaction::where([
+        return ShiftTransaction::where([
             'business_code' => $this->user->business_code,
             'type' => TransactionTypeEnum::MONEY_IN,
-        ])->sum('amount');
+            'category' => TransactionCategoryEnum::GENERAL,
+        ])->get()->sum('amount');
 
     }
 
     public function businessTotalWithdrawalTransaction()
     {
-        return Transaction::where([
+        return ShiftTransaction::where([
             'business_code' => $this->user->business_code,
             'type' => TransactionTypeEnum::MONEY_OUT,
-        ])->sum('amount');
-
+            'category' => TransactionCategoryEnum::GENERAL,
+        ])->get()->sum('amount');
     }
 
     public function businessNoOfReferrals()

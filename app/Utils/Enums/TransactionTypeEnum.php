@@ -18,8 +18,8 @@ enum TransactionTypeEnum: string
     public function label()
     {
         return match ($this) {
-            self::MONEY_OUT => 'Withdraw',
             self::MONEY_IN => 'Deposit',
+            self::MONEY_OUT => 'Withdraw',
         };
     }
 }

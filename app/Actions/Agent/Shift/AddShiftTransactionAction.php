@@ -26,7 +26,7 @@ class AddShiftTransactionAction
 
             [$newBalance, $oldBalance] = match ($data['type']) {
                 TransactionTypeEnum::MONEY_IN->value => AddShiftTransactionAction::moneyIn(shift: $shift, data: $data),
-                TransactionTypeEnum::MONEY_OUT->value => AddShiftTransactionAction::moneyOut($data),
+                TransactionTypeEnum::MONEY_OUT->value => AddShiftTransactionAction::moneyOut(shift: $shift, data: $data),
                 default => [0, 0],
             };
 

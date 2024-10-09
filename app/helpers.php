@@ -10,6 +10,7 @@ use App\Models\ShiftTransaction;
 use App\Models\User;
 use App\Utils\Enums\NetworkTypeEnum;
 use App\Utils\Enums\FundSourceEnums;
+use App\Utils\Enums\TransactionCategoryEnum;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -311,16 +312,16 @@ if (! function_exists('shiftBalances')) {
         foreach ($shift->loadMissing('shiftNetworks.network')->shiftNetworks as $shiftNetworks) {
             if($shiftNetworks->network){
                 $tills[$shiftNetworks->network->name] = [
-                    'balance' => $shift->transactions()
-                        ->where('network_code', $shiftNetworks->network_code)
-                        ->exists() ? ShiftTransaction::query()->whereBelongsTo($shift, 'shift')
-                        ->where('network_code', $shiftNetworks->network_code)
-                        ->latest('created_at')
-                        ->limit(1)
-                        ->pluck('balance_new')
-                        ->first()
-                    :
-                    $shiftNetworks->balance_new,
+                    // 'balance' => $shift->transactions()
+                    //     ->where('network_code', $shiftNetworks->network_code)
+                    //     ->exists() ? ShiftTransaction::query()->whereBelongsTo($shift, 'shift')
+                    //     ->where('network_code', $shiftNetworks->network_code)
+                    //     ->latest('created_at')
+                    //     ->limit(1)
+                    //     ->pluck('balance_new')
+                    //     ->first()
+                    // :
+                    'balance' => $shiftNetworks->network->balance,
                     'code' => $shiftNetworks->network_code,
                     'balance_new' => $shiftNetworks->balance_new,
                     'balance_old' => $shiftNetworks->balance_old,
@@ -361,6 +362,7 @@ if (! function_exists('shiftBalances')) {
                 'location_code' => $shift->location_code,
                 'user_code' => $shift->user_code,
                 'type' => \App\Utils\Enums\TransactionTypeEnum::MONEY_OUT,
+                'category' => TransactionCategoryEnum::EXPENSE,
             ])
             ->whereBetween('created_at', [
                 $shift->created_at,
@@ -373,6 +375,7 @@ if (! function_exists('shiftBalances')) {
             'location_code' => $shift->location_code,
             'user_code' => $shift->user_code,
             'type' => \App\Utils\Enums\TransactionTypeEnum::MONEY_OUT,
+            'category' => TransactionCategoryEnum::EXPENSE,
         ])
         ->whereBetween('created_at', [
             $shift->created_at,
@@ -422,7 +425,7 @@ if (! function_exists('shiftBalances')) {
 
         $creditLoan = \App\Models\Loan::query()
             ->whereBelongsTo($shift,'shift')
-            ->where('type', \App\Utils\Enums\LoanTypeEnum::MONEY_IN)
+            ->where('type', \App\Utils\Enums\TransactionTypeEnum::MONEY_IN)
             // ->whereBetween('created_at', [
             //     $shift->created_at,
             //     now(),
@@ -432,7 +435,7 @@ if (! function_exists('shiftBalances')) {
 
         $debitLoan = \App\Models\Loan::query()
             ->whereBelongsTo($shift,'shift')
-            ->where('type', \App\Utils\Enums\LoanTypeEnum::MONEY_OUT)
+            ->where('type', \App\Utils\Enums\TransactionTypeEnum::MONEY_OUT)
             // ->whereBetween(column: 'created_at', [
             //     $shift->created_at,
             //     now(),
@@ -445,7 +448,7 @@ if (! function_exists('shiftBalances')) {
 
         $startCapital = $shift->cash_start + $shift->shiftNetworks->sum('balance_old');
 
-        $cash = $cash + $income - $expenses;
+        // $cash = $cash + $income - $expenses;
 
         $totalBalance = $cash + $tillBalances;
         

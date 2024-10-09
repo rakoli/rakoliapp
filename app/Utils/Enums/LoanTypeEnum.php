@@ -4,9 +4,8 @@ namespace App\Utils\Enums;
 
 enum LoanTypeEnum: string
 {
-    case MONEY_IN = 'money_in';
-
-    case MONEY_OUT = 'money_out';
+    case MONEY_IN = 'IN';
+    case MONEY_OUT = 'OUT';
 
     public function label(): string
     {

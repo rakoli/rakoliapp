@@ -1,4 +1,4 @@
-@php use App\Utils\Enums\LoanTypeEnum; 
+@php use App\Utils\Enums\TransactionTypeEnum; 
      use App\Utils\Enums\NetworkTypeEnum;
 @endphp
 <div>
