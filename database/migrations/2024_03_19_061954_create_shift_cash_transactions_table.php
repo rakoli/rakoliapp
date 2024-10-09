@@ -45,6 +45,7 @@ return new class extends Migration
 
             $table->string('code')->unique();
             $table->string('type'); // enum <TransactionTypeEnum<Money_in, Money_out>>
+            $table->string('category'); // enum <TransactionCategoryEnum<Income, Expense, General>>
             $table->decimal('amount', 12, 2);
             $table->string('amount_currency');
             $table->decimal('balance_old', 12, 2);

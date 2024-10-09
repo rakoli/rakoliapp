@@ -15,7 +15,7 @@ class AddIncomeTransactionController extends Controller
     {
         $validated = $request->validate([
             'amount' => 'required',
-            'income_type' => 'required',
+            'source' => 'required',
             'network_code' => 'nullable',
             'description' => 'required|string',
             'notes' => 'nullable|string',

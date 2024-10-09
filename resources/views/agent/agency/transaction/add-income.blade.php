@@ -28,11 +28,11 @@
                 </div>
 
                 <div class="col-6">
-                    <x-label class="" label="{{ __('Cash In Type') }}" for="income_type"/>
+                    <x-label class="" label="{{ __('Cash In Type') }}" for="source"/>
                     <x-select2
-                        name="income_type"
+                        name="source"
                         placeholder="{{ __('source: e.g Cash ') }}"
-                        id="income_type">
+                        id="source">
                         @foreach(\App\Utils\Enums\FundSourceEnums::cases() as $source)
                             <option
                                 value="{{ $source->value }}"
@@ -50,7 +50,7 @@
 
                         </ul>
                     </x-helpertext>
-                    @error('income_type')
+                    @error('source')
                     <div class="help-block text-danger">
                         {{ $message }}
                     </div>
@@ -168,13 +168,13 @@
                 jQuery("div#till-income-type").hide()
                 jQuery(".crypto-data").hide();
 
-                jQuery("select#income_type").on("change", function () {
+                jQuery("select#source").on("change", function () {
 
                     var selectedOption = jQuery(this).find(":selected");
 
-                    var incomeType = selectedOption.data('income');
+                    var source = selectedOption.data('income');
 
-                    if ("TILL" === incomeType)
+                    if ("TILL" === source)
                     {
                         jQuery("div#till-income-type").show()
                         jQuery('select#network_code_income').change();
@@ -203,7 +203,7 @@
                     var amount = jQuery("#add-income-form #amount").val();
                     var crypto = jQuery("#add-income-form #crypto").val();
                     var exchange_rate = jQuery("#add-income-form #exchange_rate").val();
-                    if(jQuery('select#income_type').val() == "TILL"){
+                    if(jQuery('select#source').val() == "TILL"){
                         var balance_amount = jQuery("#add-income-form .balance-amount").data('till');
                     } else {
                         var balance_amount = jQuery("#add-income-form .balance-amount").data('cash');
@@ -220,7 +220,7 @@
 
                 jQuery(document).on("click","#add-income-button", function(){
 
-                    if(jQuery("#income_type").val() == "TILL"){
+                    if(jQuery("#source").val() == "TILL"){
 
                         if(jQuery("#network_code_income").find(":selected").data('type') == "Crypto"){
                             var incomeValidations = [
@@ -230,7 +230,7 @@
                                     "validators": {}
                                 },
                                 {
-                                    "name": "income_type",
+                                    "name": "source",
                                     "error": "Income type is Required",
                                     "validators": {}
                                 },
@@ -263,7 +263,7 @@
                                     "validators": {}
                                 },
                                 {
-                                    "name": "income_type",
+                                    "name": "source",
                                     "error": "Income type is Required",
                                     "validators": {}
                                 },
@@ -287,7 +287,7 @@
                                 "validators" : {}
                             },
                             {
-                                "name": "income_type",
+                                "name": "source",
                                 "error": "Income type is Required",
                                 "validators" : {}
                             },
