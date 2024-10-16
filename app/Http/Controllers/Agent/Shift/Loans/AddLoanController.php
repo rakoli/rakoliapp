@@ -48,6 +48,13 @@ class AddLoanController extends Controller
                 new \Exception('You cannot transact without an open shift')
             );
 
+            if($request['type'] == "OUT"){
+                throw_if(
+                    ! checkBalance($shift, $request), 
+                    new \Exception(message: 'Insuffcient balance')
+                );                    
+            }
+
             $validated['category'] = TransactionCategoryEnum::GENERAL;
 
             AddLoan::run(shift: $shift, data: $validated);
@@ -60,7 +67,7 @@ class AddLoanController extends Controller
         } catch (\Exception $e) {
             return response()
                 ->json([
-                    'message' => 'Something went wrong'.$e->getMessage(),
+                    'message' => $e->getMessage(),
                 ], 422);
 
         }
