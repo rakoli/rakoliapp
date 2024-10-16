@@ -25,10 +25,7 @@
                 <div class="d-flex flex-stack">
                     <!--begin::Search-->
                     <div class="d-flex align-items-center position-relative my-1">
-                        {{--<i class="ki-duotone ki-magnifier fs-1 position-absolute ms-6"><span
-                                class="path1"></span><span class="path2"></span></i>
-                        <x-input type="text" data-kt-docs-table-filter="search"
-                                 class="fform-control-solid w-250px ps-15" placeholder="Search Shits"/>--}}
+                        <a href="{{route('agency.loans.statement')}}" class="btn btn-primary fw-bold fs-8 fs-lg-base">{{__('Download Statement')}}</a>
                     </div>
                     <!--end::Search-->
                 </div>
