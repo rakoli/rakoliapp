@@ -58,7 +58,7 @@ class LoanController extends Controller
             $data['entries'][$key]['network'] = $loan->network ? $loan->network->name : "CASH";
             $data['entries'][$key]['user'] = $loan->user ? $loan->user->FullName : " - ";
             $data['entries'][$key]['credit'] = $loan->type == "IN" ? 0 : $loan->balance;
-            $data['entries'][$key]['paid'] = $loan->type == "OUT" ? $loan->balance : 0;
+            $data['entries'][$key]['paid'] = $loan->type == "IN" ? $loan->balance : 0;
             $data['total_credit'] += $data['entries'][$key]['credit']; 
             $data['total_paid'] += $data['entries'][$key]['paid']; 
         }
