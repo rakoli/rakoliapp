@@ -47,4 +47,23 @@ class LoanController extends Controller
         $pdf = Pdf::loadView('agent.agency.loans.statement', array('loan' => $loan));
         return $pdf->stream($loan['code'].".pdf");
     }
+
+    public function getStatement() {
+        Log::info('generate_receipt_pdf starts');
+        $loans = Loan::with(['network','user'])->orderBy('id')->get();
+        $data['total_credit'] = 0;
+        $data['total_paid'] = 0;
+        foreach($loans as $key => $loan) {
+            $data['entries'][$key]['created_at'] = $loan->created_at;
+            $data['entries'][$key]['network'] = $loan->network ? $loan->network->name : "CASH";
+            $data['entries'][$key]['user'] = $loan->user ? $loan->user->FullName : " - ";
+            $data['entries'][$key]['credit'] = $loan->type == "IN" ? 0 : $loan->balance;
+            $data['entries'][$key]['paid'] = $loan->type == "OUT" ? $loan->balance : 0;
+            $data['total_credit'] += $data['entries'][$key]['credit']; 
+            $data['total_paid'] += $data['entries'][$key]['paid']; 
+        }
+        $pdf = Pdf::loadView('agent.agency.loans.loans_statement', array('data' => $data));
+        return $pdf->download("loan_statement_".time().".pdf");
+    }
+
 }
