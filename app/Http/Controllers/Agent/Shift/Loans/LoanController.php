@@ -9,6 +9,7 @@ use App\Models\Network;
 use App\Models\Shift;
 use App\Utils\Datatables\Agent\Shift\LoanDatatable;
 use App\Utils\Enums\ShiftStatusEnum;
+use App\Utils\Enums\TransactionTypeEnum;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -57,8 +58,9 @@ class LoanController extends Controller
             $data['entries'][$key]['created_at'] = $loan->created_at;
             $data['entries'][$key]['network'] = $loan->network ? $loan->network->name : "CASH";
             $data['entries'][$key]['user'] = $loan->user ? $loan->user->FullName : " - ";
-            $data['entries'][$key]['credit'] = $loan->type == "IN" ? 0 : $loan->balance;
-            $data['entries'][$key]['paid'] = $loan->type == "IN" ? $loan->balance : 0;
+            $data['entries'][$key]['credit'] = $loan->type == TransactionTypeEnum::MONEY_OUT ? $loan->balance : 0;
+            $data['entries'][$key]['paid'] = $loan->type == TransactionTypeEnum::MONEY_IN ? $loan->balance : 0;
+            $data['entries'][$key]['type'] = $loan->type;
             $data['total_credit'] += $data['entries'][$key]['credit']; 
             $data['total_paid'] += $data['entries'][$key]['paid']; 
         }
