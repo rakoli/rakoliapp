@@ -34,7 +34,7 @@
             <table cellpadding="0" cellspacing="0" class="header-table" style="width: 100%; font-size: 9pt">
                 <tbody>
                     <tr>
-                        <td colspan="5" style="text-align: center; border-bottom: 1px solid #000; padding: 5px;font-size:30px;font-weight:700">
+                        <td colspan="5" style="text-align: center; border-bottom: 1px solid #000; padding: 5px;font-size:35px;font-weight:700;color:#fff;background-color:#000">
                             {{ Auth::user()->business->business_name}}
                         </td>
                     </tr>
@@ -43,9 +43,9 @@
                             STATEMENTS OF CAPITAL IS OUTSIDE ROTATIONS
                         </td>
                     </tr>
-                    <tr style="text-align: center; border-bottom: 1px solid #000; padding: 5px;font-size:16px;font-weight:700">
-                        <th colspan="2" align="left">CREDITED NAME</th>
-                        <th colspan="3" align="left">BOSS HUSSEIN</th>
+                    <tr style="text-align: center; border-bottom: 1px solid #000; padding: 5px;font-size:16px;font-weight:700;background-color:#000;">
+                        <th colspan="2" align="left" style="color:#fff;padding-left:10px">CREDITED NAME</th>
+                        <th colspan="3" align="left" style="color:#fff">BOSS HUSSEIN</th>
                     </tr>
 
                     <tr style="border-bottom:1px solid #000">
