@@ -68,20 +68,7 @@
                             >{{ str($source->name)->title()->value()  }}</option>
                         @endforeach
                     </x-select2>
-                    <x-helpertext>
-                        <ul class="list-style-none">
-                            <li class="py-md-1 text-primary">{{ __("Select the source of funds for this transaction") }}</li>
-                            <li>{{ __('Cash Source') }}: {{ __('Transaction will reduce cash balances') }}</li>
-                            <li>{{ __('Till Source') }}: {{ __('Transaction will reduce Till balances') }}</li>
-
-                        </ul>
-                        <ul class="list-style-none">
-                            <li class="py-md-1 text-primary">{{ __("Transaction Effects") }}</li>
-                            <li>{{ __('Deposit') }}: {{ __('Reduces Till Balance, Cash Balance will increase upon Loan payments') }}</li>
-                            <li  class="pt-md-3">{{ __('Withdraw') }}: {{ __('Reduce the Cash Balance, Till Balance will increase upon Loan payments') }}</li>
-
-                        </ul>
-                    </x-helpertext>
+                    <x-helpertext>{{ __("Select the source of funds for this transaction") }}</x-helpertext>
 
                     @error('source')
                     <div class="help-block text-danger">
@@ -89,6 +76,15 @@
                     </div>
                     @enderror
                 </div>
+                <x-helpertext>
+                    <ul class="list-style-none">
+                        <li>{{ __('Cash Source - Deposit') }}: {{ __('Transaction will increase cash balance') }}</li>
+                        <li>{{ __('Cash Source - Withdraw') }}: {{ __('Transaction will decrease cash balance') }}</li>
+                        <li>{{ __('Till Source - Deposit') }}: {{ __('Transaction will increase Till balance') }}</li>
+                        <li>{{ __('Till Source - Withdraw') }}: {{ __('Transaction will decrease Till balance') }}</li>
+                    </ul>
+                </x-helpertext>
+
 
                 <div class="col-6 mt-md-4 till-source">
                     <x-label class="" label="Select Till" for="till_code"/>
