@@ -68,8 +68,8 @@ class PayLoanAction
             
             if ($source === FundSourceEnums::TILL) {
                 [$newBalance, $oldBalance] = match ($data['type']) {
-                    TransactionTypeEnum::MONEY_IN->value => AddLoan::moneyIn(shift: $shift, data: $data, isLoan: true),
-                    TransactionTypeEnum::MONEY_OUT->value => AddLoan::moneyOut(shift: $shift, data: $data, isLoan: true),
+                    TransactionTypeEnum::MONEY_IN->value => AddLoan::moneyOut(shift: $shift, data: $data, isLoan: true),
+                    TransactionTypeEnum::MONEY_OUT->value => AddLoan::moneyIn(shift: $shift, data: $data, isLoan: true),
                 };
 
                 $this->createShiftTransaction(
@@ -82,8 +82,8 @@ class PayLoanAction
                 
             }else {
                 [$newBalance, $oldBalance] = match ($data['type']) {
-                    TransactionTypeEnum::MONEY_IN->value => AddLoan::cashMoneyIn(shift: $shift, data: $data, isLoan: true),
-                    TransactionTypeEnum::MONEY_OUT->value => AddLoan::cashMoneyOut(shift: $shift, data: $data, isLoan: true),
+                    TransactionTypeEnum::MONEY_IN->value => AddLoan::cashMoneyOut(shift: $shift, data: $data, isLoan: true),
+                    TransactionTypeEnum::MONEY_OUT->value => AddLoan::cashMoneyIn(shift: $shift, data: $data, isLoan: true),
                 };
 
                 $this->createShiftCashTransaction(
