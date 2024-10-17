@@ -72,8 +72,6 @@ class AddLoan
                     newBalance: $newBalance
                 );
             }
-
-            $data['type'] = $data['type'] == "IN" ? "OUT" : "IN";
             Log::info(message: "AddLoan :: Update Location Network Balance :: ".print_r($data,true));
             $this->updateBalance(shift: $shift, data: $data);
 
