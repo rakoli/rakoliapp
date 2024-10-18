@@ -42,6 +42,14 @@
         <div class="fv-row mb-8">
             <div class="d-flex flex-column flex-md-row gap-5">
                 <div class="fv-row flex-row-fluid">
+                    <input type="text" placeholder="{{ __("Business Name") }}" name="business_name" autocomplete="off" class="form-control bg-transparent" />
+                </div>
+            </div>
+        </div>
+
+        <div class="fv-row mb-8">
+            <div class="d-flex flex-column flex-md-row gap-5">
+                <div class="fv-row flex-row-fluid">
                     <input type="text" placeholder="{{ __("First Name") }}" name="fname" autocomplete="off" class="form-control bg-transparent" />
                 </div>
                 <div class="fv-row flex-row-fluid">

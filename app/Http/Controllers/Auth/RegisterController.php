@@ -115,7 +115,21 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::addUser($data);
+        $user = User::addUser($data);
+
+        $addBusinessData = [
+            'country_code' => $user->country_code,
+            'code' => generateCode($data['business_name'],$user->country_code),
+            'type' => $user->type,
+            'business_name' => $data['business_name'],
+        ];
+
+        if($user->referral_business_code != null){
+            $addBusinessData['referral_business_code'] = $user->referral_business_code;
+        }
+        $business = Business::addBusiness($addBusinessData,$user);
+        return $user;
+
     }
 
     protected function registered(Request $request, $user)

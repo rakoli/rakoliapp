@@ -8,6 +8,7 @@ class ValidationRule
     {
         return [
             'country_dial_code' => ['required','exists:countries,dialing_code'],
+            'business_name' => ['required', 'string'],
             'fname' => ['required', 'string', 'max:20'],
             'lname' => ['required', 'string', 'max:20'],
             'phone' => ['required','numeric'],

@@ -290,6 +290,11 @@
                     </span>
                     <span class="menu-title">{{ __('Business Profile') }}</span>
                 </a>
+                <a class="menu-link" href="{{route('business.profile.verification')}}"><span class="menu-bullet">
+                    <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ __('Verification') }}</span>
+                </a>
                 <a class="menu-link" href="{{route('business.branches')}}"><span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>

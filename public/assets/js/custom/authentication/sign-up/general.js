@@ -116,6 +116,13 @@ var KTSignupGeneral = function() {
                 this.value.length > 0 && r.updateFieldStatus("password", "NotValidated")
             }))) : (r = FormValidation.formValidation(e, {
                 fields: {
+                    business_name: {
+                        validators: {
+                            notEmpty: {
+                                message: "Business Name is required"
+                            }
+                        }
+                    },
                     fname: {
                         validators: {
                             notEmpty: {

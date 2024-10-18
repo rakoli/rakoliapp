@@ -115,9 +115,9 @@ class RegistrationStepController extends Controller
             $user->email_otp_time = null;
             $user->email_otp_count = null;
 
-            if($user->phone_verified_at != null){
-                $user->registration_step = $user->registration_step + 1;
-            }
+            // if($user->phone_verified_at != null){
+            //     $user->registration_step = $user->registration_step + 1;
+            // }
 
             $user->save();
 
@@ -197,9 +197,9 @@ class RegistrationStepController extends Controller
             $user->phone_otp_time = null;
             $user->phone_otp_count = null;
 
-            if($user->email_verified_at != null){
-                $user->registration_step = $user->registration_step + 1;
-            }
+            // if($user->email_verified_at != null){
+            //     $user->registration_step = $user->registration_step + 1;
+            // }
 
             $user->save();
 

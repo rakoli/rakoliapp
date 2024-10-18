@@ -745,5 +745,8 @@ class BusinessController extends Controller
 
     }
 
+    public function verification(Request $request){
+        return view('agent.business.verification');
+    }
 
 }

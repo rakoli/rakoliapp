@@ -86,6 +86,7 @@ class Business extends Model
                     'user_code'=>$user->code,
                     'location_code'=>$locationInstance->code,
                 ]);
+                $user->update(['business_code' => $businessInstance->code]);
             }
             DB::commit();
         }catch (\Exception $exception) {

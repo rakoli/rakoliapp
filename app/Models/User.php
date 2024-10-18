@@ -241,7 +241,7 @@ class User extends Authenticatable
             'password' => Hash::make($data['password']),
             'referral_business_code' => $referralBusinessCode,
             'isowner' => isset($data['type']) ? 1 : 0,
-            'registration_step' => isset($data['type']) ? 0 : 1,
+            'registration_step' => isset($data['type']) ? 0 : 3,
             'phone_verified_at' => isset($data['type'])  ? Carbon::now() : NULL,
             'email_verified_at' => isset($data['type']) ? Carbon::now() : NULL,
             'id_verified_at' => isset($data['type']) ? Carbon::now() : NULL,

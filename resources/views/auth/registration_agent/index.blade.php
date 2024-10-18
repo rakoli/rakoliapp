@@ -306,17 +306,17 @@
 @include('auth.registration_agent.js_businessdetails')
 <script>
 
-    //START:: VERIFICATION STEP ACTIONS
-    //Included Above
-    //END:: VERIFICATION STEP ACTIONS
+    // START:: VERIFICATION STEP ACTIONS
+    // Included Above
+    // END:: VERIFICATION STEP ACTIONS
 
 
-    //END:: BUSINESS DETAILS ACTIONS
-    //Included Above
-    //END:: BUSINESS DETAILS ACTIONS
+    // END:: BUSINESS DETAILS ACTIONS
+    // Included Above
+    // END:: BUSINESS DETAILS ACTIONS
 
 
-    //END:: SUBSCRIPTION ACTIONS
+    // END:: SUBSCRIPTION ACTIONS
     var selectedpackage = "";
     var selectedpackageName = "";
     var selectedpackagePrice = "";
