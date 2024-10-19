@@ -86,7 +86,7 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
     //END: AGENCY MODULE
 
     //EXCHANGE MODULE
-    Route::name('exchange.')->prefix('exchange')->middleware(['validateSubscription','lastseen_update'])->group(function () {
+    Route::name('exchange.')->prefix('exchange')->middleware(['should_verified','validateSubscription','lastseen_update'])->group(function () {
 
         Route::get('ads', [App\Http\Controllers\Agent\ExchangeController::class, 'ads'])->name('ads');
         Route::get('ads/view/{id}', [App\Http\Controllers\Agent\ExchangeController::class, 'adsView'])->name('ads.view');
@@ -114,19 +114,23 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
 
     });
     //END: EXCHANGE MODULE
+    
+    Route::middleware(['should_verified'])->group(function () {
 
-    //Task
-    Route::get('tasks/{type?}',[App\Http\Controllers\Agent\TasksController::class, 'index'])->name('agent.tasks');
-    Route::get('task/view/{id}',[App\Http\Controllers\Agent\TasksController::class, 'show'])->name('agent.task.show');
-    Route::post('task/apply',[App\Http\Controllers\Agent\TasksController::class, 'apply'])->name('agent.task.apply');
+        //Task
+        Route::get('tasks/{type?}',[App\Http\Controllers\Agent\TasksController::class, 'index'])->name('agent.tasks');
+        Route::get('task/view/{id}',[App\Http\Controllers\Agent\TasksController::class, 'show'])->name('agent.task.show');
+        Route::post('task/apply',[App\Http\Controllers\Agent\TasksController::class, 'apply'])->name('agent.task.apply');
 
-    //Contracts
-    Route::resource('contracts',App\Http\Controllers\Agent\ContractsController::class);
-    Route::get('contracts/receive/message', [App\Http\Controllers\Agent\ContractsController::class, 'contractsReceiveMessage'])->name('contracts.receive.message');
+        //Contracts
+        Route::resource('contracts',App\Http\Controllers\Agent\ContractsController::class);
+        Route::get('contracts/receive/message', [App\Http\Controllers\Agent\ContractsController::class, 'contractsReceiveMessage'])->name('contracts.receive.message');
 
-    //Contract Submission
-    Route::resource('contracts.submissions',App\Http\Controllers\Agent\ContractSubmissionsController::class);
-    Route::post('contracts/{contract}/submissions/upload',[App\Http\Controllers\Agent\ContractSubmissionsController::class, 'fileUpload'])->name('contracts.submissions.upload');
+        //Contract Submission
+        Route::resource('contracts.submissions',App\Http\Controllers\Agent\ContractSubmissionsController::class);
+        Route::post('contracts/{contract}/submissions/upload',[App\Http\Controllers\Agent\ContractSubmissionsController::class, 'fileUpload'])->name('contracts.submissions.upload');
+    });
+    //END: TASK MODULE
 
   //BUSINESS MANAGEMENT MODULE
     Route::name('business.')->prefix('business')->middleware('lastseen_update')->group(function () {

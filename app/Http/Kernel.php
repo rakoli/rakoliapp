@@ -75,6 +75,7 @@ class Kernel extends HttpKernel
         'should_complete_registration' => \App\Http\Middleware\ShouldCompleteRegistrationMiddleware::class,
         'lastseen_update' => \App\Http\Middleware\LastseenUpdateMiddleware::class,
         'validateSubscription' => \App\Http\Middleware\ValidateSubscriptionMiddleware::class,
+        'should_verified' => \App\Http\Middleware\ShouldVerifiedMiddleware::class,
     ];
 
     protected function bootstrappers()
