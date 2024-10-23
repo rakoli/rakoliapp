@@ -8,6 +8,7 @@ use App\Models\Loan;
 use App\Models\Shift;
 use App\Utils\Enums\ShiftStatusEnum;
 use App\Utils\Enums\TransactionCategoryEnum;
+use App\Utils\Enums\TransactionTypeEnum;
 use Illuminate\Http\Request;
 
 class AddLoanController extends Controller
@@ -27,12 +28,13 @@ class AddLoanController extends Controller
         $validated = $request->validate([
             'amount' => 'required',
             'source' => 'required',
+            'name' => 'required',
             'type' => 'required',
             'network_code' => 'required_if:source,TILL',
             'notes' => 'nullable|string|max:255',
             'description' => 'required|string|max:255',
         ], [
-            'type.required' => 'Transaction Type is Required',
+            'type.required' => 'Loan type is Required',
             'network_code.required' => 'Network is Required',
         ]);
 
@@ -48,12 +50,10 @@ class AddLoanController extends Controller
                 new \Exception('You cannot transact without an open shift')
             );
 
-            if($request['type'] == "OUT"){
-                throw_if(
-                    ! checkBalance($shift, $request), 
-                    new \Exception(message: 'Insuffcient balance')
-                );                    
-            }
+            throw_if(
+                ! checkBalance($shift, $request) && $request->type == "OUT", 
+                new \Exception(message: 'Insuffcient balance')
+            );
 
             $validated['category'] = TransactionCategoryEnum::GENERAL;
 

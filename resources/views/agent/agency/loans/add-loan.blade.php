@@ -1,4 +1,4 @@
-@php use App\Utils\Enums\TransactionTypeEnum;
+@php use App\Utils\Enums\LoanTypeEnum;
      use App\Utils\Enums\NetworkTypeEnum;
 @endphp
 <div>
@@ -9,6 +9,50 @@
         <div class="modal-body">
 
             <div class="row fv-row py-2">
+
+                <div class="col-6 mt-md-4">
+                    <x-label class="" label="Loan Type" for="type"/>
+                    
+                    <x-select2
+                        modalId="add-loan"
+                        class=" @error('type') @enderror"
+                        name="type"
+                        placeholder="{{ __('Select a Loan Type') }}"
+                        id="type">
+                        <option value="">{{ __('Select a Loan Type') }}</option>
+                    
+                        @foreach(LoanTypeEnum::cases() as $loanType)
+                            <option value="{{ $loanType->value }}">{{ $loanType->label() }}</option>
+                        @endforeach
+                    </x-select2>
+                    <x-helpertext>{{ __("Type of Loan, either received or given") }}</x-helpertext>
+                    
+                    @error('type')
+                    <div class="help-block text-danger">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </div>
+
+                <div class="col-6 mt-md-4">
+                    <x-label class="" label="Name" for="name"/>
+
+                    <x-input
+                    type="text"
+                    class="form-control-solid   @error('name') form-control-feedback @enderror"
+                    name="name"
+                    placeholder="{{ __('Reciver / Giver Name') }}"
+                    id="name"
+                    />
+
+                    <x-helpertext>{{ __("Reciver / Giver Name for this Loan") }}</x-helpertext>
+
+                    @error('name')
+                    <div class="help-block text-danger">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </div>
 
                 <div class="col-6 mt-md-4">
                     <x-label class="" label="{{ __('Amount') }}" for="amount"/>
@@ -23,30 +67,6 @@
 
                     <x-helpertext>{{ __("Amount for this Loan") }}</x-helpertext>
                     @error('amount')
-                    <div class="help-block text-danger">
-                        {{ $message }}
-                    </div>
-                    @enderror
-                </div>
-
-                <div class="col-6 mt-md-4">
-                    <x-label class="" label="Transaction Type" for="type"/>
-
-                    <x-select2
-                        modalId="add-loan"
-                        class=" @error('type') @enderror"
-                        name="type"
-                        placeholder="{{ __('Select a Transaction Type') }}"
-                        id="type">
-                        <option value="">{{ __('Select a Transaction Type') }}</option>
-
-                        @foreach(TransactionTypeEnum::cases() as $transactionType)
-                            <option value="{{ $transactionType->value }}">{{ $transactionType->label() }}</option>
-                        @endforeach
-                    </x-select2>
-                    <x-helpertext>{{ __("Type of Transaction, either deposit or withdraw") }}</x-helpertext>
-
-                    @error('type')
                     <div class="help-block text-danger">
                         {{ $message }}
                     </div>
@@ -76,15 +96,6 @@
                     </div>
                     @enderror
                 </div>
-                <x-helpertext>
-                    <ul class="list-style-none">
-                        <li>{{ __('Cash Source - Deposit') }}: {{ __('Transaction will increase cash balance') }}</li>
-                        <li>{{ __('Cash Source - Withdraw') }}: {{ __('Transaction will decrease cash balance') }}</li>
-                        <li>{{ __('Till Source - Deposit') }}: {{ __('Transaction will increase Till balance') }}</li>
-                        <li>{{ __('Till Source - Withdraw') }}: {{ __('Transaction will decrease Till balance') }}</li>
-                    </ul>
-                </x-helpertext>
-
 
                 <div class="col-6 mt-md-4 till-source">
                     <x-label class="" label="Select Till" for="till_code"/>
@@ -112,6 +123,13 @@
                     @enderror
 
                 </div>
+
+                <x-helpertext>
+                    <ul class="list-style-none">
+                        <li>{{ __('Received Cash / Till Loan') }}: {{ __('Transaction will increase cash or till balance and decrease loan balance') }}</li>
+                        <li>{{ __('Given Cash / Till Loan') }}: {{ __('Transaction will decrease cash or till balance and increase loan balance') }}</li>
+                    </ul>
+                </x-helpertext>
             </div>
 
 
@@ -175,24 +193,17 @@
                     }
 
                 });
-
-                $("div.till-source").hide()
+                
+                $("div.till-source").hide();
 
                 $("select#source").on("change", function () {
-
                     var selectedOption = $(this).find(":selected");
-
-
                     var source = selectedOption.data("source");
-
-
                     if ("TILL" === source) {
                         $("div.till-source").show()
                     } else {
                         $("div.till-source").hide()
                     }
-
-
                 });
 
                 jQuery(document).on("click","#add-loan-button", function(){
@@ -211,7 +222,12 @@
                             },
                             {
                                 "name": "type",
-                                "error": "Transaction Type is Required",
+                                "error": "Loan Type is Required",
+                                "validators": {}
+                            },
+                            {
+                                "name": "name",
+                                "error": "Name is Required",
                                 "validators": {}
                             },
                             {
@@ -239,7 +255,12 @@
                             },
                             {
                                 "name": "type",
-                                "error": "Transaction Type is Required",
+                                "error": "Loan Type is Required",
+                                "validators": {}
+                            },
+                            {
+                                "name": "name",
+                                "error": "Name is Required",
                                 "validators": {}
                             },
                             {

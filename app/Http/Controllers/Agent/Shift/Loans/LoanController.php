@@ -8,11 +8,9 @@ use App\Models\Location;
 use App\Models\Network;
 use App\Models\Shift;
 use App\Utils\Datatables\Agent\Shift\LoanDatatable;
+use App\Utils\Enums\LoanTypeEnum;
 use App\Utils\Enums\ShiftStatusEnum;
-use App\Utils\Enums\TransactionTypeEnum;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Dompdf\Dompdf;
-use Dompdf\Options;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Html\Builder;
@@ -57,9 +55,9 @@ class LoanController extends Controller
         foreach($loans as $key => $loan) {
             $data['entries'][$key]['created_at'] = $loan->created_at;
             $data['entries'][$key]['network'] = $loan->network ? $loan->network->name : "CASH";
-            $data['entries'][$key]['user'] = $loan->user ? $loan->user->FullName : " - ";
-            $data['entries'][$key]['credit'] = $loan->type == TransactionTypeEnum::MONEY_OUT ? $loan->balance : 0;
-            $data['entries'][$key]['paid'] = $loan->type == TransactionTypeEnum::MONEY_IN ? $loan->balance : 0;
+            $data['entries'][$key]['user'] = $loan->name;
+            $data['entries'][$key]['credit'] = $loan->type == LoanTypeEnum::MONEY_OUT ? $loan->balance : 0;
+            $data['entries'][$key]['paid'] = $loan->type == LoanTypeEnum::MONEY_IN ? $loan->balance : 0;
             $data['entries'][$key]['type'] = $loan->type;
             $data['total_credit'] += $data['entries'][$key]['credit']; 
             $data['total_paid'] += $data['entries'][$key]['paid']; 

@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Models\Scopes\BusinessScoped;
 use App\Models\Scopes\LocationScoped;
 use App\Utils\Enums\LoanPaymentStatusEnum;
-use App\Utils\Enums\TransactionTypeEnum;
+use App\Utils\Enums\LoanTypeEnum;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -23,7 +23,7 @@ class Loan extends Model
 
     protected $casts = [
         'status' => LoanPaymentStatusEnum::class,
-        'type' => TransactionTypeEnum::class,
+        'type' => LoanTypeEnum::class,
     ];
 
     protected $guarded = [

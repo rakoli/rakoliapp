@@ -52,7 +52,7 @@
                     </tr>
                     <tr style="text-align:center;">
                         <td>{!! Carbon\Carbon::parse($loan['created_at'])->format('d.m.Y') !!}</td>
-                        <td>paid</td>
+                        <td>{!! $loan['name'] !!}</td>
                         <td>{!! $loan['network'] ? $loan['network']['name'] : "Cash" !!}</td>
                         <td>0</td>
                         <td>{!! money($loan['amount'], currencyCode(), true) !!}</td>
@@ -61,7 +61,7 @@
                         @php $totalpaid += $payment['amount']; @endphp
                         <tr style="text-align:center;">
                             <td>{!! Carbon\Carbon::parse($payment['created_at'])->format('d.m.Y') !!}</td>
-                            <td>Payment</td>
+                            <td>{!! $loan['name'] !!}</td>
                             <td>{!! $payment['network'] ? $payment['network']['name'] : "Cash" !!}</td>
                             <td>{!! money($payment['amount'], currencyCode(), true) !!}</td>
                             <td>0</td>

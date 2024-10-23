@@ -35,6 +35,7 @@ class AddLoan
                 'business_code' => auth()->user()->business_code,
                 'location_code' => $shift->location_code,
                 'user_code' => auth()->user()->code,
+                'name' => $data['name'],
                 'amount' => $data['amount'],
                 'network_code' => $data['network_code'],
                 'type' => TransactionTypeEnum::tryFrom($data['type']),

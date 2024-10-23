@@ -10,8 +10,8 @@ enum LoanTypeEnum: string
     public function label(): string
     {
         return match ($this) {
-            self::MONEY_IN => 'Deposit',
-            self::MONEY_OUT => 'Withdraw',
+            self::MONEY_IN => 'Received',
+            self::MONEY_OUT => 'Given',
         };
     }
 
