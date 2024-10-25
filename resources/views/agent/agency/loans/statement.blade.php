@@ -34,9 +34,15 @@
             <table cellpadding="0" cellspacing="0" class="header-table" style="width: 100%; font-size: 9pt">
                 <tbody>
                     <tr>
-                        <td colspan="5" style="text-align: center; border-bottom: 1px solid #000; padding: 5px;font-size:30px;font-weight:700">
-                            {{ Auth::user()->business->business_name}}
-                        </td>
+                        @if(file_exists(public_path('assets/media/bussiness_logo/'.Auth::user()->business_code.'.jpeg')))
+                            <td colspan="5" style="text-align: center;">
+                                <img src="{{ public_path('assets/media/bussiness_logo/'.Auth::user()->business_code.'.jpeg') }}" alt="{{ Auth::user()->business->business_name }}" width="600px">
+                            </td>
+                        @else
+                            <td colspan="5" style="text-align: center; border-bottom: 1px solid #000; padding: 5px;font-size:30px;font-weight:700">
+                                {{ Auth::user()->business->business_name}}
+                            </td>
+                        @endif
                     </tr>
                     @php
                         $totalcredit = $loan['amount'];
