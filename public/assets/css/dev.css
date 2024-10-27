@@ -1,1 +1,5 @@
 .img-flag { width:20px;height: 20px; }
+.b-logo{display: flex;align-items: flex-start;flex-wrap: wrap}
+.b-logo img{max-width:20%;margin-left: 30px;}
+.b-logo label{width:100%;margin-right:30px}
+.b-logo input{width:calc(80% - 30px)}

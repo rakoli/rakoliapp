@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use App\Utils\VerifyOTP;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 use TimeHunter\LaravelGoogleReCaptchaV3\Validations\GoogleReCaptchaV3ValidationRule;
 
 class BusinessController extends Controller
@@ -407,6 +408,12 @@ class BusinessController extends Controller
             return redirect()->route('business.profile.update')->withErrors(['Not authorized to perform business action']);
         }
 
+        if($request->file('business_logo')){
+            $file = $request->file('business_logo'); // Retrieve the uploaded file from the request
+            $file->store('public'); // Upload File
+            $filename = $file->hashName(); // Retrieve the original filename
+        }
+
         $business->business_name = $request->get('business_name');
         $business->tax_id = $request->get('tax_id');
         $business->business_regno = $request->get('business_regno');
@@ -414,6 +421,7 @@ class BusinessController extends Controller
         $business->business_phone_number = $request->get('business_phone_number');
         $business->business_email = $request->get('business_email');
         $business->business_location = $request->get('business_location_');
+        $business->business_logo = $filename ?? NULL;
         $business->save();
 
         return redirect()->route('business.profile.update')->with(['message' => 'Profile Updated Successfully']);

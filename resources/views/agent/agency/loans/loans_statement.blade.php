@@ -7,7 +7,6 @@
     <title>Loan Statement</title>
 
     <style>
-        
         .receiptHolder {
             font-size: 10px;
             font-family: sans-serif;
@@ -21,8 +20,7 @@
             border-right: 1px solid #000;
         }
         tr td{padding:5px 0;}
-        tr th{padding:5px 0}      
-  
+        tr th{padding:5px 0}
     </style>
 </head>
 <body>
@@ -34,9 +32,9 @@
             <table cellpadding="0" cellspacing="0" class="header-table" style="width: 100%; font-size: 9pt">
                 <tbody>
                     <tr>
-                        @if(file_exists(public_path('assets/media/bussiness_logo/'.Auth::user()->business_code.'.jpeg')))
+                        @if(file_exists(public_path('storage/'.Auth::user()->business->business_logo)))
                             <td colspan="5" style="text-align: center;">
-                                <img src="{{ public_path('assets/media/bussiness_logo/'.Auth::user()->business_code.'.jpeg') }}" alt="{{ Auth::user()->business->business_name }}" width="600px">
+                                <img src="{{ public_path('storage/'.Auth::user()->business->business_logo) }}" alt="{{ Auth::user()->business->business_name }}" width="600px">
                             </td>
                         @else
                             <td colspan="5" style="text-align: center; border-bottom: 1px solid #000; padding: 5px;font-size:30px;font-weight:700">

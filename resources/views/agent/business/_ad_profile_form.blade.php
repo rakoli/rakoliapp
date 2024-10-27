@@ -1,5 +1,5 @@
 <!--begin::Form-->
-<form id="kt_form" class="form d-flex flex-column flex-lg-row" data-kt-redirect="{{route('exchange.posts')}}" action="{{$submitUrl}}" method="post">
+<form id="kt_form" class="form d-flex flex-column flex-lg-row" data-kt-redirect="{{route('exchange.posts')}}" action="{{$submitUrl}}" method="post" enctype="multipart/form-data">
 
     @csrf
 
@@ -64,8 +64,17 @@
                     <!--end::Label-->
                     <label class="form-label">{{__('Business Email')}}</label>
                     <!--begin::Input-->
-                    <input type="text" class="form-control mb-2" id="business_email" name="business_email" value="{{$business->business_email   }}" placeholder="{{__("Enter Email")}}">
+                    <input type="text" class="form-control mb-2" id="business_email" name="business_email" value="{{$business->business_email}}" placeholder="{{__("Enter Email")}}">
 
+                </div>
+                <div class="mb-5 fv-row b-logo">
+                    <!--end::Label-->
+                    <label class="form-label">{{__('Business Logo')}}</label>
+                    <!--begin::Input-->
+                    <input type="file" class="form-control mb-2" id="business_logo" name="business_logo" accept="image/png, image/gif, image/jpeg">
+                    @if($business->business_logo)
+                        <img src="{{ asset('storage/'.$business->business_logo) }}">
+                    @endif
                 </div>
                 <div class="mb-5 fv-row">
                     <!--end::Label-->

@@ -29,6 +29,7 @@ class Business extends Model
         'business_reg_date',
         'business_phone_number',
         'business_email',
+        'business_logo',
         'business_location',
         'referral_business_code',
         'is_verified',
