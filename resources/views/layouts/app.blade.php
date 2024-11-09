@@ -314,6 +314,21 @@
                     </div>
                 @endif
 
+                @if (session('error'))
+                    <!--begin::Container-->
+                    <div class="container-xxl mb-5">
+                        <div class="card card-flush mb-0">
+                            <div class="alert alert-danger mb-0">
+                                <ul>
+                                    @foreach (session('error') as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
                 @if(session('message'))
                     <div class="container-xxl mb-5">
                         <div class="card card-flush mb-0">

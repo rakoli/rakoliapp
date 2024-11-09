@@ -13,6 +13,8 @@ Route::name('admin.')->prefix('admin')->middleware(['auth', 'onlyadmin'])->group
     Route::name('business.')->prefix('business')->group(function () {
 
         Route::get('listbusiness', [App\Http\Controllers\Admin\BusinessController::class, 'listbusiness'])->name('listbusiness');
+        Route::get('resetbusiness/{code}', [App\Http\Controllers\Admin\BusinessController::class, 'resetbusiness'])->name('resetbusiness');
+
         Route::get('listusers', [App\Http\Controllers\Admin\BusinessController::class, 'listusers'])->name('listusers');
         Route::get('registeringuser', [App\Http\Controllers\Admin\BusinessController::class, 'registeringuser'])->name('registeringuser');
 
