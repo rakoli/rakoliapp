@@ -31,11 +31,14 @@ class BusinessDataTable implements HasDatatable
             ->addColumn('bussiness_name', fn (Business $business) => $business->business_name)
             ->addColumn('balance', fn (Business $business) => money($business->balance, currencyCode(), true))
             ->addColumn('created_at', fn (Business $business) => $business->created_at->format('Y-F-d'))
-            ->addColumn('action', function (Business $business) {
-
-                return (new self())->buttons([
-                ]);
-            })
+            ->addColumn('action', fn (Business $business) => (new self())->buttons([
+                'Reset' => [
+                    'route' => route('admin.business.resetbusiness', [
+                        'code' => $business->code
+                    ]),
+                    'attributes' => '',
+                ],
+            ]))
             ->rawColumns(['created_at', 'action'])
             ->toJson();
     }
@@ -48,7 +51,7 @@ class BusinessDataTable implements HasDatatable
             Column::make('status')->title(__('Status'))->searchable()->orderable(),
             Column::make('balance')->title(__('Balance'))->searchable()->orderable(),
             Column::make('created_at')->title(__('Created On'))->searchable()->orderable(),
-            // Column::make('action')->title(__('Actions'))->searchable()->orderable(),
+            Column::make('action')->title(__('Actions'))->searchable()->orderable(),
         ])
             ->responsive(true)
             ->dom('frtilp');

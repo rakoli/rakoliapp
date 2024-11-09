@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Business;
+use App\Models\Location;
+use App\Models\Network;
 use App\Models\Package;
+use App\Models\Shift;
 use App\Utils\Datatables\Admin\BusinessDataTable;
 use App\Utils\Datatables\Admin\RegistingUserDataTable;
 use App\Utils\Datatables\Admin\SalesUserDataTable;
@@ -134,4 +137,35 @@ class BusinessController extends Controller
             return redirect()->back()->withError(['message' => 'Something went wrong, please try after sometime.']);
         }
     }
+
+    public function resetBusiness($business_code){
+        Log::info("Business Reset Process Stared :: ".$business_code);
+        $business = Business::where('code',$business_code)->first();
+        if(!$business){
+            return redirect()->back()->withError(['message' => 'Business Details not found']);
+        }
+        DB::beginTransaction();
+        try {
+            $location_status = Location::where('business_code',$business_code)->update(['capital' => 0,'balance' => 0]);
+            Log::info("Business Capital Updated");
+
+            $shift_status = Shift::where('business_code',$business_code)->delete();
+            Log::info("Business Shifts Deleted :: ".$shift_status);
+
+            $network_status = Network::where('business_code',$business_code)->delete();
+            Log::info("Business Networks Deleted :: ".$network_status);
+
+            DB::commit();
+            return redirect()->back()->with(['message' => 'Business data reset Successfully']);
+        }catch (\Exception $exception) {
+            DB::rollback();
+            Log::debug("SALES USER ERROR: ".$exception->getMessage());
+            return redirect()->back()->withError(['message' => 'Something went wrong, please try after sometime.']);
+        }
+
+
+
+    }
+
+
 }

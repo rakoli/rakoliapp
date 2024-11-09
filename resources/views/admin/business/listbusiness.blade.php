@@ -7,12 +7,7 @@
 @endsection
 
 @section('breadcrumb')
-    <!--begin::Separator-->
-    <span class="h-20px border-gray-200 border-start ms-3 mx-2"></span>
-    <!--end::Separator-->
-    <!--begin::Description-->
-    <small class="text-muted fs-7 fw-semibold my-1 ms-1">Business</small>
-    <!--end::Description-->
+
 @endsection
 
 @section('content')
@@ -28,21 +23,8 @@
 
                 <!--begin::Wrapper-->
                 <div class="d-flex flex-stack mb-5">
-        {{--                    @if(! $hasOpenShift)--}}
-        {{--                        <x-a-button--}}
-        {{--                            route="{{ route('agency.shift.open.index') }}"--}}
-        {{--                        >--}}
-
-        {{--                            {{ __('Open Shift') }}--}}
-        {{--                        </x-a-button>--}}
-        {{--                    @endif--}}
                     <!--begin::Search-->
-                    <div class="d-flex align-items-center position-relative my-1">
-                        {{--<i class="ki-duotone ki-magnifier fs-1 position-absolute ms-6"><span
-                                class="path1"></span><span class="path2"></span></i>
-                        <x-input type="text" data-kt-docs-table-filter="search"
-                                class="fform-control-solid w-250px ps-15" placeholder="Search Shits"/>--}}
-                    </div>
+                    <div class="d-flex align-items-center position-relative my-1"></div>
                     <!--end::Search-->
                 </div>
                 <!--end::Wrapper-->
@@ -50,7 +32,7 @@
                 <!--begin::Table container-->
                 <div class="table-responsive">
 
-                    {!! $dataTableHtml->table(['class' => 'table table-row-bordered table-row-dashed gy-4 align-middle' , 'id' => 'bussiness-table'],true) !!}
+                    {!! $dataTableHtml->table(['class' => 'table table-row-bordered table-row-dashed gy-4' , 'id' => 'bussiness-table']) !!}
 
                 </div>
                 <!--end::Table container-->
@@ -70,4 +52,11 @@
 @section('footer_js')
     <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}" type="text/javascript"></script>
    {!! $dataTableHtml->scripts() !!}
+   <script>
+    $(document).ready(function () {
+        window.LaravelDataTables['bussiness-table'].on('draw', function () {
+            KTMenu.createInstances();
+        })
+    })
+</script>
 @endsection
