@@ -45,6 +45,11 @@ class CompleteInitiatedPayment
             }
 
             $description = "$initiatedPayment->description for $business->business_name $package->package_interval_days days";
+        } else if($initiatedPayment->income_category == SystemIncomeCategoryEnum::TRIAL->value){
+            $package = Package::where('code',$initiatedPayment->description)->first();
+            $business->package_code = $package->code;
+            $business->package_expiry_at = now()->addDays(90);  
+            $business->save();
         }
         //END:: COMPLETE SUBSCRIPTION PAYMENT
 

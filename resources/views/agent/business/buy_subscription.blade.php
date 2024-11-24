@@ -82,7 +82,10 @@
                                     </div>
                                     <!--end::Features-->
                                     <!--begin::Select-->
-                                    <button type="button" class="btn btn-sm btn-primary" onclick="selectSubscription('{{$package->code}}','{{strtoupper($package->name)}}', '{{number_format($package->price)}}', '{{strtoupper($package->price_currency)}}')">{{__('Select')}}</button>
+                                    <div class="t-btn">
+                                        <button type="button" class="btn btn-sm btn-primary" onclick="selectSubscription('{{$package->code}}','{{strtoupper($package->name)}}', '{{number_format($package->price)}}', '{{strtoupper($package->price_currency)}}')">{{__('Select')}}</button>
+                                        <button type="button" class="btn btn-sm btn-primary" onclick="selectSubscription('{{$package->code}}','{{strtoupper($package->name)}}', '{{number_format($package->price)}}', '{{strtoupper($package->price_currency)}}','true')">{{__('Trial')}}</button>
+                                    </div>
                                     <!--end::Select-->
                                 </div>
                                 <!--end::Option-->
@@ -166,11 +169,12 @@
                         </div>
                         <!--end::Close-->
                     </div>
-                    <form class="my-auto pb-5" action="{{route('pay.subscription')}}" method="POST">
+                    <form class="my-auto pb-5" action="{{route('pay.subscription')}}" method="POST" id="paySubscription">
                         @csrf
                         <div class="modal-body">
 
                             <input type="hidden" name="selected_plan_code" id="selected_plan_code" class="form-control form-control-solid-bg"/>
+                            <input type="hidden" name="is_trial" id="is_trial" class="form-control form-control-solid-bg"/>
 
                             <div class="fv-row">
                                 <label for="selected_plan_name" class="required form-label">{{__('Selected Plan')}}</label>
@@ -230,7 +234,7 @@
     var selectedpackageName = "";
     var selectedpackagePrice = "";
     var selectedpaymentMethod = "";
-    function selectSubscription(subscriptionCode, subscriptionName, subscriptionPrice, currency){
+    function selectSubscription(subscriptionCode, subscriptionName, subscriptionPrice, currency,isTrial = false){
         console.log(subscriptionCode);
         if(selectedpackage !== ""){
             document.getElementById(selectedpackage).classList.remove("bg-gray-400");
@@ -246,6 +250,11 @@
         selectedpackageName = subscriptionName;
         selectedpackagePrice = currency + ' ' +subscriptionPrice;
         selectedpaymentMethod = document.querySelector('input[name="selected_payment_method"]:checked').value;
+
+        if(isTrial){
+            document.getElementById('is_trial').value = true;
+            jQuery("#paySubscription").submit();
+        }
     }
 
     function selectPaymentMethod(method){

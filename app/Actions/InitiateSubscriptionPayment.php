@@ -16,7 +16,7 @@ class InitiateSubscriptionPayment
 {
     use AsAction;
 
-    public function handle($paymentmethod, User $user, $package)
+    public function handle($paymentmethod, User $user, $package,$isTrial)
     {
         if (! in_array($paymentmethod, config('payments.accepted_payment_methods'))) {
 
@@ -37,7 +37,7 @@ class InitiateSubscriptionPayment
         $reference = null;
         $referenceName = null;
 
-        if ($paymentmethod == 'dpopay' && $package->price > 0) {
+        if ($paymentmethod == 'dpopay' && $package->price > 0 && !$isTrial) {
 
             $data = [
                 'paymentAmount' => $package->price,
@@ -73,7 +73,7 @@ class InitiateSubscriptionPayment
             $referenceName = 'token';
         }
 
-        if ($paymentmethod == 'pesapal' && $package->price > 0) {
+        if ($paymentmethod == 'pesapal' && $package->price > 0 && !$isTrial) {
 
             $paymentParams = [
                 'id' => $tnxCode,
@@ -116,7 +116,7 @@ class InitiateSubscriptionPayment
             $referenceName = 'tracking_id';
         }
 
-        if ($paymentmethod == 'selcom' && $package->price > 0) {
+        if ($paymentmethod == 'selcom' && $package->price > 0 && !$isTrial) {
 
             $paymentParams = [
                 "vendor" => config('payments.selcom_vendor'),
@@ -152,7 +152,7 @@ class InitiateSubscriptionPayment
             $referenceName = 'order_id';
         }
 
-        if ($paymentmethod == 'test' && env('APP_ENV') != 'production') {
+        if ($paymentmethod == 'test' && env('APP_ENV') != 'production' && !$isTrial) {
             $reference = 'test_'.\Illuminate\Support\Str::random(4);
             $redirectUrl = route('pay.test', $reference);
             $referenceName = 'test_reference';
@@ -160,10 +160,21 @@ class InitiateSubscriptionPayment
             $requestResult['success'] = true;
         }
 
-        if($package->price == 0){
+        if($package->price == 0 && !$isTrial){
             $reference = $package->name.'_'.\Illuminate\Support\Str::random(8);
             $redirectUrl = route('pay.trial', $reference);
             $referenceName = 'trial_reference';
+
+            $requestResult['url'] = $redirectUrl;
+            $requestResult['success'] = true;
+        }
+
+        if($isTrial){
+            $package->price = 0;
+            $package->package_interval_days = 90;
+            $reference = $package->name.'_'.\Illuminate\Support\Str::random(8);
+            $redirectUrl = route('pay.trial', $reference);
+            $referenceName = 'trial';
 
             $requestResult['url'] = $redirectUrl;
             $requestResult['success'] = true;
@@ -210,7 +221,7 @@ class InitiateSubscriptionPayment
                 'business_code' => $user->business->code,
                 'code' => $tnxCode,
                 'channel' => $paymentmethod,
-                'income_category' => SystemIncomeCategoryEnum::SUBSCRIPTION,
+                'income_category' => $package->package_interval_days == 90 ? SystemIncomeCategoryEnum::TRIAL : SystemIncomeCategoryEnum::SUBSCRIPTION,
                 'description' => $package->code,
                 'amount' => $package->price,
                 'amount_currency' => $package->price_currency,

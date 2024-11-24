@@ -113,8 +113,10 @@
                                 </div>
                                 <!--end::Features-->
                                 <!--begin::Select-->
-                                <button type="button" class="btn btn-sm btn-primary"
-                                        onclick="selectSubscription('{{$package->code}}','{{strtoupper($package->name)}}', '{{number_format($package->price)}}', '{{strtoupper($package->price_currency)}}')">{{__('Select')}}</button>
+                                <div class="t-btn">
+                                    <button type="button" class="btn btn-sm btn-primary" onclick="selectSubscription('{{$package->code}}','{{strtoupper($package->name)}}', '{{number_format($package->price)}}', '{{strtoupper($package->price_currency)}}')">{{__('Select')}}</button>
+                                    <button type="button" class="btn btn-sm btn-primary" onclick="selectSubscription('{{$package->code}}','{{strtoupper($package->name)}}', '{{number_format($package->price)}}', '{{strtoupper($package->price_currency)}}','true')">{{__('Trial')}}</button>
+                                </div>
                                 <!--end::Select-->
                             </div>
                             <!--end::Option-->

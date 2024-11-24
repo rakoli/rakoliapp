@@ -409,7 +409,7 @@ class RegistrationStepController extends Controller
             });
         }
 
-        $requestResult = InitiateSubscriptionPayment::run($paymentMethod,$user,$package);
+        $requestResult = InitiateSubscriptionPayment::run($paymentMethod,$user,$package,$request->is_trial);
 
         if($requestResult['success'] == false){
             return DynamicResponse::sendResponse(function() use ($requestResult) {
