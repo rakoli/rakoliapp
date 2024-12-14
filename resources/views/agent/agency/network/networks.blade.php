@@ -11,11 +11,11 @@
     <span class="h-20px border-gray-200 border-start ms-3 mx-2"></span>
     <!--end::Separator-->
     <!--begin::Description-->
-    <small class="text-muted fs-7 fw-semibold my-1 ms-1">Agency</small>
+    <small class="text-muted fs-7 fw-semibold my-1 ms-1">{{__('Agency')}}</small>
 
     <span class="h-20px border-gray-200 border-start ms-3 mx-2"></span>
 
-    <small class="text-muted fs-7 fw-semibold my-1 ms-1">Manage</small>
+    <small class="text-muted fs-7 fw-semibold my-1 ms-1">{{__('general.LBL_MANAGE')}}</small>
     <!--end::Description-->
 @endsection
 
@@ -37,7 +37,7 @@
                 <div class="d-flex flex-stack">
                     <x-modal_with_button
                         targetId="add-network"
-                        label="Add Network"
+                        label="{{ __('general.LBL_ADD_NETWORK') }}"
                         modalTitle="Fill the form below record a network"
                         isStacked="true"
                     >

@@ -129,21 +129,21 @@
                     <!--end::Label-->
                     <label class="form-label">{{__('Name')}}</label>
                     <!--begin::Input-->
-                    <input type="text" class="form-control mb-2" id="name" name="name" value="@if($isEdit){{$branches->name}}@endif" placeholder="{{__("Enter Name")}}">
+                    <input type="text" class="form-control mb-2" id="name" name="name" value="@if($isEdit){{$branches->name}}@endif" placeholder="{{__("general.LBL_ENTER_NAME")}}">
 
                 </div>
                 <div class="mb-5 fv-row">
                     <!--end::Label-->
-                    <label class="form-label">{{__('Capital')}}</label>
+                    <label class="form-label">{{__('general.LBL_CAPITAL')}}</label>
                     <!--begin::Input-->
-                    <input type="text" class="form-control mb-2" id="capital" name="capital"value="@if($isEdit){{$branches->capital}}@endif" placeholder="{{__("Enter Capital")}}">
+                    <input type="text" class="form-control mb-2" id="capital" name="capital"value="@if($isEdit){{$branches->capital}}@endif" placeholder="{{__("general.LBL_ENTER_CAPITAL")}}">
 
                 </div>
                 <div class="mb-5 fv-row">
                     <!--end::Label-->
                     <label class="form-label">{{__('Balance')}}</label>
                     <!--begin::Input-->
-                    <input type="text" class="form-control mb-2" id="balance" name="balance"value="@if($isEdit){{$branches->balance}}@endif" placeholder="{{__("Enter Balance")}}">
+                    <input type="text" class="form-control mb-2" id="balance" name="balance"value="@if($isEdit){{$branches->balance}}@endif" placeholder="{{__("general.LBL_ENTER_BALANCE")}}">
 
                 </div>
                 {{-- <div class="mb-5 fv-row">
