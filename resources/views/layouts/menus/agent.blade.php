@@ -6,7 +6,7 @@
             <i class="ki-outline ki-home-2 fs-2x"></i>
         </span>
         <span class="menu-title">
-            {{ __('Home') }}
+            {{ __('general.LBL_HOME') }}
         </span>
     </a>
     <!--end:Menu link-->
@@ -20,7 +20,7 @@
             <i class="ki-outline ki-shop fs-2x"></i>
         </span>
         <span class="menu-title">
-            {{ __('Agency') }}
+            {{ __('general.LBL_AGENCY') }}
         </span>
     </span>
     <!--end:Menu link-->
@@ -31,7 +31,7 @@
             <!--begin:Menu content-->
             <div class="menu-content">
                 <span class="menu-section fs-5 fw-bolder ps-1 py-1">
-                    {{ __('Agency') }}
+                    {{ __('general.LBL_AGENCY') }}
                 </span>
             </div>
             <!--end:Menu content-->
@@ -47,9 +47,8 @@
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ __('Shift') }}</span>
+                    <span class="menu-title">{{ __('general.LBL_SHIFT') }}</span>
                 </a>
-
 
                 <a
                     class="menu-link"
@@ -58,15 +57,8 @@
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ __('Networks') }}</span>
+                    <span class="menu-title">{{ __('general.LBL_NETWORKS') }}</span>
                 </a>
-
-                {{-- <a class="menu-link"  href ="{{route('agency.transactions')}}">
-                    <span class="menu-bullet">
-                        <span class="bullet bullet-dot"></span>
-                    </span>
-                    <span class="menu-title">{{ __('Transactions') }}</span>
-                </a> --}}
 
                 <a
                     class="menu-link"
@@ -75,7 +67,7 @@
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ __('Loans') }}</span>
+                    <span class="menu-title">{{ __('general.LBL_LOANS') }}</span>
                 </a>
 
                 <a
@@ -85,9 +77,8 @@
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ __('Transfer Request') }}</span>
+                    <span class="menu-title">{{ __('general.LBL_TRANSFER_REQUEST') }}</span>
                 </a>
-
 
             </div>
             <!--end:Menu sub-->
@@ -105,7 +96,7 @@
             <i class="ki-outline ki-share fs-2x"></i>
         </span>
         <span class="menu-title">
-            {{ __('Exchange') }}
+            {{ __('general.LBL_EXCHANGE') }}
         </span>
     </span>
     <!--end:Menu link-->
@@ -116,7 +107,7 @@
             <!--begin:Menu content-->
             <div class="menu-content">
                 <span class="menu-section fs-5 fw-bolder ps-1 py-1">
-                    {{ __('Exchange Management') }}
+                    {{ __('general.LBL_EXCHANGE_MANAGEMENT') }}
                 </span>
             </div>
             <!--end:Menu content-->
@@ -132,35 +123,35 @@
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ __('Ads') }}</span>
+                    <span class="menu-title">{{ __('general.LBL_ADS') }}</span>
                 </a>
 
                 <a class="menu-link" href="{{route('exchange.transactions')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ __('Transactions') }}</span>
+                    <span class="menu-title">{{ __('general.LBL_TRANSACTIONS') }}</span>
                 </a>
 
                 <a class="menu-link" href="{{route('exchange.posts')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ __('Posts') }}</span>
+                    <span class="menu-title">{{ __('general.LBL_POSTS') }}</span>
                 </a>
 
                 <a class="menu-link" href="{{route('exchange.methods')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ __('Payment Methods') }}</span>
+                    <span class="menu-title">{{ __('general.LBL_PAYMENT_METHODS') }}</span>
                 </a>
 
                 <a class="menu-link" href="{{route('exchange.posts.create')}}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{__('Create Ad')}}</span>
+                    <span class="menu-title">{{__('general.LBL_CREATE_AD')}}</span>
                 </a>
 
             </div>
@@ -179,7 +170,7 @@
             <i class="ki-outline ki-bill fs-2x"></i>
         </span>
         <span class="menu-title">
-            {{ __('Opportunity') }}
+            {{ __('general.LBL_OPPORTUNITY') }}
         </span>
     </span>
     <!--end:Menu link-->
@@ -190,7 +181,7 @@
             <!--begin:Menu content-->
             <div class="menu-content">
                 <span class="menu-section fs-5 fw-bolder ps-1 py-1">
-                    {{ __('VAS Opportunities') }}
+                    {{ __('general.LBL_VAS_OPPORTUNITY') }}
                 </span>
             </div>
             <!--end:Menu content-->
@@ -205,21 +196,21 @@
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ __('Available') }}
+                    <span class="menu-title">{{ __('general.LBL_AVAILABLE') }}
                     </span>
                 </a>
                 <a class="menu-link" href="{!! route('agent.tasks') !!}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ __('Tasks') }} <!--Ongoing-->
+                    <span class="menu-title">{{ __('general.LBL_TASKS') }} <!--Ongoing-->
                     </span>
                 </a>
                 <a class="menu-link" href="{!! route('contracts.index') !!}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">{{ __('Contracts') }} <!--Completed-->
+                    <span class="menu-title">{{ __('general.LBL_CONTRACTS') }} <!--Completed-->
                     </span>
                 </a>
             </div>
@@ -238,7 +229,7 @@
             <i class="ki-outline ki-gear fs-2x"></i>
         </span>
         <span class="menu-title">
-            {{ __('Business') }}
+            {{ __('general.LBL_BUSSINESS') }}
         </span>
     </span>
     <!--end:Menu link-->
@@ -249,7 +240,7 @@
             <!--begin:Menu content-->
             <div class="menu-content">
                 <span class="menu-section fs-5 fw-bolder ps-1 py-1">
-                    {{ __('Business Management') }}
+                    {{ __('general.LBL_BUSSINESS_MANAGEMENT') }}
                 </span>
             </div>
             <!--end:Menu content-->

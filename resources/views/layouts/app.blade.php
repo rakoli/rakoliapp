@@ -196,20 +196,17 @@
                                         </div>
                                         <div class="separator my-2"></div>
                                         <div class="menu-item px-5">
-                                            <a href="{{route('profile')}}" class="menu-link px-5">{{ __('Profile') }}</a>
+                                            <a href="{{route('profile')}}" class="menu-link px-5">{{ __('general.LBL_PROFILE') }}</a>
                                         </div>
                                         <div class="menu-item px-5">
-                                            <a href="{{route('changepassword')}}" class="menu-link px-5">{{ __('Change Password') }}</a>
+                                            <a href="{{route('changepassword')}}" class="menu-link px-5">{{ __('general.LBL_CHANGE_PASSWORD') }}</a>
                                         </div>
-                                        <!--<div class="menu-item px-5">
-                                            <a href="{{url('https://support.rakoli.com')}}" target="_blank" class="menu-link px-5">{{ __('Support') }}</a>
-                                        </div> -->
                                         <div class="separator my-2"></div>
                                             <div class="menu-item px-5"
                                                  data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
                                                  data-kt-menu-placement="left-start" data-kt-menu-offset="-15px, 0">
                                                 <a href="#" class="menu-link px-5">
-                                                        <span class="menu-title position-relative">{{__('Language')}}
+                                                        <span class="menu-title position-relative">{{__('general.LBL_Language')}}
                                                             <span
                                                                 class="fs-8 rounded bg-light px-3 py-2 position-absolute translate-middle-y top-50 end-0">{{ localeToLanguage(session('locale'))}}
                                                                 <img class="w-15px h-15px rounded-1 ms-2"
@@ -243,7 +240,7 @@
                                             <form id="logout-form" action="{{ url('logout') }}" method="POST">
                                                 {{ csrf_field() }}
                                                 <button style="width: 100%" class="menu-link px-5"
-                                                        type="submit">{{__('Sign Out')}}</button>
+                                                        type="submit">{{__('general.LBL_SIGN_OUT')}}</button>
                                             </form>
 
                                         </div>

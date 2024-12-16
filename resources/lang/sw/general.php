@@ -16,5 +16,31 @@ return [
     'LBL_CAPITAL' => 'Mtaji',
     'LBL_ADD_NETWORK' => 'Ongeza Mtandao',
     'LBL_MANAGE' => 'Dhibiti',
-    'LBL_TRANSFER_REQUEST' => 'Ombi la Uhamisho',
+
+
+    "LBL_Language" => "Lugha",
+    "LBL_SIGN_OUT" => "Ondoka",
+    "LBL_PROFILE" => "Wasifu",
+    "LBL_CHANGE_PASSWORD" => "Badilisha Nenosiri",
+    "LBL_HOME" => "Nyumbani",
+    "LBL_AGENCY" => "Wakala",
+    "LBL_SHIFT" => "Shift",
+    "LBL_NETWORKS" => "Mitandao",
+    "LBL_LOANS" => "Mikopo",
+    'LBL_TRANSFER_REQUEST' => "Ombi la Uhamisho",
+    'LBL_EXCHANGE' => "Kubadilishana",
+    "LBL_EXCHANGE_MANAGEMENT" => "Usimamizi wa Kubadilishana",
+    "LBL_ADS" => "Matangazo",
+    "LBL_TRANSACTIONS" => "Shughuli",
+    "LBL_POSTS" => "Machapisho",
+    "LBL_PAYMENT_METHODS" => "Mbinu za Malipo",
+    "LBL_CREATE_AD" => "Unda AD",
+    "LBL_OPPORTUNITY" => "Fursa",
+    "LBL_VAS_OPPORTUNITY" => "Fursa ya VAS",
+    "LBL_AVAILABLE" => "Inapatikana",
+    "LBL_TASKS" => "Kazi",
+    "LBL_CONTRACTS" => "Mikataba",
+    "LBL_BUSSINESS" => "Biashara",
+
+
 ];
