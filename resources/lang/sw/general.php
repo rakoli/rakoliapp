@@ -41,6 +41,7 @@ return [
     "LBL_TASKS" => "Kazi",
     "LBL_CONTRACTS" => "Mikataba",
     "LBL_BUSSINESS" => "Biashara",
+    "LBL_BUSINESS_MANAGEMENT" => "Usimamizi wa Biashara",
 
 
 ];

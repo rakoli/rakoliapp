@@ -41,6 +41,6 @@ return [
     "LBL_TASKS" => "Tasks",
     "LBL_CONTRACTS" => "Contracts",
     "LBL_BUSINESS" => "Business",
-    "LBL_BUSINESS_MANAGEMENT" => "Usimamizi wa Biashara",
+    "LBL_BUSINESS_MANAGEMENT" => "Business Management",
 
 ];

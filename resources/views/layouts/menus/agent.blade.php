@@ -229,7 +229,7 @@
             <i class="ki-outline ki-gear fs-2x"></i>
         </span>
         <span class="menu-title">
-            {{ __('general.LBL_BUSSINESS') }}
+            {{ __('general.LBL_BUSINESS') }}
         </span>
     </span>
     <!--end:Menu link-->
@@ -240,7 +240,7 @@
             <!--begin:Menu content-->
             <div class="menu-content">
                 <span class="menu-section fs-5 fw-bolder ps-1 py-1">
-                    {{ __('general.LBL_BUSSINESS_MANAGEMENT') }}
+                    {{ __('general.LBL_BUSINESS_MANAGEMENT') }}
                 </span>
             </div>
             <!--end:Menu content-->
