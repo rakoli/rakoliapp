@@ -16,8 +16,6 @@ return [
     'LBL_CAPITAL' => 'Mtaji',
     'LBL_ADD_NETWORK' => 'Ongeza Mtandao',
     'LBL_MANAGE' => 'Dhibiti',
-
-
     "LBL_Language" => "Lugha",
     "LBL_SIGN_OUT" => "Ondoka",
     "LBL_PROFILE" => "Wasifu",
@@ -40,8 +38,37 @@ return [
     "LBL_AVAILABLE" => "Inapatikana",
     "LBL_TASKS" => "Kazi",
     "LBL_CONTRACTS" => "Mikataba",
-    "LBL_BUSSINESS" => "Biashara",
+    "LBL_BUSINESS" => "Biashara",
     "LBL_BUSINESS_MANAGEMENT" => "Usimamizi wa Biashara",
+    "LBL_ACCOUNT_SUBSCRIPTION" => "Usajili wa Akaunti",
+    "LBL_REFERRALS" => "Marejeleo",
+    "LBL_ROLES" => "Majukumu",
+    "LBL_USERS" => "Watumiaji",
+    "LBL_FINANCE" => "Fedha",
+    "LBL_BUSINESS_PROFILE" => "Maelezo ya Biashara",
+    "LBL_VERIFICATION" => "Uthibitishaji",
+    "LBL_BRANCHES" => "Matawi",
+    "LBL_CLOSE_ACCOUNT" => "Funga Akaunti",
 
 
+    "LBL_ACCOUNT_LOGIN" => "Kuingia kwa Akaunti",
+    "LBL_NEW_HERE" => "Mpya Hapa?",
+    "LBL_CREATE_ACCOUNT" => "Fungua Akaunti",
+    "LBL_ENTER_EMAIL" => "Weka Barua Pepe",
+    "LBL_ENTER_PASSWORD" => "Weka Nenosiri",
+    "LBL_FORGOT_PASSWORD" => "Umesahau Nenosiri?",
+    "LBL_SIGN_IN" => "Ingia",
+    "LBL_PLEASE_WAIT" => "Tafadhali subiri...",
+    "LBL_NOT_A_MEMBER" => "Je, bado si Mwanachama?",
+    "LBL_SIGN_UP" => "Jisajili",
+
+
+    "MSG_EMAIL_IS_REQUIRED" => "Anwani ya barua pepe inahitajika",
+    "MSG_INVALID_EMAIL" => "Thamani si anwani halali ya barua pepe",
+    "MSG_PASSWORD_IS_REQUIRED" => "Nenosiri linahitajika",
+    "MSG_LOGIN_SUCCESSFULLY" => "Umefanikiwa kuingia!",
+    "MSG_LOGIN_FAILED" => "Samahani, hitilafu za majibu ya uthibitishaji zimegunduliwa, tafadhali jaribu tena.",
+    "MSG_VALIDATION_ERROR" => "Samahani, hitilafu ya data iliyowasilishwa imegunduliwa, tafadhali jaribu tena.",
+
+    "BTN_SWL_OKAY" => "Sawa, nimeelewa!",
 ];

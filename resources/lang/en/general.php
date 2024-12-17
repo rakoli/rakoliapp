@@ -16,8 +16,6 @@ return [
     'LBL_CAPITAL' => 'Capital',
     'LBL_ADD_NETWORK' => 'Add Network',
     'LBL_MANAGE' => 'Manage',
-
-
     "LBL_Language" => "Language",
     "LBL_SIGN_OUT" => "Sign Out",
     "LBL_PROFILE" => "Profile",
@@ -42,5 +40,38 @@ return [
     "LBL_CONTRACTS" => "Contracts",
     "LBL_BUSINESS" => "Business",
     "LBL_BUSINESS_MANAGEMENT" => "Business Management",
+    "LBL_ACCOUNT_SUBSCRIPTION" => "Account Subscription",
+    "LBL_REFERRALS" => "Referrals",
+    "LBL_ROLES" => "Roles",
+    "LBL_USERS" => "Users",
+    "LBL_FINANCE" => "Finance",
+    "LBL_BUSINESS_PROFILE" => "Business Profile",
+    "LBL_VERIFICATION" => "Verification",
+    "LBL_BRANCHES" => "Branches",
+    "LBL_CLOSE_ACCOUNT" => "Close Account",
+
+
+    "LBL_ACCOUNT_LOGIN" => "Account Login",
+    "LBL_NEW_HERE" => "New Here?",
+    "LBL_CREATE_ACCOUNT" => "Create an Account",
+    "LBL_ENTER_EMAIL" => "Enter Email",
+    "LBL_ENTER_PASSWORD" => "Enter Password",
+    "LBL_FORGOT_PASSWORD" => "Forgot Password?",
+    "LBL_SIGN_IN" => "Sign In",
+    "LBL_PLEASE_WAIT" => "Please wait...",
+    "LBL_NOT_A_MEMBER" => "Not a Member yet?",
+    "LBL_SIGN_UP" => "Sign Up",
+
+
+    "MSG_EMAIL_IS_REQUIRED" => "Email address is required",
+    "MSG_INVALID_EMAIL" => "The value is not a valid email address",
+    "MSG_PASSWORD_IS_REQUIRED" => "The password is required",
+    "MSG_LOGIN_SUCCESSFULLY" => "You have successfully logged in!",
+    "MSG_LOGIN_FAILED" => "Sorry, authentication response errors detected, please try again.",
+    "MSG_VALIDATION_ERROR" => "Sorry, error of submitted data detected, please try again.",
+
+
+    "BTN_SWL_OKAY" => "Ok, got it!",
+
 
 ];

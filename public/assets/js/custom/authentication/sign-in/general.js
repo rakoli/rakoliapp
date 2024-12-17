@@ -18,17 +18,17 @@ var KTSigninGeneral = function () {
                         validators: {
                             regexp: {
                                 regexp: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                                message: 'The value is not a valid email address',
+                                message: invalid_email_msg,
                             },
                             notEmpty: {
-                                message: 'Email address is required'
+                                message: email_error_msg
                             }
                         }
                     },
                     'password': {
                         validators: {
                             notEmpty: {
-                                message: 'The password is required'
+                                message: password_error_msg
                             }
                         }
                     }
@@ -71,10 +71,10 @@ var KTSigninGeneral = function () {
 
                             // Show message popup. For more info check the plugin's official documentation: https://sweetalert2.github.io/
                             Swal.fire({
-                                text: "You have successfully logged in!",
+                                text: login_success_msg,
                                 icon: "success",
                                 buttonsStyling: false,
-                                confirmButtonText: "Ok, got it!",
+                                confirmButtonText: swal_okay,
                                 customClass: {
                                     confirmButton: "btn btn-primary"
                                 }
@@ -89,7 +89,7 @@ var KTSigninGeneral = function () {
                                 text: response.data.error.message,
                                 icon: "error",
                                 buttonsStyling: false,
-                                confirmButtonText: "Ok, got it!",
+                                confirmButtonText: swal_okay,
                                 customClass: {
                                     confirmButton: "btn btn-primary"
                                 }
@@ -100,10 +100,10 @@ var KTSigninGeneral = function () {
 
                     }).catch(function (error) {
                         Swal.fire({
-                            text: "Sorry, authentication response errors detected, please try again.",
+                            text: login_error_msg,
                             icon: "error",
                             buttonsStyling: false,
-                            confirmButtonText: "Ok, got it!",
+                            confirmButtonText: swal_okay,
                             customClass: {
                                 confirmButton: "btn btn-primary"
                             }
@@ -118,10 +118,10 @@ var KTSigninGeneral = function () {
                 } else {
                     // Show error popup. For more info check the plugin's official documentation: https://sweetalert2.github.io/
                     Swal.fire({
-                        text: "Sorry, error of submitted data detected, please try again.",
+                        text: validation_error_msg,
                         icon: "error",
                         buttonsStyling: false,
-                        confirmButtonText: "Ok, got it!",
+                        confirmButtonText: swal_okay,
                         customClass: {
                             confirmButton: "btn btn-primary"
                         }

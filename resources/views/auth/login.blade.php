@@ -1,6 +1,6 @@
 @extends('layouts.auth_basic')
 
-@section('title', __('Account Login'))
+@section('title', __('general.LBL_ACCOUNT_LOGIN'))
 
 @section('body')
 <style>
@@ -27,12 +27,12 @@
         <!--begin::Heading-->
         <div class="text-center mb-11">
             <!--begin::Title-->
-            <h1 class="text-dark fw-bolder mb-3">{{ __("Sign In")}}</h1>
+            <h1 class="text-dark fw-bolder mb-3">{{ __("general.LBL_SIGN_IN")}}</h1>
             <!--end::Title-->
             <!--begin::Subtitle-->
             <div class="text-gray-500 fw-semibold fs-6">
-                {{ __("New Here?")}}
-                <a href="{{route('register')}}" class="link-primary fw-bold"> {{ __("Create an Account")}}  </a>
+                {{ __("general.LBL_NEW_HERE")}}
+                <a href="{{route('register')}}" class="link-primary fw-bold"> {{ __("general.LBL_CREATE_ACCOUNT")}}  </a>
             </div>
             <!--end::Subtitle=-->
         </div>
@@ -41,13 +41,13 @@
         <!--begin::Input group=-->
         <div class="fv-row mb-8">
             <!--begin::Email-->
-            <input type="text" placeholder="{{ __("Enter Email")}}" name="email" autocomplete="off" class="form-control bg-transparent" />
+            <input type="text" placeholder="{{ __("general.LBL_ENTER_EMAIL")}}" name="email" autocomplete="off" class="form-control bg-transparent" />
             <!--end::Email-->
         </div>
         <!--end::Input group=-->
         <div class="fv-row mb-3">
             <!--begin::Password-->
-            <input type="password" placeholder="{{ __("Enter Password")}}" name="password" autocomplete="off" class="form-control bg-transparent" />
+            <input type="password" placeholder="{{ __("general.LBL_ENTER_PASSWORD")}}" name="password" autocomplete="off" class="form-control bg-transparent" />
             <!--end::Password-->
         </div>
         <!--end::Input group=-->
@@ -55,7 +55,7 @@
         <div class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8">
             <div></div>
             <!--begin::Link-->
-            <a href="{{url('password/reset')}}" class="link-primary">{{ __("Forgot Password?")}}</a>
+            <a href="{{url('password/reset')}}" class="link-primary">{{ __("general.LBL_FORGOT_PASSWORD")}}</a>
             <!--end::Link-->
         </div>
         <!--end::Wrapper-->
@@ -63,10 +63,10 @@
         <div class="d-grid mb-10">
             <button type="submit" id="kt_sign_in_submit" class="btn btn-primary">
                 <!--begin::Indicator label-->
-                <span class="indicator-label">{{ __("Sign In")}}</span>
+                <span class="indicator-label">{{ __("general.LBL_SIGN_IN")}}</span>
                 <!--end::Indicator label-->
                 <!--begin::Indicator progress-->
-                <span class="indicator-progress">{{ __("Please wait...")}}
+                <span class="indicator-progress">{{ __("general.LBL_PLEASE_WAIT")}}
 										<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                 <!--end::Indicator progress-->
             </button>
@@ -74,8 +74,8 @@
         <!--end::Submit button-->
 
         <!--begin::Sign up-->
-        <div class="text-gray-500 text-center fw-semibold fs-6" id="agentReg">{{ __("Not a Member yet?")}}
-            <a href="{{route('register')}}" class="link-primary">{{ __("Sign Up")}}</a>
+        <div class="text-gray-500 text-center fw-semibold fs-6" id="agentReg">{{ __("general.LBL_NOT_A_MEMBER")}}
+            <a href="{{route('register')}}" class="link-primary">{{ __("general.LBL_SIGN_UP")}}</a>
         </div>
         <div class="playstore-btn" id="playbtn">
             <a href="https://apps.apple.com/tz/app/rakoli/id6457264938" target="_blank"><img src="{{asset('assets/media/app-store.png')}}"></a>
@@ -108,6 +108,16 @@
                 playbtn.style.display = "none";
             }
         });
+    </script>
+    <script>
+        var email_error_msg = "{!! __('general.MSG_EMAIL_IS_REQUIRED') !!}";
+        var invalid_email_msg = "{!! __('general.MSG_INVALID_EMAIL') !!}"
+        var password_error_msg = "{!! __('general.MSG_PASSWORD_IS_REQUIRED') !!}";
+        var login_success_msg = "{!! __('general.MSG_LOGIN_SUCCESSFULLY') !!}";
+        var login_error_msg = "{!! __('general.MSG_LOGIN_FAILED') !!}"
+        var validation_error_msg = "{!! __('general.MSG_VALIDATION_ERROR') !!}"
+        var swal_okay = "{!! __('general.BTN_SWL_OKAY') !!}"
+
     </script>
     <script src="{{asset('assets/js/custom/authentication/sign-in/general.js')}}"></script>
 
