@@ -43,11 +43,11 @@ class LoanPaymentDatatable implements HasDatatable
 
         return $datatableBuilder->columns([
             Column::make('id')->title('#')->searchable(false)->orderable(),
-            Column::make('created_at')->title(__('Date Received'))->searchable()->orderable(),
-            Column::make('deposited_at')->title(__('Date Deposited'))->searchable()->orderable(),
-            Column::make('user_name')->title(__('User'))->searchable()->orderable(),
-            Column::make('agency_name')->title(__('Agency'))->searchable()->orderable(),
-            Column::make('amount')->title(__('amount').' '.strtoupper(session('currency')))->searchable()->orderable(),
+            Column::make('created_at')->title(__('general.LBL_RECEIVED'))->searchable()->orderable(),
+            Column::make('deposited_at')->title(__('general.LBL_DEPOSITED'))->searchable()->orderable(),
+            Column::make('user_name')->title(__('general.LBL_USER'))->searchable()->orderable(),
+            Column::make('agency_name')->title(__('general.LBL_AGENCY'))->searchable()->orderable(),
+            Column::make('amount')->title(__('general.LBL_AMOUNT').' '.strtoupper(session('currency')))->searchable()->orderable(),
 
         ])
             ->responsive(true)

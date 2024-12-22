@@ -82,13 +82,13 @@ class ShiftDatatable implements HasDatatable
     public function columns(Builder $datatableBuilder): Builder
     {
         return $datatableBuilder->columns([
-            Column::make('no')->title(__('#No'))->searchable()->orderable(),
-            Column::make('branch')->title(__('Branch'))->searchable()->orderable(),
-            Column::make('user_name')->title(__('user'))->searchable()->orderable(),
-            Column::make('cash_start')->title(__('Start Cash').' '.strtoupper(session('currency')))->searchable()->orderable(),
-            Column::make('cash_end')->title(__('End Cash').' '.strtoupper(session('currency')))->searchable()->orderable(),
-            Column::make('status')->title(__('Status'))->searchable()->orderable(),
-            Column::make('action')->title(__('Actions'))->searchable()->orderable(),
+            Column::make('no')->title(__('general.LBL_NO'))->searchable()->orderable(),
+            Column::make('branch')->title(__('general.LBL_BRANCH'))->searchable()->orderable(),
+            Column::make('user_name')->title(__('general.LBL_USER'))->searchable()->orderable(),
+            Column::make('cash_start')->title(__('general.LBL_START_CASH').' '.strtoupper(session('currency')))->searchable()->orderable(),
+            Column::make('cash_end')->title(__('general.LBL_END_CASH').' '.strtoupper(session('currency')))->searchable()->orderable(),
+            Column::make('status')->title(__('general.LBL_STATUS'))->searchable()->orderable(),
+            Column::make('action')->title(__('general.LBL_ACTIONS'))->searchable()->orderable(),
         ])
             ->responsive(true)
             ->dom('frtilp');

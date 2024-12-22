@@ -65,17 +65,14 @@ class NetworkDatatable implements HasDatatable
     {
         return $datatableBuilder->columns([
 
-            Column::make('created_at')->title(__('Date'))->searchable()->orderable(),
-            Column::make('location_name')->title(__('Location'))->searchable()->orderable(),
-            Column::make('type')->title(__('Type'))->searchable()->orderable(),
-            Column::make('name')->title(__('Till Name'))->searchable()->orderable(),
-            Column::make('network_name')->title(__('Agency'))->searchable()->orderable(),
-            Column::make('agent_no')->title(__('Agent No'))->searchable()->orderable(),
-//            Column::make('crypto_balance')->title(__('Crypto Balance'))->searchable()->orderable(),
-//            Column::make('exchange_rate')->title(__('Exchange Rate'))->searchable()->orderable(),
-//            Column::make('balance')->title(__('Balance').' '.strtoupper(session('currency')))->searchable()->orderable(),
-            Column::make('balance_combined')->title(__('Balance').' '.strtoupper(session('currency')))->searchable()->orderable(),
-            Column::make('actions')->title('Actions'),
+            Column::make('created_at')->title(__('general.LBL_DATE'))->searchable()->orderable(),
+            Column::make('location_name')->title(__('general.LBL_LOCATION'))->searchable()->orderable(),
+            Column::make('type')->title(__('general.LBL_TYPE'))->searchable()->orderable(),
+            Column::make('name')->title(__('general.LBL_TILL_NAME'))->searchable()->orderable(),
+            Column::make('network_name')->title(__('general.LBL_AGENCY'))->searchable()->orderable(),
+            Column::make('agent_no')->title(__('general.LBL_AGENT_NO'))->searchable()->orderable(),
+            Column::make('balance_combined')->title(__('general.LBL_BALANCE').' '.strtoupper(session('currency')))->searchable()->orderable(),
+            Column::make('actions')->title('general.LBL_ACTIONS'),
         ])
             ->responsive(true)
             ->orderBy(0);

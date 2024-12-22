@@ -65,10 +65,10 @@ class ShiftTransferRequestDatatable implements HasDatatable
     {
         return $datatableBuilder->columns([
             Column::make('id')->title('#')->searchable(false)->orderable(),
-            Column::make('branch')->title(__('Branch'))->searchable()->orderable(),
-            Column::make('user_name')->title(__('user'))->searchable()->orderable(),
-            Column::make('status')->title(__('Status'))->searchable()->orderable(),
-            Column::make('action')->title(__('Actions'))->searchable()->orderable(),
+            Column::make('branch')->title(__('general.LBL_BRANCH'))->searchable()->orderable(),
+            Column::make('user_name')->title(__('general.LBL_USER'))->searchable()->orderable(),
+            Column::make('status')->title(__('general.LBL_STATUS'))->searchable()->orderable(),
+            Column::make('action')->title(__('general.LBL_ACTIONS'))->searchable()->orderable(),
         ])->orderBy(0, 'desc')
         ->responsive(true)
             ->dom('frtilp');

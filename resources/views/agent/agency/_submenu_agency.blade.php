@@ -10,28 +10,21 @@
                 <!--begin::Nav item-->
                 <li class="nav-item my-1">
                     <a class="btn btn-color-gray-600 btn-active-secondary btn-active-color-primary fw-bolder fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 {{returnActiveSubMenuStyle('shift')}}"
-                       href="{{route('agency.shift')}}">{{__('Shift')}}</a>
+                       href="{{route('agency.shift')}}">{{__('general.LBL_SHIFT')}}</a>
                 </li>
                 <!--end::Nav item-->
 
                 <!--begin::Nav item-->
                 <li class="nav-item my-1">
                     <a class="btn btn-color-gray-600 btn-active-secondary btn-active-color-primary fw-bolder fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 {{returnActiveSubMenuStyle('networks')}}"
-                       href="{{route('agency.networks')}}">{{__('Networks')}}</a>
+                       href="{{route('agency.networks')}}">{{__('general.LBL_NETWORKS')}}</a>
                 </li>
-                <!--end::Nav item-->
-
-                <!--begin::Nav item-->
-                {{-- <li class="nav-item my-1">
-                    <a class="btn btn-color-gray-600 btn-active-secondary btn-active-color-primary fw-bolder fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 {{returnActiveSubMenuStyle('transactions')}}"
-                       href="{{route('agency.transactions')}}">{{__('Transactions')}}</a>
-                </li> --}}
                 <!--end::Nav item-->
 
                 <!--begin::Nav item-->
                 <li class="nav-item my-1">
                     <a class="btn btn-color-gray-600 btn-active-secondary btn-active-color-primary fw-bolder fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 {{returnActiveSubMenuStyle('loans')}}"
-                       href="{{route('agency.loans')}}">{{__('Loans')}}</a>
+                       href="{{route('agency.loans')}}">{{__('general.LBL_LOANS')}}</a>
                 </li>
                 <!--end::Nav item-->
 
@@ -47,12 +40,12 @@
             <!--begin::Action-->
 
             @if(!hasOpenShift())
-                <a href="{{route('agency.shift.open.index')}}" class="btn btn-primary fw-bold fs-8 fs-lg-base">{{__('Open Shift')}}</a>
+                <a href="{{route('agency.shift.open.index')}}" class="btn btn-primary fw-bold fs-8 fs-lg-base">{{__('general.LBL_OPEN_SHIFT')}}</a>
             @else
                 @php
                     $shift = getOpenShift();
                 @endphp
-                <a href="{{route('agency.shift.show',$shift->id)}}" class="btn btn-primary fw-bold fs-8 fs-lg-base">{{__('View Open Shift')}}</a>
+                <a href="{{route('agency.shift.show',$shift->id)}}" class="btn btn-primary fw-bold fs-8 fs-lg-base">{{__('general.LBL_VIEW_OPEN_SHIFT')}}</a>
             @endif
 
             <!--end::Action-->

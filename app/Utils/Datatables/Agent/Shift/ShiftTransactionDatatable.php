@@ -55,12 +55,12 @@ class ShiftTransactionDatatable implements HasDatatable
     {
         return $datatableBuilder
             ->columns([
-                Column::make('user_name')->title(__('User'))->orderable(),
-                Column::make('balance_old')->title(__('Old Balance').' '.strtoupper(session('currency')))->orderable(),
-                Column::make('amount')->title(__('Amount Transacted').' '.strtoupper(session('currency')))->orderable(),
-                Column::make('balance_new')->title(__('New Balance')),
-                Column::make('network_name')->title(__('network')),
-                Column::make('transaction_type')->title(__('Type'))->orderable(),
+                Column::make('user_name')->title(__('general.LBL_USER'))->orderable(),
+                Column::make('balance_old')->title(__('general.LBL_OLD_BALANCE').' '.strtoupper(session('currency')))->orderable(),
+                Column::make('amount')->title(__('general.LBL_AMOUNT').' '.strtoupper(session('currency')))->orderable(),
+                Column::make('balance_new')->title(__('general.LBL_NEW_BALANCE')),
+                Column::make('network_name')->title(__('general.LBL_NETWORK')),
+                Column::make('transaction_type')->title(__('general.LBL_TYPE'))->orderable(),
             ])
             ->lengthMenu([[5, 10, 20, -1], [5, 10, 20, 'All']])
             ->responsive(true)

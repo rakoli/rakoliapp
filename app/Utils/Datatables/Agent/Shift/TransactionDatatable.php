@@ -65,14 +65,14 @@ class TransactionDatatable implements HasDatatable
     {
         return $datatableBuilder->columns([
             Column::make('id')->title('#')->searchable(false)->orderable(),
-            Column::make('created_at')->title(__('date'))->searchable()->orderable(),
-            Column::make('transaction_type')->title(__('Type'))->searchable()->orderable(),
-            Column::make('category_label')->title(__('category'))->searchable()->orderable(),
-            Column::make('location.name')->title(__('Location'))->searchable()->orderable(),
-            Column::make('user_code')->title(__('User'))->searchable()->orderable(),
-            Column::make('balance_old')->title(__('Old Balance').' '.strtoupper(session('currency')))->searchable()->orderable(),
-            Column::make('amount')->title(__('Amount').' '.strtoupper(session('currency')))->searchable()->orderable(),
-            Column::make('balance_new')->title(__('New Balance'))->searchable()->orderable(),
+            Column::make('created_at')->title(__('general.LBL_DATE'))->searchable()->orderable(),
+            Column::make('transaction_type')->title(__('general.LBL_TYPE'))->searchable()->orderable(),
+            Column::make('category_label')->title(__('general.LBL_CATEGORY'))->searchable()->orderable(),
+            Column::make('location.name')->title(__('general.LBL_LOCATION'))->searchable()->orderable(),
+            Column::make('user_code')->title(__('general.LBL_USER'))->searchable()->orderable(),
+            Column::make('balance_old')->title(__('general.LBL_OLD_BALANCE').' '.strtoupper(session('currency')))->searchable()->orderable(),
+            Column::make('amount')->title(__('general.LBL_AMOUNT').' '.strtoupper(session('currency')))->searchable()->orderable(),
+            Column::make('balance_new')->title(__('general.LBL_NEW_BALANCE'))->searchable()->orderable(),
         ])
         ->responsive(true)
         ->orderBy(0, 'desc');

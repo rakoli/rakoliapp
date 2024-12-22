@@ -1,6 +1,6 @@
 @extends('layouts.users.agent')
 
-@section('title', __("Dashboard"))
+@section('title', __("general.LBL_DASHBOARD"))
 
 @section('header_js')
     <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css" />
@@ -26,8 +26,8 @@
                     <div class="card-header pt-5">
                         <!--begin::Title-->
                         <h3 class="card-title align-items-start flex-column">
-                            <span class="card-label fw-bold text-dark">{{__('Highlights')}}</span>
-                            <span class="text-gray-400 mt-1 fw-semibold fs-6">{{__('30 days financials')}}</span>
+                            <span class="card-label fw-bold text-dark">{{__('general.LBL_HIGHLIGHTS')}}</span>
+                            <span class="text-gray-400 mt-1 fw-semibold fs-6">{{__('general.LBL_HIGHLIGHTS_SUB')}}</span>
                         </h3>
                         <!--end::Title-->
                     </div>
@@ -70,7 +70,7 @@
                         <!--begin::Item-->
                         <div class="d-flex flex-stack">
                             <!--begin::Section-->
-                            <div class="text-gray-700 fw-semibold fs-6 me-2">{{__('Referrals')}}</div>
+                            <div class="text-gray-700 fw-semibold fs-6 me-2">{{__('general.LBL_REFERRALS')}}</div>
                             <!--end::Section-->
                             <!--begin::Statistics-->
                             <div class="d-flex align-items-senter">
@@ -95,7 +95,7 @@
                             <span class="fs-2hx fw-bold me-2 lh-1 ls-n2">{{$stats['networks']}}</span>
                             <!--end::Amount-->
                             <!--begin::Subtitle-->
-                            <span class="text-gray-400 pt-1 fw-semibold fs-6">{{__('Network Tills')}}</span>
+                            <span class="text-gray-400 pt-1 fw-semibold fs-6">{{__('general.LBL_NETWORK_TILLS')}}</span>
                             <!--end::Subtitle-->
                         </div>
                         <!--end::Title-->
@@ -106,7 +106,7 @@
                         <!--begin::Progress-->
                         <div class="d-flex align-items-center flex-column mt-3 w-100">
                             <div class="d-flex justify-content-between fw-bold fs-6 w-100 mt-auto mb-2">
-                                <span>{{$stats['open_shifts']}} {{__('Open Shifts')}}</span>
+                                <span>{{$stats['open_shifts']}} {{__('general.LBL_OPEN_SHIFT')}}</span>
                             </div>
                         </div>
                         <!--end::Progress-->
@@ -125,7 +125,7 @@
                             <span class="fs-2hx fw-bold text-dark me-2 lh-1 ls-n2">{{$stats['awarded_vas']}}</span>
                             <!--end::Amount-->
                             <!--begin::Subtitle-->
-                            <span class="text-gray-400 pt-1 fw-semibold fs-6">{{__('Awarded VAS')}}</span>
+                            <span class="text-gray-400 pt-1 fw-semibold fs-6">{{__('general.LBL_AWARDED_VAS')}}</span>
                             <!--end::Subtitle-->
                         </div>
                         <!--end::Title-->
@@ -136,7 +136,7 @@
                         <!--begin::Progress-->
                         <div class="d-flex align-items-center flex-column mt-3 w-100">
                             <div class="d-flex justify-content-between fw-bold fs-6 w-100 mt-auto mb-2">
-                                <span>{{$stats['pending_exchange']}} {{__('Pending Exchange')}}</span>
+                                <span>{{$stats['pending_exchange']}} {{__('general.LBL_PENDING_EXCHANGE')}}</span>
                             </div>
                         </div>
                         <!--end::Progress-->
@@ -167,7 +167,7 @@
                             </div>
                             <!--end::Info-->
                             <!--begin::Subtitle-->
-                            <span class="text-gray-400 pt-1 fw-semibold fs-6">{{__('Total Transaction')}}</span>
+                            <span class="text-gray-400 pt-1 fw-semibold fs-6">{{__('general.LBL_TOTAL_TRANSACTION')}}</span>
                             <!--end::Subtitle-->
                         </div>
                         <!--end::Title-->
@@ -188,7 +188,7 @@
                                 <div class="bullet w-8px h-3px rounded-2 bg-success me-3"></div>
                                 <!--end::Bullet-->
                                 <!--begin::Label-->
-                                <div class="text-gray-500 flex-grow-1 me-4">{{__('Deposit')}}</div>
+                                <div class="text-gray-500 flex-grow-1 me-4">{{__('general.LBL_DEPOSIT')}}</div>
                                 <!--end::Label-->
                                 <!--begin::Stats-->
                                 <div class="fw-bolder text-gray-700 text-xxl-end">{{session('currency').' '.$stats['deposit_transaction']}}</div>
@@ -201,7 +201,7 @@
                                 <div class="bullet w-8px h-3px rounded-2 bg-primary me-3"></div>
                                 <!--end::Bullet-->
                                 <!--begin::Label-->
-                                <div class="text-gray-500 flex-grow-1 me-4">{{__('Withdraw')}}</div>
+                                <div class="text-gray-500 flex-grow-1 me-4">{{__('general.LBL_WITHDRAW')}}</div>
                                 <!--end::Label-->
                                 <!--begin::Stats-->
                                 <div class="fw-bolder text-gray-700 text-xxl-end">{{session('currency').' '.$stats['withdraw_transaction']}}</div>
@@ -231,7 +231,7 @@
                             </div>
                             <!--end::Info-->
                             <!--begin::Subtitle-->
-                            <span class="text-gray-400 pt-1 fw-semibold fs-6">{{__('Total Balance')}}</span>
+                            <span class="text-gray-400 pt-1 fw-semibold fs-6">{{__('general.LBL_TOTAL_BALANCE')}}</span>
                             <!--end::Subtitle-->
                         </div>
                         <!--end::Title-->
@@ -252,7 +252,7 @@
                                 <div class="bullet w-8px h-3px rounded-2 bg-success me-3"></div>
                                 <!--end::Bullet-->
                                 <!--begin::Label-->
-                                <div class="text-gray-500 flex-grow-1 me-4">{{__('Cash')}}</div>
+                                <div class="text-gray-500 flex-grow-1 me-4">{{__('general.LBL_CASH')}}</div>
                                 <!--end::Label-->
                                 <!--begin::Stats-->
                                 <div class="fw-bolder text-gray-700 text-xxl-end">{{session('currency').' '.$stats['cash_balance']}}</div>
@@ -265,7 +265,7 @@
                                 <div class="bullet w-8px h-3px rounded-2 bg-primary me-3"></div>
                                 <!--end::Bullet-->
                                 <!--begin::Label-->
-                                <div class="text-gray-500 flex-grow-1 me-4">{{__('Network Tills')}}</div>
+                                <div class="text-gray-500 flex-grow-1 me-4">{{__('general.LBL_NETWORK_TILLS')}}</div>
                                 <!--end::Label-->
                                 <!--begin::Stats-->
                                 <div class="fw-bolder text-gray-700 text-xxl-end">{{session('currency').' '.$stats['till_balance']}}</div>
@@ -278,7 +278,7 @@
                                 <div class="bullet w-8px h-3px rounded-2 bg-primary me-3"></div>
                                 <!--end::Bullet-->
                                 <!--begin::Label-->
-                                <div class="text-gray-500 flex-grow-1 me-4">{{__('Loan Balance')}}</div>
+                                <div class="text-gray-500 flex-grow-1 me-4">{{__('general.LBL_LOAN_BALANCE')}}</div>
                                 <!--end::Label-->
                                 <!--begin::Stats-->
                                 <div class="fw-bolder text-gray-700 text-xxl-end">{{session('currency').' '.$stats['loan_balance']}}</div>
@@ -288,7 +288,7 @@
                             <!--begin::Label-->
                             <div class="d-flex fw-semibold align-items-center my-3">
                                 <div class="m-0">
-                                    <a href="{{ route('agent.report') }}" class="btn btn-sm btn-primary mb-2">See More</a>
+                                    <a href="{{ route('agent.report') }}" class="btn btn-sm btn-primary mb-2">{{ __('general.LBL_SEE_MORE') }}</a>
                                 </div>
                             </div>
                             <!--end::Label-->
@@ -312,26 +312,26 @@
                         <div class="mb-10">
                             <!--begin::Title-->
                             <div class="fs-2hx fw-bold text-gray-800 text-center mb-13">
-                                                    <span class="me-2">Welcome to the leading
+                                                    <span class="me-2">{{ __('general.LBL_WELCOME_TO_LEADING') }}
                                                     <br />
                                                     <span class="position-relative d-inline-block text-danger">
                                                         <!--begin::Separator-->
                                                         <span class="position-absolute opacity-15 bottom-0 start-0 border-4 border-danger border-bottom w-100"></span>
                                                         <!--end::Separator-->
-                                                    </span></span>Agency Management</div>
+                                                    </span></span>{{ __('general.LBL_AGENCY_MANAGEMENT') }}</div>
                             <!--end::Title-->
                             <!--begin::Action-->
                             <div class="text-center">
                                 @if(!hasOpenShift())
-                                    <a href="{{route('agency.shift.open.index')}}" class="btn btn-sm btn-dark fw-bold m-1">{{__('Open Shift')}}</a>
+                                    <a href="{{route('agency.shift.open.index')}}" class="btn btn-sm btn-dark fw-bold m-1">{{__('general.LBL_OPEN_SHIFT')}}</a>
                                 @else
                                     @php
                                         $shift = getOpenShift();
                                     @endphp
-                                    <a href="{{route('agency.shift.show',$shift->id)}}" class="btn btn-sm btn-dark fw-bold m-1">{{__('View Open Shift')}}</a>
+                                    <a href="{{route('agency.shift.show',$shift->id)}}" class="btn btn-sm btn-dark fw-bold m-1">{{__('general.LBL_VIEW_OPEN_SHIFT')}}</a>
                                 @endif
-                                <a href="{{route('exchange.ads')}}" class="btn btn-sm btn-dark fw-bold m-1">{{__('Exchange Float')}}</a>
-                                <a href="{{route('agent.tasks')}}" class="btn btn-sm btn-dark fw-bold m-1">{{__('View Opportunities')}}</a>
+                                <a href="{{route('exchange.ads')}}" class="btn btn-sm btn-dark fw-bold m-1">{{__('general.LBL_EXCHANGE_FLOAT')}}</a>
+                                <a href="{{route('agent.tasks')}}" class="btn btn-sm btn-dark fw-bold m-1">{{__('general.LBL_VIEW_OPPORTUNITIES')}}</a>
                             </div>
                         </div>
                         <!--begin::Wrapper-->
@@ -357,7 +357,7 @@
                 <div class="card-header pt-5">
                     <!--begin::Title-->
                     <h3 class="card-title align-items-start flex-column">
-                        <span class="card-label fw-bold text-dark">Summary</span>
+                        <span class="card-label fw-bold text-dark">{{ __('general.LBL_SUMMARY') }}</span>
                     </h3>
                     <!--end::Title-->
                 </div>
@@ -403,14 +403,14 @@
                                         </tr>
                                     @endforeach
                                         <tr class="fs-7 fw-bold text-gray-500">
-                                            <th class="pe-0 min-w-120px pt-3">Branch Name</th>
-                                            <th class="pe-0 min-w-120px pt-3">Physical Balance (Cash + Till)</th>
-                                            <th class="pe-0 min-w-120px pt-3">Credit (Money In)</th>
-                                            <th class="pe-0 min-w-120px pt-3">Debit (Money Out)</th>
-                                            <th class="pe-0 min-w-120px pt-3">Expense</th>
-                                            <th class="pe-0 min-w-120px pt-3">Total Balance</th>
-                                            <th class="pe-0 min-w-120px pt-3">Captial</th>
-                                            <th class="pe-0 min-w-120px pt-3">Differ</th>
+                                            <th class="pe-0 min-w-120px pt-3">{{__('general.LBL_BRANCH_NAME')}}</th>
+                                            <th class="pe-0 min-w-120px pt-3">{{__('general.LBL_PHYSICAL_BALANCE')}} ({{ __('general.LBL_CASH') }} + {{ __('general.LBL_TILL') }})</th>
+                                            <th class="pe-0 min-w-120px pt-3">{{__('general.LBL_CREDIT')}} ({{ __('general.LBL_MONEY_IN') }})</th>
+                                            <th class="pe-0 min-w-120px pt-3">{{__('general.LBL_DEBIT')}} ({{ __('general.LBL_MONEY_OUT') }})</th>
+                                            <th class="pe-0 min-w-120px pt-3">{{__('general.LBL_EXPENSE')}}</th>
+                                            <th class="pe-0 min-w-120px pt-3">{{__('general.LBL_TOTAL_BALANCE')}}</th>
+                                            <th class="pe-0 min-w-120px pt-3">{{__('general.LBL_CAPITAL')}}</th>
+                                            <th class="pe-0 min-w-120px pt-3">{{__('general.LBL_DIFFER')}}</th>
                                         </tr>
                                     </thead>
                                     <!--end::Table head-->
@@ -473,12 +473,12 @@
                     <div class="card-header pt-7">
                         <!--begin::Title-->
                         <h3 class="card-title align-items-start flex-column">
-                            <span class="card-label fw-bold text-gray-800">{{__('Recent Transactions')}}</span>
+                            <span class="card-label fw-bold text-gray-800">{{__('general.LBL_RECENT_TRANSACTIONS')}}</span>
                         </h3>
                         <!--end::Title-->
                         <!--begin::Toolbar-->
                         <div class="card-toolbar">
-                            <a href="{{route('agency.transactions')}}" class="btn btn-sm btn-light">{{__('View Transactions')}}</a>
+                            <a href="{{route('agency.transactions')}}" class="btn btn-sm btn-light">{{__('general.LBL_VIEW_TRANSACTIONS')}}</a>
                         </div>
                         <!--end::Toolbar-->
                     </div>

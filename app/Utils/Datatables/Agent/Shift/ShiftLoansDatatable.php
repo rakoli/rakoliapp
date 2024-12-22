@@ -73,15 +73,15 @@ class ShiftLoansDatatable implements HasDatatable
 
         return $datatableBuilder->columns([
             Column::make('id')->title('#')->searchable(false)->orderable(),
-            Column::make('created_at')->title(__('date'))->searchable()->orderable(),
-            Column::make('location_name')->title(__('Location'))->searchable()->orderable(),
-            Column::make('user_name')->title(__('User'))->searchable()->orderable(),
-            Column::make('agency_name')->title(__('Agency'))->searchable()->orderable(),
-            Column::make('status')->title(__('status'))->searchable()->orderable(),
-            Column::make('type')->title(__('type'))->searchable()->orderable(),
-            Column::make('amount')->title(__('amount').' '.strtoupper(session('currency')))->searchable()->orderable(),
-            Column::make('balance')->title(__('balance').' '.strtoupper(session('currency')))->searchable()->orderable(),
-            Column::make('action')->data('action')->title(__('action')),
+            Column::make('created_at')->title(__('general.LBL_DATE'))->searchable()->orderable(),
+            Column::make('location_name')->title(__('general.LBL_LOCATION'))->searchable()->orderable(),
+            Column::make('user_name')->title(__('general.LBL_USER'))->searchable()->orderable(),
+            Column::make('agency_name')->title(__('general.LBL_AGENCY'))->searchable()->orderable(),
+            Column::make('status')->title(__('general.LBL_STATUS'))->searchable()->orderable(),
+            Column::make('type')->title(__('general.LBL_TYPE'))->searchable()->orderable(),
+            Column::make('amount')->title(__('general.LBL_AMOUNT').' '.strtoupper(session('currency')))->searchable()->orderable(),
+            Column::make('balance')->title(__('general.LBL_BALANCE').' '.strtoupper(session('currency')))->searchable()->orderable(),
+            Column::make('action')->data('action')->title(__('general.LBL_ACTIONS')),
 
         ])
             ->responsive(true)

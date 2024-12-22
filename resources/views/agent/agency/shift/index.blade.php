@@ -1,6 +1,6 @@
 @extends('layouts.users.agent')
 
-@section('title', "Shift")
+@section('title', __("general.LBL_SHIFT"))
 
 @section('header_js')
     <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css"/>
@@ -11,7 +11,7 @@
     <span class="h-20px border-gray-200 border-start ms-3 mx-2"></span>
     <!--end::Separator-->
     <!--begin::Description-->
-    <small class="text-muted fs-7 fw-semibold my-1 ms-1">Agency</small>
+    <small class="text-muted fs-7 fw-semibold my-1 ms-1">{{ __('general.LBL_AGENCY') }}</small>
     <!--end::Description-->
 @endsection
 
@@ -31,20 +31,8 @@
 
                 <!--begin::Wrapper-->
                 <div class="d-flex flex-stack mb-5">
-{{--                    @if(! $hasOpenShift)--}}
-{{--                        <x-a-button--}}
-{{--                            route="{{ route('agency.shift.open.index') }}"--}}
-{{--                        >--}}
-
-{{--                            {{ __('Open Shift') }}--}}
-{{--                        </x-a-button>--}}
-{{--                    @endif--}}
                     <!--begin::Search-->
                     <div class="d-flex align-items-center position-relative my-1">
-                        {{--<i class="ki-duotone ki-magnifier fs-1 position-absolute ms-6"><span
-                                class="path1"></span><span class="path2"></span></i>
-                        <x-input type="text" data-kt-docs-table-filter="search"
-                                 class="fform-control-solid w-250px ps-15" placeholder="Search Shits"/>--}}
                     </div>
                     <!--end::Search-->
                 </div>

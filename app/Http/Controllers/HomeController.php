@@ -137,12 +137,12 @@ class HomeController extends Controller
 
             //Datatable
             $dataTableHtml = $builder->columns([
-                ['data' => 'created_at', 'title' => __('Time')],
-                ['data' => 'location.name', 'title' => __('Location')],
-                ['data' => 'name', 'title' => __('User')],
-                ['data' => 'type', 'title' => __('Type')],
-                ['data' => 'amount', 'title' => __('Amount')],
-                ['data' => 'balance_new', 'title' => __('Balance')],
+                ['data' => 'created_at', 'title' => __('general.LBL_TIME')],
+                ['data' => 'location.name', 'title' => __('general.LBL_LOCATION')],
+                ['data' => 'name', 'title' => __('general.LBL_USER')],
+                ['data' => 'type', 'title' => __('general.LBL_TYPE')],
+                ['data' => 'amount', 'title' => __('general.LBL_AMOUNT')],
+                ['data' => 'balance_new', 'title' => __('general.LBL_BALANCE')],
             ])->orderBy(0, 'desc')
                 ->responsive(true)
                 ->setTableHeadClass('fw-semibold fs-6 text-gray-800 border-bottom border-gray-200');
