@@ -34,6 +34,7 @@ class Business extends Model
         'referral_business_code',
         'is_verified',
         'package_code',
+        'is_trial',
         'package_expiry_at'
     ];
 
