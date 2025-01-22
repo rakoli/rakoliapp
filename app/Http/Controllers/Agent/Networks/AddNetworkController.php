@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Agent\Networks;
 use App\Actions\Agent\Shift\Network\AddLocationNetwork;
 use App\Http\Controllers\Controller;
 use App\Models\Network;
+use App\Utils\Enums\NetworkTypeEnum;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class AddNetworkController extends Controller
 {
@@ -44,7 +46,33 @@ class AddNetworkController extends Controller
 
         try {
 
+            $type = NetworkTypeEnum::tryFrom($request->type);
+            if($type === NetworkTypeEnum::CRYPTO){
+                $networkCheck = Network::query()
+                ->where([
+                    'location_code' => $request->location_code,
+                    'crypto_code' => $request->crypto_code,
+                ])
+                ->exists();
+            } else {
+                $networkCheck = Network::query()
+                ->where([
+                    'location_code' => $request->location_code,
+                    'fsp_code' => $request->fsp_code,
+                    'agent_no' => $request->agent_no,
+                ])
+                ->exists();
+            }
+
+            if($networkCheck){
+                return response()
+                ->json([
+                    'message' => "Network already exists.",
+                ], 422);
+            }
+            
             AddLocationNetwork::run($validated);
+
 
             return response()
                 ->json([

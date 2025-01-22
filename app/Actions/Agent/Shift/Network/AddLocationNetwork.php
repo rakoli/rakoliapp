@@ -44,33 +44,20 @@ class AddLocationNetwork
                 } else {
                     Log::info("AddLocationNetwork :: Till Network");
 
-                    $networkCheck = Network::query()
-                    ->where([
+                    $network = Network::create([
+                        'business_code' => auth()->user()->business_code,
                         'location_code' => $data['location_code'],
+                        'type' => $type,
                         'fsp_code' => $data['fsp_code'],
-                        'agent_no' => $data['agent_no'],
-                    ])
-                    ->exists();
-
-
-                    if(!$networkCheck){
-                        $network = Network::create([
-                            'business_code' => auth()->user()->business_code,
-                            'location_code' => $data['location_code'],
-                            'type' => $type,
-                            'fsp_code' => $data['fsp_code'],
-                            'code' => generateCode(name: $data['name'], prefixText: $data['fsp_code']),
-                            'agent_no' => $data['agent_no'] ?? null,
-                            'balance' => $data['balance'] ?? null,
-                            'balance_currency' => currencyCode(),
-                            'name' => $data['name'],
-                            'description' => $data['description'] ?? null,
-                        ]);
+                        'code' => generateCode(name: $data['name'], prefixText: $data['fsp_code']),
+                        'agent_no' => $data['agent_no'] ?? null,
+                        'balance' => $data['balance'] ?? null,
+                        'balance_currency' => currencyCode(),
+                        'name' => $data['name'],
+                        'description' => $data['description'] ?? null,
+                    ]);
                         
-                        Log::info("AddLocationNetwork :: Added Network :: ".print_r($network,true));
-                    } else {
-                        Log::info("AddLocationNetwork :: Network already exists.");
-                    }
+                    Log::info("AddLocationNetwork :: Added Network :: ".print_r($network,true));
                 }
 
                 // event(new NetworkCreatedEvent(network: $network));
