@@ -103,8 +103,11 @@ class RegisterController extends Controller
 
         if (env('APP_ENV') == 'production'){
             $validators['g-recaptcha-response'] = [new GoogleReCaptchaV3ValidationRule('register')];
+            $message = [
+                'g-recaptcha-response' => "Invalid Captch code, Please resubmit data."
+            ];
         }
-        return Validator::make($data,$validators);
+        return Validator::make($data,$validators,$message);
     }
 
     /**

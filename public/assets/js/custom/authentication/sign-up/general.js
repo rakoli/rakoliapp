@@ -212,16 +212,21 @@ var KTSignupGeneral = function() {
                             }
                         })
                     })).catch((function(e) {
-                        console.log('shida',e.response.data.message,e)
+                        console.log(e.response.data);
                         var error_msg = "Something went wrong, please try again.";
+                        var error_html = "";
                         if ('error' in e.response.data){
                             error_msg = e.response.data.error.message;
+                            $.each(e.response.data.error.fields, function(i,msg){
+                                error_html = error_html + msg + "<br>";
+                            });
                         } else if('message' in e.response.data) {
                             error_msg = e.response.data.message;
                         }
-                    
+                                
                         Swal.fire({
-                            text: error_msg,
+                            title: error_msg,
+                            html: error_html,
                             icon: "error",
                             buttonsStyling: !1,
                             confirmButtonText: "Ok, got it!",
