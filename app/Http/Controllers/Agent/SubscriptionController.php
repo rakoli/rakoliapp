@@ -9,6 +9,7 @@ use App\Models\InitiatedPayment;
 use App\Models\Package;
 use App\Models\PackageName;
 use App\Models\Region;
+use App\Utils\Enums\SystemIncomeCategoryEnum;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
@@ -69,6 +70,8 @@ class SubscriptionController extends Controller
     }
 
     public function subscriptionBuy(Request $request){
-        return view('agent.business.buy_subscription');
+        $user = \auth()->user();
+        $CheckTrial = InitiatedPayment::where('business_code', $user->business_code)->where('income_category', SystemIncomeCategoryEnum::TRIAL)->exists();
+        return view('agent.business.buy_subscription',compact('CheckTrial'));
     }
 }

@@ -84,7 +84,9 @@
                                     <!--begin::Select-->
                                     <div class="t-btn">
                                         <button type="button" class="btn btn-sm btn-primary" onclick="selectSubscription('{{$package->code}}','{{strtoupper($package->name)}}', '{{number_format($package->price)}}', '{{strtoupper($package->price_currency)}}')">{{__('Select')}}</button>
-                                        <button type="button" class="btn btn-sm btn-primary" onclick="selectSubscription('{{$package->code}}','{{strtoupper($package->name)}}', '{{number_format($package->price)}}', '{{strtoupper($package->price_currency)}}','true')">{{__('Trial')}}</button>
+                                        @if(!$CheckTrial)
+                                            <button type="button" class="btn btn-sm btn-primary" onclick="selectSubscription('{{$package->code}}','{{strtoupper($package->name)}}', '{{number_format($package->price)}}', '{{strtoupper($package->price_currency)}}','true')">{{__('Trial')}}</button>
+                                        @endif
                                     </div>
                                     <!--end::Select-->
                                 </div>

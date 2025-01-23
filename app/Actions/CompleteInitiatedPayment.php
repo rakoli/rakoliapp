@@ -29,6 +29,7 @@ class CompleteInitiatedPayment
 
             $package = Package::where('code',$initiatedPayment->description)->first();
             $business->package_code = $package->code;
+            $business->is_trial = 0;
             $business->package_expiry_at = now()->addDays($package->package_interval_days);
             $business->save();
 
@@ -48,6 +49,7 @@ class CompleteInitiatedPayment
         } else if($initiatedPayment->income_category == SystemIncomeCategoryEnum::TRIAL->value){
             $package = Package::where('code',$initiatedPayment->description)->first();
             $business->package_code = $package->code;
+            $business->is_trial = 1;
             $business->package_expiry_at = now()->addDays(90);  
             $business->save();
         }
