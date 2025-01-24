@@ -239,7 +239,7 @@
                                     <!--begin::Amount-->
                                     <span class="fs-2hx fw-bold text-white me-2 lh-1 ls-n2"  data-kt-countup="true"
                                           data-kt-countup-value="{{ number_format($loanBalances , 2) }}"
-                                          data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">{{number_format($loanBalances , 2)}}</span>
+                                          data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">{{number_format(abs($loanBalances) , 2)}}</span>
                                     <!--end::Amount-->
                                     <!--begin::Subtitle-->
                                     <span class="text-white pt-1 fw-semibold fs-6">{{ __('Loan Balance') }} in {{currencyCode()}}</span>
