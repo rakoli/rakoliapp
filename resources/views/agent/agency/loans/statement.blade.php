@@ -80,7 +80,7 @@
                     </tr>
                     <tr style="text-align:center;border-top:1px solid #000">
                         <td colspan="3" style="font-size:18px">Statement</td>
-                        <td colspan="2" style="font-size:30px;font-weight:700">{!! money(($totalpaid - $totalcredit), currencyCode(), true) !!}</td>
+                        <td colspan="2" style="font-size:30px;font-weight:700">{!! money((abs($totalpaid - $totalcredit)), currencyCode(), true) !!}</td>
                     </tr>
                 </tbody>
             </table>

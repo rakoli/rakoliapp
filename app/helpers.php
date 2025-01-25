@@ -470,7 +470,7 @@ if (! function_exists('shiftBalances')) {
             'shorts' => $shorts ,
             'loanIn' => $creditLoan,
             'loanOut' => $debitLoan,
-            'loanBalances' => $loanBalances,
+            'loanBalances' => abs($loanBalances),
             'capital' => $capital,
             'differ' => $differ,
         ];

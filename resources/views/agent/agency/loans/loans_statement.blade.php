@@ -75,7 +75,7 @@
                     </tr>
                     <tr style="text-align:center;border-top:1px solid #000">
                         <td colspan="3" style="font-size:18px">UNPAID</td>
-                        <td colspan="2" style="font-size:30px;font-weight:700">{!! money(($data['total_paid'] - $data['total_credit']), currencyCode(), true) !!}</td>
+                        <td colspan="2" style="font-size:30px;font-weight:700">{!! money((abs($data['total_paid'] - $data['total_credit'])), currencyCode(), true) !!}</td>
                     </tr>
                 </tbody>
             </table>
