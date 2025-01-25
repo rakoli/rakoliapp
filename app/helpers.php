@@ -444,7 +444,7 @@ if (! function_exists('shiftBalances')) {
             ->sum(fn (\App\Models\Loan $loan)  :float => + $loan->balance);
 
 
-        $loanBalances = $creditLoan - $debitLoan;
+        $loanBalances = abs($creditLoan - $debitLoan);
 
         $startCapital = $shift->cash_start + $shift->shiftNetworks->sum('balance_old');
 
@@ -470,7 +470,7 @@ if (! function_exists('shiftBalances')) {
             'shorts' => $shorts ,
             'loanIn' => $creditLoan,
             'loanOut' => $debitLoan,
-            'loanBalances' => abs($loanBalances),
+            'loanBalances' => $loanBalances,
             'capital' => $capital,
             'differ' => $differ,
         ];
