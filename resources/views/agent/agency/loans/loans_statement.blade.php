@@ -32,7 +32,7 @@
             <table cellpadding="0" cellspacing="0" class="header-table" style="width: 100%; font-size: 9pt">
                 <tbody>
                     <tr>
-                        @if(file_exists(public_path('storage/'.Auth::user()->business->business_logo)))
+                        @if(!empty(Auth::user()->business->business_logo) && file_exists(public_path('storage/'.Auth::user()->business->business_logo)))
                             <td colspan="5" style="text-align: center;">
                                 <img src="{{ public_path('storage/'.Auth::user()->business->business_logo) }}" alt="{{ Auth::user()->business->business_name }}" width="600px">
                             </td>

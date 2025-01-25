@@ -71,7 +71,7 @@
                     <!--end::Label-->
                     <label class="form-label">{{__('Business Logo')}}</label>
                     <!--begin::Input-->
-                    <input type="file" class="form-control mb-2" id="business_logo" name="business_logo" accept="image/png, image/gif, image/jpeg">
+                    <input type="file" class="form-control mb-2" id="business_logo" name="business_logo" accept="image/*">
                     @if($business->business_logo)
                         <img src="{{ asset('storage/'.$business->business_logo) }}">
                     @endif
