@@ -17,7 +17,7 @@ class BusinessDataTable implements HasDatatable
     public function index()
     {
 
-        $users = Business::query()->where('type', 'agent');
+        $users = Business::query()->where('type', 'agent')->WhereNotNull('package_code');
 
         return Datatables::eloquent($users)
 
