@@ -155,7 +155,7 @@
 
         <div class="modal-footer my-4">
 
-            <x-submit-button id="add-expense-button" label="Save Expenses"/>
+            <x-submit-button id="add-expense-button" label="Save Cash Out"/>
         </div>
 
     </form>

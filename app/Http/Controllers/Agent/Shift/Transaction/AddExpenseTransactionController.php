@@ -37,7 +37,7 @@ class AddExpenseTransactionController extends Controller
 
             return response()
                 ->json([
-                    'message' => 'Expense Added successfully',
+                    'message' => 'Cash Out recorded successfully',
                 ]);
 
         } catch (\Exception|\Throwable $e) {
