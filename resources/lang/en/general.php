@@ -24,6 +24,7 @@ return [
     "LBL_AGENCY" => "Agency",
     "LBL_SHIFT" => "Shift",
     "LBL_NETWORKS" => "Networks",
+    "LBL_NETWORK" => "Network",
     "LBL_LOANS" => "Loans",
     "LBL_TRANSFER_REQUEST" => "Transfer Request",
     'LBL_EXCHANGE' => "Exchange",

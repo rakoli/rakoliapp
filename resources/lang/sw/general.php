@@ -24,6 +24,7 @@ return [
     "LBL_AGENCY" => "Wakala",
     "LBL_SHIFT" => "Shift",
     "LBL_NETWORKS" => "Mitandao",
+    "LBL_NETWORK" => "Mtandao",
     "LBL_LOANS" => "Mikopo",
     'LBL_TRANSFER_REQUEST' => "Ombi la Uhamisho",
     'LBL_EXCHANGE' => "Kubadilishana",
