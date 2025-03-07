@@ -8,12 +8,15 @@ use App\Models\Shift;
 use App\Utils\Enums\TransactionCategoryEnum;
 use App\Utils\Enums\TransactionTypeEnum;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class AddExpenseTransactionController extends Controller
 {
     public function __invoke(Request $request, Shift $shift)
     {
+        Log::info(print_r($request->all(),true));
         $validated = $request->validate([
+            'category' => 'required',
             'amount' => 'required',
             'source' => 'required',
             'network_code' => 'required_if:source,TILL',
@@ -29,6 +32,11 @@ class AddExpenseTransactionController extends Controller
 
             throw_if(! checkBalance($shift, $request), new \Exception('Insuffcient balance'));
 
+            if($validated['category'] == "expense"){
+                $msg = "Expense recorded successfully";
+            } else {
+                $msg = "Cash Out recorded successfully";
+            }
             $validated['category'] = TransactionCategoryEnum::EXPENSE;
 
             $validated['type'] = TransactionTypeEnum::MONEY_OUT->value;
@@ -37,7 +45,7 @@ class AddExpenseTransactionController extends Controller
 
             return response()
                 ->json([
-                    'message' => 'Cash Out recorded successfully',
+                    'message' => $msg,
                 ]);
 
         } catch (\Exception|\Throwable $e) {

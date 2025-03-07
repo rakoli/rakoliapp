@@ -36,12 +36,12 @@
             </x-modal_with_button>
 
             <x-modal_with_button
-                targetId="add-expenses"
+                targetId="add-cashout"
                 label="Add Cash Out"
                 modalTitle="Fill the form below record a Cash Out"
                 btnClass="btn btn-youtube m-1"
             >
-            @include('agent.agency.transaction.add-expense')
+            @include('agent.agency.transaction.add-cashout')
             </x-modal_with_button>
 
             <x-modal_with_button
@@ -69,6 +69,15 @@
                 modalTitle="Fill the form below to transfer till balance"
             >
             @include('agent.agency.transaction.transfer-balance')
+            </x-modal_with_button>
+
+            <x-modal_with_button
+                targetId="add-expenses"
+                label="Add Expense"
+                modalTitle="Fill the form below record a Expense"
+                btnClass="btn btn-youtube m-1"
+            >
+            @include('agent.agency.transaction.add-expense')
             </x-modal_with_button>
 
             <x-a-button class="btn btn-outline-danger btn-google text-white m-1" route="{{ route('agency.shift.close', $shift) }}">Close Shift</x-a-button>

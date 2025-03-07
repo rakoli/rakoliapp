@@ -1,6 +1,6 @@
 <div>
-    <form method="post" id="add-expense-form" class="uk-form-horizontal">
-        <input type="hidden" name="category" value="expense">
+    <form method="post" id="add-cashout-form" class="uk-form-horizontal">
+        <input type="hidden" name="category" value="CashOut">
         @csrf
         <div class="modal-body">
             <div class="current-balance">
@@ -18,7 +18,7 @@
                         name="amount"
                         data-placeholder="{{ __('amount') }}"
                         id="amount"/>
-                    <x-helpertext>{{ __("Amount you want to Expense") }}</x-helpertext>
+                    <x-helpertext>{{ __("Amount you want to Cash Out") }}</x-helpertext>
                     @error('amount')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -29,7 +29,7 @@
                 <div class="col-6">
                     <x-label class="" label="{{ __('Fund Source') }}" for="source"/>
                     <x-select2
-                        modalId="add-expenses"
+                        modalId="add-cashouts"
                         name="source"
                         placeholder="{{ __('source: e.g Cash ') }}"
                         id="source"
@@ -155,7 +155,7 @@
 
         <div class="modal-footer my-4">
 
-            <x-submit-button id="add-expense-button" label="Save Expense"/>
+            <x-submit-button id="add-expense-button" label="Save Cash Out"/> 
         </div>
 
     </form>
@@ -176,14 +176,14 @@
                     if ("TILL" === source) {
                         $("div#till-source").show();
                         jQuery('select#till_source_code').change();
-                        var balance_amount = jQuery("#add-expense-form .balance-amount").data('till');
+                        var balance_amount = jQuery("#add-cashout-form .balance-amount").data('till');
                     } else {
                         $("div#till-source").hide();
                         jQuery(".crypto-data").hide();
-                        var balance_amount = jQuery("#add-expense-form .balance-amount").data('cash');
+                        var balance_amount = jQuery("#add-cashout-form .balance-amount").data('cash');
                     }
                     var balance_amount = Number(balance_amount.replace(/[^0-9.-]+/g,""));
-                    jQuery("#add-expense-form .balance-amount").text(format(balance_amount));
+                    jQuery("#add-cashout-form .balance-amount").text(format(balance_amount));
 
                 });
 
@@ -191,30 +191,30 @@
                     var selectedOption = $(this).find(":selected");
                     if(selectedOption.data('type') == "Crypto"){
                         jQuery(".crypto-data").show();
-                        jQuery("#add-expense-form #exchange_rate").val(selectedOption.data('rate'));
+                        jQuery("#add-cashout-form #exchange_rate").val(selectedOption.data('rate'));
 
                     } else {
                         jQuery(".crypto-data").hide();
                     }
                 });
 
-                jQuery("#add-expense-form #amount, #add-expense-form #crypto, #add-expense-form #exchange_rate").on("change",function(){
-                    var amount = jQuery("#add-expense-form #amount").val();
-                    var crypto = jQuery("#add-expense-form #crypto").val();
-                    var exchange_rate = jQuery("#add-expense-form #exchange_rate").val();
+                jQuery("#add-cashout-form #amount, #add-cashout-form #crypto, #add-cashout-form #exchange_rate").on("change",function(){
+                    var amount = jQuery("#add-cashout-form #amount").val();
+                    var crypto = jQuery("#add-cashout-form #crypto").val();
+                    var exchange_rate = jQuery("#add-cashout-form #exchange_rate").val();
                     if(jQuery('select#source').val() == "TILL"){
-                        var balance_amount = jQuery("#add-expense-form .balance-amount").data('till');
+                        var balance_amount = jQuery("#add-cashout-form .balance-amount").data('till');
                     } else {
-                        var balance_amount = jQuery("#add-expense-form .balance-amount").data('cash');
+                        var balance_amount = jQuery("#add-cashout-form .balance-amount").data('cash');
                     }
                     var balance_amount = Number(balance_amount.replace(/[^0-9.-]+/g,""));
 
                     if(crypto > 0){
-                        jQuery("#add-expense-form #amount").val(crypto * exchange_rate)
+                        jQuery("#add-cashout-form #amount").val(crypto * exchange_rate)
                     }else if(amount > 0){
-                        jQuery("#add-expense-form #crypto").val(amount / exchange_rate)
+                        jQuery("#add-cashout-form #crypto").val(amount / exchange_rate)
                     }
-                    jQuery("#add-expense-form .balance-amount").text(format(parseFloat(balance_amount,2) - parseFloat(amount,2)));
+                    jQuery("#add-cashout-form .balance-amount").text(format(parseFloat(balance_amount,2) - parseFloat(amount,2)));
                 });
 
                 jQuery(document).on("click","#add-expense-button", function(){
@@ -299,7 +299,7 @@
                         ];
                     }
 
-                    const expenseForm = document.getElementById('add-expense-form');
+                    const expenseForm = document.getElementById('add-cashout-form');
                     const submitIncomeButton = document.getElementById('add-expense-button');
                     lakoriValidation(expenseValidations, expenseForm, submitIncomeButton, 'post', '{{  route('agency.transactions.add.expense', $shift) }}',"",true);
                 });
