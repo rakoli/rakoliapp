@@ -4,19 +4,21 @@ namespace App\Utils;
 
 use AfricasTalking\SDK\AfricasTalking;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpClient\HttpClient;
+
 
 class SMS
 {
     public static function nextSMSSendSingleText($to, $text)
     {
-        $client = HttpClient::create([
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'Accept header' => 'application/json',
-                'Authorization' => 'Basic '.base64_encode(env('NEXTSMS_USERNAME').':'.env('NEXTSMS_PASSWORD')),
-            ],
-        ]);
+        $client = HttpClient::create();
+
+        $headers = [
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+            'Authorization' => 'Basic '.env('NEXTSMS_KEY'),
+        ];
 
         $body = [
             'from' => 'rakoli',
@@ -26,13 +28,14 @@ class SMS
         ];
 
         $response = $client->request(
-            'POST',
-            'https://messaging-service.co.tz/api/sms/v1/text/single',
+            "POST", 
+            "https://messaging-service.co.tz/api/sms/v1/text/single", 
             [
-                'body' => json_encode($body),
+                'headers' => $headers,
+                'body'    => json_encode($body),
             ]
         );
-
+        Log::info("Sms Response ::". print_r($response->getContent(),true));
         //        $statusCode = $response->getStatusCode();
         //        $contentType = $response->getHeaders()['content-type'][0];
         //        $content = $response->getContent();

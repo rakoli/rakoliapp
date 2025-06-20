@@ -56,4 +56,9 @@ class TestController extends Controller
 
 
     }
+
+    public function sendSms($phone){
+        $response = SMS::nextSMSSendSingleText($phone, "Sample text message");
+        return $response->getContent();
+    }
 }
