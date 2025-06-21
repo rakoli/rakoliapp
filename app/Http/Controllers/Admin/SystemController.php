@@ -17,7 +17,16 @@ class SystemController extends Controller
 
         if($request->isMethod('POST')){
             Log::info("SystemController :: SendMessage :: Request". print_r($request->all(),true));
-            if(isset($request->users)){
+
+            $validated = $request->validate([
+                'users' => 'required|array',
+                'message' => 'required',
+            ],  [
+                'users.required' => 'Please select users',
+                'message.required' => 'Message is required',
+            ]);
+
+            if(!in_array('all',$request->users)){
                 $users = User::find($request->users);
             }
 

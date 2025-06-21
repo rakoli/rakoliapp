@@ -22,7 +22,8 @@
                     <!--end::Label-->
                     <label class="form-label">{{__('User')}}</label>
                     <!--begin::Input-->
-                    <select data-control="select2" data-hide-search="true" data-placeholder="Select a User..." class="form-select form-select-solid" name="users[]" multiple>
+                    <select data-control="select2" data-hide-search="true" data-placeholder="Select a User..." class="form-select form-select-solid" name="users[]" multiple required>
+                        <option value="all">{{ __("All") }}</option>
                         @foreach($users as $user)
                             <option value="{{$user->id}}">{{$user->fname}} {{$user->lname}}</option>
                         @endforeach
