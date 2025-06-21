@@ -43,4 +43,6 @@ Route::name('admin.')->prefix('admin')->middleware(['auth', 'onlyadmin'])->group
     });
     //END: EXCHANGE MODULE
 
+    Route::any('system/send-message',[App\Http\Controllers\Admin\SystemController::class, 'SendMessage'])->name('system.send-message');
+
 });

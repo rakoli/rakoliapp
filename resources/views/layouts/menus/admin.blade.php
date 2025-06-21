@@ -255,7 +255,7 @@
         </div>
         <!--end:Menu item-->
         <!--begin:Menu item-->
-        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
+        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion" >
 
             <!--begin:Menu sub-->
             <div class="menu-sub menu-sub-accordion">
@@ -271,7 +271,7 @@
                     </span>
                     <span class="menu-title">{{ __('Email Notification') }}</span>
                 </a>
-                <a class="menu-link" href="/dashboard/admin/maintenance">
+                <a class="menu-link" href="{{ route('admin.system.send-message') }}">
                     <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                     </span>
