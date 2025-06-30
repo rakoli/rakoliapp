@@ -17,7 +17,10 @@ class BusinessDataTable implements HasDatatable
     public function index()
     {
 
-        $users = Business::query()->where('type', 'agent')->WhereNotNull('package_code');
+        $users = Business::query()
+            ->where('type', 'agent')
+            ->whereNotNull('package_code')
+            ->with('package');
 
         return Datatables::eloquent($users)
 
@@ -29,6 +32,7 @@ class BusinessDataTable implements HasDatatable
             })
             ->addIndexColumn()
             ->addColumn('bussiness_name', fn (Business $business) => $business->business_name)
+            ->addColumn('package_code', fn (Business $business) => ucfirst($business->package?->name ?? 'N/A'))
             ->addColumn('is_trial', fn (Business $business) => $business->is_trial ? "Trial" : "Paid")
             ->addColumn('balance', fn (Business $business) => money($business->balance, currencyCode(), true))
             ->addColumn('created_at', fn (Business $business) => $business->created_at->format('Y-F-d'))
@@ -43,14 +47,16 @@ class BusinessDataTable implements HasDatatable
             ->rawColumns(['created_at', 'action'])
             ->toJson();
     }
+
     public function columns(Builder $datatableBuilder): Builder
     {
         return $datatableBuilder->columns([
             Column::make('bussiness_name')->title(__('Bussiness Name'))->searchable()->orderable(),
             Column::make('business_email')->title(__('Email'))->searchable()->orderable(),
             Column::make('business_phone_number')->title(__('Phone Number'))->searchable()->orderable(),
-            Column::make('status')->title(__('Status'))->searchable()->orderable(),
+            Column::make('package_code')->title(__('Package'))->searchable()->orderable(),
             Column::make('is_trial')->title(__('Subscription'))->searchable()->orderable(),
+            Column::make('status')->title(__('Status'))->searchable()->orderable(),
             Column::make('balance')->title(__('Balance'))->searchable()->orderable(),
             Column::make('created_at')->title(__('Created On'))->searchable()->orderable(),
             Column::make('action')->title(__('Actions'))->searchable()->orderable(),
