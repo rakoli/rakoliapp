@@ -11,7 +11,7 @@ class FinancialServiceProvider extends Model
 {
     use HasFactory;
 
-    public static $tzDefaultsFSPs = ['M-PESA','TIGOPESA','AIRTELMONEY'];
+    public static $tzDefaultsFSPs = ['M-PESA','MIXXBYYAS','AIRTELMONEY'];
     public static $keDefaultsFSPs = ['M-PESA','AIRTELMONEY','ORANGE MONEY'];
 
     public function country(): BelongsTo
@@ -34,6 +34,6 @@ class FinancialServiceProvider extends Model
             return asset('/assets/media/fsp_logos/'.$this->logo);
         } else {
             return asset('/assets/media/fsp_logos/default.jpg');
-        } 
+        }
     }
 }

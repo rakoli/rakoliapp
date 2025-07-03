@@ -11,7 +11,7 @@
 @section('content')
     <!--begin::Container-->
     <div id="kt_content_container" class="container-xxl">
-        
+
         @include('agent.business._submenu_business')
 
         <!--begin::Layout-->
@@ -64,21 +64,21 @@
                                 </div>
                                 <div class="fw-bold mt-8">
                                     {{ __("Package Expiry At") }}
-                                
+
                                     {{-- Display Package Expiry Date --}}
                                     <div class="text-gray-600">
                                         {{ $balance[0]->package_expiry_at ?? '' }}
                                     </div>
-                                
+
                                     {{-- Display Days Left --}}
                                     @php
                                         $expiryDateTime = $balance[0]->package_expiry_at ?? null;
                                         $daysLeft = null;
-                                
+
                                         if ($expiryDateTime) {
                                             $now = now(); // Assuming Laravel's now() helper function is available
                                             $expiryTime = \Carbon\Carbon::parse($expiryDateTime);
-                                            
+
                                             if ($expiryTime > $now) {
                                                 $daysLeft = $now->diffInDays($expiryTime);
                                             } else {
@@ -86,7 +86,7 @@
                                             }
                                         }
                                     @endphp
-                                
+
                                     @if($daysLeft !== null)
                                         <div class="text-gray-600">
                                             @if($daysLeft > 0)
@@ -96,7 +96,7 @@
                                             @endif
                                         </div>
                                     @endif
-                                </div>                                
+                                </div>
 
                                 {{-- <div class="fw-bold mt-5">{{__("Features List")}}
                                     <div class="text-gray-600">
@@ -229,12 +229,12 @@
                             </button>
                             <button type="button" class="btn btn-primary" onclick="window.location.href = '{{route('business.subscription.buy')}}'">
                                 {{ __('Upgrade') }}
-                            </button>                            
+                            </button>
                         </div>
                         <!--begin::Card-->
                         <div class="card pt-4 mb-6 mb-xl-9">
                             <!--begin::Card header-->
-                           
+
                             <!--end::Card header-->
                             <!--begin::Card body-->
                             <div class="card-body pt-0 pb-5">
@@ -246,9 +246,9 @@
                                     <!--end::Card title-->
                                 </div>
                                 <!--begin::Table-->
-                    
+
                                     {!! $dataTableHtml->table(['class' => 'table table-row-bordered table-row-dashed gy-4' , 'style="font-size: 1.1rem;"'],true) !!}
-                
+
                                 <!--end::Table -->
                             </div>
                             <!--end::Card body-->
@@ -300,18 +300,18 @@
                                 <!--begin::Notice-->
                                 <div class="text-muted fw-semibold fs-6 mb-5 mt-5">{{__('Choose payment method below')}}</div>
                                 <!--end::Notice-->
-                        
+
                                 <!--begin::Option-->
                                 <input type="radio" class="btn-check" name="payment_method" id="pesapal_method" value="pesapal" onchange="selectPaymentMethod(this)" checked="checked"/>
                                 <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center" for="pesapal_method">
                                     <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/pesapal.png')}}" class="mw-200px mh-70px"></i>
                                     <span class="d-block fw-semibold text-start">
                                     <span class="text-gray-900 fw-bold d-block fs-3">PesaPal</span>
-                                    <span class="text-muted fw-semibold fs-6">Pay with Visa, MasterCard, Bank and Mobile Money like Mpesa, Airtel Money, TigoPesa, MTN MoMo Pay and Orange Money</span>
+                                    <span class="text-muted fw-semibold fs-6">Pay with Visa, MasterCard, Bank and Mobile Money like Mpesa, Airtel Money, Mixx by Yas, MTN MoMo Pay and Orange Money</span>
                                 </span>
                                 </label>
                                 <!--end::Option-->
-                        
+
                                 <!--begin::Option-->
                                 <input type="radio" class="btn-check" name="payment_method" id="dpopay_method" value="dpopay" onchange="selectPaymentMethod(this)"/>
                                 <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center mb-5" for="dpopay_method">
@@ -319,12 +319,12 @@
                                     <span class="d-block fw-semibold text-start">
                                         <span class="text-gray-900 fw-bold d-block fs-3">DPO Pay</span>
                                         <span class="text-muted fw-semibold fs-6">
-                                            Pay with Visa, MasterCard, Paypal and Mobile Money like Mpesa (TZ and KE), Airtel Money, TigoPesa, MTN MoMo Pay and Orange Money
+                                            Pay with Visa, MasterCard, Paypal and Mobile Money like Mpesa (TZ and KE), Airtel Money, Mixx by Yas, MTN MoMo Pay and Orange Money
                                         </span>
                                     </span>
                                 </label>
                                 <!--end::Option-->
-                        
+
                                 @if(env('APP_ENV') != 'production')
                                         <!--begin::Option-->
                                         <input type="radio" class="btn-check" name="payment_method" id="test_method" value="test" onchange="selectPaymentMethod(this)"/>
@@ -364,7 +364,7 @@
         var selectedpackagePrice = "";
         var selectedpaymentMethod = "";
         var selectedPlan = "";
-    
+
         function selectSubscription(subscriptionCode, subscriptionName, subscriptionPrice, currency) {
             console.log(subscriptionCode);
             document.getElementById('selected_plan_code').value = subscriptionCode;
@@ -377,7 +377,7 @@
             selectedpackagePrice = currency + ' ' + subscriptionPrice;
             selectedpaymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
         }
-    
+
         function selectPaymentMethod(element) {
             // Update the value of selected_plan based on the selected payment method
             var selectedPlan = ''; // Update this variable based on your logic

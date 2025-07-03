@@ -329,7 +329,7 @@
                                 <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/pesapal.png')}}" class="mw-200px mh-70px"></i>
                                 <span class="d-block fw-semibold text-start">
                                     <span class="text-gray-900 fw-bold d-block fs-3">PesaPal</span>
-                                    <span class="text-muted fw-semibold fs-6">Pay with Visa, MasterCard, Bank and Mobile Money like Mpesa, Airtel Money, TigoPesa, MTN MoMo Pay and Orange Money</span>
+                                    <span class="text-muted fw-semibold fs-6">Pay with Visa, MasterCard, Bank and Mobile Money like Mpesa, Airtel Money, Mixx by Yas, MTN MoMo Pay and Orange Money</span>
                                 </span>
                             </label>
                             <!--end::Option-->
@@ -341,7 +341,7 @@
                                 <span class="d-block fw-semibold text-start">
                                         <span class="text-gray-900 fw-bold d-block fs-3">DPO Pay</span>
                                         <span class="text-muted fw-semibold fs-6">
-                                            Pay with Visa, MasterCard, Paypal and Mobile Money like Mpesa (TZ and KE), Airtel Money, TigoPesa, MTN MoMo Pay and Orange Money
+                                            Pay with Visa, MasterCard, Paypal and Mobile Money like Mpesa (TZ and KE), Airtel Money, Mixx by Yas, MTN MoMo Pay and Orange Money
                                         </span>
                                     </span>
                             </label>
