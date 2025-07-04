@@ -22,7 +22,7 @@ class MixxUpdate
             // 2. Update financial service providers table
             $providersUpdated = FinancialServiceProvider::where('name', 'TIGOPESA')
                 ->update([
-                    'name' => 'MIXX BY YAS',
+                    'name' => 'MIXXBYYAS',
                     'logo' => 'mixxbyyas.svg'
                 ]);
 

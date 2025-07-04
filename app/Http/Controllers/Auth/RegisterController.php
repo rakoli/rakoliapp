@@ -125,6 +125,8 @@ class RegisterController extends Controller
             'code' => generateCode($data['business_name'],$user->country_code),
             'type' => $user->type,
             'business_name' => $data['business_name'],
+            'tax_id' => $data['tax_id'] ?? null,
+            'business_regno' => $data['business_regno'] ?? null,
         ];
 
         if($user->referral_business_code != null){

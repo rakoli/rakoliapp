@@ -123,6 +123,8 @@ return [
     "LBL_EMAIL" => "Barua pepe",
     "LBL_PASSWORD" => "Nenosiri",
     "LBL_REPEAT_PASSWORD" => "Rudia Nenosiri",
+    "LBL_TIN" => "Nambari ya TIN",
+    "LBL_BRN" => "Nambari ya Usajili wa Biashara",
     "LBL_REFERRAL_CODE" => "Msimbo wa Rufaa",
     "LBL_TERMS_ACCEPT" => "Ninakubali",
     "LBL_TERMS" => "Masharti",
