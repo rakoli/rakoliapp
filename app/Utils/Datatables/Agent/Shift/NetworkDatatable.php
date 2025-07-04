@@ -32,7 +32,7 @@ class NetworkDatatable implements HasDatatable
             ->addColumn('created_at', fn (Network $network) => $network->created_at->format('Y-F-d'))
             ->addColumn('type', fn (Network $network) => $network->type)
             ->addColumn('location_name', fn (Network $network) => $network->location->name)
-            ->addColumn('network_name', function (Network $network) { 
+            ->addColumn('network_name', function (Network $network) {
                 if($network->type == NetworkTypeEnum::CRYPTO->value){
                     return $network->crypto?->name;
                 } else {
@@ -72,7 +72,7 @@ class NetworkDatatable implements HasDatatable
             Column::make('network_name')->title(__('general.LBL_AGENCY'))->searchable()->orderable(),
             Column::make('agent_no')->title(__('general.LBL_AGENT_NO'))->searchable()->orderable(),
             Column::make('balance_combined')->title(__('general.LBL_BALANCE').' '.strtoupper(session('currency')))->searchable()->orderable(),
-            Column::make('actions')->title('general.LBL_ACTIONS'),
+            Column::make('actions')->title(__('general.LBL_ACTIONS')),
         ])
             ->responsive(true)
             ->orderBy(0);

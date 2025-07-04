@@ -121,6 +121,8 @@ return [
     "LBL_EMAIL" => "Email",
     "LBL_PASSWORD" => "Password",
     "LBL_REPEAT_PASSWORD" => "Repeat Password",
+    "LBL_TIN" => "TIN Number",
+    "LBL_BRN" => "Business Registration Number",
     "LBL_REFERRAL_CODE" => "Referral Code",
     "LBL_TERMS_ACCEPT" => "I Accept the",
     "LBL_TERMS" => "Terms",

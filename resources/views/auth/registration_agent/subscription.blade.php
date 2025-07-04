@@ -43,12 +43,19 @@
         <!--begin::Heading-->
         <div>
             <!--begin::Title-->
-            <h2 class="fw-bold text-dark">{{__('Select Package')}}</h2>
+            @if(env('GRACE_PERIOD') == 'true')
+                <h2 class="fw-bold text-dark">{{__('Start using Rakoli for Free!')}}</h2>
+            @else
+                <h2 class="fw-bold text-dark">{{__('Select Package')}}</h2>
+            @endif
             <!--end::Title-->
             <!--begin::Notice-->
-            <div
-                class="text-muted fw-semibold fs-6">{{__('Choose a subscription package that fits your business needs')}}
-                .
+            <div class="text-muted fw-semibold fs-6">
+                @if(env('GRACE_PERIOD') == 'true')
+                    {{__('Click Start for Free Now! to start using Rakoli for free.')}}
+                @else
+                    {{__('Choose a subscription package that fits your business needs')}}
+                @endif
             </div>
             <!--end::Notice-->
         </div>
@@ -59,10 +66,12 @@
             <!--begin::Row-->
             <div class="row">
 
-                @foreach(\App\Models\Package::where('country_code', auth()->user()->country_code)->where('status',1)->get() as $package )
+                @foreach(\App\Models\Package::where('country_code', auth()->user()->country_code)->where('status',1)->when(env('GRACE_PERIOD') == 'true', function($query) {
+                    $query->where('name', 'elite');
+                })->get() as $package )
 
                     <!--begin::Col-->
-                    <div class="col-xl-4">
+                    <div class="@if(env('GRACE_PERIOD') == 'true') col-xl-12 @else col-xl-4 @endif">
                         <div class="d-flex h-100 align-items-center m-2">
                             <!--begin::Option-->
                             <div class="w-100 d-flex flex-column flex-center rounded-3 py-15 px-10 bg-secondary"
@@ -78,13 +87,15 @@
                                     <div class="text-gray-600 fw-semibold mb-5">{{$package->description}}</div>
                                     <!--end::Description-->
                                     <!--begin::Price-->
-                                    <div class="text-center">
-                                        <span class="mb-2 text-primary">{{strtoupper($package->price_currency)}}</span>
-                                        <span
-                                            class="fs-3x fw-bold text-primary">{{number_format_short($package->price)}}</span>
-                                        <span class="fs-7 fw-semibold opacity-50">/
-																<span data-kt-element="period">{{$package->package_interval_days}} days</span></span>
-                                    </div>
+                                    @if(env('GRACE_PERIOD') != 'true')
+                                        <div class="text-center">
+                                            <span class="mb-2 text-primary">{{strtoupper($package->price_currency)}}</span>
+                                            <span
+                                                class="fs-3x fw-bold text-primary">{{number_format_short($package->price)}}</span>
+                                            <span class="fs-7 fw-semibold opacity-50">/
+                                                <span data-kt-element="period">{{$package->package_interval_days}} days</span></span>
+                                        </div>
+                                    @endif
                                     <!--end::Price-->
                                 </div>
                                 <!--end::Heading-->
@@ -114,8 +125,12 @@
                                 <!--end::Features-->
                                 <!--begin::Select-->
                                 <div class="t-btn">
-                                    <button type="button" class="btn btn-sm btn-primary" onclick="selectSubscription('{{$package->code}}','{{strtoupper($package->name)}}', '{{number_format($package->price)}}', '{{strtoupper($package->price_currency)}}')">{{__('Select')}}</button>
-                                    <button type="button" class="btn btn-sm btn-primary" onclick="selectSubscription('{{$package->code}}','{{strtoupper($package->name)}}', '{{number_format($package->price)}}', '{{strtoupper($package->price_currency)}}','true')">{{__('Trial')}}</button>
+                                    @if(env('GRACE_PERIOD') == 'true')
+                                        <button type="button" class="btn btn-lg btn-primary w-100" onclick="selectSubscription('{{$package->code}}','{{strtoupper($package->name)}}', '{{number_format($package->price)}}', '{{strtoupper($package->price_currency)}}','true')">{{__('Start for Free Now!')}}</button>
+                                    @else
+                                        <button type="button" class="btn btn-sm btn-primary" onclick="selectSubscription('{{$package->code}}','{{strtoupper($package->name)}}', '{{number_format($package->price)}}', '{{strtoupper($package->price_currency)}}')">{{__('Select')}}</button>
+                                        <button type="button" class="btn btn-sm btn-primary" onclick="selectSubscription('{{$package->code}}','{{strtoupper($package->name)}}', '{{number_format($package->price)}}', '{{strtoupper($package->price_currency)}}','true')">{{__('Trial')}}</button>
+                                    @endif
                                 </div>
                                 <!--end::Select-->
                             </div>
@@ -131,82 +146,90 @@
         </div>
         <!--end::Plans-->
         <!--begin::Input group-->
-        <div class="fv-row">
-            {{--            <label for="selected_plan" class="required form-label">Selected Plan</label>--}}
-            <input type="hidden" name="selected_plan" id="selected_plan" class="form-control form-control-solid-bg "
+        @if(env('GRACE_PERIOD') != 'true')
+            <div class="fv-row">
+                {{--            <label for="selected_plan" class="required form-label">Selected Plan</label>--}}
+                <input type="hidden" name="selected_plan" id="selected_plan" class="form-control form-control-solid-bg "
                    readonly/>
-        </div>
-        <!--end::Input group-->
-        <!--begin::Notice-->
-        <div class="text-muted fw-semibold fs-6 mb-5 mt-5">{{__('Choose payment method below')}}</div>
-        <!--end::Notice-->
+            </div>
+            <!--end::Input group-->
+            <!--begin::Notice-->
+            <div class="text-muted fw-semibold fs-6 mb-5 mt-5">{{__('Choose payment method below')}}</div>
+            <!--end::Notice-->
 
-        <!--begin::Option-->
-        <input type="radio" class="btn-check" name="selected_payment_method" value="pesapal" id="pesapal"
-               onchange="selectPaymentMethod(this)" checked="checked"/>
-        <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center"
-               for="pesapal">
-            <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/pesapal.png')}}"
-                                                  class="mw-200px mh-70px"></i>
-            <span class="d-block fw-semibold text-start">
-            <span class="text-gray-900 fw-bold d-block fs-3">PesaPal</span>
-            <span class="text-muted fw-semibold fs-6">Pay with Visa, MasterCard, Bank and Mobile Money like Mpesa, Airtel Money, TigoPesa, MTN MoMo Pay and Orange Money</span>
-        </span>
-        </label>
+            <!--begin::Option-->
+            <input type="radio" class="btn-check" name="selected_payment_method" value="pesapal" id="pesapal"
+                   onchange="selectPaymentMethod(this)" checked="checked"/>
+            <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center"
+                   for="pesapal">
+                <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/pesapal.png')}}"
+                                  class="mw-200px mh-70px"></i>
+                <span class="d-block fw-semibold text-start">
+                <span class="text-gray-900 fw-bold d-block fs-3">PesaPal</span>
+                <span class="text-muted fw-semibold fs-6">Pay with Visa, MasterCard, Bank and Mobile Money like Mpesa, Airtel Money, TigoPesa, MTN MoMo Pay and Orange Money</span>
+            </span>
+            </label>
+        @endif
         <!--end::Option-->
 
         <!--begin::Option-->
         <input type="radio" class="btn-check" name="selected_payment_method" value="selcom" id="selcom"
                onchange="selectPaymentMethod(this)" checked="checked"/>
-        <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center"
-               for="selcom">
-            <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/selcom.png')}}"
-                                                  class="mw-200px mh-70px"></i>
-            <span class="d-block fw-semibold text-start">
-            <span class="text-gray-900 fw-bold d-block fs-3">Selcom Tanzania</span>
-            <span class="text-muted fw-semibold fs-6">Pay with Visa, MasterCard and Mobile Money like Mpesa, Airtel Money, TigoPesa</span>
-        </span>
-        </label>
-        <!--end::Option-->
+        @if(env('GRACE_PERIOD') != 'true')
+            <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center"
+                   for="selcom">
+                <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/selcom.png')}}"
+                                  class="mw-200px mh-70px"></i>
+                <span class="d-block fw-semibold text-start">
+                <span class="text-gray-900 fw-bold d-block fs-3">Selcom Tanzania</span>
+                <span class="text-muted fw-semibold fs-6">Pay with Visa, MasterCard and Mobile Money like Mpesa, Airtel Money, TigoPesa</span>
+            </span>
+            </label>
+            <!--end::Option-->
 
-        <!--begin::Option-->
-        {{--        <input type="radio" class="btn-check" name="selected_payment_method" value="dpopay" id="dpopay_method" onchange="selectPaymentMethod(this)"/>--}}
-        {{--        <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center mb-5" for="dpopay_method">--}}
-        {{--            <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/DPOPay.webp')}}" class="mw-200px mh-70px"></i>--}}
-        {{--            <span class="d-block fw-semibold text-start">--}}
-        {{--                <span class="text-gray-900 fw-bold d-block fs-3">DPO Pay</span>--}}
-        {{--                <span class="text-muted fw-semibold fs-6">--}}
-        {{--                    Pay with Visa, MasterCard, Paypal and Mobile Money like Mpesa (TZ and KE), Airtel Money, TigoPesa, MTN MoMo Pay and Orange Money--}}
-        {{--                </span>--}}
-        {{--            </span>--}}
-        {{--        </label>--}}
+            <!--begin::Option-->
+            {{--        <input type="radio" class="btn-check" name="selected_payment_method" value="dpopay" id="dpopay_method" onchange="selectPaymentMethod(this)"/>--}}
+            {{--        <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center mb-5" for="dpopay_method">--}}
+            {{--            <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/DPOPay.webp')}}" class="mw-200px mh-70px"></i>--}}
+            {{--            <span class="d-block fw-semibold text-start">--}}
+            {{--                <span class="text-gray-900 fw-bold d-block fs-3">DPO Pay</span>--}}
+            {{--                <span class="text-muted fw-semibold fs-6">--}}
+            {{--                    Pay with Visa, MasterCard, Paypal and Mobile Money like Mpesa (TZ and KE), Airtel Money, TigoPesa, MTN MoMo Pay and Orange Money--}}
+            {{--                </span>--}}
+            {{--            </span>--}}
+            {{--        </label>--}}
+        @endif
         <!--end::Option-->
 
         @if(env('APP_ENV') != 'production')
             <!--begin::Option-->
-            <input type="radio" class="btn-check" name="selected_payment_method" value="test" id="test_method"
-                   onchange="selectPaymentMethod(this)"/>
-            <label
-                class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center mb-5"
-                for="test_method">
-                <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/test_pay.jpg')}}"
-                                                      class="mw-200px mh-70px"></i>
-                <span class="d-block fw-semibold text-start">
-                <span class="text-gray-900 fw-bold d-block fs-3">TEST Pay</span>
-                <span class="text-muted fw-semibold fs-6">
-                    Demo payment for testing. (An auto complete button will be provided).
-                </span>
-            </span>
-            </label>
+            @if(env('GRACE_PERIOD') != 'true')
+                        <input type="radio" class="btn-check" name="selected_payment_method" value="test" id="test_method"
+                               onchange="selectPaymentMethod(this)"/>
+                        <label
+                            class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center mb-5"
+                            for="test_method">
+                            <i class="ki-duotone fs-4x me-4"><img src="{{asset('assets/media/misc/test_pay.jpg')}}"
+                                                                  class="mw-200px mh-70px"></i>
+                            <span class="d-block fw-semibold text-start">
+                            <span class="text-gray-900 fw-bold d-block fs-3">TEST Pay</span>
+                            <span class="text-muted fw-semibold fs-6">
+                                Demo payment for testing. (An auto complete button will be provided).
+                            </span>
+                        </span>
+                        </label>
+            @endif
             <!--end::Option-->
         @endif
 
-        <div class="m-5 fv-row">
-            <button id="verify_phone_button" type="button" class="btn btn-primary"
+        @if(env('GRACE_PERIOD') != 'true')
+            <div class="m-5 fv-row">
+                <button id="verify_phone_button" type="button" class="btn btn-primary"
                     onclick="validateSubscriptionAndOpenModal()">
                 {{__('Make Payment')}}
-            </button>
-        </div>
+                </button>
+            </div>
+        @endif
 
 
     </div>
