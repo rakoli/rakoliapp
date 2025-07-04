@@ -172,8 +172,12 @@ class BusinessController extends Controller
         if(!$business){
             return redirect()->back()->withError(['message' => 'Business Details not found']);
         }
+        
+        $user = User::where('business_code', $code)->first();
+        
         return view('admin.business.viewbusiness',[
-            'business' => $business
+            'business' => $business,
+            'user' => $user
         ]);
     }
 

@@ -65,6 +65,12 @@
                     </span>
                     <span class="menu-title">{{__('Sales User')}}</span>
                 </a>
+                <a class="menu-link" href="{{route('admin.referrals.index')}}">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{__('Referral Management')}}</span>
+                </a>
             </div>
             <!--end:Menu sub-->
         </div>

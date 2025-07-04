@@ -50,6 +50,13 @@ Route::name('admin.')->prefix('admin')->middleware(['auth', 'onlyadmin'])->group
     });
     //END: EXCHANGE MODULE
 
+    //REFERRALS MODULE
+    Route::name('referrals.')->prefix('referrals')->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\AdminController::class, 'referrals'])->name('index');
+        Route::get('/view/{userId}', [App\Http\Controllers\Admin\AdminController::class, 'viewSalesUserReferrals'])->name('view');
+    });
+    //END: REFERRALS MODULE
+
     Route::any('system/send-message',[App\Http\Controllers\Admin\SystemController::class, 'SendMessage'])->name('system.send-message');
 
 });
