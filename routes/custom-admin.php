@@ -14,9 +14,16 @@ Route::name('admin.')->prefix('admin')->middleware(['auth', 'onlyadmin'])->group
 
         Route::get('listbusiness', [App\Http\Controllers\Admin\BusinessController::class, 'listbusiness'])->name('listbusiness');
         Route::get('resetbusiness/{code}', [App\Http\Controllers\Admin\BusinessController::class, 'resetbusiness'])->name('resetbusiness');
+        Route::get('viewbusiness/{code}', [App\Http\Controllers\Admin\BusinessController::class, 'viewbusiness'])->name('viewbusiness');
+        Route::get('editbusiness/{code}', [App\Http\Controllers\Admin\BusinessController::class, 'editbusiness'])->name('editbusiness');
+        Route::put('updatebusiness/{code}', [App\Http\Controllers\Admin\BusinessController::class, 'updatebusiness'])->name('updatebusiness');
+        Route::get('packages/{countryCode}', [App\Http\Controllers\Admin\BusinessController::class, 'getPackagesByCountry'])->name('packages.by.country');
 
         Route::get('listusers', [App\Http\Controllers\Admin\BusinessController::class, 'listusers'])->name('listusers');
         Route::get('registeringuser', [App\Http\Controllers\Admin\BusinessController::class, 'registeringuser'])->name('registeringuser');
+        Route::get('viewuser/{id}', [App\Http\Controllers\Admin\BusinessController::class, 'viewuser'])->name('viewuser');
+        Route::get('edituser/{id}', [App\Http\Controllers\Admin\BusinessController::class, 'edituser'])->name('edituser');
+        Route::put('updateuser/{id}', [App\Http\Controllers\Admin\BusinessController::class, 'updateuser'])->name('updateuser');
 
         Route::name('users.')->prefix('users')->group(function () {
             Route::get('sales', [App\Http\Controllers\Admin\BusinessController::class, 'salesUsers'])->name('sales');

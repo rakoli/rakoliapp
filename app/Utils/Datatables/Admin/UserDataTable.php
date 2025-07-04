@@ -28,7 +28,7 @@ class UserDataTable implements HasDatatable
                 return $query->orderBy('id', 'desc');
             })
             ->addIndexColumn()
-            ->addColumn('bussiness_name', fn (User $user) => '<a href="'.route('admin.business.listbusiness').'">'.$user->business->business_name.'</a>')
+            ->addColumn('bussiness_name', fn (User $user) => '<a href="'.route('admin.business.viewbusiness', ['code' => $user->business_code]).'">'.$user->business->business_name.'</a>')
             ->addColumn('name', fn (User $user) => $user->fname." ".$user->lname)
             ->addColumn('created_at', fn (User $user) => $user->created_at->format('Y-F-d'))
             ->addColumn('action', function (User $user) {

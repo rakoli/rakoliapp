@@ -127,7 +127,7 @@ class BusinessController extends Controller
 
             $user->business_code = $business->code;
             $user->save();
-            
+
             DB::commit();
             return redirect()->route('admin.business.users.sales')->with(['message' => 'Sales added Successfully']);
         }catch (\Exception $exception) {
@@ -167,5 +167,86 @@ class BusinessController extends Controller
 
     }
 
+    public function viewbusiness($code){
+        $business = Business::where('code',$code)->first();
+        if(!$business){
+            return redirect()->back()->withError(['message' => 'Business Details not found']);
+        }
+        return view('admin.business.viewbusiness',[
+            'business' => $business
+        ]);
+    }
 
+    public function editbusiness($code){
+        $business = Business::where('code',$code)->first();
+        if(!$business){
+            return redirect()->back()->withError(['message' => 'Business Details not found']);
+        }
+
+        $packages = Package::where('country_code', $business->country_code)
+            ->pluck('name', 'code')
+            ->toArray();
+
+        $countries = \DB::table('countries')
+            ->pluck('name', 'code')
+            ->toArray();
+
+        return view('admin.business.editbusiness',[
+            'business' => $business,
+            'packages' => $packages,
+            'countries' => $countries
+        ]);
+    }
+
+    public function updatebusiness(Request $request, $code){
+        $business = Business::where('code',$code)->first();
+        if(!$business){
+            return redirect()->back()->withError(['message' => 'Business Details not found']);
+        }
+
+        $validated = $request->validate([
+            'business_name' => 'required|string|max:255',
+            'business_email' => 'required|email|max:255',
+            'business_phone_number' => 'required|string|max:20',
+            'business_location' => 'nullable|string|max:255',
+            'country_code' => 'required|exists:countries,code',
+            'package_code' => 'nullable|exists:packages,code',
+            'status' => 'required|in:active,inactive,suspended',
+            'is_verified' => 'boolean',
+            'is_trial' => 'boolean',
+            'tax_id' => 'nullable|string|max:100',
+            'business_regno' => 'nullable|string|max:100',
+            'business_reg_date' => 'nullable|date',
+            'referral_business_code' => 'nullable|string|max:50',
+        ]);
+
+        try {
+            $business->update($validated);
+            return redirect()->route('admin.business.viewbusiness', ['code' => $code])
+                ->with(['message' => 'Business updated successfully']);
+        } catch (\Exception $exception) {
+            Log::debug("Business Update Error: ".$exception->getMessage());
+            Bugsnag::notifyException($exception);
+            return redirect()->back()->withError(['message' => 'Something went wrong, please try again.']);
+        }
+    }
+
+    public function getPackagesByCountry($countryCode){
+        try {
+            $packages = Package::where('country_code', $countryCode)
+                ->select('code', 'name')
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'packages' => $packages
+            ]);
+        } catch (\Exception $exception) {
+            Log::debug("Get Packages Error: ".$exception->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch packages'
+            ], 500);
+        }
+    }
 }
