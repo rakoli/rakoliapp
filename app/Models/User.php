@@ -91,6 +91,16 @@ class User extends Authenticatable
         return $this->belongsTo(Business::class,'business_code','code');
     }
 
+    public function referralBusiness() : BelongsTo
+    {
+        return $this->belongsTo(Business::class,'referral_business_code','code');
+    }
+
+    public function referredUsers() : HasMany
+    {
+        return $this->hasMany(User::class, 'referral_business_code', 'business_code');
+    }
+
     public function loan_payments() : HasMany
     {
         return $this->hasMany(LoanPayment::class, 'user_code', 'code');

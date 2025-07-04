@@ -104,11 +104,11 @@
                                         <tbody>
                                             <tr>
                                                 <td class="fw-bold">Email:</td>
-                                                <td>{{ $business->business_email ?? 'N/A' }}</td>
+                                                <td>{{ $user->email ?? 'N/A' }}</td>
                                             </tr>
                                             <tr>
                                                 <td class="fw-bold">Phone:</td>
-                                                <td>{{ $business->business_phone_number ?? 'N/A' }}</td>
+                                                <td>{{ $user->phone ?? 'N/A' }}</td>
                                             </tr>
                                             <tr>
                                                 <td class="fw-bold">Location:</td>
@@ -124,7 +124,7 @@
                                             </tr>
                                             <tr>
                                                 <td class="fw-bold">Registration Date:</td>
-                                                <td>{{ $business->business_reg_date ? \Carbon\Carbon::parse($business->business_reg_date)->format('Y-m-d') : 'N/A' }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($business->created_at)->format('Y-m-d') ?? 'N/A' }}</td>
                                             </tr>
                                         </tbody>
                                     </table>

@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     'online' => 'online',
     'last_seen' => 'ago',
     'exchange.trade' => 'Trade',
@@ -139,8 +138,25 @@ return [
     "MSG_LOGIN_FAILED" => "Sorry, authentication response errors detected, please try again.",
     "MSG_VALIDATION_ERROR" => "Sorry, error of submitted data detected, please try again.",
 
-
-    "BTN_SWL_OKAY" => "Ok, got it!",
-
+    // Referrals
+    "LBL_REFERRALS_MANAGEMENT" => "Referrals Management",
+    "LBL_TOTAL_REFERRALS" => "Total Referrals",
+    "LBL_ACTIVE_REFERRALS" => "Active Referrals",
+    "LBL_INACTIVE_REFERRALS" => "Inactive Referrals",
+    "LBL_TOTAL_COMMISSION" => "Total Commission",
+    "LBL_REFERRED_BY" => "Referred By",
+    "LBL_REGISTRATION_STATUS" => "Registration Status",
+    "LBL_PACKAGE_STATUS" => "Package Status",
+    "LBL_COMMISSION" => "Commission",
+    "LBL_NOT_REGISTERED" => "Not Registered",
+    "LBL_NO_ACTIVE_PACKAGE" => "No Active Package",
+    "LBL_COMPLETE" => "Complete",
+    "LBL_FILTER" => "Filter",
+    "LBL_RESET" => "Reset",
+    "LBL_ALL_STATUS" => "All Status",
+    "LBL_ALL_COUNTRIES" => "All Countries",
+    "LBL_DATE_FROM" => "Date From",
+    "LBL_DATE_TO" => "Date To",
+    "LBL_FILTERS" => "Filters",
 
 ];

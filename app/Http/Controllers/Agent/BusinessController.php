@@ -26,6 +26,7 @@ use App\Models\User;
 use App\Models\UserRole;
 use App\Utils\Enums\ExchangeStatusEnum;
 use App\Utils\Enums\UserTypeEnum;
+use App\Utils\DataTableColumn;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -33,9 +34,11 @@ use App\Utils\VerifyOTP;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use TimeHunter\LaravelGoogleReCaptchaV3\Validations\GoogleReCaptchaV3ValidationRule;
+use App\Traits\DataTableable;
 
 class BusinessController extends Controller
 {
+    use DataTableable;
     public function roles(Request $request)
     {
         $user = \auth()->user();
@@ -62,7 +65,6 @@ class BusinessController extends Controller
                 ->toJson();
         }
 
-        // DataTable
         $dataTableHtml = $builder->columns([
             ['data' => 'id', 'title' => __('ID')],
             ['data' => 'business_code', 'title' => __('Business Code')],
@@ -72,7 +74,7 @@ class BusinessController extends Controller
             ['data' => 'actions', 'title' => __('Actions')],
         ])->responsive(true)
             ->ordering(false)
-            ->ajax(route('business.role', $orderBy)) // Assuming you have a named route for the roles.index endpoint
+            ->ajax(route('business.role', $orderBy))
             ->paging(true)
             ->dom('frtilp')
             ->lengthMenu([[25, 50, 100, -1], [25, 50, 100, "All"]]);
@@ -676,25 +678,49 @@ class BusinessController extends Controller
                     $packageCommission = $user->business->package->price_commission;
                     return number_format($packageCommission,2);
                 })
+                ->filterColumn('name', function($query, $keyword) {
+                    $query->where(function($q) use ($keyword) {
+                        $q->where('fname', 'like', "%{$keyword}%")
+                          ->orWhere('lname', 'like', "%{$keyword}%")
+                          ->orWhereRaw("CONCAT(fname, ' ', lname) like ?", ["%{$keyword}%"]);
+                    });
+                })
+                ->filterColumn('phone', function($query, $keyword) {
+                    $query->where('phone', 'like', "%{$keyword}%");
+                })
+                ->filterColumn('business_name', function($query, $keyword) {
+                    $query->whereHas('business', function($q) use ($keyword) {
+                        $q->where('business_name', 'like', "%{$keyword}%");
+                    });
+                })
                 ->rawColumns(['actions'])
                 ->addIndexColumn()
-                ->toJson();
+                ->make(true);
         }
-        // DataTable
-        $dataTableHtml = $builder->columns([
-            ['data' => 'id', 'title' => __('ID')],
-            ['data' => 'name', 'title' => __('Name')],
-            ['data' => 'phone', 'title' => __('Phone')],
-            ['data' => 'registration_status', 'title' => __('Registration Status')],
-            ['data' => 'business_name', 'title' => __('Business Name')],
-            ['data' => 'package_status', 'title' => __('Package Status')],
-            ['data' => 'package_commission', 'title' => __('Commission')],
-        ])->responsive(true)
+        // DataTable with chainable API using trait helpers
+        $dataTableHtml = $this->createDataTableBuilder()
+            ->columns([
+                $this->createIdColumn(),
+                $this->createNameColumn('name'),
+                $this->createPhoneColumn(),
+                $this->createStatusColumn('registration_status', __('Registration Status'))
+                    ->width('150px'),
+                DataTableColumn::make('business_name')
+                    ->title(__('Business Name'))
+                    ->searchable()
+                    ->width('150px'),
+                $this->createStatusColumn('package_status', __('Package Status'))
+                    ->width('130px'),
+                $this->createAmountColumn('package_commission', __('Commission')),
+            ])
+            ->responsive(true)
             ->ordering(false)
+            ->searching(true)
             ->ajax(route('business.referrals', $orderBy))
             ->paging(true)
             ->dom('frtilp')
-            ->lengthMenu([[25, 50, 100, -1], [25, 50, 100, "All"]]);
+            ->lengthMenu([[25, 50, 100, -1], [25, 50, 100, "All"]])
+            ->build();
 
         $statisticsService = new StatisticsService($user);
 

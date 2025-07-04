@@ -142,4 +142,25 @@ return [
     "MSG_VALIDATION_ERROR" => "Samahani, hitilafu ya data iliyowasilishwa imegunduliwa, tafadhali jaribu tena.",
 
     "BTN_SWL_OKAY" => "Sawa, nimeelewa!",
+
+    // Referrals
+    "LBL_REFERRALS_MANAGEMENT" => "Usimamizi wa Referrals",
+    "LBL_TOTAL_REFERRALS" => "Jumla ya Referrals",
+    "LBL_ACTIVE_REFERRALS" => "Referrals Zinazofanya Kazi",
+    "LBL_INACTIVE_REFERRALS" => "Referrals Zinazoshindwa Kazi",
+    "LBL_TOTAL_COMMISSION" => "Jumla ya Kamisheni",
+    "LBL_REFERRED_BY" => "Ameelekezwa na",
+    "LBL_REGISTRATION_STATUS" => "Hali ya Usajili",
+    "LBL_PACKAGE_STATUS" => "Hali ya Kifurushi",
+    "LBL_COMMISSION" => "Kamisheni",
+    "LBL_NOT_REGISTERED" => "Hajasajiliwa",
+    "LBL_NO_ACTIVE_PACKAGE" => "Hakuna Kifurushi Kinachofanya Kazi",
+    "LBL_COMPLETE" => "Kamilifu",
+    "LBL_FILTER" => "Chuja",
+    "LBL_RESET" => "Weka Upya",
+    "LBL_ALL_STATUS" => "Hali Zote",
+    "LBL_ALL_COUNTRIES" => "Nchi Zote",
+    "LBL_DATE_FROM" => "Tarehe Kutoka",
+    "LBL_DATE_TO" => "Tarehe Mpaka",
+    "LBL_FILTERS" => "Vichujio",
 ];
