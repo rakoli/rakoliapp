@@ -101,6 +101,16 @@ class User extends Authenticatable
         return $this->hasMany(User::class, 'referral_business_code', 'business_code');
     }
 
+    public function referralPayments() : HasMany
+    {
+        return $this->hasMany(ReferralPayment::class);
+    }
+
+    public function referralPaymentsReceived() : HasMany
+    {
+        return $this->hasMany(ReferralPayment::class, 'referral_id');
+    }
+
     public function loan_payments() : HasMany
     {
         return $this->hasMany(LoanPayment::class, 'user_code', 'code');
@@ -266,6 +276,179 @@ class User extends Authenticatable
             SendTelegramNotification::dispatch($message);
         }
 
+    }
+
+    /**
+     * Get the first week transaction count for a referred business
+     */
+    public function getFirstWeekTransactionsCount()
+    {
+        if (!$this->business) {
+            return 0;
+        }
+
+        $referralDate = $this->created_at;
+        $weekAfter = $referralDate->copy()->addWeek();
+
+        return Transaction::where('business_code', $this->business->code)
+            ->whereBetween('created_at', [$referralDate, $weekAfter])
+            ->count();
+    }
+
+    /**
+     * Get the second week transaction count for a referred business
+     */
+    public function getSecondWeekTransactionsCount()
+    {
+        if (!$this->business) {
+            return 0;
+        }
+
+        $referralDate = $this->created_at;
+        $weekAfter = $referralDate->copy()->addWeek();
+        $twoWeeksAfter = $referralDate->copy()->addWeeks(2);
+
+        return Transaction::where('business_code', $this->business->code)
+            ->whereBetween('created_at', [$weekAfter, $twoWeeksAfter])
+            ->count();
+    }
+
+    /**
+     * Check if registration is completed (has business with package)
+     */
+    public function isRegistrationCompleted()
+    {
+        return $this->business && $this->business->package_code;
+    }
+
+    /**
+     * Get total referral earnings for this referred user
+     */
+    public function getTotalReferralEarnings()
+    {
+        $earnings = 0;
+
+        // Registration bonus
+        if ($this->isRegistrationCompleted()) {
+            $earnings += 500;
+        }
+
+        // Week 1 transaction bonus
+        if ($this->getFirstWeekTransactionsCount() >= 10) {
+            $earnings += 1000;
+        }
+
+        // Week 2 transaction bonus
+        if ($this->getSecondWeekTransactionsCount() >= 10) {
+            $earnings += 1000;
+        }
+
+        return $earnings;
+    }
+
+    /**
+     * Get bonus eligibility status
+     */
+    public function getBonusStatus()
+    {
+        $now = now();
+        $referralDate = $this->created_at;
+        $twoWeeksAfter = $referralDate->copy()->addWeeks(2);
+
+        if ($now > $twoWeeksAfter) {
+            return [
+                'status' => 'expired',
+                'label' => 'Expired',
+                'class' => 'badge-danger'
+            ];
+        } else {
+            $daysLeft = $now->diffInDays($twoWeeksAfter);
+            return [
+                'status' => 'active',
+                'label' => $daysLeft . ' days left',
+                'class' => 'badge-info'
+            ];
+        }
+    }
+
+    /**
+     * Payment tracking methods
+     */
+    public function getTotalEarnings()
+    {
+        return $this->referralPayments()->sum('amount');
+    }
+
+    public function getTotalPaid()
+    {
+        return $this->referralPayments()->where('payment_status', 'paid')->sum('amount');
+    }
+
+    public function getRemainingBalance()
+    {
+        return $this->getTotalEarnings() - $this->getTotalPaid();
+    }
+
+    public function getPendingPayments()
+    {
+        return $this->referralPayments()->where('payment_status', 'pending')->sum('amount');
+    }
+
+    public function getPaymentStatusAttribute()
+    {
+        $pending = $this->getPendingPayments();
+        $total = $this->getTotalEarnings();
+
+        if ($total == 0) {
+            return ['status' => 'none', 'label' => 'No Earnings', 'class' => 'badge-secondary'];
+        } elseif ($pending == 0) {
+            return ['status' => 'paid', 'label' => 'Fully Paid', 'class' => 'badge-success'];
+        } elseif ($pending == $total) {
+            return ['status' => 'pending', 'label' => 'Pending Payment', 'class' => 'badge-warning'];
+        } else {
+            return ['status' => 'partial', 'label' => 'Partially Paid', 'class' => 'badge-info'];
+        }
+    }
+
+    public function getLastPaymentDate()
+    {
+        $lastPayment = $this->referralPayments()->where('payment_status', 'paid')->latest('paid_at')->first();
+        return $lastPayment ? $lastPayment->paid_at : null;
+    }
+
+    /**
+     * Create payment records when bonuses are earned
+     */
+    public function createRegistrationBonusPayment($referralId)
+    {
+        // Check if payment record already exists
+        $exists = $this->referralPayments()
+            ->where('referral_id', $referralId)
+            ->where('payment_type', 'registration_bonus')
+            ->exists();
+
+        if (!$exists) {
+            return ReferralPayment::createRegistrationBonus($this->id, $referralId);
+        }
+
+        return null;
+    }
+
+    public function createTransactionBonusPayment($referralId, $week)
+    {
+        $type = $week === 1 ? 'transaction_bonus_week1' : 'transaction_bonus_week2';
+
+        // Check if payment record already exists
+        $exists = $this->referralPayments()
+            ->where('referral_id', $referralId)
+            ->where('payment_type', $type)
+            ->exists();
+
+        if (!$exists) {
+            return ReferralPayment::createTransactionBonus($this->id, $referralId, $week);
+        }
+
+        return null;
     }
 
 }

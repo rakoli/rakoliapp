@@ -64,7 +64,7 @@ class PackagesTableSeeder extends Seeder
                 'code' => generateCode($elitePackage->name,"tz"),
                 'price' => 150000,
                 'price_currency' => 'tzs',
-                'price_commission' => 4500,//3%
+                'price_commission' => env('GRACE_PERIOD', false) ? 500 : 4500,//3%
                 'package_interval_days' => 365,
                 'description' => "Full control of agency business"
             ],

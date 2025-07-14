@@ -76,6 +76,182 @@
             <!--begin::Content-->
             <div class="flex-lg-row-fluid ms-lg-15">
 
+                <!--begin::Earnings Dashboard-->
+                <div class="row g-6 g-xl-9 mb-6 mb-xl-9">
+                    <!--begin::Earnings Overview Card-->
+                    <div class="col-12">
+                        <div class="card h-100">
+                            <div class="card-header border-0 pt-5">
+                                <h3 class="card-title align-items-start flex-column">
+                                    <span class="card-label fw-bold fs-3 mb-1">{{ __('Earnings Dashboard') }}</span>
+                                    <span class="text-muted mt-1 fw-semibold fs-7">{{ __('Complete referral earnings breakdown') }}</span>
+                                </h3>
+                                <div class="card-toolbar">
+                                    <button type="button" class="btn btn-sm btn-icon btn-color-primary btn-active-light-primary" onclick="location.reload();">
+                                        <i class="ki-duotone ki-arrows-circle fs-2">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                        </i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body pt-5">
+                                <!--begin::Total Earnings Row-->
+                                <div class="row mb-8">
+                                    <div class="col-lg-4 col-md-6 mb-5">
+                                        <div class="d-flex align-items-center bg-light-success rounded p-5">
+                                            <i class="ki-duotone ki-wallet fs-1 text-success me-5">
+                                                <span class="path1"></span>
+                                                <span class="path2"></span>
+                                                <span class="path3"></span>
+                                                <span class="path4"></span>
+                                            </i>
+                                            <div class="flex-grow-1">
+                                                <span class="text-gray-800 fw-bold fs-6 d-block">{{ __('Total Earnings') }}</span>
+                                                <span class="text-success fw-bold fs-2">{{ number_format($stats['total_earnings']) }} TZS</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6 mb-5">
+                                        <div class="d-flex align-items-center bg-light-primary rounded p-5">
+                                            <i class="ki-duotone ki-arrow-down fs-1 text-primary me-5">
+                                                <span class="path1"></span>
+                                                <span class="path2"></span>
+                                            </i>
+                                            <div class="flex-grow-1">
+                                                <span class="text-gray-800 fw-bold fs-6 d-block">{{ __('Paid Earnings') }}</span>
+                                                <span class="text-primary fw-bold fs-2">{{ number_format($stats['paid_earnings']) }} TZS</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6 mb-5">
+                                        <div class="d-flex align-items-center bg-light-warning rounded p-5">
+                                            <i class="ki-duotone ki-time fs-1 text-warning me-5">
+                                                <span class="path1"></span>
+                                                <span class="path2"></span>
+                                            </i>
+                                            <div class="flex-grow-1">
+                                                <span class="text-gray-800 fw-bold fs-6 d-block">{{ __('Pending Earnings') }}</span>
+                                                <span class="text-warning fw-bold fs-2">{{ number_format($stats['pending_earnings']) }} TZS</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--begin::Earnings Breakdown-->
+                                <div class="separator separator-dashed my-6"></div>
+                                <h4 class="fw-bold text-gray-800 mb-5">{{ __('Earnings Breakdown') }}</h4>
+                                <div class="row mb-8">
+                                    <div class="col-lg-4 col-md-6 mb-5">
+                                        <div class="d-flex align-items-center">
+                                            <div class="symbol symbol-40px me-5">
+                                                <span class="symbol-label bg-light-info">
+                                                    <i class="ki-duotone ki-user-tick fs-2 text-info">
+                                                        <span class="path1"></span>
+                                                        <span class="path2"></span>
+                                                        <span class="path3"></span>
+                                                    </i>
+                                                </span>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <span class="text-gray-800 fw-semibold d-block fs-7">{{ __('Registration Bonuses') }}</span>
+                                                <span class="text-gray-400 fw-semibold fs-8">{{ $stats['registration_bonus_count'] }} × 500 TZS</span>
+                                                <span class="text-gray-800 fw-bold d-block fs-5">{{ number_format($stats['registration_earnings']) }} TZS</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6 mb-5">
+                                        <div class="d-flex align-items-center">
+                                            <div class="symbol symbol-40px me-5">
+                                                <span class="symbol-label bg-light-success">
+                                                    <i class="ki-duotone ki-chart-line-up fs-2 text-success">
+                                                        <span class="path1"></span>
+                                                        <span class="path2"></span>
+                                                    </i>
+                                                </span>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <span class="text-gray-800 fw-semibold d-block fs-7">{{ __('Week 1 Usage Bonuses') }}</span>
+                                                <span class="text-gray-400 fw-semibold fs-8">{{ $stats['week1_bonus_count'] }} × 1000 TZS</span>
+                                                <span class="text-gray-800 fw-bold d-block fs-5">{{ number_format($stats['week1_earnings']) }} TZS</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6 mb-5">
+                                        <div class="d-flex align-items-center">
+                                            <div class="symbol symbol-40px me-5">
+                                                <span class="symbol-label bg-light-danger">
+                                                    <i class="ki-duotone ki-chart-line-up fs-2 text-danger">
+                                                        <span class="path1"></span>
+                                                        <span class="path2"></span>
+                                                    </i>
+                                                </span>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <span class="text-gray-800 fw-semibold d-block fs-7">{{ __('Week 2 Usage Bonuses') }}</span>
+                                                <span class="text-gray-400 fw-semibold fs-8">{{ $stats['week2_bonus_count'] }} × 1000 TZS</span>
+                                                <span class="text-gray-800 fw-bold d-block fs-5">{{ number_format($stats['week2_earnings']) }} TZS</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--begin::Performance Metrics-->
+                                <div class="separator separator-dashed my-6"></div>
+                                <h4 class="fw-bold text-gray-800 mb-5">{{ __('Performance Metrics') }}</h4>
+                                <div class="row">
+                                    <div class="col-lg-4 col-md-6 mb-5">
+                                        <div class="d-flex align-items-center justify-content-between bg-light rounded p-4">
+                                            <div class="d-flex align-items-center">
+                                                <i class="ki-duotone ki-arrow-up-right fs-2 text-success me-3">
+                                                    <span class="path1"></span>
+                                                    <span class="path2"></span>
+                                                </i>
+                                                <div>
+                                                    <span class="text-gray-700 fw-semibold d-block">{{ __('Conversion Rate') }}</span>
+                                                    <span class="text-gray-400 fw-semibold fs-7" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ __('Percentage of referred users who completed registration with package purchase') }}">{{ __('Referrals → Registrations') }}</span>
+                                                </div>
+                                            </div>
+                                            <span class="badge badge-light-success fs-6 fw-bold">{{ $stats['conversion_rate'] }}%</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6 mb-5">
+                                        <div class="d-flex align-items-center justify-content-between bg-light rounded p-4">
+                                            <div class="d-flex align-items-center">
+                                                <i class="ki-duotone ki-chart-pie-simple fs-2 text-primary me-3">
+                                                    <span class="path1"></span>
+                                                    <span class="path2"></span>
+                                                </i>
+                                                <div>
+                                                    <span class="text-gray-700 fw-semibold d-block">{{ __('Transaction Success') }}</span>
+                                                    <span class="text-gray-400 fw-semibold fs-7" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ __('Percentage of registered businesses that reached 10+ transactions per week') }}">{{ __('Businesses with 10+ transactions') }}</span>
+                                                </div>
+                                            </div>
+                                            <span class="badge badge-light-primary fs-6 fw-bold">{{ $stats['transaction_success_rate'] }}%</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6 mb-5">
+                                        <div class="d-flex align-items-center justify-content-between bg-light rounded p-4">
+                                            <div class="d-flex align-items-center">
+                                                <i class="ki-duotone ki-pulse fs-2 text-warning me-3">
+                                                    <span class="path1"></span>
+                                                    <span class="path2"></span>
+                                                </i>
+                                                <div>
+                                                    <span class="text-gray-700 fw-semibold d-block">{{ __('Active Referrals') }}</span>
+                                                    <span class="text-gray-400 fw-semibold fs-7" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ __('Number of referred businesses still within the 2-week bonus earning period') }}">{{ __('In 2-week bonus period') }}</span>
+                                                </div>
+                                            </div>
+                                            <span class="badge badge-light-warning fs-6 fw-bold">{{ $stats['active_referrals'] }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end::Earnings Dashboard-->
+
                 <!--begin::Table-->
                 <div class="card card-flush">
 
@@ -217,6 +393,34 @@
             }, 3000)
         });
         //END:: REFERRAL LINK - CLIPBOARD
+
+        // Refresh earnings dashboard
+        function refreshEarningsDashboard() {
+            // Add loading state
+            const refreshBtn = document.querySelector('.btn-sm.btn-icon');
+            const originalHtml = refreshBtn.innerHTML;
+            refreshBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+
+            // Reload the page to get updated stats
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+        }
+
+        // Add click handler to refresh button
+        document.addEventListener('DOMContentLoaded', function() {
+            const refreshBtn = document.querySelector('.btn-sm.btn-icon[onclick="location.reload();"]');
+            if (refreshBtn) {
+                refreshBtn.removeAttribute('onclick');
+                refreshBtn.addEventListener('click', refreshEarningsDashboard);
+            }
+
+            // Initialize tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
 
     </script>
 @endsection

@@ -20,6 +20,12 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
         ShiftOpened::class => [],
+        \App\Events\BusinessRegistrationCompleted::class => [
+            \App\Listeners\ProcessRegistrationBonus::class,
+        ],
+        \App\Events\TransactionCreated::class => [
+            \App\Listeners\ProcessTransactionBonus::class,
+        ],
     ];
 
     /**

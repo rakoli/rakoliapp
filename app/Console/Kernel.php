@@ -12,7 +12,17 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        // Process referral bonuses every hour
+        $schedule->command('referrals:process-bonuses')
+                 ->hourly()
+                 ->withoutOverlapping()
+                 ->runInBackground();
+
+        // Check for missed transaction bonuses twice daily
+        $schedule->command('referrals:check-missed-transaction-bonuses')
+                 ->twiceDaily(9, 21)
+                 ->withoutOverlapping()
+                 ->runInBackground();
     }
 
     /**

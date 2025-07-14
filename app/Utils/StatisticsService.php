@@ -23,6 +23,9 @@ use App\Utils\Enums\ShiftStatusEnum;
 use App\Utils\Enums\TransactionCategoryEnum;
 use App\Utils\Enums\TransactionTypeEnum;
 use App\Utils\Enums\VasTaskStatusEnum;
+use App\Models\ReferralPayment;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class StatisticsService
 {
@@ -63,7 +66,7 @@ class StatisticsService
         return Loan::where('location_code',$location_code)->get()->sum('balance');
     }
 
-    
+
     public function locationTotalCreditLoan($location_code)
     {
         return Loan::where('location_code',$location_code)->where('type',TransactionTypeEnum::MONEY_IN)->get()->sum('balance');
@@ -104,7 +107,7 @@ class StatisticsService
             'business_code' => $this->user->business_code,
             'category' => TransactionCategoryEnum::INCOME,
         ])->where('created_at','>=',now()->subDays(30))->get()->sum('amount');
-        
+
         $till_income = ShiftTransaction::where([
             'business_code' => $this->user->business_code,
             'category' => TransactionCategoryEnum::INCOME,
@@ -119,7 +122,7 @@ class StatisticsService
             'business_code' => $this->user->business_code,
             'category' => TransactionCategoryEnum::EXPENSE,
         ])->where('created_at','>=',now()->subDays(30))->get()->sum('amount');
-        
+
         $till_expense = ShiftTransaction::where([
             'business_code' => $this->user->business_code,
             'category' => TransactionCategoryEnum::EXPENSE,
@@ -133,11 +136,11 @@ class StatisticsService
         $cash_txns = ShiftCashTransaction::where([
             'business_code' => $this->user->business_code,
         ])->get()->sum('amount');
-        
+
         $till_txns = ShiftTransaction::where([
             'business_code' => $this->user->business_code,
         ])->get()->sum('amount');
-        
+
         return $cash_txns + $till_txns;
 
     }
@@ -262,7 +265,7 @@ class StatisticsService
             $data['bussiness'][0]['expense'] = 0;
             $data['bussiness'][0]['total_balance'] = 0;
             $data['bussiness'][0]['capital'] = 0;
-            $data['bussiness'][0]['differ'] = 0;    
+            $data['bussiness'][0]['differ'] = 0;
             foreach($this->user->locations as $key => $location) {
                 $data['branches'][$key]['name'] = $location->name;
                 $data['bussiness'][0]['physical_balance'] += $data['branches'][$key]['physical_balance'] = $location->balance + $location->networks->sum('balance');
@@ -288,4 +291,178 @@ class StatisticsService
             return $data;
     }
 
+    /**
+     * Enhanced Referral Earnings Statistics
+     */
+    public function getRegistrationEarnings()
+    {
+        return $this->user->referralPayments()
+            ->where('payment_type', 'registration_bonus')
+            ->sum('amount');
+    }
+
+    public function getWeek1TransactionEarnings()
+    {
+        return $this->user->referralPayments()
+            ->where('payment_type', 'transaction_bonus_week1')
+            ->sum('amount');
+    }
+
+    public function getWeek2TransactionEarnings()
+    {
+        return $this->user->referralPayments()
+            ->where('payment_type', 'transaction_bonus_week2')
+            ->sum('amount');
+    }
+
+    public function getTotalUsageEarnings()
+    {
+        return $this->getWeek1TransactionEarnings() + $this->getWeek2TransactionEarnings();
+    }
+
+    public function getTotalReferralEarnings()
+    {
+        return $this->getRegistrationEarnings() + $this->getTotalUsageEarnings();
+    }
+
+    public function getPaidEarnings()
+    {
+        return $this->user->referralPayments()
+            ->where('payment_status', 'paid')
+            ->sum('amount');
+    }
+
+    public function getPendingEarnings()
+    {
+        return $this->user->referralPayments()
+            ->where('payment_status', 'pending')
+            ->sum('amount');
+    }
+
+    public function getConversionRate()
+    {
+        $totalReferred = $this->agent_total_number_of_referrals();
+        if ($totalReferred == 0) return 0;
+
+        $completedRegistrations = User::where('referral_business_code', $this->user->business_code)
+            ->whereHas('business', function($query) {
+                $query->whereNotNull('package_code');
+            })
+            ->count();
+
+        return round(($completedRegistrations / $totalReferred) * 100, 1);
+    }
+
+    public function getTransactionSuccessRate()
+    {
+        $registeredBusinesses = User::where('referral_business_code', $this->user->business_code)
+            ->whereHas('business', function($query) {
+                $query->whereNotNull('package_code');
+            })
+            ->count();
+
+        if ($registeredBusinesses == 0) return 0;
+
+        $user = $this->user;
+        $businessesWithBonuses = $user->referralPayments()
+            ->whereIn('payment_type', ['transaction_bonus_week1', 'transaction_bonus_week2'])
+            ->distinct('referral_id')
+            ->count();
+
+        return round(($businessesWithBonuses / $registeredBusinesses) * 100, 1);
+    }
+
+    public function getActiveReferrals()
+    {
+        $twoWeeksAgo = Carbon::now()->subWeeks(2);
+
+        return User::where('referral_business_code', $this->user->business_code)
+            ->where('created_at', '>=', $twoWeeksAgo)
+            ->whereHas('business', function($query) {
+                $query->whereNotNull('package_code');
+            })
+            ->count();
+    }
+
+    public function getRegistrationBonusCount()
+    {
+        return $this->user->referralPayments()
+            ->where('payment_type', 'registration_bonus')
+            ->count();
+    }
+
+    public function getWeek1BonusCount()
+    {
+        return $this->user->referralPayments()
+            ->where('payment_type', 'transaction_bonus_week1')
+            ->count();
+    }
+
+    public function getWeek2BonusCount()
+    {
+        return $this->user->referralPayments()
+            ->where('payment_type', 'transaction_bonus_week2')
+            ->count();
+    }
+
+    /**
+     * Debug method to check referral payment data
+     */
+    public function debugReferralPayments()
+    {
+        $user = $this->user;
+
+        return [
+            'user_id' => $user->id,
+            'business_code' => $user->business_code,
+            'total_referral_payments' => $user->referralPayments()->count(),
+            'registration_payments' => $user->referralPayments()->where('payment_type', 'registration_bonus')->count(),
+            'week1_payments' => $user->referralPayments()->where('payment_type', 'transaction_bonus_week1')->count(),
+            'week2_payments' => $user->referralPayments()->where('payment_type', 'transaction_bonus_week2')->count(),
+            'all_payments' => $user->referralPayments()->select('id', 'referral_id', 'amount', 'payment_type', 'payment_status')->get()->toArray(),
+            'total_referrals' => $this->agent_total_number_of_referrals(),
+            'referrals_with_business' => User::where('referral_business_code', $user->business_code)
+                ->whereHas('business', function($query) {
+                    $query->whereNotNull('package_code');
+                })
+                ->count()
+        ];
+    }
+
+    /**
+     * Manually create missing referral payments for this user's referrals
+     */
+    public function createMissingReferralPayments()
+    {
+        $user = $this->user;
+        $created = [];
+
+        // Find referrals with businesses but no registration bonus
+        $eligibleReferrals = User::where('referral_business_code', $user->business_code)
+            ->whereHas('business', function($query) {
+                $query->whereNotNull('package_code');
+            })
+            ->whereDoesntHave('referralPaymentsReceived', function($query) {
+                $query->where('payment_type', 'registration_bonus');
+            })
+            ->get();
+
+        foreach ($eligibleReferrals as $referral) {
+            try {
+                $payment = ReferralPayment::createRegistrationBonus($user->id, $referral->id);
+                if ($payment) {
+                    $created[] = [
+                        'type' => 'registration_bonus',
+                        'referral_id' => $referral->id,
+                        'referral_name' => $referral->name,
+                        'amount' => 500
+                    ];
+                }
+            } catch (\Exception $e) {
+                Log::error("Failed to create registration bonus for referral {$referral->id}: " . $e->getMessage());
+            }
+        }
+
+        return $created;
+    }
 }

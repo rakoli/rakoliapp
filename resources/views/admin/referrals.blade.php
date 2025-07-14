@@ -300,6 +300,54 @@
             <!--begin::Content-->
             <div class="flex-lg-row-fluid ms-lg-15">
 
+                <!--begin::Earnings Summary Card-->
+                <div class="card card-flush mb-5">
+                    <div class="card-header">
+                        <h3 class="card-title">{{ __('Referral Earnings Summary') }}</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <div class="d-flex flex-column">
+                                    <span class="text-gray-800 fw-bold fs-6 mb-1">{{ __('Total Earned') }}</span>
+                                    <span class="text-gray-400 fw-semibold fs-4">{{ session('currency', 'TZS') }} {{ number_format($earningStats['total_earned'] ?? 0, 0) }}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="d-flex flex-column">
+                                    <span class="text-gray-800 fw-bold fs-6 mb-1">{{ __('Total Paid') }}</span>
+                                    <span class="text-success fw-semibold fs-4">{{ session('currency', 'TZS') }} {{ number_format($earningStats['total_paid'] ?? 0, 0) }}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="d-flex flex-column">
+                                    <span class="text-gray-800 fw-bold fs-6 mb-1">{{ __('Pending Payments') }}</span>
+                                    <span class="text-warning fw-semibold fs-4">{{ session('currency', 'TZS') }} {{ number_format($earningStats['pending_payments'] ?? 0, 0) }}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="d-flex flex-column">
+                                    <span class="text-gray-800 fw-bold fs-6 mb-1">{{ __('Outstanding Balance') }}</span>
+                                    <span class="text-danger fw-semibold fs-4">{{ session('currency', 'TZS') }} {{ number_format($earningStats['outstanding_balance'] ?? 0, 0) }}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="d-flex flex-column">
+                                    <span class="text-gray-800 fw-bold fs-6 mb-1">{{ __('Registration Bonuses') }}</span>
+                                    <span class="text-gray-400 fw-semibold fs-4">{{ session('currency', 'TZS') }} {{ number_format($earningStats['registration_bonuses'] ?? 0, 0) }}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="d-flex flex-column">
+                                    <span class="text-gray-800 fw-bold fs-6 mb-1">{{ __('Transaction Bonuses') }}</span>
+                                    <span class="text-gray-400 fw-semibold fs-4">{{ session('currency', 'TZS') }} {{ number_format($earningStats['transaction_bonuses'] ?? 0, 0) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end::Earnings Summary Card-->
+
                 <!--begin::Table-->
                 <div class="card card-flush">
 
@@ -330,4 +378,176 @@
 @section('footer_js')
     <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}" type="text/javascript"></script>
     {!! $dataTableHtml->scripts() !!}
+
+    <!-- Payment Management JavaScript -->
+    <script>
+        function processPayment(userId) {
+            // Get pending payments for the user
+            fetch(`/admin/referrals/payments/${userId}/history`)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('paymentModalContent').innerHTML = html;
+                    $('#paymentModal').modal('show');
+                });
+        }
+
+        function processUserPayments(userId) {
+            Swal.fire({
+                title: '{{ __("Process Payments") }}',
+                html: `
+                    <div class="form-group mb-3">
+                        <label for="payment_method" class="form-label">{{ __("Payment Method") }}</label>
+                        <select id="payment_method" class="form-select">
+                            <option value="mobile_money">{{ __("Mobile Money") }}</option>
+                            <option value="bank_transfer">{{ __("Bank Transfer") }}</option>
+                            <option value="cash">{{ __("Cash") }}</option>
+                        </select>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="payment_reference" class="form-label">{{ __("Payment Reference") }}</label>
+                        <input type="text" id="payment_reference" class="form-control" placeholder="Enter transaction reference">
+                    </div>
+                    <div class="form-group">
+                        <label for="payment_notes" class="form-label">{{ __("Notes (Optional)") }}</label>
+                        <textarea id="payment_notes" class="form-control" rows="3" placeholder="Add any notes..."></textarea>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: '{{ __("Process Payment") }}',
+                cancelButtonText: '{{ __("Cancel") }}',
+                preConfirm: () => {
+                    const method = document.getElementById('payment_method').value;
+                    const reference = document.getElementById('payment_reference').value;
+                    const notes = document.getElementById('payment_notes').value;
+
+                    if (!method) {
+                        Swal.showValidationMessage('{{ __("Please select a payment method") }}');
+                        return false;
+                    }
+
+                    return {
+                        payment_method: method,
+                        payment_reference: reference,
+                        notes: notes
+                    };
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Get all pending payment IDs for this user
+                    const pendingPayments = getPendingPaymentIds(userId);
+
+                    fetch('/admin/referrals/payments/process', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({
+                            user_id: userId,
+                            payment_ids: pendingPayments,
+                            ...result.value
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire('{{ __("Success") }}', data.message, 'success');
+                            // Reload the DataTable
+                            window.LaravelDataTables['dataTableBuilder'].draw();
+                            $('#paymentModal').modal('hide');
+                        } else {
+                            Swal.fire('{{ __("Error") }}', data.message, 'error');
+                        }
+                    })
+                    .catch(error => {
+                        Swal.fire('{{ __("Error") }}', '{{ __("An error occurred while processing the payment") }}', 'error');
+                    });
+                }
+            });
+        }
+
+        function processBulkPayments() {
+            // Get selected users (if implementing bulk selection)
+            const selectedUsers = getSelectedUsers();
+
+            if (selectedUsers.length === 0) {
+                Swal.fire('{{ __("No Selection") }}', '{{ __("Please select users to process payments for") }}', 'warning');
+                return;
+            }
+
+            Swal.fire({
+                title: '{{ __("Bulk Payment Processing") }}',
+                html: `
+                    <p>{{ __("Process payments for") }} ${selectedUsers.length} {{ __("selected users") }}</p>
+                    <div class="form-group mb-3">
+                        <label for="bulk_payment_method" class="form-label">{{ __("Payment Method") }}</label>
+                        <select id="bulk_payment_method" class="form-select">
+                            <option value="mobile_money">{{ __("Mobile Money") }}</option>
+                            <option value="bank_transfer">{{ __("Bank Transfer") }}</option>
+                            <option value="cash">{{ __("Cash") }}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="bulk_reference_prefix" class="form-label">{{ __("Reference Prefix") }}</label>
+                        <input type="text" id="bulk_reference_prefix" class="form-control" placeholder="BULK-PAY">
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: '{{ __("Process All") }}',
+                cancelButtonText: '{{ __("Cancel") }}'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const method = document.getElementById('bulk_payment_method').value;
+                    const prefix = document.getElementById('bulk_reference_prefix').value;
+
+                    fetch('/admin/referrals/payments/bulk', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({
+                            user_ids: selectedUsers,
+                            payment_method: method,
+                            payment_reference_prefix: prefix
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire('{{ __("Success") }}', data.message, 'success');
+                            window.LaravelDataTables['dataTableBuilder'].draw();
+                        } else {
+                            Swal.fire('{{ __("Error") }}', data.message, 'error');
+                        }
+                    });
+                }
+            });
+        }
+
+        function exportPayments() {
+            window.open('/admin/referrals/payments/export', '_blank');
+        }
+
+        // Helper functions
+        function getPendingPaymentIds(userId) {
+            // This would need to be implemented based on your specific data structure
+            // For now, return empty array - this should be populated with actual pending payment IDs
+            return [];
+        }
+
+        function getSelectedUsers() {
+            // This would implement checkbox selection logic for bulk operations
+            return [];
+        }
+    </script>
+
+    <!-- Payment Modal -->
+    <div class="modal fade" id="paymentModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" id="paymentModalContent">
+                <!-- Content will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
 @endsection

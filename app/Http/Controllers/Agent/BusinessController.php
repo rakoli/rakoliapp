@@ -724,9 +724,29 @@ class BusinessController extends Controller
 
         $statisticsService = new StatisticsService($user);
 
+        // Basic stats
         $stats['total_referrals'] = $statisticsService->agent_total_number_of_referrals();
         $stats['annual_commission'] = $statisticsService->agent_total_annual_referral_commission();
         $stats['inactive_referrals'] = $statisticsService->agent_total_no_of_inactive_referrals();
+
+        // Enhanced earnings statistics
+        $stats['registration_earnings'] = $statisticsService->getRegistrationEarnings();
+        $stats['week1_earnings'] = $statisticsService->getWeek1TransactionEarnings();
+        $stats['week2_earnings'] = $statisticsService->getWeek2TransactionEarnings();
+        $stats['total_usage_earnings'] = $statisticsService->getTotalUsageEarnings();
+        $stats['total_earnings'] = $statisticsService->getTotalReferralEarnings();
+        $stats['paid_earnings'] = $statisticsService->getPaidEarnings();
+        $stats['pending_earnings'] = $statisticsService->getPendingEarnings();
+
+        // Performance metrics
+        $stats['conversion_rate'] = $statisticsService->getConversionRate();
+        $stats['transaction_success_rate'] = $statisticsService->getTransactionSuccessRate();
+        $stats['active_referrals'] = $statisticsService->getActiveReferrals();
+
+        // Bonus counts
+        $stats['registration_bonus_count'] = $statisticsService->getRegistrationBonusCount();
+        $stats['week1_bonus_count'] = $statisticsService->getWeek1BonusCount();
+        $stats['week2_bonus_count'] = $statisticsService->getWeek2BonusCount();
 
         return view('agent.business.referrals', compact('dataTableHtml', 'orderByFilter', 'stats'));
     }

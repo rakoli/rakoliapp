@@ -54,6 +54,15 @@ Route::name('admin.')->prefix('admin')->middleware(['auth', 'onlyadmin'])->group
     Route::name('referrals.')->prefix('referrals')->group(function () {
         Route::get('/', [App\Http\Controllers\Admin\AdminController::class, 'referrals'])->name('index');
         Route::get('/view/{userId}', [App\Http\Controllers\Admin\AdminController::class, 'viewSalesUserReferrals'])->name('view');
+
+        // Payment management routes
+        Route::name('payments.')->prefix('payments')->group(function () {
+            Route::post('/process', [App\Http\Controllers\Admin\AdminController::class, 'processPayment'])->name('process');
+            Route::post('/bulk', [App\Http\Controllers\Admin\AdminController::class, 'processBulkPayments'])->name('bulk');
+            Route::get('/{user}/history', [App\Http\Controllers\Admin\AdminController::class, 'paymentHistory'])->name('history');
+            Route::put('/{payment}/update', [App\Http\Controllers\Admin\AdminController::class, 'updatePayment'])->name('update');
+            Route::get('/export', [App\Http\Controllers\Admin\AdminController::class, 'exportPayments'])->name('export');
+        });
     });
     //END: REFERRALS MODULE
 
