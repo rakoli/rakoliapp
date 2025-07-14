@@ -25,6 +25,7 @@
         "pusher/pusher-php-server": "^7.2",
         "rappasoft/laravel-authentication-log": "^3.0",
         "selcom/selcom-apigw-client": "^1.0",
+        "spatie/laravel-activitylog": "^4.10",
         "spatie/laravel-honeypot": "^4.3",
         "spatie/laravel-permission": "^5.11",
         "symfony/http-client": "^6.3",

@@ -13,11 +13,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Scout\Searchable;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class Shift extends Model
 {
     use HasFactory;
     use Searchable;
+    use LogsActivity;
 
     protected $guarded = ['id'];
 
@@ -87,5 +90,11 @@ class Shift extends Model
     public function scopeOpen(Builder $query)
     {
         $query->where('status', ShiftStatusEnum::OPEN);
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logAll();
     }
 }

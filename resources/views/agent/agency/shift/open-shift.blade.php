@@ -62,7 +62,7 @@
 
 
                                 <div class="col-6">
-                                    <x-label class="" label="{{ __('Cash At Hand') }}" for="amount"/>
+                                    <x-label class="" label="{{__('general.LBL_CASH_AT_HAND')}}" for="amount"/>
                                     <x-input
                                         type="number"
                                         class="form-control-solid   @error('cash_at_hand') form-control-feedback @enderror"
@@ -70,7 +70,7 @@
                                         placeholder="{{ __('cash at hand') }}"
                                         readonly="readonly"
                                         id="amount"/>
-                                    <x-helpertext> {{ __("Current cash you have in this Location") }}</x-helpertext>
+                                    <x-helpertext> {{ __("general.LBL_TOTAL_CASH_AT_HAND") }}</x-helpertext>
                                     @error('cash_at_hand')
                                     <div class="help-block text-danger">
                                         {{ $message }}

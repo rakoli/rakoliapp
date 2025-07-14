@@ -57,6 +57,19 @@ Route::name('admin.')->prefix('admin')->middleware(['auth', 'onlyadmin'])->group
     });
     //END: REFERRALS MODULE
 
+    //ANALYTICS MODULE
+    Route::name('analytics.')->prefix('analytics')->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\Analytics\AdminAnalyticsController::class, 'index'])->name('index');
+        Route::get('/businesses', [App\Http\Controllers\Admin\Analytics\AdminAnalyticsController::class, 'businesses'])->name('businesses');
+        Route::get('/shifts', [App\Http\Controllers\Admin\Analytics\AdminAnalyticsController::class, 'shifts'])->name('shifts');
+        Route::get('/shifts/data', [App\Http\Controllers\Admin\Analytics\AdminAnalyticsController::class, 'getShiftsData'])->name('shifts.data');
+        Route::get('/shifts/{id}/view', [App\Http\Controllers\Admin\Analytics\AdminAnalyticsController::class, 'showShiftDetails'])->name('shifts.view');
+        Route::get('/shifts/{id}/transactions-data', [App\Http\Controllers\Admin\Analytics\AdminAnalyticsController::class, 'getShiftTransactionsData'])->name('shifts.transactions.data');
+        Route::get('/transactions', [App\Http\Controllers\Admin\Analytics\AdminAnalyticsController::class, 'transactions'])->name('transactions');
+        Route::get('/users', [App\Http\Controllers\Admin\Analytics\AdminAnalyticsController::class, 'users'])->name('users');
+    });
+    //END: ANALYTICS MODULE
+
     Route::any('system/send-message',[App\Http\Controllers\Admin\SystemController::class, 'SendMessage'])->name('system.send-message');
 
 });

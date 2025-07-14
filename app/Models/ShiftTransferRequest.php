@@ -13,11 +13,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Scout\Searchable;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class ShiftTransferRequest extends Model
 {
     use HasFactory;
     use Searchable;
+    use LogsActivity;
 
     protected $guarded = ['id'];
 
@@ -52,4 +55,9 @@ class ShiftTransferRequest extends Model
         $query->where('status', ShiftTransferRequestStatusEnum::ACCEPTED);
     }
 
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logAll();
+    }
 }

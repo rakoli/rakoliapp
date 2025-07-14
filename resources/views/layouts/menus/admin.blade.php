@@ -237,6 +237,72 @@
     <!--end:Menu sub-->
 </div>
 
+<!-- Analytics -->
+<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('analytics')}}">
+    <!--begin:Menu link-->
+    <span class="menu-link menu-center">
+        <span class="menu-icon me-0">
+            <i class="ki-outline ki-chart-line-up fs-2x"></i>
+        </span>
+        <span class="menu-title">
+            {{ __('Analytics') }}
+        </span>
+    </span>
+    <!--end:Menu link-->
+    <!--begin:Menu sub-->
+    <div class="menu-sub menu-sub-dropdown px-2 py-4 w-250px mh-75 overflow-auto">
+        <!--begin:Menu item-->
+        <div class="menu-item">
+            <!--begin:Menu content-->
+            <div class="menu-content">
+                <span class="menu-section fs-5 fw-bolder ps-1 py-1">{{ __('Analytics & Reports') }}</span>
+            </div>
+            <!--end:Menu content-->
+        </div>
+        <!--end:Menu item-->
+        <!--begin:Menu item-->
+        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
+
+            <!--begin:Menu sub-->
+            <div class="menu-sub menu-sub-accordion">
+                <a class="menu-link" href="{{route('admin.analytics.index')}}">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ __('System Overview') }}</span>
+                </a>
+                <a class="menu-link" href="{{route('admin.analytics.businesses')}}">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ __('Business Performance') }}</span>
+                </a>
+                <a class="menu-link" href="{{route('admin.analytics.shifts')}}">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ __('Shift Analytics') }}</span>
+                </a>
+                <a class="menu-link" href="{{route('admin.analytics.transactions')}}">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ __('Transaction Analytics') }}</span>
+                </a>
+                <a class="menu-link" href="{{route('admin.analytics.users')}}">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ __('User Analytics') }}</span>
+                </a>
+            </div>
+            <!--end:Menu sub-->
+        </div>
+        <!--end:Menu item-->
+    </div>
+    <!--end:Menu sub-->
+</div>
+
 <!-- System -->
 <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2 {{returnActiveMenuStyle('system')}}">
     <!--begin:Menu link-->

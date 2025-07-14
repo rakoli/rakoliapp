@@ -66,7 +66,12 @@ class User extends Authenticatable
         return "{$this->fname} {$this->lname}";
     }
 
-    public function name()
+    public function getNameAttribute()
+    {
+        return $this->fname .' '.$this->lname;
+    }
+
+      public function name()
     {
         return $this->fname .' '.$this->lname;
     }

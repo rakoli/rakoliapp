@@ -85,6 +85,18 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
     });
     //END: AGENCY MODULE
 
+    //ANALYTICS MODULE
+    Route::name('analytics.')->prefix('analytics')->middleware(['should_verified','validateSubscription','lastseen_update'])->group(function () {
+        Route::get('/', [App\Http\Controllers\Agent\Analytics\AnalyticsController::class, 'index'])->name('index');
+        Route::get('/shifts', [App\Http\Controllers\Agent\Analytics\AnalyticsController::class, 'shifts'])->name('shifts');
+        Route::get('/transactions', [App\Http\Controllers\Agent\Analytics\AnalyticsController::class, 'transactions'])->name('transactions');
+        Route::get('/users', [App\Http\Controllers\Agent\Analytics\AnalyticsController::class, 'users'])->name('users');
+        Route::get('/debug', function() {
+            return view('agent.analytics.debug');
+        })->name('debug');
+    });
+    //END: ANALYTICS MODULE
+
     //EXCHANGE MODULE
     Route::name('exchange.')->prefix('exchange')->middleware(['should_verified','validateSubscription','lastseen_update'])->group(function () {
 
@@ -114,7 +126,7 @@ Route::middleware(['auth', 'should_complete_registration', 'onlyagent'])->group(
 
     });
     //END: EXCHANGE MODULE
-    
+
     Route::middleware(['should_verified'])->group(function () {
 
         //Task

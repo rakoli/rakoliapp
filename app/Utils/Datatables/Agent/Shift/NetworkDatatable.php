@@ -68,7 +68,7 @@ class NetworkDatatable implements HasDatatable
             Column::make('created_at')->title(__('general.LBL_DATE'))->searchable()->orderable(),
             Column::make('location_name')->title(__('general.LBL_LOCATION'))->searchable()->orderable(),
             Column::make('type')->title(__('general.LBL_TYPE'))->searchable()->orderable(),
-            Column::make('name')->title(__('general.LBL_TILL_NAME'))->searchable()->orderable(),
+            //Column::make('name')->title(__('general.LBL_TILL_NAME'))->searchable()->orderable(),
             Column::make('network_name')->title(__('general.LBL_AGENCY'))->searchable()->orderable(),
             Column::make('agent_no')->title(__('general.LBL_AGENT_NO'))->searchable()->orderable(),
             Column::make('balance_combined')->title(__('general.LBL_BALANCE').' '.strtoupper(session('currency')))->searchable()->orderable(),

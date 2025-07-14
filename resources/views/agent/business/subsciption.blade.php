@@ -241,7 +241,7 @@
                                 <div class="card-header border-0">
                                     <!--begin::Card title-->
                                     <div class="card-title">
-                                        <h2>Transaction History</h2>
+                                        <h2>{{__('general.LBL_TRANSACTION_HISTORY')}}</h2>
                                     </div>
                                     <!--end::Card title-->
                                 </div>

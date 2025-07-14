@@ -4,7 +4,7 @@
         @csrf
         <div class="modal-body">
 
-            <div class="row fv-row py-2">
+            <div class="row fv-row py-2" style="display: none;">
 
                 <div class="col-6">
                     <x-label class="" label="{{ __('Name') }}" for="name"/>
@@ -13,6 +13,7 @@
                         name="name"
                         placeholder="{{ __('name') }}"
                         id="name"
+                        value="NETWORK NAME"
                     />
                     <x-helpertext>{{ __('Till Name E.G: M-Pesa') }}</x-helpertext>
                     @error('name')
@@ -21,7 +22,7 @@
                     </div>
                     @enderror
                 </div>
-                
+
                 <div class="col-6">
 
                     <x-label
@@ -36,7 +37,7 @@
                         id="type"
                     >
                         @foreach(NetworkTypeEnum::cases() as $networkType)
-                            <option value="{{ $networkType->value }}">{{ $networkType->label() }}</option>
+                            <option value="{{ $networkType->value }}" {{ $networkType->value === 'Finance' ? 'selected' : '' }}>{{ $networkType->label() }}</option>
                         @endforeach
                     </x-select2>
                     <x-helpertext>{{ __('Till Type E.G: Fianace, Crypto') }}</x-helpertext>
@@ -51,7 +52,7 @@
                 <div class="col-6 finance_data">
                     <x-label
                         class=""
-                        label="Select Network Provider"
+                        label="{{ __('general.LBL_SELECT_NETWORK') }}"
                         for="fsp_code"
                     />
                     <x-select2
@@ -97,7 +98,7 @@
                 <div class="col-6">
                     <x-label
                         class=""
-                        label="Select Location"
+                        label="{{ __('general.LBL_SELECT_LOCATION') }}"
                         for="location_code"
                     />
                     <x-select2
@@ -123,7 +124,7 @@
                 <div class="col-6">
                     <x-label
                         class=""
-                        label="{{ __('Agent No') }}"
+                        label="{{ __('general.LBL_AGENT_TILL_NO') }}"
                         for="agent_no"
                     />
                     <x-input
@@ -228,7 +229,7 @@
     @push('js')
         <script>
         jQuery(document).ready(function() {
-            
+
             jQuery(".finance_data").show();
             jQuery(".crypto_data").hide();
 
@@ -246,7 +247,7 @@
                 var rate = jQuery("#crypto_code option:selected").data('rate');
                 jQuery("#exchange_rate").val(rate);
             }).change();
-            
+
             jQuery(document).on("click","#add-network-button", function(){
                 if(jQuery("#type").val() == "Crypto"){
                     var validations = [

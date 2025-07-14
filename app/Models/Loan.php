@@ -12,6 +12,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Scout\Searchable;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
+
 
 /**
  * @property float $balance
@@ -20,6 +23,7 @@ class Loan extends Model
 {
     use HasFactory;
     use Searchable;
+    use LogsActivity;
 
     protected $casts = [
         'status' => LoanPaymentStatusEnum::class,
@@ -78,5 +82,10 @@ class Loan extends Model
         return new Attribute(
             get: fn (): float => $this->amount - $this->paid
         );
+    }
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logAll();
     }
 }
