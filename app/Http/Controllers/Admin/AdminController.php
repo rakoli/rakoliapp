@@ -42,21 +42,28 @@ class AdminController extends Controller
                     return "$user->fname $user->lname";
                 })
                 ->addColumn('total_referrals', function (User $user) {
-                    return $user->referredUsers ? $user->referredUsers->count() : 0;
+                    // Get fresh count of referred users for this sales user
+                    $count = User::where('referral_business_code', $user->business_code)->count();
+                    return $count;
                 })
                 ->addColumn('active_referrals', function (User $user) {
-                    if (!$user->referredUsers) return 0;
-                    return $user->referredUsers->filter(function($referredUser) {
-                        return $referredUser->business && $referredUser->business->package_code;
-                    })->count();
+                    // Get fresh count of active referrals (users with businesses and packages)
+                    $count = User::where('referral_business_code', $user->business_code)
+                        ->whereHas('business', function($q) {
+                            $q->whereNotNull('package_code');
+                        })
+                        ->count();
+                    return $count;
                 })
                 ->addColumn('total_commission', function (User $user) {
-                    if (!$user->referredUsers) return session('currency', 'TZS') . ' ' . number_format(0, 2);
-                    $totalCommission = $user->referredUsers->sum(function($referredUser) {
-                        return $referredUser->business && $referredUser->business->package
-                            ? $referredUser->business->package->price_commission ?? 0
-                            : 0;
-                    });
+                    // Get fresh commission calculation
+                    $totalCommission = User::where('referral_business_code', $user->business_code)
+                        ->whereHas('business.package')
+                        ->with('business.package')
+                        ->get()
+                        ->sum(function($referredUser) {
+                            return $referredUser->business->package->price_commission ?? 0;
+                        });
                     return session('currency', 'TZS') . ' ' . number_format($totalCommission, 2);
                 })
                 ->addColumn('business_name', function (User $user) {
@@ -118,22 +125,30 @@ class AdminController extends Controller
             ->paging(true)
             ->dom('frtilp')
             ->lengthMenu([[25, 50, 100, -1], [25, 50, 100, "All"]])
-            ->build();
+            ->build();        // Get fresh data for accurate stats calculation using same approach as viewSalesUserReferrals
+        $salesUsers = User::where('type', 'sales')->get();
 
         $stats = [
-            'total_sales_users' => User::where('type', 'sales')->count(),
-            'total_referrals' => User::whereNotNull('referral_business_code')->count(),
-            'active_referrals' => User::whereNotNull('referral_business_code')
-                ->whereHas('business', function($q) {
-                    $q->whereNotNull('package_code');
-                })->count(),
-            'total_commission' => User::whereNotNull('referral_business_code')
-                ->whereHas('business.package')
-                ->with('business.package')
-                ->get()
-                ->sum(function($user) {
-                    return $user->business->package->price_commission ?? 0;
-                })
+            'total_sales_users' => $salesUsers->count(),
+            'total_referrals' => $salesUsers->sum(function($salesUser) {
+                return User::where('referral_business_code', $salesUser->business_code)->count();
+            }),
+            'active_referrals' => $salesUsers->sum(function($salesUser) {
+                return User::where('referral_business_code', $salesUser->business_code)
+                    ->whereHas('business', function($q) {
+                        $q->whereNotNull('package_code');
+                    })
+                    ->count();
+            }),
+            'total_commission' => $salesUsers->sum(function($salesUser) {
+                return User::where('referral_business_code', $salesUser->business_code)
+                    ->whereHas('business.package')
+                    ->with('business.package')
+                    ->get()
+                    ->sum(function($referredUser) {
+                        return $referredUser->business->package->price_commission ?? 0;
+                    });
+            })
         ];
 
         return view('admin.referrals', compact('dataTableHtml', 'orderByFilter', 'stats'));
@@ -266,15 +281,20 @@ class AdminController extends Controller
             ->lengthMenu([[25, 50, 100, -1], [25, 50, 100, "All"]])
             ->build();
 
+        // Get fresh data for accurate stats calculation
+        $allReferredUsers = User::where('referral_business_code', $salesUser->business_code)
+            ->with(['business.package'])
+            ->get();
+
         $stats = [
-            'total_referrals' => $salesUser->referredUsers->count(),
-            'active_referrals' => $salesUser->referredUsers->filter(function($user) {
+            'total_referrals' => $allReferredUsers->count(),
+            'active_referrals' => $allReferredUsers->filter(function($user) {
                 return $user->business && $user->business->package_code;
             })->count(),
-            'inactive_referrals' => $salesUser->referredUsers->filter(function($user) {
-                return !$user->business;
+            'inactive_referrals' => $allReferredUsers->filter(function($user) {
+                return !$user->business || !$user->business->package_code;
             })->count(),
-            'total_commission' => $salesUser->referredUsers->sum(function($user) {
+            'total_commission' => $allReferredUsers->sum(function($user) {
                 return $user->business && $user->business->package
                     ? $user->business->package->price_commission ?? 0
                     : 0;
