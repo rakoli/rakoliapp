@@ -39,8 +39,182 @@ class AdminController extends Controller
             return \Yajra\DataTables\Facades\DataTables::eloquent($referrals)
                 ->addColumn('actions', function (User $user) {
                     $content = '<a class="btn btn-primary btn-sm me-2" href="' . route('admin.referrals.view', $user->id) . '">' . __("View Referrals") . '</a>';
-                    //$content .= '<a class="btn btn-secondary btn-sm me-2" href="' . route('admin.business.viewuser', $user->id) . '">' . __("View User") . '</a>';
+
+                    // Calculate actual pending amount including all bonuses
+                    $referredUsers = User::where('referral_business_code', $user->business_code)
+                        ->with('business.package')
+                        ->get();
+
+                    $totalEarnings = 0;
+                    foreach ($referredUsers as $referredUser) {
+                        if ($referredUser->business) {
+                            $totalEarnings += 500;
+                        }
+                        if ($referredUser->business && $referredUser->business->package) {
+                            $totalEarnings += $referredUser->business->package->price_commission ?? 0;
+                        }
+
+                        // Week 1 transaction bonus
+                        if (method_exists($referredUser, 'getFirstWeekTransactionsCount')) {
+                            $week1Count = $referredUser->getFirstWeekTransactionsCount();
+                            if ($week1Count >= 10) {
+                                $totalEarnings += 1000;
+                            }
+                        }
+
+                        // Week 2 transaction bonus
+                        if (method_exists($referredUser, 'getSecondWeekTransactionsCount')) {
+                            $week2Count = $referredUser->getSecondWeekTransactionsCount();
+                            if ($week2Count >= 10) {
+                                $totalEarnings += 1000;
+                            }
+                        }
+                    }
+
+                    $paidAmount = ReferralPayment::where('user_id', $user->id)
+                        ->where('payment_status', 'paid')
+                        ->sum('amount');
+
+                    $pendingAmount = max($totalEarnings - $paidAmount, 0);
+
+                    if ($pendingAmount > 0) {
+                        $content .= '<button class="btn btn-success btn-sm me-2" onclick="showPaymentModal(' . $user->id . ', \'' . $user->fname . ' ' . $user->lname . '\', ' . $pendingAmount . ')" title="Pay TZS ' . number_format($pendingAmount, 0) . '">' . __("Pay Now") . '</button>';
+                    }
+
                     return $content;
+                })                ->addColumn('total_earnings', function (User $user) {
+                    // Calculate actual earnings based on referrals (not just ReferralPayment table)
+                    $referredUsers = User::where('referral_business_code', $user->business_code)
+                        ->with('business.package')
+                        ->get();
+
+                    $totalEarnings = 0;
+                    foreach ($referredUsers as $referredUser) {
+                        // Registration bonus for users with businesses
+                        if ($referredUser->business) {
+                            $totalEarnings += 500;
+                        }
+
+                        // Commission for users with packages
+                        if ($referredUser->business && $referredUser->business->package) {
+                            $totalEarnings += $referredUser->business->package->price_commission ?? 0;
+                        }
+
+                        // Week 1 transaction bonus (if user has 10+ transactions in first week)
+                        if (method_exists($referredUser, 'getFirstWeekTransactionsCount')) {
+                            $week1Count = $referredUser->getFirstWeekTransactionsCount();
+                            if ($week1Count >= 10) {
+                                $totalEarnings += 1000;
+                            }
+                        }
+
+                        // Week 2 transaction bonus (if user has 10+ transactions in second week)
+                        if (method_exists($referredUser, 'getSecondWeekTransactionsCount')) {
+                            $week2Count = $referredUser->getSecondWeekTransactionsCount();
+                            if ($week2Count >= 10) {
+                                $totalEarnings += 1000;
+                            }
+                        }
+                    }
+
+                    // Get earnings from payment table
+                    $paymentEarnings = ReferralPayment::where('user_id', $user->id)->sum('amount');
+
+                    // Use the higher value (calculated vs recorded payments)
+                    $actualEarnings = max($totalEarnings, $paymentEarnings);
+
+                    return session('currency', 'TZS') . ' ' . number_format($actualEarnings, 0);
+                })                ->addColumn('pending_payments', function (User $user) {
+                    // Calculate what should be pending based on actual earnings
+                    $referredUsers = User::where('referral_business_code', $user->business_code)
+                        ->with('business.package')
+                        ->get();
+
+                    $totalEarnings = 0;
+                    foreach ($referredUsers as $referredUser) {
+                        if ($referredUser->business) {
+                            $totalEarnings += 500;
+                        }
+                        if ($referredUser->business && $referredUser->business->package) {
+                            $totalEarnings += $referredUser->business->package->price_commission ?? 0;
+                        }
+
+                        // Week 1 transaction bonus
+                        if (method_exists($referredUser, 'getFirstWeekTransactionsCount')) {
+                            $week1Count = $referredUser->getFirstWeekTransactionsCount();
+                            if ($week1Count >= 10) {
+                                $totalEarnings += 1000;
+                            }
+                        }
+
+                        // Week 2 transaction bonus
+                        if (method_exists($referredUser, 'getSecondWeekTransactionsCount')) {
+                            $week2Count = $referredUser->getSecondWeekTransactionsCount();
+                            if ($week2Count >= 10) {
+                                $totalEarnings += 1000;
+                            }
+                        }
+                    }
+
+                    $paidAmount = ReferralPayment::where('user_id', $user->id)
+                        ->where('payment_status', 'paid')
+                        ->sum('amount');
+
+                    $pendingFromTable = ReferralPayment::where('user_id', $user->id)
+                        ->where('payment_status', 'pending')
+                        ->sum('amount');
+
+                    // Pending amount is either what's in the table or the difference between earned and paid
+                    $pendingAmount = max($totalEarnings - $paidAmount, $pendingFromTable);
+
+                    $class = $pendingAmount > 0 ? 'text-danger fw-bold' : 'text-muted';
+                    return '<span class="' . $class . '">' . session('currency', 'TZS') . ' ' . number_format($pendingAmount, 0) . '</span>';
+                })                ->addColumn('payment_status', function (User $user) {
+                    // Calculate actual earnings including all bonuses
+                    $referredUsers = User::where('referral_business_code', $user->business_code)
+                        ->with('business.package')
+                        ->get();
+
+                    $totalEarnings = 0;
+                    foreach ($referredUsers as $referredUser) {
+                        if ($referredUser->business) {
+                            $totalEarnings += 500;
+                        }
+                        if ($referredUser->business && $referredUser->business->package) {
+                            $totalEarnings += $referredUser->business->package->price_commission ?? 0;
+                        }
+
+                        // Week 1 transaction bonus
+                        if (method_exists($referredUser, 'getFirstWeekTransactionsCount')) {
+                            $week1Count = $referredUser->getFirstWeekTransactionsCount();
+                            if ($week1Count >= 10) {
+                                $totalEarnings += 1000;
+                            }
+                        }
+
+                        // Week 2 transaction bonus
+                        if (method_exists($referredUser, 'getSecondWeekTransactionsCount')) {
+                            $week2Count = $referredUser->getSecondWeekTransactionsCount();
+                            if ($week2Count >= 10) {
+                                $totalEarnings += 1000;
+                            }
+                        }
+                    }
+
+                    $paidAmount = ReferralPayment::where('user_id', $user->id)
+                        ->where('payment_status', 'paid')
+                        ->sum('amount');
+                    $pendingAmount = max($totalEarnings - $paidAmount, 0);
+
+                    if ($totalEarnings == 0) {
+                        return '<span class="badge badge-light-secondary">No Earnings</span>';
+                    } elseif ($pendingAmount == 0) {
+                        return '<span class="badge badge-light-success">Fully Paid</span>';
+                    } elseif ($paidAmount == 0) {
+                        return '<span class="badge badge-light-warning">Pending Payment</span>';
+                    } else {
+                        return '<span class="badge badge-light-info">Partially Paid</span>';
+                    }
                 })
                 ->addColumn('name', function (User $user) {
                     return "$user->fname $user->lname";
@@ -95,7 +269,7 @@ class AdminController extends Controller
                         $q->where('business_name', 'like', "%{$keyword}%");
                     });
                 })
-                ->rawColumns(['actions', 'registration_status', 'package_status', 'business_name'])
+                ->rawColumns(['actions', 'registration_status', 'package_status', 'business_name', 'pending_payments', 'payment_status'])
                 ->addIndexColumn()
                 ->make(true);
         }
@@ -119,8 +293,20 @@ class AdminController extends Controller
                     ->width('120px'),
                 $this->createAmountColumn('total_commission', __('Total Commission'))
                     ->width('140px'),
+                DataTableColumn::make('total_earnings')
+                    ->title(__('Total Earnings'))
+                    ->centerAlign()
+                    ->width('120px'),
+                DataTableColumn::make('pending_payments')
+                    ->title(__('Pending'))
+                    ->centerAlign()
+                    ->width('100px'),
+                DataTableColumn::make('payment_status')
+                    ->title(__('Payment Status'))
+                    ->centerAlign()
+                    ->width('120px'),
                 $this->createActionsColumn()
-                    ->width('200px'),
+                    ->width('250px'),
             ])
             ->responsive(true)
             ->ordering(false)
@@ -153,25 +339,67 @@ class AdminController extends Controller
                         return $referredUser->business->package->price_commission ?? 0;
                     });
             })
-        ];
+        ];        // Calculate earnings statistics - only for sales users' referrals
+        $salesUsers = User::where('type', 'sales')->get();
 
-        // Calculate earnings statistics for the new summary card
-        $allReferrals = User::whereNotNull('referral_business_code')
-            ->with(['business.package', 'referralPaymentsReceived'])
-            ->get();
+        // Calculate actual earnings based on registrations and packages (not just ReferralPayment table)
+        $registrationBonuses = 0;
+        $commissionEarnings = 0;
+        $week1Bonuses = 0;
+        $week2Bonuses = 0;
 
-        // Calculate payment statistics
-        $totalPaid = ReferralPayment::where('payment_status', 'paid')->sum('amount');
-        $pendingPayments = ReferralPayment::where('payment_status', 'pending')->sum('amount');
-        $totalEarned = ReferralPayment::sum('amount');
+        foreach ($salesUsers as $salesUser) {
+            $referredUsers = User::where('referral_business_code', $salesUser->business_code)
+                ->with(['business.package'])
+                ->get();
+
+            foreach ($referredUsers as $referredUser) {
+                // Registration bonus for users with businesses
+                if ($referredUser->business) {
+                    $registrationBonuses += 500; // Standard registration bonus
+                }
+
+                // Commission earnings for users with packages
+                if ($referredUser->business && $referredUser->business->package) {
+                    $commissionEarnings += $referredUser->business->package->price_commission ?? 0;
+                }
+
+                // Week 1 transaction bonus (if user has 10+ transactions in first week)
+                if (method_exists($referredUser, 'getFirstWeekTransactionsCount')) {
+                    $week1Count = $referredUser->getFirstWeekTransactionsCount();
+                    if ($week1Count >= 10) {
+                        $week1Bonuses += 1000;
+                    }
+                }
+
+                // Week 2 transaction bonus (if user has 10+ transactions in second week)
+                if (method_exists($referredUser, 'getSecondWeekTransactionsCount')) {
+                    $week2Count = $referredUser->getSecondWeekTransactionsCount();
+                    if ($week2Count >= 10) {
+                        $week2Bonuses += 1000;
+                    }
+                }
+            }
+        }
+
+        $totalCalculatedEarnings = $registrationBonuses + $commissionEarnings + $week1Bonuses + $week2Bonuses;
+
+        // Get payment statistics from ReferralPayment table - only for sales users
+        $salesUserIds = User::where('type', 'sales')->pluck('id');
+        $totalPaid = ReferralPayment::whereIn('user_id', $salesUserIds)->where('payment_status', 'paid')->sum('amount');
+        $pendingPayments = ReferralPayment::whereIn('user_id', $salesUserIds)->where('payment_status', 'pending')->sum('amount');
+        $totalEarnedFromPayments = ReferralPayment::whereIn('user_id', $salesUserIds)->sum('amount');
+
+        // Use calculated earnings if higher than payment table (which means payments haven't been created yet)
+        $actualTotalEarned = max($totalCalculatedEarnings, $totalEarnedFromPayments);
 
         $earningStats = [
-            'total_earned' => $totalEarned,
+            'total_earned' => $actualTotalEarned,
             'total_paid' => $totalPaid,
-            'pending_payments' => $pendingPayments,
-            'outstanding_balance' => $totalEarned - $totalPaid,
-            'registration_bonuses' => ReferralPayment::where('payment_type', 'registration_bonus')->sum('amount'),
-            'transaction_bonuses' => ReferralPayment::whereIn('payment_type', ['transaction_bonus_week1', 'transaction_bonus_week2'])->sum('amount'),
+            'pending_payments' => max($actualTotalEarned - $totalPaid, $pendingPayments),
+            'outstanding_balance' => $actualTotalEarned - $totalPaid,
+            'registration_bonuses' => max($registrationBonuses, ReferralPayment::whereIn('user_id', $salesUserIds)->where('payment_type', 'registration_bonus')->sum('amount')),
+            'transaction_bonuses' => max($week1Bonuses + $week2Bonuses, ReferralPayment::whereIn('user_id', $salesUserIds)->whereIn('payment_type', ['transaction_bonus_week1', 'transaction_bonus_week2'])->sum('amount')),
         ];
 
         return view('admin.referrals', compact('dataTableHtml', 'orderByFilter', 'stats', 'earningStats'));
@@ -630,6 +858,249 @@ class AdminController extends Controller
             fclose($file);
         }, $filename, [
             'Content-Type' => 'text/csv',
+        ]);
+    }
+
+    /**
+     * Process individual referral payment
+     */
+    public function processReferralPayment(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'payment_method' => 'required|string|max:50',
+            'payment_reference' => 'nullable|string|max:100',
+            'notes' => 'nullable|string|max:500'
+        ]);
+
+        try {
+            $user = User::findOrFail($request->user_id);
+
+            // Get existing pending payments
+            $pendingPayments = ReferralPayment::where('user_id', $user->id)
+                ->where('payment_status', 'pending')
+                ->get();
+
+            // If no pending payments exist, create them based on referrals
+            if ($pendingPayments->isEmpty()) {
+                $referredUsers = User::where('referral_business_code', $user->business_code)
+                    ->with('business.package')
+                    ->get();
+
+                foreach ($referredUsers as $referredUser) {
+                    // Create registration bonus payment
+                    if ($referredUser->business) {
+                        $existingRegBonus = ReferralPayment::where('user_id', $user->id)
+                            ->where('referral_id', $referredUser->id)
+                            ->where('payment_type', 'registration_bonus')
+                            ->first();
+
+                        if (!$existingRegBonus) {
+                            ReferralPayment::create([
+                                'user_id' => $user->id,
+                                'referral_id' => $referredUser->id,
+                                'amount' => 500,
+                                'payment_type' => 'registration_bonus',
+                                'payment_status' => 'pending',
+                                'created_at' => $referredUser->created_at,
+                                'updated_at' => now()
+                            ]);
+                        }
+                    }
+
+                    // Create package commission payment
+                    if ($referredUser->business && $referredUser->business->package) {
+                        $commission = $referredUser->business->package->price_commission ?? 0;
+                        if ($commission > 0) {
+                            $existingCommission = ReferralPayment::where('user_id', $user->id)
+                                ->where('referral_id', $referredUser->id)
+                                ->where('payment_type', 'package_commission')
+                                ->first();
+
+                            if (!$existingCommission) {
+                                ReferralPayment::create([
+                                    'user_id' => $user->id,
+                                    'referral_id' => $referredUser->id,
+                                    'amount' => $commission,
+                                    'payment_type' => 'package_commission',
+                                    'payment_status' => 'pending',
+                                    'created_at' => $referredUser->created_at,
+                                    'updated_at' => now()
+                                ]);
+                            }
+                        }
+                    }
+                }
+
+                // Refresh pending payments after creation
+                $pendingPayments = ReferralPayment::where('user_id', $user->id)
+                    ->where('payment_status', 'pending')
+                    ->get();
+            }
+
+            if ($pendingPayments->isEmpty()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No pending payments found for this user'
+                ], 400);
+            }
+
+            $processedCount = 0;
+            $totalAmount = 0;
+
+            foreach ($pendingPayments as $payment) {
+                $payment->markAsPaid(
+                    $request->payment_method,
+                    $request->payment_reference . '-' . $payment->id,
+                    auth()->id()
+                );
+
+                if ($request->notes) {
+                    $payment->update(['notes' => $request->notes]);
+                }
+
+                // Send notification to the sales user
+                $payment->user->notify(new PaymentProcessed($payment));
+
+                $processedCount++;
+                $totalAmount += $payment->amount;
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => "Successfully processed {$processedCount} payment(s) totaling TZS " . number_format($totalAmount, 0),
+                'processed_count' => $processedCount,
+                'total_amount' => $totalAmount
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Payment processing failed: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Payment processing failed. Please try again.'
+            ], 500);
+        }
+    }
+
+    /**
+     * Get pending payments for a user
+     */
+    public function getPendingPayments(Request $request, $userId)
+    {
+        $user = User::findOrFail($userId);
+
+        // Get existing pending payments from the table
+        $pendingPayments = ReferralPayment::where('user_id', $userId)
+            ->where('payment_status', 'pending')
+            ->with('referral')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // If no pending payments exist, calculate what should be pending
+        if ($pendingPayments->isEmpty()) {
+            $referredUsers = User::where('referral_business_code', $user->business_code)
+                ->with('business.package')
+                ->get();
+
+            $calculatedPayments = [];
+            $totalPending = 0;
+
+            foreach ($referredUsers as $referredUser) {
+                // Registration bonus
+                if ($referredUser->business) {
+                    $calculatedPayments[] = [
+                        'id' => 'calc_' . $referredUser->id . '_reg',
+                        'amount' => 500,
+                        'payment_type' => 'Registration Bonus',
+                        'referral_name' => $referredUser->fname . ' ' . $referredUser->lname,
+                        'created_at' => $referredUser->created_at->format('Y-m-d H:i:s')
+                    ];
+                    $totalPending += 500;
+                }
+
+                // Package commission
+                if ($referredUser->business && $referredUser->business->package) {
+                    $commission = $referredUser->business->package->price_commission ?? 0;
+                    if ($commission > 0) {
+                        $calculatedPayments[] = [
+                            'id' => 'calc_' . $referredUser->id . '_comm',
+                            'amount' => $commission,
+                            'payment_type' => 'Package Commission',
+                            'referral_name' => $referredUser->fname . ' ' . $referredUser->lname,
+                            'created_at' => $referredUser->created_at->format('Y-m-d H:i:s')
+                        ];
+                        $totalPending += $commission;
+                    }
+                }
+
+                // Week 1 transaction bonus
+                if (method_exists($referredUser, 'getFirstWeekTransactionsCount')) {
+                    $week1Count = $referredUser->getFirstWeekTransactionsCount();
+                    if ($week1Count >= 10) {
+                        $calculatedPayments[] = [
+                            'id' => 'calc_' . $referredUser->id . '_week1',
+                            'amount' => 1000,
+                            'payment_type' => 'Week 1 Transaction Bonus',
+                            'referral_name' => $referredUser->fname . ' ' . $referredUser->lname,
+                            'created_at' => $referredUser->created_at->addWeek()->format('Y-m-d H:i:s')
+                        ];
+                        $totalPending += 1000;
+                    }
+                }
+
+                // Week 2 transaction bonus
+                if (method_exists($referredUser, 'getSecondWeekTransactionsCount')) {
+                    $week2Count = $referredUser->getSecondWeekTransactionsCount();
+                    if ($week2Count >= 10) {
+                        $calculatedPayments[] = [
+                            'id' => 'calc_' . $referredUser->id . '_week2',
+                            'amount' => 1000,
+                            'payment_type' => 'Week 2 Transaction Bonus',
+                            'referral_name' => $referredUser->fname . ' ' . $referredUser->lname,
+                            'created_at' => $referredUser->created_at->addWeeks(2)->format('Y-m-d H:i:s')
+                        ];
+                        $totalPending += 1000;
+                    }
+                }
+            }
+
+            // Subtract any payments already made
+            $paidAmount = ReferralPayment::where('user_id', $userId)
+                ->where('payment_status', 'paid')
+                ->sum('amount');
+
+            $totalPending = max($totalPending - $paidAmount, 0);
+
+            return response()->json([
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->fname . ' ' . $user->lname,
+                    'business_name' => $user->business->business_name ?? 'N/A'
+                ],
+                'payments' => $calculatedPayments,
+                'total_pending' => $totalPending
+            ]);
+        }
+
+        $totalPending = $pendingPayments->sum('amount');
+
+        return response()->json([
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->fname . ' ' . $user->lname,
+                'business_name' => $user->business->business_name ?? 'N/A'
+            ],
+            'payments' => $pendingPayments->map(function($payment) {
+                return [
+                    'id' => $payment->id,
+                    'amount' => $payment->amount,
+                    'payment_type' => ucfirst(str_replace('_', ' ', $payment->payment_type)),
+                    'referral_name' => $payment->referral ? ($payment->referral->fname . ' ' . $payment->referral->lname) : 'N/A',
+                    'created_at' => $payment->created_at->format('Y-m-d H:i:s')
+                ];
+            }),
+            'total_pending' => $totalPending
         ]);
     }
 }

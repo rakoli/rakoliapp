@@ -29,10 +29,11 @@ class ProcessReferralBonuses extends Command
     {
         $this->info('Starting referral bonus processing...');
 
-        // Dispatch the job
-        ProcessReferralBonusesJob::dispatch();
+        // Run the job directly without queue
+        $job = new ProcessReferralBonusesJob();
+        $job->handle();
 
-        $this->info('Referral bonus processing job dispatched successfully!');
+        $this->info('Referral bonus processing completed successfully!');
 
         return 0;
     }

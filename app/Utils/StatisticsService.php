@@ -463,6 +463,93 @@ class StatisticsService
             }
         }
 
+        // Also check for transaction bonuses
+        $this->createMissingTransactionBonuses($user, $created);
+
         return $created;
+    }
+
+    /**
+     * Create missing transaction bonuses
+     */
+    private function createMissingTransactionBonuses($user, &$created)
+    {
+        $referrals = User::where('referral_business_code', $user->business_code)
+            ->whereHas('business', function($query) {
+                $query->whereNotNull('package_code');
+            })
+            ->get();
+
+        foreach ($referrals as $referral) {
+            $referralDate = $referral->created_at;
+            $twoWeeksAfter = $referralDate->copy()->addWeeks(2);
+
+            if (Carbon::now()->lte($twoWeeksAfter)) {
+                continue; // Still within bonus period, let automatic system handle it
+            }
+
+            // Check for week 1 and week 2 bonuses
+            for ($week = 1; $week <= 2; $week++) {
+                $paymentType = $week === 1 ? 'transaction_bonus_week1' : 'transaction_bonus_week2';
+
+                // Check if bonus already exists
+                $existingPayment = ReferralPayment::where('user_id', $user->id)
+                    ->where('referral_id', $referral->id)
+                    ->where('payment_type', $paymentType)
+                    ->exists();
+
+                if ($existingPayment) {
+                    continue;
+                }
+
+                // Check transaction count for this week
+                $weekStart = $week === 1 ? $referralDate : $referralDate->copy()->addWeek();
+                $weekEnd = $weekStart->copy()->addWeek();
+
+                $transactionCount = Transaction::where('business_code', $referral->business->code)
+                    ->whereBetween('created_at', [$weekStart, $weekEnd])
+                    ->count();
+
+                if ($transactionCount >= 10) {
+                    try {
+                        $payment = ReferralPayment::createTransactionBonus($user->id, $referral->id, $week);
+                        if ($payment) {
+                            $created[] = [
+                                'type' => $paymentType,
+                                'referral_id' => $referral->id,
+                                'referral_name' => $referral->name,
+                                'amount' => 1000,
+                                'transaction_count' => $transactionCount
+                            ];
+                        }
+                    } catch (\Exception $e) {
+                        Log::error("Failed to create {$paymentType} for referral {$referral->id}: " . $e->getMessage());
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Simple method to ensure all payments are created and return summary
+     */
+    public function ensureReferralPaymentsExist()
+    {
+        $created = $this->createMissingReferralPayments();
+
+        return [
+            'payments_created' => count($created),
+            'created_details' => $created,
+            'current_stats' => [
+                'total_earnings' => $this->getTotalReferralEarnings(),
+                'registration_earnings' => $this->getRegistrationEarnings(),
+                'transaction_earnings' => $this->getTotalUsageEarnings(),
+                'paid_earnings' => $this->getPaidEarnings(),
+                'pending_earnings' => $this->getPendingEarnings(),
+                'registration_bonus_count' => $this->getRegistrationBonusCount(),
+                'week1_bonus_count' => $this->getWeek1BonusCount(),
+                'week2_bonus_count' => $this->getWeek2BonusCount(),
+            ]
+        ];
     }
 }

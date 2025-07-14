@@ -391,6 +391,141 @@
                 });
         }
 
+        function showPaymentModal(userId, userName, pendingAmount) {
+            // First get the pending payments details
+            fetch(`/admin/referrals/payments/pending/${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.payments && data.payments.length > 0) {
+                        let paymentsHtml = '<div class="table-responsive"><table class="table table-sm"><thead><tr><th>Type</th><th>Referral</th><th>Amount</th><th>Date</th></tr></thead><tbody>';
+
+                        data.payments.forEach(payment => {
+                            paymentsHtml += `<tr>
+                                <td>${payment.payment_type}</td>
+                                <td>${payment.referral_name}</td>
+                                <td>TZS ${new Intl.NumberFormat().format(payment.amount)}</td>
+                                <td>${payment.created_at}</td>
+                            </tr>`;
+                        });
+
+                        paymentsHtml += '</tbody></table></div>';
+
+                        Swal.fire({
+                            title: `Process Payment for ${userName}`,
+                            html: `
+                                <div class="text-start">
+                                    <p><strong>Total Pending:</strong> TZS ${new Intl.NumberFormat().format(data.total_pending)}</p>
+                                    <p><strong>Business:</strong> ${data.user.business_name}</p>
+
+                                    <div class="mb-4">
+                                        <h6>Pending Payments:</h6>
+                                        ${paymentsHtml}
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label for="payment_method" class="form-label">Payment Method *</label>
+                                        <select id="payment_method" class="form-select" required>
+                                            <option value="">Select payment method</option>
+                                            <option value="mobile_money">Mobile Money</option>
+                                            <option value="bank_transfer">Bank Transfer</option>
+                                            <option value="cash">Cash</option>
+                                            <option value="check">Check</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label for="payment_reference" class="form-label">Payment Reference</label>
+                                        <input type="text" id="payment_reference" class="form-control"
+                                               placeholder="Transaction ID, Check number, etc.">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="payment_notes" class="form-label">Notes (Optional)</label>
+                                        <textarea id="payment_notes" class="form-control" rows="2"
+                                                  placeholder="Additional notes about this payment"></textarea>
+                                    </div>
+                                </div>
+                            `,
+                            width: '600px',
+                            showCancelButton: true,
+                            confirmButtonText: `Pay TZS ${new Intl.NumberFormat().format(data.total_pending)}`,
+                            confirmButtonColor: '#28a745',
+                            cancelButtonText: 'Cancel',
+                            preConfirm: () => {
+                                const method = document.getElementById('payment_method').value;
+                                const reference = document.getElementById('payment_reference').value;
+                                const notes = document.getElementById('payment_notes').value;
+
+                                if (!method) {
+                                    Swal.showValidationMessage('Please select a payment method');
+                                    return false;
+                                }
+
+                                return {
+                                    user_id: userId,
+                                    payment_method: method,
+                                    payment_reference: reference,
+                                    notes: notes
+                                };
+                            }
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                processReferralPayment(result.value);
+                            }
+                        });
+                    } else {
+                        Swal.fire('No Payments', 'No pending payments found for this user.', 'info');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire('Error', 'Failed to load payment details.', 'error');
+                });
+        }
+
+        function processReferralPayment(paymentData) {
+            // Show loading
+            Swal.fire({
+                title: 'Processing Payment...',
+                text: 'Please wait while we process the payment.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            fetch('/admin/referrals/payments/process-referral', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify(paymentData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        title: 'Payment Processed!',
+                        text: data.message,
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        // Reload the DataTable to show updated payment status
+                        if (window.LaravelDataTables && window.LaravelDataTables['dataTableBuilder']) {
+                            window.LaravelDataTables['dataTableBuilder'].draw();
+                        }
+                    });
+                } else {
+                    Swal.fire('Error', data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire('Error', 'An error occurred while processing the payment.', 'error');
+            });
+        }
+
         function processUserPayments(userId) {
             Swal.fire({
                 title: '{{ __("Process Payments") }}',
