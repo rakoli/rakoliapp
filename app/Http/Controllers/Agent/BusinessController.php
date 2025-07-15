@@ -724,6 +724,40 @@ class BusinessController extends Controller
 
         $statisticsService = new StatisticsService($user);
 
+        $stats = [];
+
+        $stats['total_referred_users'] = User::where('referral_business_code', $user->business_code)->count();
+
+        $registrationEarnings = User::where('referral_business_code', $user->business_code)
+            ->whereHas('business', function($query) {
+                $query->whereNotNull('package_code');
+            })
+            ->with('business.package')
+            ->get()
+            ->sum(function($referredUser) {
+                return $referredUser->business && $referredUser->business->package
+                    ? $referredUser->business->package->price_commission
+                    : 0;
+            });
+        $stats['registration_earnings'] = number_format($registrationEarnings, 2);
+
+        // Usage Earnings - Last 14 days earnings from referred businesses
+        $twoWeeksAgo = Carbon::now()->subDays(14);
+        $usageEarnings = 0;
+
+        $referredUsers = User::where('referral_business_code', $user->business_code)
+            ->whereHas('business')
+            ->with('business')
+            ->get();
+
+        foreach ($referredUsers as $referredUser) {
+            if ($referredUser->business && $referredUser->business->package) {
+                $dailyCommission = $referredUser->business->package->price_commission * 0.01; // 1% daily
+                $usageEarnings += $dailyCommission * 14; // 14 days
+            }
+        }
+        $stats['usage_earnings'] = number_format($usageEarnings, 2);
+
         $stats['total_referrals'] = $statisticsService->agent_total_number_of_referrals();
         $stats['annual_commission'] = $statisticsService->agent_total_annual_referral_commission();
         $stats['inactive_referrals'] = $statisticsService->agent_total_no_of_inactive_referrals();

@@ -13,6 +13,70 @@
 
         @include('agent.business._submenu_business')
 
+        <!--begin::Analytics Widgets Row-->
+        <div class="row g-5 g-xl-8 mb-5 mb-xl-8">
+            <!--begin::Total Referred Users Widget-->
+            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                <div class="card bg-primary hoverable card-xl-stretch mb-5 mb-xl-8 h-xl-100">
+                    <div class="card-body d-flex flex-column">
+                        <!--begin::Svg Icon-->
+                        <span class="svg-icon svg-icon-white svg-icon-3x ms-n1 mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M16.0173 9H15.3945C14.2833 9 13.263 9.61425 12.7431 10.5963L12.154 11.7091C12.0645 11.8781 12.1072 12.0868 12.2559 12.2071L12.6402 12.5183C13.2631 13.0225 13.7556 13.6691 14.0764 14.4035L14.2321 14.7601C14.2957 14.9058 14.4396 15 14.5987 15H18.6747C19.7297 15 20.4057 13.8774 19.912 12.945L18.6686 10.5963C18.1487 9.61425 17.1285 9 16.0173 9Z" fill="currentColor"/>
+                                <rect opacity="0.3" x="14" y="4" width="4" height="4" rx="2" fill="currentColor"/>
+                                <path d="M4.65486 14.8559C5.40389 13.1224 7.11161 12 9 12C10.8884 12 12.5961 13.1224 13.3451 14.8559L14.793 18.2067C15.3636 19.5271 14.3955 21 12.9571 21H5.04292C3.60453 21 2.63644 19.5271 3.20698 18.2067L4.65486 14.8559Z" fill="currentColor"/>
+                                <rect opacity="0.3" x="6" y="5" width="6" height="6" rx="3" fill="currentColor"/>
+                            </svg>
+                        </span>
+                        <!--end::Svg Icon-->
+                        <div class="text-white fw-bolder fs-2 mb-2 mt-auto">{{ $stats['total_referred_users'] }}</div>
+                        <div class="fw-bold text-white opacity-75 fs-6">{{ __('Total Referred Users') }}</div>
+                    </div>
+                </div>
+            </div>
+            <!--end::Total Referred Users Widget-->
+
+            <!--begin::Registration Earnings Widget-->
+            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                <div class="card bg-success hoverable card-xl-stretch mb-5 mb-xl-8 h-xl-100">
+                    <div class="card-body d-flex flex-column">
+                        <!--begin::Svg Icon-->
+                        <span class="svg-icon svg-icon-white svg-icon-3x ms-n1 mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M21 10H13V11C13 11.6 12.6 12 12 12C11.4 12 11 11.6 11 11V10H3C2.4 10 2 10.4 2 11V13H22V11C22 10.4 21.6 10 21 10Z" fill="currentColor"/>
+                                <path opacity="0.3" d="M12 12C11.4 12 11 11.6 11 11V3C11 2.4 11.4 2 12 2C12.6 2 13 2.4 13 3V11C13 11.6 12.6 12 12 12Z" fill="currentColor"/>
+                                <path opacity="0.3" d="M18.1 21H5.9C5.4 21 4.9 20.6 4.8 20.1L3 13H21L19.2 20.1C19.1 20.6 18.6 21 18.1 21Z" fill="currentColor"/>
+                            </svg>
+                        </span>
+                        <!--end::Svg Icon-->
+                        <div class="text-white fw-bolder fs-2 mb-2 mt-auto">{{ session('currency') ?? '$' }}{{ $stats['registration_earnings'] }}</div>
+                        <div class="fw-bold text-white opacity-75 fs-6">{{ __('Registration Earnings') }}</div>
+                    </div>
+                </div>
+            </div>
+            <!--end::Registration Earnings Widget-->
+
+            <!--begin::Usage Earnings Widget-->
+            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                <div class="card bg-warning hoverable card-xl-stretch mb-5 mb-xl-8 h-xl-100">
+                    <div class="card-body d-flex flex-column">
+                        <!--begin::Svg Icon-->
+                        <span class="svg-icon svg-icon-white svg-icon-3x ms-n1 mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M22 7H2V11H22V7Z" fill="currentColor"/>
+                                <path opacity="0.3" d="M21 19H3C2.4 19 2 18.6 2 18V6C2 5.4 2.4 5 3 5H21C21.6 5 22 5.4 22 6V18C22 18.6 21.6 19 21 19ZM14 14C14 15.1 13.1 16 12 16C10.9 16 10 15.1 10 14C10 12.9 10.9 12 12 12C13.1 12 14 12.9 14 14ZM16 12C16 14.2 14.2 16 12 16C9.8 16 8 14.2 8 12C8 9.8 9.8 8 12 8C14.2 8 16 9.8 16 12Z" fill="currentColor"/>
+                            </svg>
+                        </span>
+                        <!--end::Svg Icon-->
+                        <div class="text-white fw-bolder fs-2 mb-2 mt-auto">{{ session('currency') ?? '$' }}{{ $stats['usage_earnings'] }}</div>
+                        <div class="fw-bold text-white opacity-75 fs-6">{{ __('Usage Earnings (2 Weeks)') }}</div>
+                    </div>
+                </div>
+            </div>
+            <!--end::Usage Earnings Widget-->
+        </div>
+        <!--end::Analytics Widgets Row-->
+
         <!--begin::Layout-->
         <div class="d-flex flex-column flex-xl-row">
 
