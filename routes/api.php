@@ -18,6 +18,18 @@ Route::any('dpo/callback', [App\Http\Controllers\PaymentProcessingController::cl
 Route::any('pesapal/callback', [App\Http\Controllers\PaymentProcessingController::class, 'pesapalCallback'])->name('pesapal.callback');
 Route::any('selcom/callback', [App\Http\Controllers\PaymentProcessingController::class, 'selcomCallback'])->name('selcom.callback');
 
+// Referrer API Routes
+Route::post('referrals/login', [\App\Http\Controllers\Api\ReferrerAPIController::class, 'singleSignOn']);
+Route::middleware('auth:sanctum')->group(function () {
+Route::get('referrals', [\App\Http\Controllers\Api\ReferrerAPIController::class, 'getReferrals']);
+Route::get('referrals/shift', [\App\Http\Controllers\Api\ReferrerAPIController::class, 'referredBusinessShiftActivities']);
+Route::get('referrals/businesses', [\App\Http\Controllers\Api\ReferrerAPIController::class, 'getReferredBusinesses']);
+Route::get('referrals/payments', [\App\Http\Controllers\Api\ReferrerAPIController::class, 'referrerPayments']);
+Route::get('referrals/payment-history', [\App\Http\Controllers\Api\ReferrerAPIController::class, 'getPaymentHistory']);
+Route::post('referrals/mark-paid', [\App\Http\Controllers\Api\ReferrerAPIController::class, 'markPaymentsAsPaid']);
+Route::post('referrals/create-payment', [\App\Http\Controllers\Api\ReferrerAPIController::class, 'createReferrerPayment']);
+Route::get('referrals/all-payments', [\App\Http\Controllers\Api\ReferrerAPIController::class, 'getAllReferrerPayments']);
+});
 Route::post('login', [App\Http\Controllers\Api\MobileAppController::class, 'login']);
 Route::post('register', [App\Http\Controllers\Api\MobileAppController::class, 'register']);
 
