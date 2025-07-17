@@ -1,6 +1,6 @@
 @extends('layouts.users.agent')
 
-@section('title', "Shift Transfer Request")
+@section('title', __("general.LBL_SHIFT_TRANFER_REQ"))
 
 @section('header_js')
     <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css"/>
@@ -11,7 +11,7 @@
     <span class="h-20px border-gray-200 border-start ms-3 mx-2"></span>
     <!--end::Separator-->
     <!--begin::Description-->
-    <small class="text-muted fs-7 fw-semibold my-1 ms-1">Transfer Request</small>
+    <small class="text-muted fs-7 fw-semibold my-1 ms-1">{{ __("general.LBL_TRANSFER_REQUEST") }}</small>
     <!--end::Description-->
 @endsection
 

@@ -1,6 +1,6 @@
 @extends('layouts.users.agent')
 
-@section('title', "Networks")
+@section('title', __('general.LBL_NETWORKS'))
 
 @push('styles')
     <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css" />
@@ -38,7 +38,7 @@
                     <x-modal_with_button
                         targetId="add-network"
                         label="{{ __('general.LBL_ADD_NETWORK') }}"
-                        modalTitle="Fill the form below record a network"
+                        modalTitle="{{ __('general.LBL_FORM_MODAL_DESCRIPTION') }}"
                         isStacked="true"
                     >
 

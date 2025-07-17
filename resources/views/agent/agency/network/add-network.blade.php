@@ -64,7 +64,7 @@
                             <option title="{{ $agency->getLogo() }}" value="{{ $agency->code }}">{{ $agency->name }}</option>
                         @endforeach
                     </x-select2>
-                    <x-helpertext>{{ __('Till Provider E.G: Equity Bank') }}</x-helpertext>
+                    <x-helpertext>{{ __('general.LBL_TILL_HELPER') }}</x-helpertext>
                     @error('fsp_code')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -111,7 +111,7 @@
                             <option value="{{ $location->code }}">{{ $location->name }}</option>
                         @endforeach
                     </x-select2>
-                    <x-helpertext>{{ __('This Till belongs to which Branch?') }}</x-helpertext>
+                    <x-helpertext>{{ __('general.LBL_TILL_BRANCH') }}</x-helpertext>
                     @error('location_code')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -132,7 +132,7 @@
                         placeholder="{{ __('agent_no') }}"
                         id="agent_no"
                     />
-                    <x-helpertext>{{ __('Till Agency No:') }}</x-helpertext>
+                    <x-helpertext>{{ __('general.TILL_AGENCY_NO') }}</x-helpertext>
                     @error('agent_no')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -151,7 +151,7 @@
                         placeholder="{{ __('balance') }}"
                         id="balance"
                     />
-                    <x-helpertext>{{ __('Till Current Balance: Note this cannot be updated after you start transcating') }}</x-helpertext>
+                    <x-helpertext>{{ __('general.LBL_TRANSACTION_NOTE') }}</x-helpertext>
                     @error('balance')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -208,7 +208,7 @@
                     />
                     <textarea name="description" class="form-control form-control form-control-solid" rows="3"
                               data-kt-autosize="false"></textarea>
-                    <x-helpertext>{{ __('Anything to note about this Till? Max length: 255') }}</x-helpertext>
+                    <x-helpertext>{{ __('general.LBL_TILL_ADD_NOTE') }}</x-helpertext>
                     @error('description')
                     <div class="help-block text-danger">
                         {{ $message }}

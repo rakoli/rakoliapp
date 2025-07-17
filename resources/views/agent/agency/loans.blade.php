@@ -1,6 +1,6 @@
 @extends('layouts.users.agent')
 
-@section('title', "Loans")
+@section('title', __('general.LBL_LOANS'))
 
 @push('styles')
     <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css"/>

@@ -1,6 +1,6 @@
 @extends('layouts.users.agent')
 
-@section('title', "Loans Payment")
+@section('title', __('general.LBL_LOANS'))
 
 
 @section('breadcrumb')
