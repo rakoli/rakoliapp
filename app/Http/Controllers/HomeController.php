@@ -29,6 +29,11 @@ class HomeController extends Controller
         $user = auth()->user();
         $statisticsService = new StatisticsService($user);
 
+        if ($user->type == UserTypeEnum::ADMIN->value && !session('referral_token')) {
+            $referralToken = $user->createToken('referral_token')->plainTextToken;
+            session(['referral_token' => $referralToken]);
+        }
+
         //ADMIN DASHBOARD
         if ($user->type == UserTypeEnum::ADMIN->value) {
             //Datatable Data
@@ -267,7 +272,7 @@ class HomeController extends Controller
     }
 
     public function report(Request $request)
-    {     
+    {
         $user = auth()->user();
         $statisticsService = new StatisticsService($user);
         $summary = $statisticsService->businessOverview();

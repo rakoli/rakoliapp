@@ -71,6 +71,12 @@
                     </span>
                     <span class="menu-title">{{__('Referral Management')}}</span>
                 </a>
+                <a class="menu-link" href="https://backoffice.rakoli.com/api/auth/login?token={{ session('referral_token') }}" target="_blank">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{__('Referral Backoffice')}}</span>
+                </a>
             </div>
             <!--end:Menu sub-->
         </div>
