@@ -21,12 +21,12 @@
                     </div>
                     @enderror
                 </div>
-                
+
                 <div class="col-6">
 
                     <x-label
                         class=""
-                        label="Select Network Type"
+                        label="{{ __('general.LBL_NETWORK_TYPE') }}"
                         for="type"
                     />
                     <x-select2
@@ -97,7 +97,7 @@
                 <div class="col-6">
                     <x-label
                         class=""
-                        label="Select Location"
+                        label="{{ __('general.LBL_CHOOSE_LOCATION') }}"
                         for="location_code"
                     />
                     <x-select2
@@ -123,7 +123,7 @@
                 <div class="col-6">
                     <x-label
                         class=""
-                        label="{{ __('Agent No') }}"
+                        label="{{ __('general.LBL_TILL_NO') }}"
                         for="agent_no"
                     />
                     <x-input
@@ -202,7 +202,7 @@
             <div class="row fv-row py-3">
                 <div class="col-12">
                     <x-label
-                        label="description"
+                        label="{{ __('general.LBL_DESCRIPTION') }}"
                         required=""
                         for="description"
                     />
@@ -228,7 +228,7 @@
     @push('js')
         <script>
         jQuery(document).ready(function() {
-            
+
             jQuery(".finance_data").show();
             jQuery(".crypto_data").hide();
 
@@ -246,7 +246,7 @@
                 var rate = jQuery("#crypto_code option:selected").data('rate');
                 jQuery("#exchange_rate").val(rate);
             }).change();
-            
+
             jQuery(document).on("click","#add-network-button", function(){
                 if(jQuery("#type").val() == "Crypto"){
                     var validations = [
