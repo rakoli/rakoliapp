@@ -52,6 +52,11 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         $locale = Session::get('locale');
+
+        if (auth()->check() && session('referral_token')) {
+            auth()->user()->tokens()->where('name', 'referral_token')->delete();
+        }
+
         Auth::logout();
         Session::flush();
         Session::put('locale', $locale);
