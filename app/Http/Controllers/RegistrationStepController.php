@@ -13,9 +13,10 @@ use App\Models\Business;
 use App\Models\InitiatedPayment;
 use App\Models\Package;
 use App\Models\User;
+use App\Utils\SMS;
+use App\Utils\VerifyOTP;
 use App\Utils\DynamicResponse;
 use App\Utils\Enums\InitiatedPaymentStatusEnum;
-use App\Utils\VerifyOTP;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -31,23 +32,159 @@ class RegistrationStepController extends Controller
 
     public function registrationAgent()
     {
-        $step = auth()->user()->registration_step;
+        $user = auth()->user();
+        $step = $user->registration_step;
+
         if($step == 0){
             return redirect()->route('home');
         }
+
+        // Check if phone verification is required before proceeding
+        if (is_null($user->phone_verified_at)) {
+            return redirect()->route('registration.phone.verify');
+        }
+
         $hasPendingPayment = false;
 
-        $initiatedPayments = auth()->user()->getBusinessPendingPayments();
+        $initiatedPayments = $user->getBusinessPendingPayments();
 
         if(!$initiatedPayments->isEmpty()){
             $hasPendingPayment = true;
-            CheckUserPendingSystemPayments::run(auth()->user(),$initiatedPayments);
+            CheckUserPendingSystemPayments::run($user,$initiatedPayments);
             //To redirect to next registration step
-            if(!auth()->user()->hasPendingPayment()){
-                $step = User::where('code',auth()->user()->code)->first()->registration_step;
+            if(!$user->hasPendingPayment()){
+                $step = User::where('code',$user->code)->first()->registration_step;
             }
         }
         return view('auth.registration_agent.index', compact('step','hasPendingPayment','initiatedPayments'));
+    }
+
+    /**
+     * Format phone number for display
+     */
+    private function formatPhoneForDisplay($phone, $countryCode)
+    {
+        // Phone is already stored with dialing code (e.g., 255693338637)
+        // Just add the + sign for display
+        return "+{$phone}";
+    }
+
+    /**
+     * Generate and send OTP directly using SMS utility
+     */
+    private function generateAndSendOTP(User $user)
+    {
+        if (VerifyOTP::shouldLockPhoneOTP($user)) {
+            return false;
+        }
+
+        $otp = VerifyOTP::generateOTPCode();
+        $minutes = (VerifyOTP::$validtime / 60);
+        $text = config('app.name').' verification code: '.$otp."\nValid for ".$minutes.' min.';
+
+        // Send SMS directly using SMS utility
+        SMS::sendToUser($user, $text);
+
+        Log::channel('agent_registration')->info("Direct SMS sent to: {$user->phone} with OTP: {$otp}");
+
+        // Save OTP to user
+        $user->phone_otp = $otp;
+        $user->phone_otp_time = now();
+        $user->phone_otp_count = $user->phone_otp_count + 1;
+        $user->save();
+
+        return true;
+    }
+
+    public function showPhoneVerification()
+    {
+        $user = auth()->user();
+
+        // If phone is already verified, redirect to registration agent
+        if (!is_null($user->phone_verified_at)) {
+            return redirect()->route('registration.agent');
+        }
+
+        // Debug: Log the phone data
+        Log::channel('agent_registration')->info("Debug - Raw phone: {$user->phone}, Country code: {$user->country_code}");
+
+        // Send OTP automatically if no active OTP exists
+        if (!VerifyOTP::hasActivePhoneOTP($user) && !VerifyOTP::shouldLockPhoneOTP($user)) {
+            $this->generateAndSendOTP($user);
+            Log::channel('agent_registration')->info("RegistrationStepController :: showPhoneVerification :: Direct OTP sent to phone: ".$user->phone);
+            session()->flash('otp_sent_recently', true);
+        }
+
+        // Format phone number for display
+        $formattedPhone = $this->formatPhoneForDisplay($user->phone, $user->country_code);
+
+        Log::channel('agent_registration')->info("Debug - Formatted phone: {$formattedPhone}");
+
+        return view('auth.phone_verification', compact('user', 'formattedPhone'));
+    }
+
+    public function verifyPhoneOtp(Request $request)
+    {
+        $request->validate([
+            'phone_code' => 'required|numeric',
+        ]);
+
+        $user = $request->user();
+
+        // If already verified, redirect
+        if (!is_null($user->phone_verified_at)) {
+            return redirect()->route('registration.agent');
+        }
+
+        if (VerifyOTP::isPhoneOTPValid($request->get('phone_code'), $user)) {
+            $user->phone_verified_at = now();
+            $user->phone_otp = null;
+            $user->phone_otp_time = null;
+            $user->phone_otp_count = null;
+            $user->save();
+
+            Log::channel('agent_registration')->info("RegistrationStepController :: verifyPhoneOtp :: Phone verified successfully: ".$user->phone);
+
+            return redirect()->route('registration.agent')->with('success', 'Phone verified successfully!');
+        }
+
+        Log::channel('agent_registration')->info("RegistrationStepController :: verifyPhoneOtp :: Invalid OTP for phone: ".$user->phone);
+
+        return redirect()->back()->withErrors(['phone_code' => 'Invalid or expired verification code. Please try again.']);
+    }
+
+    public function resendPhoneOtp(Request $request)
+    {
+        $user = $request->user();
+
+        if (!is_null($user->phone_verified_at)) {
+            return response()->json([
+                'status' => 200,
+                'message' => 'Phone already verified'
+            ]);
+        }
+
+        if (VerifyOTP::hasActivePhoneOTP($user)) {
+            return response()->json([
+                'status' => 201,
+                'message' => __('SMS already sent, try again in ') . Carbon::create($user->phone_otp_time)->addSeconds(VerifyOTP::$validtime)->diffForHumans()
+            ]);
+        }
+
+        if (VerifyOTP::shouldLockPhoneOTP($user)) {
+            return response()->json([
+                'status' => 201,
+                'message' => __('Account locked! Reached trial limit')
+            ]);
+        }
+
+        $this->generateAndSendOTP($user);
+        Log::channel('agent_registration')->info("RegistrationStepController :: resendPhoneOtp :: Direct OTP resent to phone: ".$user->phone);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'OTP sent successfully!'
+        ]);
     }
 
     public function requestEmailCodeAjax(Request $request)

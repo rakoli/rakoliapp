@@ -23,6 +23,9 @@ Route::get('logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'
 
 //REGISTRATION ROUTES
 Route::get('registration/agent', [App\Http\Controllers\RegistrationStepController::class, 'registrationAgent'])->name('registration.agent');
+Route::get('registration/phone/verify', [App\Http\Controllers\RegistrationStepController::class, 'showPhoneVerification'])->name('registration.phone.verify');
+Route::post('registration/phone/verify', [App\Http\Controllers\RegistrationStepController::class, 'verifyPhoneOtp'])->name('registration.phone.verify.submit');
+Route::post('registration/phone/resend', [App\Http\Controllers\RegistrationStepController::class, 'resendPhoneOtp'])->name('registration.phone.resend');
 Route::get('registration/step/confirmation', [App\Http\Controllers\RegistrationStepController::class, 'registrationStepConfirmation'])->name('registration.step.confirmation');
 Route::get('request/email/code', [App\Http\Controllers\RegistrationStepController::class, 'requestEmailCodeAjax'])->name('request.email.code');
 Route::get('request/phone/code', [App\Http\Controllers\RegistrationStepController::class, 'requestPhoneCodeAjax'])->name('request.phone.code');
