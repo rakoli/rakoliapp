@@ -42,7 +42,7 @@
                                           data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">{{ number_format($cashAtHand , 2) }}</span>
                                     <!--end::Amount-->
                                     <!--begin::Subtitle-->
-                                    <span class="text-white pt-1 fw-semibold fs-6">{{ __('Cash at Hand') }} in {{currencyCode()}}</span>
+                                    <span class="text-white pt-1 fw-semibold fs-6">{{ __('general.LBL_CASH_AT_HAND') }} in {{currencyCode()}}</span>
                                     <!--end::Subtitle-->
                                 </div>
                                 <!--end::Title-->
@@ -388,7 +388,7 @@
                     <!--end::Card body-->
                 </div>
                 <!--end::Card-->
-                
+
                 <!--begin::Card-->
                 <div class="card pt-4 mb-6 mb-xl-9">
                     <!--begin::Card header-->

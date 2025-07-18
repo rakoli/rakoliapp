@@ -30,6 +30,7 @@ Route::post('referrals/mark-paid', [\App\Http\Controllers\Api\ReferrerAPIControl
 Route::post('referrals/create-payment', [\App\Http\Controllers\Api\ReferrerAPIController::class, 'createReferrerPayment']);
 Route::get('referrals/all-payments', [\App\Http\Controllers\Api\ReferrerAPIController::class, 'getAllReferrerPayments']);
 });
+
 Route::post('login', [App\Http\Controllers\Api\MobileAppController::class, 'login']);
 Route::post('register', [App\Http\Controllers\Api\MobileAppController::class, 'register']);
 

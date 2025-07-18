@@ -46,7 +46,7 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td>{{  __("Cash at Hand") }}</td>
+                                    <td>{{ __("general.LBL_CASH_AT_HAND") }}</td>
 
                                     <td>{{  Number::currency($cashAtHand,  currencyCode())}}</td>
                                     <td>
@@ -56,7 +56,7 @@
                                             name="closing_balance"
                                             value="{{ $cashAtHand }}"
                                             placeholder="{{ __('Closing Balance') }}" id="closing_balance"/>
-                                        <x-helpertext>{{ __('Confirm closing cash at hand') }}</x-helpertext>
+                                        <x-helpertext>{{ __('general.CONFIRM_CLOSING_CASH_AT_HAND') }}</x-helpertext>
                                     </td>
                                 </tr>
 
@@ -472,7 +472,7 @@
                         <!--end::Card body-->
                     </div>
                     <!--begin::END Income and Expenses Card-->
-                    
+
                     @if(validateSubscription("loan management"))
                     <!--begin::Loans Card-->
                     <div class="card pt-4 mb-6 mb-xl-9">

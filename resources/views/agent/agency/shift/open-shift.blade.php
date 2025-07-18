@@ -26,9 +26,9 @@
                 <div class="card-body fs-6 py-15 px-10 py-lg-15 px-lg-15 text-gray-700">
                     <div>
 
-                        <x-back
-                            :route="route('agency.shift') "
-                            />
+                        <a href="{{ route('agency.shift') }}" class="btn btn-danger">
+                            {{ __('general.LBL_BACK_BTN') }}
+                        </a>
 
                         <form method="post" id="openShift" action="{{ route('agency.shift.open.store') }}">
                             @csrf
@@ -52,7 +52,7 @@
                                             >{{ $location['name'] }}</option>
                                         @endforeach
                                     </x-select2>
-                                    <x-helpertext> {{ __("Location for this Shift") }}</x-helpertext>
+                                    <x-helpertext> {{ __("general.LBL_LOCATION_FOR_SHIFT") }}</x-helpertext>
                                     @error('location_code')
                                     <div class="help-block text-danger">
                                         {{ $message }}
@@ -62,15 +62,15 @@
 
 
                                 <div class="col-6">
-                                    <x-label class="" label="{{ __('Cash At Hand') }}" for="amount"/>
+                                    <x-label class="" label="{{ __('general.LBL_CASH_AT_HAND') }}" for="amount"/>
                                     <x-input
                                         type="number"
                                         class="form-control-solid   @error('cash_at_hand') form-control-feedback @enderror"
                                         name="cash_at_hand"
-                                        placeholder="{{ __('cash at hand') }}"
+                                        placeholder="{{ __('general.LBL_CASH_AT_HAND') }}"
                                         readonly="readonly"
                                         id="amount"/>
-                                    <x-helpertext> {{ __("Current cash you have in this Location") }}</x-helpertext>
+                                    <x-helpertext> {{ __("general.LBL_CASH_YOU_HAVE_AT_LOCATION") }}</x-helpertext>
                                     @error('cash_at_hand')
                                     <div class="help-block text-danger">
                                         {{ $message }}
@@ -129,7 +129,7 @@
                                         class="form-control form-control form-control-solid"
                                         rows="3"
                                         data-kt-autosize="false"></textarea>
-                                    <x-helpertext> {{ __("What would like to note about this shift, max length: 255 characters") }}</x-helpertext>
+                                    <x-helpertext> {{ __("general.LBL_SHIFT_OPEN_NOTE") }}</x-helpertext>
                                     @error('description')
                                     <div class="help-block text-danger">
                                         {{ $message }}
@@ -142,7 +142,7 @@
                                         name="notes"
                                         class="form-control form-control form-control-solid" rows="3"
                                         data-kt-autosize="false"></textarea>
-                                    <x-helpertext> {{ __("Do you have extra note?, max length: 255 characters ") }}</x-helpertext>
+                                    <x-helpertext> {{ __("general.LBL_EXTRA_OPEN_NOTE") }} </x-helpertext>
                                     @error('notes')
                                     <div class="help-block text-danger">
                                         {{ $message }}
@@ -155,7 +155,7 @@
                                 <x-submit-button
                                     type="button"
                                     class="btn btn-primary"
-                                    label="Open Shift"
+                                    label="{{ __('general.LBL_OPEN_SHIFT') }}"
                                     id="open-shift-button"
 
                                 />
