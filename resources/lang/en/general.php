@@ -125,6 +125,12 @@ return [
 
     "LBL_ACCOUNT_LOGIN" => "Account Login",
     "LBL_NEW_HERE" => "New Here?",
+    "LBL_WE_HAVE_SENT_VERIFICATION_CODE" => "We've sent a verification code to",
+    "LBL_VERIFY_YOUR_PHONE_NUMBER" => "Verify Your Phone Number",
+    "LBL_ENTER_OTP" => "Enter Verification Code",
+    "LBL_VERIFY_PHONE" => "Verify Phone",
+    "LBL_DID_NOT_RECEIVE_CODE" => "Did not receive the code?",
+    "LBL_RESEND_CODE" => "Resend Code",
     "LBL_CREATE_ACCOUNT" => "Create an Account",
     "LBL_ENTER_EMAIL" => "Enter Email",
     "LBL_ENTER_PASSWORD" => "Enter Password",

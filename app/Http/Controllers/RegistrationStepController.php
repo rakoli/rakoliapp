@@ -80,9 +80,8 @@ class RegistrationStepController extends Controller
 
         $otp = VerifyOTP::generateOTPCode();
         $minutes = (VerifyOTP::$validtime / 60);
-        $text = config('app.name').' verification code: '.$otp."\nValid for ".$minutes.' min.';
+        $text = env('APP_NAME').' verification code: '.$otp."\nValid for ".$minutes.' min.';
 
-        // Send SMS directly using SMS utility
         SMS::sendToUser($user, $text);
 
         Log::channel('agent_registration')->info("Direct SMS sent to: {$user->phone} with OTP: {$otp}");

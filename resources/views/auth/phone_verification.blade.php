@@ -26,11 +26,11 @@
     <!--begin::Heading-->
     <div class="text-center mb-11">
         <!--begin::Title-->
-        <h1 class="text-dark fw-bolder mb-3">{{ __("Verify Your Phone Number") }}</h1>
+        <h1 class="text-dark fw-bolder mb-3">{{ __('general.LBL_VERIFY_YOUR_PHONE_NUMBER') }}</h1>
         <!--end::Title-->
         <!--begin::Subtitle-->
         <div class="text-gray-500 fw-semibold fs-6 mb-5">
-            {{ __("We've sent a verification code to") }}<br>
+            {{ __('general.LBL_WE_HAVE_SENT_VERIFICATION_CODE') }}<br>
             <strong>{{ $formattedPhone }}</strong>
         </div>
         <!--end::Subtitle-->
@@ -54,7 +54,7 @@
     <!--begin::Input group-->
     <div class="fv-row mb-8">
         <div class="verification-container">
-            <label class="form-label fw-bolder text-dark fs-6 mb-3">{{ __("Enter Verification Code") }}</label>
+            <label class="form-label fw-bolder text-dark fs-6 mb-3">{{ __('general.LBL_ENTER_OTP') }}</label>
             <input type="text"
                    name="phone_code"
                    class="form-control form-control-lg form-control-solid otp-input"
@@ -70,7 +70,7 @@
     <div class="d-grid mb-10">
         <button type="submit" id="kt_phone_verification_submit" class="btn btn-primary">
             <!--begin::Indicator label-->
-            <span class="indicator-label">{{ __("Verify Phone") }}</span>
+            <span class="indicator-label">{{ __('general.LBL_VERIFY_PHONE') }}</span>
             <!--end::Indicator label-->
             <!--begin::Indicator progress-->
             <span class="indicator-progress">{{ __("Please wait...") }}
@@ -84,10 +84,10 @@
     <!--begin::Resend-->
     <div class="text-center">
         <div class="text-gray-500 fw-semibold fs-6 mb-3">
-            {{ __("Didn't receive the code?") }}
+            {{ __('general.LBL_DID_NOT_RECEIVE_CODE') }}
         </div>
         <button type="button" id="resend-otp-btn" class="btn btn-link p-0 text-primary fw-bold">
-            {{ __("Resend Code") }}
+            {{ __('general.LBL_RESEND_CODE') }}
         </button>
         <div id="countdown-timer" class="countdown mt-2" style="display: none;"></div>
     </div>
