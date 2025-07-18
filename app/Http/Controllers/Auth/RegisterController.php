@@ -100,6 +100,9 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         $validators = ValidationRule::agentRegistration();
+         $message = [
+                'g-recaptcha-response' => "Invalid Captch code, Please resubmit data."
+            ];
 
         if (env('APP_ENV') == 'production'){
             $validators['g-recaptcha-response'] = [new GoogleReCaptchaV3ValidationRule('register')];
@@ -125,7 +128,7 @@ class RegisterController extends Controller
             'code' => generateCode($data['business_name'],$user->country_code),
             'type' => $user->type,
             'business_name' => $data['business_name'],
-            'tax_id' => $data['tax_id'] ?? null,
+            //'tax_id' => $data['tax_id'] ?? null,
             'business_regno' => $data['business_regno'] ?? null,
         ];
 

@@ -167,11 +167,11 @@
 											<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                                 </button>
 
-                                <a type="button" class="btn btn-lg btn-primary" href="{{route('logout')}}">{{ __("Sign Out")}}
+                                <a type="button" class="btn btn-lg btn-primary" href="{{route('logout')}}">{{ __('general.LBL_SIGN_OUT')}}
                                     <i class="ki-outline ki-exit-left fs-4 ms-1"></i>
                                 </a>
 
-                                <button type="button" class="btn btn-lg btn-primary" data-kt-stepper-action="next">{{ $translator("Continue","Endelea")}}
+                                <button type="button" class="btn btn-lg btn-primary" data-kt-stepper-action="next">{{__('general.LBL_CONTINUE')}}
                                     <i class="ki-outline ki-arrow-right fs-4 ms-1"></i>
                                 </button>
 

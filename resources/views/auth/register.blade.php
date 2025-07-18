@@ -91,9 +91,9 @@
         <!--begin::Business Registration Information-->
         <div class="fv-row mb-8">
             <div class="d-flex flex-column flex-md-row gap-5">
-                <div class="fv-row flex-row-fluid">
+          <!--       <div class="fv-row flex-row-fluid">
                     <input type="text" placeholder="{{ __("general.LBL_TIN") }}" name="tax_id" autocomplete="off" class="form-control bg-transparent" />
-                </div>
+                </div> -->
                 <div class="fv-row flex-row-fluid">
                     <input type="text" placeholder="{{ __("general.LBL_BRN") }}" name="business_regno" autocomplete="off" class="form-control bg-transparent" />
                 </div>

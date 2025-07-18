@@ -24,7 +24,7 @@ class Business extends Model
         'country_code',
         'code',
         'business_name',
-        'tax_id',
+        //'tax_id',
         'business_regno',
         'business_reg_date',
         'business_phone_number',

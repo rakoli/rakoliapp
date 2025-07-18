@@ -44,7 +44,7 @@
         <div>
             <!--begin::Title-->
             @if(env('GRACE_PERIOD') == 'true')
-                <h2 class="fw-bold text-dark">{{__('Start using Rakoli for Free!')}}</h2>
+                <h2 class="fw-bold text-dark">{{__('general.LBL_START_USING_RAKOLI')}}</h2>
             @else
                 <h2 class="fw-bold text-dark">{{__('Select Package')}}</h2>
             @endif
@@ -52,7 +52,7 @@
             <!--begin::Notice-->
             <div class="text-muted fw-semibold fs-6">
                 @if(env('GRACE_PERIOD') == 'true')
-                    {{__('Click Start for Free Now! to start using Rakoli for free.')}}
+                    {{__('general.LBL_CLICK_START')}}
                 @else
                     {{__('Choose a subscription package that fits your business needs')}}
                 @endif
@@ -126,7 +126,7 @@
                                 <!--begin::Select-->
                                 <div class="t-btn">
                                     @if(env('GRACE_PERIOD') == 'true')
-                                        <button type="button" class="btn btn-lg btn-primary w-100" onclick="selectSubscription('{{$package->code}}','{{strtoupper($package->name)}}', '{{number_format($package->price)}}', '{{strtoupper($package->price_currency)}}','true')">{{__('Start for Free Now!')}}</button>
+                                        <button type="button" class="btn btn-lg btn-primary w-100" onclick="selectSubscription('{{$package->code}}','{{strtoupper($package->name)}}', '{{number_format($package->price)}}', '{{strtoupper($package->price_currency)}}','true')">{{__('general.LBL_BTN_START_FOR_FREE')}}</button>
                                     @else
                                         <button type="button" class="btn btn-sm btn-primary" onclick="selectSubscription('{{$package->code}}','{{strtoupper($package->name)}}', '{{number_format($package->price)}}', '{{strtoupper($package->price_currency)}}')">{{__('Select')}}</button>
                                         <button type="button" class="btn btn-sm btn-primary" onclick="selectSubscription('{{$package->code}}','{{strtoupper($package->name)}}', '{{number_format($package->price)}}', '{{strtoupper($package->price_currency)}}','true')">{{__('Trial')}}</button>

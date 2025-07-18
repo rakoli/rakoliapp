@@ -351,7 +351,7 @@ class RegistrationStepController extends Controller
             'type' => $user->type,
             'business_name' => $request->get('business_name'),
             'business_regno' => $request->get('reg_id',null),
-            'tax_id' => $request->get('tax_id',null),
+            //'tax_id' => $request->get('tax_id',null),
             'business_reg_date' => $regDate,
         ];
 

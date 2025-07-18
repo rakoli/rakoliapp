@@ -172,9 +172,9 @@ class BusinessController extends Controller
         if(!$business){
             return redirect()->back()->withError(['message' => 'Business Details not found']);
         }
-        
+
         $user = User::where('business_code', $code)->first();
-        
+
         return view('admin.business.viewbusiness',[
             'business' => $business,
             'user' => $user
@@ -218,7 +218,7 @@ class BusinessController extends Controller
             'status' => 'required|in:active,inactive,suspended',
             'is_verified' => 'boolean',
             'is_trial' => 'boolean',
-            'tax_id' => 'nullable|string|max:100',
+            //'tax_id' => 'nullable|string|max:100',
             'business_regno' => 'nullable|string|max:100',
             'business_reg_date' => 'nullable|date',
             'referral_business_code' => 'nullable|string|max:50',
