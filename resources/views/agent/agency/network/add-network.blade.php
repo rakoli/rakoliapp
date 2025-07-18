@@ -14,7 +14,7 @@
                         placeholder="{{ __('name') }}"
                         id="name"
                     />
-                    <x-helpertext>{{ __('Till Name E.G: M-Pesa') }}</x-helpertext>
+                    <x-helpertext>{{ __('general.LBL_TILL_NAME_WITH_EG') }}</x-helpertext>
                     @error('name')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -32,14 +32,14 @@
                     <x-select2
                         modalId="add-network"
                         name="type"
-                        placeholder="{{ __('Select a Network Type') }}"
+                        placeholder="{{ __('general.LBL_NETWORK_TYPE') }}"
                         id="type"
                     >
                         @foreach(NetworkTypeEnum::cases() as $networkType)
                             <option value="{{ $networkType->value }}">{{ $networkType->label() }}</option>
                         @endforeach
                     </x-select2>
-                    <x-helpertext>{{ __('Till Type E.G: Fianace, Crypto') }}</x-helpertext>
+                    <x-helpertext>{{ __('general.LBL_TILL_TYPE') }}</x-helpertext>
                     @error('type')
                     <div class="help-block text-danger">
                         {{ $message }}
