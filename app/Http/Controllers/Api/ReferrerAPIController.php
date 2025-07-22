@@ -58,7 +58,7 @@ class ReferrerAPIController extends Controller
 
         $result = $users->map(function ($user) {
             $referredBusinessesCount = Business::where('referral_business_code', $user->business_code)->count();
-            $reg_earnings = 500 * $referredBusinessesCount;
+            $reg_earnings = 1000 * $referredBusinessesCount;
             return [
                 'user' => $user,
                 'referred_businesses_count' => $referredBusinessesCount,
