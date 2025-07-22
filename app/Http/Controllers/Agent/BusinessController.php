@@ -16,6 +16,7 @@ use App\Models\ExchangeBusinessMethod;
 use App\Models\ExchangePaymentMethod;
 use App\Models\Location;
 use App\Models\LocationUser;
+use App\Models\Shift;
 use App\Utils\StatisticsService;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
@@ -741,19 +742,32 @@ class BusinessController extends Controller
             });
         $stats['registration_earnings'] = number_format($registrationEarnings, 2);
 
-        // Usage Earnings - Last 14 days earnings from referred businesses
-        $twoWeeksAgo = Carbon::now()->subDays(14);
+        // Usage Earnings - Based on shift activities in first 2 weeks after referral registration
         $usageEarnings = 0;
+        $referredBusinesses = Business::where('referral_business_code', $user->business_code)->get();
 
-        $referredUsers = User::where('referral_business_code', $user->business_code)
-            ->whereHas('business')
-            ->with('business')
-            ->get();
+        foreach ($referredBusinesses as $business) {
+            $registrationDate = $business->created_at;
+            $firstWeekEnd = $registrationDate->copy()->addDays(7);
+            $secondWeekStart = $firstWeekEnd->copy();
+            $secondWeekEnd = $secondWeekStart->copy()->addDays(7);
 
-        foreach ($referredUsers as $referredUser) {
-            if ($referredUser->business && $referredUser->business->package) {
-                $dailyCommission = $referredUser->business->package->price_commission * 0.01; // 1% daily
-                $usageEarnings += $dailyCommission * 14; // 14 days
+            // First week shifts (day 0-7 since registration)
+            $firstWeekShifts = Shift::where('business_code', $business->code)
+                ->whereBetween('created_at', [$registrationDate, $firstWeekEnd])
+                ->count();
+
+            // Second week shifts (day 8-14 since registration)
+            $secondWeekShifts = Shift::where('business_code', $business->code)
+                ->whereBetween('created_at', [$secondWeekStart, $secondWeekEnd])
+                ->count();
+
+            // Earnings: 500 for 7+ shifts in first week, 500 for 7+ shifts in second week
+            if ($firstWeekShifts >= 7) {
+                $usageEarnings += 500;
+            }
+            if ($secondWeekShifts >= 7) {
+                $usageEarnings += 500;
             }
         }
         $stats['usage_earnings'] = number_format($usageEarnings, 2);
