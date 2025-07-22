@@ -126,17 +126,17 @@ class ReferrerAPIController extends Controller
                     ->count();
             }
 
-            $reg_earnings = 500 * $referredBusinessesCount;
+            $reg_earnings = 1000 * $referredBusinessesCount;
             $firstWeekEarnings = 0;
             $secondWeekEarnings = 0;
-            if ($referredBusinessesCount > 10) {
+            /* if ($referredBusinessesCount > 10) {
                 $reg_earnings += 1000; // Bonus for more than 10 referrals
+            } */
+            if ($firstWeekShiftsCount >= 7) {
+                $firstWeekEarnings += 500; // Bonus for more than 7 shifts in the first week
             }
-            if ($firstWeekShiftsCount >= 10) {
-                $firstWeekEarnings += 1000; // Bonus for more than 10 shifts in the first week
-            }
-            if($secondWeekShiftsCount >= 10) {
-                $secondWeekEarnings += 1000; // Bonus for more than 10 shifts in the second week
+            if($secondWeekShiftsCount >= 7) {
+                $secondWeekEarnings += 500; // Bonus for more than 7 shifts in the second week
             }
 
             $totalEarnings = $reg_earnings + $firstWeekEarnings + $secondWeekEarnings;
@@ -173,7 +173,7 @@ class ReferrerAPIController extends Controller
                 // Get all referred businesses for this user
                 $referredBusinesses = Business::where('referral_business_code', $user->business_code)->get();
 
-                $registrationEarnings = count($referredBusinesses) * 500;
+                $registrationEarnings = count($referredBusinesses) * 1000;
                 $firstWeekEarnings = 0;
                 $secondWeekEarnings = 0;
 
@@ -186,16 +186,16 @@ class ReferrerAPIController extends Controller
                     $firstWeekShifts = Shift::where('business_code', $business->code)
                         ->whereBetween('created_at', [$registrationDate, $firstWeekEnd])
                         ->count();
-                    if ($firstWeekShifts >= 10) {
-                        $firstWeekEarnings += 1000;
+                    if ($firstWeekShifts >= 7) {
+                        $firstWeekEarnings += 500;
                     }
 
                     // Second week shifts
                     $secondWeekShifts = Shift::where('business_code', $business->code)
                         ->whereBetween('created_at', [$firstWeekEnd, $secondWeekEnd])
                         ->count();
-                    if ($secondWeekShifts >= 10) {
-                        $secondWeekEarnings += 1000;
+                    if ($secondWeekShifts >= 7) {
+                        $secondWeekEarnings += 500;
                     }
                 }
 
@@ -223,7 +223,7 @@ class ReferrerAPIController extends Controller
                         ->whereRaw("DATE_FORMAT(created_at, '%Y-%m') = ?", [$per])
                         ->get();
 
-                    $registrationEarnings = count($referredBusinesses) * 500;
+                    $registrationEarnings = count($referredBusinesses) * 1000;
 
                     // First week bonuses
                     $firstWeekEarnings = 0;
@@ -239,8 +239,8 @@ class ReferrerAPIController extends Controller
                             ->whereBetween('created_at', [$registrationDate, $firstWeekEnd])
                             ->count();
 
-                        if ($firstWeekShifts >= 10) {
-                            $firstWeekEarnings += 1000;
+                        if ($firstWeekShifts >= 7) {
+                            $firstWeekEarnings += 500;
                         }
 
                         // Second week shifts
@@ -248,8 +248,8 @@ class ReferrerAPIController extends Controller
                             ->whereBetween('created_at', [$firstWeekEnd, $secondWeekEnd])
                             ->count();
 
-                        if ($secondWeekShifts >= 10) {
-                            $secondWeekEarnings += 1000;
+                        if ($secondWeekShifts >= 7) {
+                            $secondWeekEarnings += 500;
                         }
                     }
 
