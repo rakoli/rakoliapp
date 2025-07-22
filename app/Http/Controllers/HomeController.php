@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Business;
+use App\Models\Shift;
 use App\Models\SystemIncome;
 use App\Models\Transaction;
+use App\Models\User;
 use App\Utils\DynamicResponse;
 use App\Utils\Enums\UserTypeEnum;
 use App\Utils\StatisticsService;
@@ -199,7 +201,71 @@ class HomeController extends Controller
 
         //Sales DASHBOARD
         if ($user->type == UserTypeEnum::SALES->value) {
-            return view('dashboard.sales');
+            // Calculate sales metrics
+            $stats = [];
+
+            // Total referred businesses
+            $stats['total_referred_businesses'] = Business::where('referral_business_code', $user->business_code)->count();
+
+            // Registration earnings (1000 per referral)
+            $stats['registration_earnings'] = $stats['total_referred_businesses'] * 1000;
+
+            // Usage earnings based on shift activities in first 2 weeks
+            $usageEarnings = 0;
+            $referredBusinesses = Business::where('referral_business_code', $user->business_code)->get();
+
+            foreach ($referredBusinesses as $business) {
+                $registrationDate = $business->created_at;
+                $firstWeekEnd = $registrationDate->copy()->addDays(7);
+                $secondWeekStart = $firstWeekEnd->copy();
+                $secondWeekEnd = $secondWeekStart->copy()->addDays(7);
+
+                // First week shifts (day 0-7 since registration)
+                $firstWeekShifts = Shift::where('business_code', $business->code)
+                    ->whereBetween('created_at', [$registrationDate, $firstWeekEnd])
+                    ->count();
+
+                // Second week shifts (day 8-14 since registration)
+                $secondWeekShifts = Shift::where('business_code', $business->code)
+                    ->whereBetween('created_at', [$secondWeekStart, $secondWeekEnd])
+                    ->count();
+
+                // Earnings: 500 for 7+ shifts in first week, 500 for 7+ shifts in second week
+                if ($firstWeekShifts >= 7) {
+                    $usageEarnings += 500;
+                }
+                if ($secondWeekShifts >= 7) {
+                    $usageEarnings += 500;
+                }
+            }
+
+            $stats['usage_earnings'] = $usageEarnings;
+            $stats['total_earnings'] = $stats['registration_earnings'] + $stats['usage_earnings'];
+
+            // Active businesses (those with recent activity in last 30 days)
+            $thirtyDaysAgo = Carbon::now()->subDays(30);
+            $stats['active_referrals'] = 0;
+            foreach ($referredBusinesses as $business) {
+                $recentShifts = Shift::where('business_code', $business->code)
+                    ->where('created_at', '>=', $thirtyDaysAgo)
+                    ->count();
+                if ($recentShifts > 0) {
+                    $stats['active_referrals']++;
+                }
+            }
+
+            // This month's referrals
+            $currentMonth = Carbon::now()->format('Y-m');
+            $stats['monthly_referrals'] = Business::where('referral_business_code', $user->business_code)
+                ->whereRaw("DATE_FORMAT(created_at, '%Y-%m') = ?", [$currentMonth])
+                ->count();
+
+            // Performance percentage (active vs total)
+            $stats['performance_percentage'] = $stats['total_referred_businesses'] > 0
+                ? round(($stats['active_referrals'] / $stats['total_referred_businesses']) * 100, 1)
+                : 0;
+
+            return view('dashboard.sales', compact('stats'));
         }
 
         return 'INVALID DASHBOARD REQUEST';
