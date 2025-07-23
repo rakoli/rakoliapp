@@ -99,7 +99,7 @@
 
                 <!--begin::Details item-->
                 <div class="d-flex flex-row mt-5 border-bottom-2 gap-14 justify-content-lg-between">
-                    <div class="fw-bold border-primary">Status</div>
+                    <div class="fw-bold border-primary">{{__('general.LBL_STATUS')}}</div>
                     <div class="text-gray-600">
                         <span class="{{ $shift->status->color() }}">{{ $shift->status->label() }}</span>
                     </div>
@@ -107,20 +107,20 @@
                 <!--begin::Details item-->
 
                 <!--begin::Details item-->
-                <div class="fw-bold mt-5 d-flex between gap-14 justify-content-lg-between">Date :
+                <div class="fw-bold mt-5 d-flex between gap-14 justify-content-lg-between">{{__('general.LBL_DATE')}} :
                     <span> {{ $shift->created_at->format('Y-m-d')  }} </span>
 
                 </div>
 
 
-                <div class="fw-bold mt-5 d-flex between gap-14 justify-content-lg-between">Shift's No:
+                <div class="fw-bold mt-5 d-flex between gap-14 justify-content-lg-between">{{__('general.LBL_SHIFT_NO')}} :
                     <span>   {{ $shift->no  }}  </span></div>
 
 
                 <div class="fs-6">
                     <!--begin::Details item-->
                     <div class="d-flex flex-row gap-14 mt-5 justify-content-lg-between">
-                        <div class="fw-bold">User:</div>
+                        <div class="fw-bold">{{__('general.LBL_USER')}}:</div>
                         <div class="text-gray-600">{{ $shift->user->full_name }}</div>
                     </div>
                 </div>
@@ -153,13 +153,13 @@
             <div class="py-5 fs-6">
 
                 <div class="d-flex flex-row mt-5 border-bottom-2 gap-14 justify-content-lg-between">
-                    <div class="fw-bold border-primary">Cash In Hand</div>
+                    <div class="fw-bold border-primary">{{__('general.LBL_CASH_IN_HAND')}}</div>
                     <div class="text-gray-600">
                         <span>{{  money(amount: $cashAtHand , convert: true, currency: currencyCode()) }}</span>
                     </div>
                 </div>
                 <div class="d-flex flex-row mt-5 border-bottom-2 gap-14 justify-content-lg-between">
-                    <div class="fw-bold border-primary">Loan Balance</div>
+                    <div class="fw-bold border-primary">{{__('general.LBL_LOAN_BALANCE')}}</div>
                     <div class="text-gray-600">
                         <span>{{  money(amount: $loanBalances , convert: true, currency: currencyCode()) }}</span>
                     </div>
