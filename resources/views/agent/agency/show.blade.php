@@ -412,11 +412,11 @@
                                     <thead>
                                         <tr>
                                             <th>User</th>
-                                            <th>Old Balance {{ strtoupper(session('currency')) }}</th>
-                                            <th>Amount Transacted {{ strtoupper(session('currency')) }}</th>
-                                            <th>New Balance</th>
-                                            <th>Network</th>
-                                            <th>Type</th>
+                                            <th>{{ __('general.LBL_OLD_BALANCE') }} {{ strtoupper(session('currency')) }}</th>
+                                            <th>{{ __('general.LBL_AMOUNT_TRANSACTED') }} {{ strtoupper(session('currency')) }}</th>
+                                            <th>{{ __('general.LBL_NEW_BALANCE') }}</th>
+                                            <th>{{ __('general.LBL_NETWORK') }}</th>
+                                            <th>{{ __('general.LBL_TYPE') }}</th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -451,14 +451,14 @@
                                        id="shift-loan-table">
                                     <thead>
                                     <tr>
-                                        <th>User</th>
-                                        <th>Agency</th>
-                                        <th>Status</th>
-                                        <th>Type</th>
-                                        <th>Amount</th>
-                                        <th>Paid</th>
-                                        <th>Balance</th>
-                                        <th>Actions</th>
+                                        <th>{{ __('general.LBL_USER') }}</th>
+                                        <th>{{ __('general.LBL_AGENCY') }}</th>
+                                        <th>{{ __('general.LBL_STATUS') }}</th>
+                                        <th>{{ __('general.LBL_TYPE') }}</th>
+                                        <th>{{ __('general.LBL_AMOUNT') }}</th>
+                                        <th>{{ __('general.LBL_PAID') }}</th>
+                                        <th>{{ __('general.LBL_BALANCE') }}</th>
+                                        <th>{{ __('general.LBL_ACTIONS') }}</th>
                                     </tr>
                                     </thead>
                                     <tbody>

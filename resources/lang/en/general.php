@@ -201,4 +201,24 @@ return [
     "LBL_DATE_TO" => "Date To",
     "LBL_FILTERS" => "Filters",
 
-];
+    "LBL_USER" => "User",
+    "LBL_AGENCY" => "Agency",
+    "LBL_STATUS" => "Status",
+    "LBL_TYPE" => "Type",
+    "LBL_AMOUNT" => "Amount",
+    "LBL_PAID" => "Paid",
+    "LBL_BALANCE" => "Balance",
+    "LBL_ACTIONS" => "Actions",
+    "LBL_AMOUNT_TRANSACTED" => "Amount Transacted",
+
+    "LBL_BALANCE_SUMMARY" => "Total Balance Summary",
+
+    "LBL_DEPOSIT_TILL_TRANSACTION" => "Deposit Till Transaction",
+    "LBL_WITHDRAW_TILL_TRANSACTION" => "Withdraw Till Transaction",
+
+    "LBL_ADD_CASH_OUT" => "Add Cash Out",
+    "LBL_ADD_LOAN" => "Add Loan",
+    "LBL_TRANSFER_BALANCE" => "Transfer Balance",
+    "LBL_ADD_EXPENSE" => "Add Expense",
+    "LBL_CLOSE_SHIFT" => "Close Shift",
+    ];

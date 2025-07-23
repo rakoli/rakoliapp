@@ -15,11 +15,11 @@
 
         <div class="card-body pt-5 pb-5">
 
-            <x-back :route="route('agency.shift')" class="py-md-4"/>
+            <x-back :route="route('agency.shift')" class="py-md-4" label="{{__('general.LBL_BACK_BTN')}}"/>
 
             <x-modal_with_button
                 targetId="deposit-till-transaction"
-                label="Deposit Till Transaction"
+                label="{{__('general.LBL_DEPOSIT_TILL_TRANSACTION')}}"
                 modalTitle="Fill the form below record a deposit till transaction"
                 btnClass="btn btn-facebook m-1"
             >
@@ -28,7 +28,7 @@
 
             <x-modal_with_button
                 targetId="withdraw-till-transaction"
-                label="Withdraw Till Transaction"
+                label="{{__('general.LBL_WITHDRAW_TILL_TRANSACTION')}}"
                 modalTitle="Fill the form below record a withdraw till transaction"
                 btnClass="btn btn-instagram m-1"
             >
@@ -37,7 +37,7 @@
 
             <x-modal_with_button
                 targetId="add-cashout"
-                label="Add Cash Out"
+                label="{{__('general.LBL_ADD_CASH_OUT')}}"
                 modalTitle="Fill the form below record a Cash Out"
                 btnClass="btn btn-youtube m-1"
             >
@@ -47,7 +47,7 @@
             <x-modal_with_button
                 btnClass="btn btn-primary m-1"
                 targetId="add-income"
-                label="Add Cash In"
+                label="{{__('general.LBL_ADD_CASH_IN')}}"
                 modalTitle="Fill the form below record a Cash in"
             >
             @include('agent.agency.transaction.add-income')
@@ -56,7 +56,7 @@
             <x-modal_with_button
                 btnClass="btn btn-instagram m-1"
                 targetId="add-loan"
-                label="Add Loan"
+                label="{{__('general.LBL_ADD_LOAN')}}"
                 modalTitle="Fill the form below record a Loan"
             >
             @include('agent.agency.loans.add-loan')
@@ -65,7 +65,7 @@
             <x-modal_with_button
                 btnClass="btn btn-facebook m-1"
                 targetId="transfer-balance"
-                label="Transfer Balance"
+                label="{{__('general.LBL_TRANSFER_BALANCE')}}"
                 modalTitle="Fill the form below to transfer till balance"
             >
             @include('agent.agency.transaction.transfer-balance')
@@ -73,14 +73,14 @@
 
             <x-modal_with_button
                 targetId="add-expenses"
-                label="Add Expense"
+                label="{{__('general.LBL_ADD_EXPENSE')}}"
                 modalTitle="Fill the form below record a Expense"
                 btnClass="btn btn-youtube m-1"
             >
             @include('agent.agency.transaction.add-expense')
             </x-modal_with_button>
 
-            <x-a-button class="btn btn-outline-danger btn-google text-white m-1" route="{{ route('agency.shift.close', $shift) }}">Close Shift</x-a-button>
+            <x-a-button class="btn btn-outline-danger btn-google text-white m-1" route="{{ route('agency.shift.close', $shift) }}">{{__('general.LBL_CLOSE_SHIFT')}}</x-a-button>
 
         </div>
     @endif
@@ -141,7 +141,7 @@
             <div class="fw-bold rotate collapsible" data-bs-toggle="collapse"
                  href="#networks_details" role="button" aria-expanded="false"
                  aria-controls="networks_details">
-                {{__('Total Balance Summary')}}
+                {{__('general.LBL_BALANCE_SUMMARY')}}
             </div>
         </div>
         <!--end::Details toggle-->

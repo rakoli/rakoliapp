@@ -206,4 +206,27 @@ return [
     "LBL_DATE_FROM" => "Tarehe Kutoka",
     "LBL_DATE_TO" => "Tarehe Mpaka",
     "LBL_FILTERS" => "Vichujio",
+
+
+
+    "LBL_USER" => "Mtumiaji",
+    "LBL_AGENCY" => "Wakala",
+    "LBL_STATUS" => "Hali",
+    "LBL_TYPE" => "Aina",
+    "LBL_AMOUNT" => "Kiasi",
+    "LBL_PAID" => "Imelipwa",
+    "LBL_BALANCE" => "Balansi",
+    "LBL_ACTIONS" => "Vitendo",
+    "LBL_AMOUNT_TRANSACTED" => "Kiasi",
+
+    "LBL_BALANCE_SUMMARY" => "Muhtasari wa Balansi",
+    "LBL_DEPOSIT_TILL_TRANSACTION" => "Kuweka Miamala ya Till",
+    "LBL_WITHDRAW_TILL_TRANSACTION" => "Kutoa Miamala ya Till",
+
+    "LBL_ADD_CASH_OUT" => "Toa Pesa",
+    "LBL_ADD_CASH_IN" => "Ongeza Pesa",
+    "LBL_ADD_LOAN" => "Weka Mkopo",
+    "LBL_TRANSFER_BALANCE" => "Hamisha Balansi",
+    "LBL_ADD_EXPENSE" => "Weka Matumizi",
+    "LBL_CLOSE_SHIFT" => "Funga Zamu",
 ];
