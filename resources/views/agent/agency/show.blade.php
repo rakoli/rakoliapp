@@ -42,7 +42,7 @@
                                           data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">{{ number_format($cashAtHand , 2) }}</span>
                                     <!--end::Amount-->
                                     <!--begin::Subtitle-->
-                                    <span class="text-white pt-1 fw-semibold fs-6">{{ __('general.LBL_CASH_AT_HAND') }} in {{currencyCode()}}</span>
+                                    <span class="text-white pt-1 fw-semibold fs-6">{{ __('general.LBL_CASH_AT_HAND') }} {{ __('general.LBL_IN') }} {{currencyCode()}}</span>
                                     <!--end::Subtitle-->
                                 </div>
                                 <!--end::Title-->
@@ -67,7 +67,7 @@
                                           data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">{{ number_format($tillBalances , 2) }}</span>
                                     <!--end::Amount-->
                                     <!--begin::Subtitle-->
-                                    <span class="text-white pt-1 fw-semibold fs-6">{{ __('Total Till Balances') }} in {{currencyCode()}}</span>
+                                    <span class="text-white pt-1 fw-semibold fs-6">{{ __('general.LBL_TOTAL_TILL_BALANCE') }} {{ __('general.LBL_IN') }} {{currencyCode()}}</span>
                                     <!--end::Subtitle-->
                                 </div>
                                 <!--end::Title-->
@@ -92,7 +92,7 @@
                                           data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">{{number_format($income , 2)}}</span>
                                     <!--end::Amount-->
                                     <!--begin::Subtitle-->
-                                    <span class="text-white pt-1 fw-semibold fs-6">{{ __('Credit (cash in)') }} in {{currencyCode()}}</span>
+                                    <span class="text-white pt-1 fw-semibold fs-6">{{ __('general.LBL_CREDIT_CASH_IN') }} {{ __('general.LBL_IN') }} {{currencyCode()}}</span>
                                     <!--end::Subtitle-->
                                 </div>
                                 <!--end::Title-->
@@ -117,7 +117,7 @@
                                           data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">-{{number_format($expenses , 2)}}</span>
                                     <!--end::Amount-->
                                     <!--begin::Subtitle-->
-                                    <span class="text-white pt-1 fw-semibold fs-6">{{ __('Debit (cash out)') }} in {{currencyCode()}}</span>
+                                    <span class="text-white pt-1 fw-semibold fs-6">{{ __('general.LBL_DEBIT_CASH_OUT') }} {{ __('general.LBL_IN') }} {{currencyCode()}}</span>
                                     <!--end::Subtitle-->
                                 </div>
                                 <!--end::Title-->
@@ -142,7 +142,7 @@
                                           data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">{{number_format($capital , 2)}}</span>
                                     <!--end::Amount-->
                                     <!--begin::Subtitle-->
-                                    <span class="text-white pt-1 fw-semibold fs-6">{{ __('Total Capital') }} in {{currencyCode()}}</span>
+                                    <span class="text-white pt-1 fw-semibold fs-6">{{ __('general.LBL_TOTAL_CAPITAL') }} {{ __('general.LBL_IN') }} {{currencyCode()}}</span>
                                     <!--end::Subtitle-->
                                 </div>
                                 <!--end::Title-->
@@ -192,7 +192,7 @@
                                           data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">{{number_format($loanIn , 2)}}</span>
                                     <!--end::Amount-->
                                     <!--begin::Subtitle-->
-                                    <span class="text-white pt-1 fw-semibold fs-6">{{ __('Loan Money In') }} in {{currencyCode()}}</span>
+                                    <span class="text-white pt-1 fw-semibold fs-6">{{ __('general.LBL_LOAN_MONEY') }} {{ __('general.LBL_IN') }} {{currencyCode()}}</span>
                                     <!--end::Subtitle-->
                                 </div>
                                 <!--end::Title-->
@@ -217,7 +217,7 @@
                                           data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">{{number_format($loanOut , 2)}}</span>
                                     <!--end::Amount-->
                                     <!--begin::Subtitle-->
-                                    <span class="text-white pt-1 fw-semibold fs-6">{{ __('Loan Money Out') }} in {{currencyCode()}}</span>
+                                    <span class="text-white pt-1 fw-semibold fs-6">{{ __('general.LBL_LOAN_MONEY_OUT') }} {{ __('general.LBL_IN') }} {{currencyCode()}}</span>
                                     <!--end::Subtitle-->
                                 </div>
                                 <!--end::Title-->
@@ -242,7 +242,7 @@
                                           data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">{{number_format(abs($loanBalances) , 2)}}</span>
                                     <!--end::Amount-->
                                     <!--begin::Subtitle-->
-                                    <span class="text-white pt-1 fw-semibold fs-6">{{ __('Loan Balance') }} in {{currencyCode()}}</span>
+                                    <span class="text-white pt-1 fw-semibold fs-6">{{ __('general.LBL_LOAN_BALANCE') }} {{ __('general.LBL_IN') }} {{currencyCode()}}</span>
                                     <!--end::Subtitle-->
                                 </div>
                                 <!--end::Title-->
@@ -267,7 +267,7 @@
                                           data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">{{number_format($expenses , 2)}}</span>
                                     <!--end::Amount-->
                                     <!--begin::Subtitle-->
-                                    <span class="text-white pt-1 fw-semibold fs-6">{{ __('Expense (cash out)') }} in {{currencyCode()}}</span>
+                                    <span class="text-white pt-1 fw-semibold fs-6">{{ __('general.LBL_EXPENSE_CASH_OUT') }} {{ __('general.LBL_IN') }} {{currencyCode()}}</span>
                                     <!--end::Subtitle-->
                                 </div>
                                 <!--end::Title-->
@@ -292,7 +292,7 @@
                                           data-kt-countup-prefix="{{ currencyCode() }}" data-kt-initialized="1">{{number_format($differ , 2)}}</span>
                                     <!--end::Amount-->
                                     <!--begin::Subtitle-->
-                                    <span class="text-white pt-1 fw-semibold fs-6">{{ __('Differ') }} in {{currencyCode()}}</span>
+                                    <span class="text-white pt-1 fw-semibold fs-6">{{ __('general.LBL_DIFFER') }} {{ __('general.LBL_IN') }} {{currencyCode()}}</span>
                                     <!--end::Subtitle-->
                                 </div>
                                 <!--end::Title-->
@@ -330,7 +330,7 @@
                     <div class="card-header border-0">
                         <!--begin::Card title-->
                         <div class="card-title">
-                            <h2>Till Transaction History</h2>
+                            <h2>{{ __('general.LBL_TILL_TRANSACTION_HISTORY') }}</h2>
                         </div>
                         <!--end::Card title-->
                     </div>
@@ -353,6 +353,7 @@
 
 
                 <!--begin::Card-->
+                {{--
                 <div class="card pt-4 mb-6 mb-xl-9">
                     <!--begin::Card header-->
                     <div class="card-header border-0">
@@ -387,6 +388,7 @@
                     </div>
                     <!--end::Card body-->
                 </div>
+                --}}
                 <!--end::Card-->
 
                 <!--begin::Card-->
@@ -395,7 +397,7 @@
                     <div class="card-header border-0">
                         <!--begin::Card title-->
                         <div class="card-title">
-                            <h2>Cash Transaction History</h2>
+                            <h2>{{ __('general.LBL_CASH_TRANSACTIONS_HISTORY') }}</h2>
                         </div>
                         <!--end::Card title-->
                     </div>
@@ -432,7 +434,7 @@
                     <div class="card-header border-0">
                         <!--begin::Card title-->
                         <div class="card-title">
-                            <h2>Shift Loans</h2>
+                            <h2>{{ __('general.LBL_SHIFT_LOANS') }}</h2>
                         </div>
                         <!--end::Card title-->
                     </div>
