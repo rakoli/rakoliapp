@@ -106,7 +106,7 @@ return [
     "LBL_MONEY_OUT" => "Pesa nje",
     "LBL_LOAN_BALANCE" => "Salio la Mkopo",
     "LBL_SEE_MORE" => "Tazama Zaidi",
-    "LBL_VIEW_OPEN_SHIFT" => "Tazama Fungua Shift",
+    "LBL_VIEW_OPEN_SHIFT" => "Tazama Zamu Iliofunguliwa",
     "LBL_EXCHANGE_FLOAT" => "Kuelea kwa kubadilishana",
     "LBL_VIEW_OPPORTUNITIES" => "Tazama Fursa",
     "LBL_WELCOME_TO_LEADING" => "Karibu kwa wanaoongoza",
