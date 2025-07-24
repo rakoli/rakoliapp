@@ -14,13 +14,13 @@
         <input type="hidden" name="type" id="transaction_type" value="IN">
         <div class="modal-body">
             <div class="current-balance">
-                <span class="balance-label">Balance</span>
+                <span class="balance-label">{{ __('general.LBL_BALANCE') }}</span>
                 <span class="balance-amount" data-till="{{ number_format($tillBalances , 2) }}">{{ currencyCode() }} {{ number_format($tillBalances , 2) }}</span>
             </div>
             <div class="row fv-row py-2">
 
                 <div class="col-6 py-3" id="allNetwork">
-                    <x-label class="" label="Select Till" for="till_code"/>
+                    <x-label class="" label="{{ __('general.LBL_SELECT_TILL') }}" for="till_code"/>
 
                     <x-select2
                         name="network_code"
@@ -35,8 +35,8 @@
                                 >{{ str($name)->title()->value()  }} - {{ number_format($network['balance'],2) }}</option>
                         @endforeach
                     </x-select2>
-                    <x-helpertext>{{ __("Till you want to transact from") }}</x-helpertext>
-                    <x-helpertext>{{ __('Deposit') }}: {{ __('Increases Cash Balance and Reduces Till Balance') }}</x-helpertext>
+                    <x-helpertext>{{ __("general.LBL_TILL_YOU_WANT_TO_TRANSACT_FROM") }}</x-helpertext>
+                    <x-helpertext>{{ __('general.LBL_DEPOSIT') }}: {{ __('general.LBL_CASH_IN_DESCRIPTION') }}</x-helpertext>
                     @error('network_code')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -54,7 +54,7 @@
                         placeholder="{{ __('amount') }}"
                         id="amount"/>
 
-                    <x-helpertext>{{ __("Amount you want to Transact") }}</x-helpertext>
+                    <x-helpertext>{{ __('general.LBL_CASH_AMOUNT') }}</x-helpertext>
 
                     @error('amount')
                     <div class="help-block text-danger">
@@ -121,7 +121,7 @@
                     <x-label label="Description" class="" for="description"/>
                     <textarea name="description" class="form-control form-control form-control-solid" rows="3"
                               data-kt-autosize="false"></textarea>
-                    <x-helpertext>{{ __("Anything you want to note about this Transaction, Max length: 255 characters") }}</x-helpertext>
+                    <x-helpertext>{{ __("general.LBL_NOTE_ABOUT_TRANSACTION") }}</x-helpertext>
                     @error('description')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -135,7 +135,7 @@
                     <x-label label="notes" required="" class="" for="notes"/>
                     <textarea name="notes" class="form-control form-control form-control-solid" rows="3"
                               data-kt-autosize="false"></textarea>
-                    <x-helpertext>{{ __("Any Additional note, Max length: 255 characters") }}</x-helpertext>
+                    <x-helpertext>{{ __("general.LBL_ADDITIONAL_NOTES") }}</x-helpertext>
                     @error('notes')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -178,7 +178,7 @@
                     var crypto = jQuery("#deposit-transaction-form #crypto").val();
                     var exchange_rate = jQuery("#deposit-transaction-form #exchange_rate").val();
                     var balance_amount = jQuery("#deposit-transaction-form .balance-amount").data('till');
-                    var balance_amount = Number(balance_amount.replace(/[^0-9.-]+/g,""));           
+                    var balance_amount = Number(balance_amount.replace(/[^0-9.-]+/g,""));
 
                     if(crypto > 0){
                         jQuery("#deposit-transaction-form #amount").val(crypto * exchange_rate)
@@ -255,7 +255,7 @@
                     templateSelection: formatOption,
                     minimumResultsForSearch: Infinity
                 });
-             });    
+             });
 
 
 

@@ -10,11 +10,11 @@
             <div class="row fv-row py-2">
 
                 <div class="col-6 py-3" id="allNetwork">
-                    <x-label class="" label="Select Till" for="till_code"/>
+                    <x-label class="" label="{{ __('general.LBL_SELECT_TILL') }}" for="till_code"/>
 
                     <x-select2
                         name="network_code"
-                        placeholder="{{ __('Select a Till') }}"
+                        placeholder="{{ __('general.LBL_SELECT_TILL') }}"
                         id="withdraw_network_code"
                     >
                         <option value="">  </option>
@@ -25,8 +25,8 @@
                                 >{{ str($name)->title()->value()  }} - {{ number_format($network['balance'],2) }}</option>
                         @endforeach
                     </x-select2>
-                    <x-helpertext>{{ __("Till you want to transact from") }}</x-helpertext>
-                    <x-helpertext>{{ __('Withdraw') }}: {{ __('Increases Till Balance and Reduces Cash Balance') }}</x-helpertext>
+                    <x-helpertext>{{ __("general.LBL_TILL_YOU_WANT_TO_TRANSACT_FROM") }}</x-helpertext>
+                    <x-helpertext>{{ __('Withdraw') }}: {{ __('general.LBL_WITHDRAW_DESCRIPTION') }}</x-helpertext>
                     @error('network_code')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -44,7 +44,7 @@
                         placeholder="{{ __('amount') }}"
                         id="amount"/>
 
-                    <x-helpertext>{{ __("Amount you want to Transact") }}</x-helpertext>
+                    <x-helpertext>{{ __("general.LBL_CASH_AMOUNT") }}</x-helpertext>
 
                     @error('amount')
                     <div class="help-block text-danger">
@@ -111,7 +111,7 @@
                     <x-label label="Description" class="" for="description"/>
                     <textarea name="description" class="form-control form-control form-control-solid" rows="3"
                               data-kt-autosize="false"></textarea>
-                    <x-helpertext>{{ __("Anything you want to note about this Transaction, Max length: 255 characters") }}</x-helpertext>
+                    <x-helpertext>{{ __("general.LBL_NOTE_ABOUT_TRANSACTION") }}</x-helpertext>
                     @error('description')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -125,7 +125,7 @@
                     <x-label label="notes" required="" class="" for="notes"/>
                     <textarea name="notes" class="form-control form-control form-control-solid" rows="3"
                               data-kt-autosize="false"></textarea>
-                    <x-helpertext>{{ __("Any Additional note, Max length: 255 characters") }}</x-helpertext>
+                    <x-helpertext>{{ __("general.LBL_ADDITIONAL_NOTES") }}</x-helpertext>
                     @error('notes')
                     <div class="help-block text-danger">
                         {{ $message }}
@@ -239,7 +239,7 @@
 
                     const form = document.getElementById('withdraw-transaction-form');
                     const submitTransactionButton = document.getElementById('withdraw-transaction-button');
-                    lakoriValidation(validations, form, submitTransactionButton, 'post', '{{  route('agency.transactions.add.transaction', $shift) }}',"",true);                    
+                    lakoriValidation(validations, form, submitTransactionButton, 'post', '{{  route('agency.transactions.add.transaction', $shift) }}',"",true);
                 });
 
                 $('#withdraw_network_code').select2({

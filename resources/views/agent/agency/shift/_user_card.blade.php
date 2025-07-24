@@ -20,7 +20,7 @@
             <x-modal_with_button
                 targetId="deposit-till-transaction"
                 label="{{__('general.LBL_DEPOSIT_TILL_TRANSACTION')}}"
-                modalTitle="Fill the form below record a deposit till transaction"
+                modalTitle="{{__('general.LBL_FILL_THE_FORM')}}"
                 btnClass="btn btn-facebook m-1"
             >
             @include('agent.agency.transaction.deposit-till-transaction')

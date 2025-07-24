@@ -232,4 +232,21 @@ return [
     "LBL_TRANSFER_BALANCE" => "Hamisha Balansi",
     "LBL_ADD_EXPENSE" => "Weka Matumizi",
     "LBL_CLOSE_SHIFT" => "Funga Zamu",
+
+    "LBL_CASH_IN_DESCRIPTION" => "Inaongeza Balansi ya Cash na Kupunguza Balansi ya Till",
+
+    "LBL_CASH_AMOUNT" => "Kiasi unachotaka Kufanya Muamala",
+
+    "LBL_NOTE_ABOUT_TRANSACTION" => "Kumbuka kuhusu muamala huu, urefu wa herufi ni herufi 255",
+
+    "LBL_FILL_THE_FORM" => "Tafadhali jaza fomu hapa chini ili kurekodi muamala wa kuweka pesa",
+
+    "LBL_ADDITIONAL_NOTES" => "Notisi ya ziada, Urefu wa herufi ni herufi 255",
+
+    "LBL_SELECT_TILL" => "Chagua Till",
+
+    "LBL_TILL_YOU_WANT_TO_TRANSACT_FROM" => "Till ambayo unataka kufanyia muamala",
+
+    "LBL_WITHDRAW_DESCRIPTION" => "Inaongeza Balansi ya Till na Kupunguza Balansi ya Cash",
+
 ];

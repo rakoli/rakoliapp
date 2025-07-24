@@ -224,4 +224,19 @@ return [
     "LBL_TRANSFER_BALANCE" => "Transfer Balance",
     "LBL_ADD_EXPENSE" => "Add Expense",
     "LBL_CLOSE_SHIFT" => "Close Shift",
+    "LBL_ADD_CASH_IN" => "Add Cash In",
+
+    "LBL_CASH_IN_DESCRIPTION" => "Increases Cash Balance and Reduces Till Balance",
+
+    "LBL_CASH_AMOUNT" => "Amount you want to Transact",
+
+    "LBL_NOTE_ABOUT_TRANSACTION" => "Anything you want to note about this Transaction, Max length: 255 characters",
+
+    "LBL_FILL_THE_FORM" => "Fill the form below record a deposit till transaction",
+    "LBL_ADDITIONAL_NOTES" => "Any Additional note, Max length: 255 characters",
+    "LBL_SELECT_TILL" => "Select Till",
+    "LBL_TILL_YOU_WANT_TO_TRANSACT_FROM" => "Till you want to transact from",
+
+    "LBL_WITHDRAW_DESCRIPTION" => "Increases Till Balance and Reduces Cash Balance",
+
     ];
