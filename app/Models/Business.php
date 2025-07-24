@@ -81,7 +81,7 @@ class Business extends Model
                 'name'=>'Cashier',
                 'description'=>'Cashier',
             ]);
-            Network::addBusinessDefaultTills($businessInstance, $locationInstance);
+            //Network::addBusinessDefaultTills($businessInstance, $locationInstance);
             if($user){
                 LocationUser::create([
                     'business_code'=>$businessInstance->code,
