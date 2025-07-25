@@ -35,10 +35,10 @@ class AddTransactionController extends Controller
             throw_if(! checkBalance($shift, $request), new \Exception('Insuffcient balance'));
 
             \App\Actions\Agent\Shift\AddTransaction::run(shift: $shift, data: $validated);
-            
+
             return response()
                 ->json([
-                    'message' => 'Transaction Added successfully',
+                    'message' => __('general.LBL_TRANSACTION_ADDED_SUCCESSFULLY'),
                 ]);
 
         } catch (\Exception|\Throwable $e) {

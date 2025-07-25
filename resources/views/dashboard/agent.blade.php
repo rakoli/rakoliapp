@@ -37,7 +37,7 @@
                         <!--begin::Item-->
                         <div class="d-flex flex-stack">
                             <!--begin::Section-->
-                            <div class="text-gray-700 fw-semibold fs-6 me-2">{{__('Debit (cash in)')}}</div>
+                            <div class="text-gray-700 fw-semibold fs-6 me-2">{{__('general.LBL_DEBT_CASH_IN')}}</div>
                             <!--end::Section-->
                             <!--begin::Statistics-->
                             <div class="d-flex align-items-senter">
@@ -53,7 +53,7 @@
                         <!--begin::Item-->
                         <div class="d-flex flex-stack">
                             <!--begin::Section-->
-                            <div class="text-gray-700 fw-semibold fs-6 me-2">{{__('Credit (cash out)')}}</div>
+                            <div class="text-gray-700 fw-semibold fs-6 me-2">{{__('general.LBL_DEBT_CASH_OUT')}}</div>
                             <!--end::Section-->
                             <!--begin::Statistics-->
                             <div class="d-flex align-items-senter">
@@ -114,7 +114,7 @@
                     <!--end::Card body-->
                 </div>
                 <!--end::Card widget 1-->
-                
+
                 <!--begin::Card widget 2-->
                 <div class="card card-flush h-md-50 mb-5 mb-xl-10">
                     <!--begin::Header-->
@@ -144,7 +144,7 @@
                     <!--end::Card body-->
                 </div>
                 <!--end::Card widget 2-->
-                
+
             </div>
             <!--end::Col-->
 
@@ -292,7 +292,7 @@
                                 </div>
                             </div>
                             <!--end::Label-->
-                            
+
                         </div>
                         <!--end::Labels-->
                     </div>

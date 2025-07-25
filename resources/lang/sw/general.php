@@ -136,7 +136,7 @@ return [
     "LBL_DATE" => "Tarehe",
     "LBL_RECEIVED" => "Imepokelewa Katika",
     "LBL_DEPOSITED" => "Imewekwa kwenye",
-    "LBL_TILL_NAME" => "Mpaka Jina",
+    "LBL_TILL_NAME" => "Jina la Till",
     "LBL_AGENT_NO" => "Wakala Na",
     "LBL_OLD_BALANCE" => "Mizani ya Zamani",
     "LBL_NEW_BALANCE" => "Salio Mpya",
@@ -282,6 +282,16 @@ return [
     "LBL_CLOSING_REMARKS" => "Maoni ya Kufunga Zamu",
     "LBL_YOU_ARE_CLOSING" => "You are closing the",
     "LBL_GIVEN" => "Kutolewa",
-    "LBL_LOAN_RECEIVED" => "Kupokelewa"
+    "LBL_LOAN_RECEIVED" => "Kupokelewa",
+    "CONFIRM_CLOSING_CASH_AT_HAND" => "Thibitisha kiasi cha fedha taslimu wakati wa kufunga zamu",
+    "LBL_RECORD_TRANSACTION" => "Rekodi Muamala",
+    "LBL_TRANSACTION_ADDED_SUCCESSFULLY" => "Muamala umerekodiwa kikamilifu",
+    "LBL_SHORT_DESCRIPTION" => "Maelezo Mafupi",
+    "LBL_SHIFT_CLOSED_SUCCESSFULLY" => "Zamu imefungwa kikamilifu",
+
+    "LBL_DEBT_CASH_IN" => "Debit (pesa inayoingia)",
+    "LBL_DEBT_CASH_OUT" => "Credit (pesa inayotoka)",
+
+
 
 ];

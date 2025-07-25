@@ -109,7 +109,7 @@ class TransferShiftController extends Controller
 
             return response()
                 ->json([
-                    'message' => 'Closed Shift successfully',
+                    'message' => __('general.LBL_SHIFT_CLOSED_SUCCESSFULLY'),
                 ], 200);
 
         } catch (ValidationException|\Throwable|\Exception $e) {

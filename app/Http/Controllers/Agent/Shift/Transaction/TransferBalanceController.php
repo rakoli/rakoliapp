@@ -37,7 +37,7 @@ class TransferBalanceController extends Controller
             
             return response()
                 ->json([
-                    'message' => 'Transaction Added successfully',
+                    'message' => __('general.LBL_TRANSACTION_ADDED_SUCCESSFULLY'),
                 ]);
 
         } catch (\Exception|\Throwable $e) {

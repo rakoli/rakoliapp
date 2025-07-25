@@ -157,7 +157,7 @@
                             <div class="row fv-row py-3" id="has_short">
                                 <div class="">
                                     <x-label
-                                        label="Short Description"
+                                        label="{{ __('general.LBL_SHORT_DESCRIPTION') }}"
                                         for="short_description"/>
 
                                     <textarea

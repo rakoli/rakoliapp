@@ -148,7 +148,7 @@
 
 
         <div class="modal-footer my-4 py-2">
-            <x-submit-button  id="deposit-transaction-button" label="Record Transaction"/>
+            <x-submit-button  id="deposit-transaction-button" label="{{ __('general.LBL_RECORD_TRANSACTION') }}"/>
 
         </div>
 

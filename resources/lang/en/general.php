@@ -271,5 +271,12 @@ return [
     "LBL_CLOSING_REMARKS" => "Closing Remarks",
     "LBL_YOU_ARE_CLOSING" => "You are closing the",
     "LBL_GIVEN" => "Given",
-    "LBL_LOAN_RECEIVED" => "Received"
+    "LBL_LOAN_RECEIVED" => "Received",
+
+    "LBL_RECORD_TRANSACTION" => "Record Transaction",
+    "LBL_TRANSACTION_ADDED_SUCCESSFULLY" => "Transaction Added successfully",
+    "LBL_SHORT_DESCRIPTION" => "Short Description",
+    "LBL_SHIFT_CLOSED_SUCCESSFULLY" => "Shift Closed successfully",
+    "LBL_DEBT_CASH_IN" => "Debit (cash in)",
+    "LBL_DEBT_CASH_OUT" => "Debit (cash out)",
     ];
