@@ -29,9 +29,9 @@
 
                         <div class="card-body">
                             <h4 id="starting-capital" class="py-sm-4 py-md-12 px-md-4 bg-light-success"
-                                data-starting-capital="{{ $startCapital }}">{{ __('Total Starting Capital') }}
+                                data-starting-capital="{{ $startCapital }}">{{ __('general.LBL_TOTAL_STARTING_CAPITAL') }}
                                 : {{ Number::currency($startCapital, currencyCode()) }}</h4>
-                            <h4 class="py-sm-4 py-md-13 px-md-4 bg-light-primary">{{ __('Total Ending Capital') }}
+                            <h4 class="py-sm-4 py-md-13 px-md-4 bg-light-primary">{{ __('general.LBL_TOTAL_ENDING_CAPITAL') }}
                                 : {{ Number::currency($endCapital , currencyCode()) }}</h4>
                             <div id="loans-balances" data-loans-balance="{{ $loanBalances }}"></div>
 
@@ -40,8 +40,8 @@
                                 <thead>
                                 <tr>
                                     <th class="fw-bolder">Till</th>
-                                    <th class="fw-bolder">{{ __('End Balance') }}</th>
-                                    <th class="fw-bolder">{{ __('Confirm Closing Balances') }}</th>
+                                    <th class="fw-bolder">{{ __('general.LBL_END_BALANCE') }}</th>
+                                    <th class="fw-bolder">{{ __('general.LBL_CONFIRM_CLOSING_BALANCE') }}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -75,7 +75,7 @@
                                                 placeholder="{{ $network['balance'] }}"
                                                 id="{{ $network['code'] }}
                                             "/>
-                                            <x-helpertext>{{ __("Confirm closing {$name} balance") }}</x-helpertext>
+                                            <x-helpertext>{{ __("general.LBL_CONFIRM_CLOSING") }} {{ __("{$name}") }} {{ __("general.LBL_BALANCE") }}</x-helpertext>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -93,7 +93,7 @@
                                             placeholder="expenses"
                                             id="expenses"
                                         />
-                                        <x-helpertext>{{ __("Confirm closing Cash Out Amount") }}</x-helpertext>
+                                        <x-helpertext>{{ __("general.LBL_CONFIRM_CLOSING_CASHOUT_BALANCE") }}</x-helpertext>
                                     </td>
                                 </tr>
 
@@ -110,7 +110,7 @@
                                             placeholder="Cash In"
                                             id="income"
                                         />
-                                        <x-helpertext>{{ __("Confirm closing Cash In Amount") }}</x-helpertext>
+                                        <x-helpertext>{{ __("general.LBL_CONFIRM_CLOSING_CASHIN_BALANCE") }}</x-helpertext>
                                     </td>
                                 </tr>
 
@@ -191,7 +191,7 @@
                         <div class="card-header border-0">
                             <!--begin::Card title-->
                             <div class="card-title">
-                                <h2>{{ __('Tills Transaction Summary') }}</h2>
+                                <h2>{{ __('general.LBL_TILL_TRANSACTION_SUMMARY') }}</h2>
                             </div>
                             <!--end::Card title-->
                         </div>
@@ -210,9 +210,9 @@
                                         <thead>
                                         <tr>
                                             <th class="fw-bolder">Till</th>
-                                            <th class="fw-bolder">{{ __('Starting Balance') }}</th>
-                                            <th class="fw-bolder">{{ __('End Balance') }}</th>
-                                            <th class="fw-bolder">{{ __('Transacted Amount') }}</th>
+                                            <th class="fw-bolder">{{ __('general.LBL_STARTING_BALANCE') }}</th>
+                                            <th class="fw-bolder">{{ __('general.LBL_ENDING_BALANCE') }}</th>
+                                            <th class="fw-bolder">{{ __('general.LBL_TRANSACTED_AMOUNT') }}</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -423,7 +423,7 @@
                         <div class="card-header border-0">
                             <!--begin::Card title-->
                             <div class="card-title">
-                                <h2>{{ __('Cash Flow') }}</h2>
+                                <h2>{{ __('general.LBL_CASH_FLOW') }}</h2>
                             </div>
                             <!--end::Card title-->
                         </div>
@@ -480,7 +480,7 @@
                         <div class="card-header border-0">
                             <!--begin::Card title-->
                             <div class="card-title">
-                                <h2>Shift Loans Summary</h2>
+                                <h2>{{ __('general.LBL_SHIFT_LOAN_SUMMARY') }}</h2>
                             </div>
                             <!--end::Card title-->
                         </div>
@@ -499,10 +499,10 @@
                                         <thead>
                                         <tr>
 
-                                            <th>Type</th>
-                                            <th>Amount</th>
-                                            <th>Paid</th>
-                                            <th>Balance</th>
+                                            <th>{{ __('general.LBL_TYPE') }}</th>
+                                            <th>{{ __('general.LBL_AMOUNT') }}</th>
+                                            <th>{{ __('general.LBL_PAID') }}</th>
+                                            <th>{{ __('general.LBL_BALANCE') }}</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -534,7 +534,7 @@
                         <div class="card-header border-0">
                             <!--begin::Card title-->
                             <div class="card-title">
-                                <h2>Shorts Summary</h2>
+                                <h2>{{ __('general.LBL_SHIFT_SHORT_SUMMARY') }}</h2>
                             </div>
                             <!--end::Card title-->
                         </div>
@@ -553,9 +553,9 @@
 
                                         <thead>
                                         <tr>
-                                            <th>Type</th>
-                                            <th>Till</th>
-                                            <th>Amount</th>
+                                            <th>{{ __('general.LBL_TYPE') }}</th>
+                                            <th>{{ __('general.LBL_TILL') }}</th>
+                                            <th>{{ __('general.LBL_AMOUNT') }}</th>
                                         </tr>
                                         </thead>
                                         <tbody>

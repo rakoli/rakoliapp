@@ -239,4 +239,19 @@ return [
 
     "LBL_WITHDRAW_DESCRIPTION" => "Increases Till Balance and Reduces Cash Balance",
 
+    "LBL_TOTAL_STARTING_CAPITAL" => "Total Starting Capital",
+    "LBL_TOTAL_ENDING_CAPITAL" => "Total Ending Capital",
+    "LBL_TILL_TRANSACTION_SUMMARY" => "Tills Transaction Summary",
+    "LBL_STARTING_BALANCE" => "Starting Balance",
+    "LBL_ENDING_BALANCE" => "Ending Balance",
+    "LBL_TRANSACTED_AMOUNT" => "Transacted Amount",
+    "LBL_SHIFT_LOAN_SUMMARY" => "Shift Loan Summary",
+    "LBL_SHIFT_SHORT_SUMMARY" => "Shorts Summary",
+    "LBL_CASH_FLOW" => "Cash Flow",
+    "LBL_CONFIRM_CLOSING_BALANCE" => "Confirm Closing Balances",
+    "LBL_END_BALANCE" => "End Balance",
+    "LBL_CONFIRM_CLOSING_CASHOUT_BALANCE" => "Confirm closing Cash Out Amount",
+    "LBL_CONFIRM_CLOSING_CASHIN_BALANCE" => "Confirm closing Cash In Amount",
+    "LBL_CONFIRM_CLOSING" => "Confirm closing ",
+
     ];

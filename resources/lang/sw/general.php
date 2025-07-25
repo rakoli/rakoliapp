@@ -101,7 +101,7 @@ return [
     "LBL_WITHDRAW" => "Ondoa",
     "LBL_TOTAL_BALANCE" => "Jumla ya Mizani",
     "LBL_CASH" => "Fedha taslimu",
-    "LBL_TILL" => "Mpaka",
+    "LBL_TILL" => "Till",
     "LBL_MONEY_IN" => "Pesa Ndani",
     "LBL_MONEY_OUT" => "Pesa nje",
     "LBL_LOAN_BALANCE" => "Salio la Mkopo",
@@ -248,5 +248,22 @@ return [
     "LBL_TILL_YOU_WANT_TO_TRANSACT_FROM" => "Till ambayo unataka kufanyia muamala",
 
     "LBL_WITHDRAW_DESCRIPTION" => "Inaongeza Balansi ya Till na Kupunguza Balansi ya Cash",
+
+
+    "LBL_TOTAL_STARTING_CAPITAL" => "Juma ya Mtaji wa Kuanzia",
+    "LBL_TOTAL_ENDING_CAPITAL" => "Juma ya Mtaji wa Mwisho",
+    "LBL_TILL_TRANSACTION_SUMMARY" => "Muhtasari wa Miamala ya Till",
+    "LBL_STARTING_BALANCE" => "Balansi ya Mwanzo",
+    "LBL_ENDING_BALANCE" => "Balansi ya Mwisho",
+    "LBL_TRANSACTED_AMOUNT" => "Kiasi cha Miamala",
+    "LBL_SHIFT_LOAN_SUMMARY" => "Muhtasari wa Mikopo Katika Zamu",
+    "LBL_SHIFT_SHORT_SUMMARY" => "Muhtasari wa Shoti Katika Zamu",
+    "LBL_CASH_FLOW" => "Mtiririko wa Fedha",
+    "LBL_CONFIRM_CLOSING_BALANCE" => "Thibitisha Balansi za Kufunga",
+    "LBL_END_BALANCE" => "Balansi ya Mwisho",
+    "LBL_CONFIRM_CLOSING_CASHOUT_BALANCE" => "Thibitisha kiasi cha kufunga pesa zilizotolewa",
+    "LBL_CONFIRM_CLOSING_CASHIN_BALANCE" => "Thibitisha kiasi cha kufunga pesa zilizowekwa",
+    "LBL_CONFIRM_CLOSING" => "Thibitisha Kufunga ",
+
 
 ];
