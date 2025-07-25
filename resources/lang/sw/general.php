@@ -264,6 +264,22 @@ return [
     "LBL_CONFIRM_CLOSING_CASHOUT_BALANCE" => "Thibitisha kiasi cha kufunga pesa zilizotolewa",
     "LBL_CONFIRM_CLOSING_CASHIN_BALANCE" => "Thibitisha kiasi cha kufunga pesa zilizowekwa",
     "LBL_CONFIRM_CLOSING" => "Thibitisha Kufunga ",
-
+    "LBL_CLOSING_MATH" => "Jumla ya Fedha Taslimu + Jumla ya Pesa za Till + Pesa zilizotolewe + Shoti + Salio la Mikopo - Pesa zilizoingizwa",
+    "LBL_TRANSFER_SHIFT" => "Hamisha Zamu",
+    "LBL_CASH_OUT" => "Pesa Zilizotolewa",
+    "LBL_CASH_IN" => "Pesa Zilizowekwa",
+    "LBL_TOTAL" => "Jumla",
+    "LBL_SHORT" => "Shoti",
+    "LBL_NEGATIVE_VE" => "-ve ina maanisha una mtaji wa kufunga uliozidi",
+    "LBL_POSITIVE_VE" => "+ve ina maanisha una upungufu (shoti) katika mtaji wako wa kufunga",
+    "LBL_STARTING_CASH" => "Fedha Taslimu ya Mwanzo",
+    "LBL_TOTAL_CASH_IN" => "Jumla ya Fedha Zilizoingizwa",
+    "LBL_TOTAL_CASH_OUT" => "Jumla ya Fedha Zilizotolewa",
+    "LBL_TOTAL_SHORT" => "Jumla ya Shoti",
+    "LBL_SHIFT_SUMMARY" => "Muhtasari wa Zamu",
+    "LBL_SHIFT_TRANSFER" => "Taarifa za Uhamisho wa Zamu",
+    "LBL_CONFIRM_SHIFT_TRANSFER" => "Thibitisha Uhamisho wa Zamu",
+    "LBL_CLOSING_REMARKS" => "Maoni ya Kufunga Zamu",
+    "LBL_YOU_ARE_CLOSING" => "You are closing the",
 
 ];

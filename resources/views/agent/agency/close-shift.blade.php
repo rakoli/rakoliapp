@@ -1,6 +1,6 @@
 @extends('layouts.users.agent')
 
-@section('title', "Close Shift")
+@section('title', __('general.LBL_CLOSE_SHIFT'))
 
 @section('breadcrumb')
     <!--begin::Separator-->
@@ -81,7 +81,7 @@
                                 @endforeach
 
                                 <tr>
-                                    <td>{{  __("Cash Out") }}</td>
+                                    <td>{{  __('general.LBL_CASH_OUT') }}</td>
 
                                     <td>: {{  Number::currency($expenses,  currencyCode())}}</td>
                                     <td class="fs-sm">
@@ -98,7 +98,7 @@
                                 </tr>
 
                                 <tr>
-                                    <td>{{  __("Cash In") }}</td>
+                                    <td>{{  __("general.LBL_CASH_IN") }}</td>
 
                                     <td>: {{  Number::currency($income,  currencyCode())}}</td>
                                     <td class="fs-sm">
@@ -119,7 +119,7 @@
                                 <tfoot>
 
                                 <tr>
-                                    <td>{{  __("Total") }}</td>
+                                    <td>{{  __("general.LBL_TOTAL") }}</td>
 
                                     <td class="fw-bolder">
                                         <span
@@ -128,7 +128,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>{{  __("Shorts") }}</td>
+                                    <td>{{  __("general.LBL_SHORT") }}</td>
 
                                     <td class="fw-bolder">
 
@@ -143,8 +143,8 @@
                                         />
                                         <x-helpertext>
                                             <ul class="list-style-none">
-                                                <li>  {{ __('- ve value means you have excess closing capital') }}</li>
-                                                <li>  {{ __(' +ve value means you have short in your closing capital') }}</li>
+                                                <li>  {{ __('general.LBL_NEGATIVE_VE') }}</li>
+                                                <li>  {{ __('general.LBL_POSITIVE_VE') }}</li>
                                             </ul>
                                         </x-helpertext>
 
@@ -217,7 +217,7 @@
                                         </thead>
                                         <tbody>
                                         <tr>
-                                            <td>{{  __("Starting Cash") }}</td>
+                                            <td>{{  __("general.LBL_STARTING_CASH") }}</td>
 
                                             <td>{{  Number::currency($shift->cash_start,  currencyCode())}}</td>
                                             <td class="fw-bolder">
@@ -308,7 +308,7 @@
 
                                         </tr> --}}
                                         <tr class="border-1">
-                                            <td class="border-top-1"> {{ __('Total Cash In') }}</td>
+                                            <td class="border-top-1"> {{ __('general.LBL_TOTAL_CASH_IN') }}</td>
                                             <td class="fw-bolder border-dashed">
                                                 <span
                                                     class="ending-balance income"
@@ -332,7 +332,7 @@
                                         </tr>
 
                                         <tr class="border-1">
-                                            <td class="border-top-1"> {{ __('Total Cash Out') }}</td>
+                                            <td class="border-top-1"> {{ __('general.LBL_TOTAL_CASH_OUT') }}</td>
                                             <td class=" border-dashed">{{ \Illuminate\Support\Number::currency(0, currencyCode()) }}</td>
                                             <td class="fw-bolder border-dashed">
                                                 <span
@@ -359,7 +359,7 @@
 
 
                                         <tr class="border-1">
-                                            <td class="border-top-1"> {{ __('Total Shorts') }}</td>
+                                            <td class="border-top-1"> {{ __('general.LBL_TOTAL_SHORT') }}</td>
                                             <td class=" border-dashed">{{ \Illuminate\Support\Number::currency(0, currencyCode()) }}</td>
                                             <td class="fw-bolder border-dashed">
                                                 <span
@@ -399,7 +399,7 @@
                                             <td colspan="4">
                                                 <x-helpertext class="text-sm">
                                                     <span
-                                                        style=""> {{ __( "Total Cash + Total Tills + Cash Out + Shorts + Loans balance - Cash In ") }}</span>
+                                                        style=""> {{ __( "general.LBL_CLOSING_MATH") }}</span>
                                                 </x-helpertext>
                                             </td>
                                         </tr>
@@ -442,21 +442,21 @@
                                         <thead>
                                         <tr>
 
-                                            <th>Type</th>
-                                            <th>Amount</th>
+                                            <th>{{ __('general.LBL_TYPE') }}</th>
+                                            <th>{{ __('general.LBL_AMOUNT') }}</th>
 
                                         </tr>
                                         </thead>
                                         <tbody>
 
                                         <tr>
-                                            <td>{{ __('Cash In') }}</td>
+                                            <td>{{ __('general.LBL_CASH_IN') }}</td>
                                             <td>{{ Number::currency($income, currencyCode()) }}</td>
 
                                         </tr>
 
                                         <tr>
-                                            <td>{{ __('Cash Out') }}</td>
+                                            <td>{{ __('general.LBL_CASH_OUT') }}</td>
                                             <td>{{ Number::currency($expenses, currencyCode()) }}</td>
 
                                         </tr>
@@ -589,9 +589,15 @@
     @push('js')
         <script>
             $(document).ready(() => {
+                @if(session('locale') == 'sw')
+                var closing_text = "Unafunga zamu na {!! $shift->no !!} ya tarehe {!! $shift->created_at->format('d-m-Y') !!}.";
+                var short_text = "";
+                var loan_text = "Jumla ya mikopo kwenye zamu hii ni {!! Number::currency($loans->sum('balance'), currencyCode()) !!}";
+                @else
                 var closing_text = "You are closing the {!! $shift->no !!} of the {!! $shift->created_at->format('d-m-Y') !!}.";
                 var short_text = "";
                 var loan_text = "The total loans on this shift is {!! Number::currency($loans->sum('balance'), currencyCode()) !!}";
+                @endif
                 $("div#has_short").hide();
                 $("div#shift_network_code").hide();
 
@@ -659,12 +665,20 @@
                         $("body").addClass("has_short");
                         $("div#has_short").show();
                         $("div.shift-has-shorts").show();
+                        @if(session('locale') == 'sw')
+                        short_text = "Jumla ya kiasi kilichoshughulikiwa ni "+ jQuery("#total_balance").text()+" na pungufu la "+ format(totalShort)+".";
+                        @else
                         short_text = "The total transacted volume is "+ jQuery("#total_balance").text()+" with a short of "+ format(totalShort)+".";
+                        @endif
                     } else {
                         $("body").removeClass("has_short");
                         $("div#has_short").hide();
                         $("div.shift-has-shorts").hide();
+                        @if(session('locale') == 'sw')
+                        short_text = "Jumla ya kiasi kilichoshughulikiwa ni "+ jQuery("#total_balance").text()+" bila pungufu.";
+                        @else
                         short_text = "The total transacted volume is "+ jQuery("#total_balance").text()+" with no short.";
+                        @endif
                     }
 
 

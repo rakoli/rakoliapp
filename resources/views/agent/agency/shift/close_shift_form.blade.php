@@ -34,9 +34,9 @@
     <div class="d-flex gap-3 flex-row align-content-between">
         @if($shift->status == App\Utils\Enums\ShiftStatusEnum::OPEN)
         <x-modal_with_button
-            modalTitle="Shift Transfer details"
+            modalTitle="{{ __('general.LBL_SHIFT_TRANSFER') }}"
             targetId="transfer_shift"
-            label="Transfer Shift"
+            label="{{ __('general.LBL_TRANSFER_SHIFT') }}"
             size="modal-lg"
             btnClass="btn  btn-light-primary mt-sm-4 mt-md-6"
         >
@@ -57,14 +57,14 @@
                 </x-select2>
             </div>
             <x-submit-button type="button" id="transfer-shift-button" class="btn btn-primary mt-sm-4 mt-md-6"
-                             label="Confirm Transfer Shift"/>
+                             label="{{ __('general.LBL_CONFIRM_SHIFT_TRANSFER') }}"/>
 
         </x-modal_with_button>
 
         <x-modal_with_button
-            modalTitle="Shift Summary"
+            modalTitle="{{ __('general.LBL_SHIFT_SUMMARY') }}"
             targetId="summary"
-            label="Close shift"
+            label="{{ __('general.LBL_CLOSE_SHIFT') }}"
             size="modal-lg"
             btnClass="btn  btn-danger mt-sm-4 mt-md-6"
         >
@@ -72,12 +72,12 @@
             @include('agent.agency.shift._short_form')
             <div class="col-6 mt-4" id="close_shift_info">
                 <p class="shift_info">The total loans on this shift is {total loan amount}</p>
-                <strong>Closing Remarks</strong>
+                <strong>{{ __('general.LBL_CLOSING_REMARKS') }}</strong>
                 <p class="close_info">description entered on closing page</p>
             </div>
 
             <x-submit-button type="button" id="close-shift-button" class="btn btn-primary mt-sm-4 mt-md-6"
-                             label="Close Shift"/>
+                             label="{{ __('general.LBL_CLOSE_SHIFT') }}"/>
 
         </x-modal_with_button>
         @endif

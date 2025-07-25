@@ -50,7 +50,7 @@
                                 <x-a-button
                                     class="btn btn-outline-danger btn-google text-white"
                                     route="{{ route('agency.shift.close', $shift) }}">
-                                    Close Shift
+                                    {{ __('general.LBL_CLOSE_SHIFT') }}
                                 </x-a-button>
                                 @endif
 
