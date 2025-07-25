@@ -281,5 +281,7 @@ return [
     "LBL_CONFIRM_SHIFT_TRANSFER" => "Thibitisha Uhamisho wa Zamu",
     "LBL_CLOSING_REMARKS" => "Maoni ya Kufunga Zamu",
     "LBL_YOU_ARE_CLOSING" => "You are closing the",
+    "LBL_GIVEN" => "Kutolewa",
+    "LBL_LOAN_RECEIVED" => "Kupokelewa"
 
 ];

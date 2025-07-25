@@ -270,4 +270,6 @@ return [
     "LBL_CONFIRM_SHIFT_TRANSFER" => "Confirm Shift Transfer",
     "LBL_CLOSING_REMARKS" => "Closing Remarks",
     "LBL_YOU_ARE_CLOSING" => "You are closing the",
+    "LBL_GIVEN" => "Given",
+    "LBL_LOAN_RECEIVED" => "Received"
     ];

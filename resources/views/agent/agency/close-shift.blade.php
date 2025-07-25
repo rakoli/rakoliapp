@@ -508,7 +508,7 @@
                                         <tbody>
                                         @foreach($loans as $type => $loan)
                                             <tr>
-                                                <td>{{ $type }}</td>
+                                                <td>{{ $type == 'Received' ? __('general.LBL_LOAN_RECEIVED') : ($type == 'Given' ? __('general.LBL_GIVEN') : $type) }}</td>
                                                 <td>{{ Number::currency($loan->sum('amount'), currencyCode()) }}</td>
                                                 <td>{{ Number::currency($loan->sum('paid'), currencyCode()) }}</td>
                                                 <td>{{ Number::currency($loan->sum('balance'), currencyCode()) }}</td>
