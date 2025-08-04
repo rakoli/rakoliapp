@@ -59,6 +59,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('agency/networks', App\Http\Controllers\Agent\Networks\NetworkController::class);
     Route::get('agency/loans', [\App\Http\Controllers\Agent\Shift\Loans\LoanController::class, 'index']);
 
+    //FLOAT EXCHANGE MODULE
+
+
+    //TRANSACTION MODULE
+
+
+    //CALLBACKS
+
 
 });
 
