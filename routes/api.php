@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\ShiftAPIController;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,13 +60,32 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('agency/networks', App\Http\Controllers\Agent\Networks\NetworkController::class);
     Route::get('agency/loans', [\App\Http\Controllers\Agent\Shift\Loans\LoanController::class, 'index']);
 
-    //FLOAT EXCHANGE MODULE
+    //SHIFT MODULE
+    Route::prefix('shifts')->group(function () {
+        // Core shift operations
+        Route::get('/', [ShiftAPIController::class, 'index']);
+        Route::post('/', [ShiftAPIController::class, 'store']);
+        Route::get('/current', [ShiftAPIController::class, 'current']);
+        Route::get('/locations', [ShiftAPIController::class, 'locations']);
+        Route::get('/{id}', [ShiftAPIController::class, 'show']);
+        Route::put('/{id}', [ShiftAPIController::class, 'update']);
+        Route::delete('/{id}', [ShiftAPIController::class, 'destroy']);
 
+        // Transaction operations
+        Route::post('/{id}/income', [ShiftAPIController::class, 'addIncome']);
+        Route::post('/{id}/expense', [ShiftAPIController::class, 'addExpense']);
+        Route::post('/{id}/transaction', [ShiftAPIController::class, 'addTransaction']);
+        Route::post('/{id}/transfer', [ShiftAPIController::class, 'transferBalance']);
+        Route::get('/{id}/transactions', [ShiftAPIController::class, 'transactions']);
 
-    //TRANSACTION MODULE
+        // Loan operations
+        Route::post('/{id}/loans', [ShiftAPIController::class, 'addLoan']);
+        Route::get('/{id}/loans', [ShiftAPIController::class, 'loans']);
+        Route::post('/{shiftId}/loans/{loanId}/pay', [ShiftAPIController::class, 'payLoan']);
 
-
-    //CALLBACKS
+        // Other shift data
+        Route::get('/{id}/tills', [ShiftAPIController::class, 'tills']);
+    });
 
 
 });
