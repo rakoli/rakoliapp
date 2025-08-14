@@ -130,6 +130,7 @@ return [
     "LBL_TILL_HELPER" => "Till Provider E.G: Equity Bank",
     "LBL_TILL_NAME_WITH_EG" => "Till Name E.G: M-Pesa",
     "LBL_NETWORK_TYPE" => "Select Network Type",
+    "LBL_TILL_ADD_NOTE" => "Anything to note about this Till? Max length: 255",
     "LBL_TILL_TYPE" => "Till Type E.G: Finance, Crypto",
     "LBL_TILL_BRANCH" => "This Till belongs to which Branch?",
     "TILL_AGENCY_NO" => "Till Agency No:",

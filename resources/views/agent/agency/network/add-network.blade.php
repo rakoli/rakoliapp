@@ -22,29 +22,9 @@
                     @enderror
                 </div>
 
-                <div class="col-6">
-
-                    <x-label
-                        class=""
-                        label="{{ __('general.LBL_NETWORK_TYPE') }}"
-                        for="type"
-                    />
-                    <x-select2
-                        modalId="add-network"
-                        name="type"
-                        placeholder="{{ __('general.LBL_NETWORK_TYPE') }}"
-                        id="type"
-                    >
-                        @foreach(NetworkTypeEnum::cases() as $networkType)
-                            <option value="{{ $networkType->value }}">{{ $networkType->label() }}</option>
-                        @endforeach
-                    </x-select2>
-                    <x-helpertext>{{ __('general.LBL_TILL_TYPE') }}</x-helpertext>
-                    @error('type')
-                    <div class="help-block text-danger">
-                        {{ $message }}
-                    </div>
-                    @enderror
+                <div class="col-6" style="display: none;">
+                    <!-- Network type is now hardcoded to Finance -->
+                    <input type="hidden" name="type" value="Finance">
                 </div>
             </div>
             <div class="row fv-row py-2">
