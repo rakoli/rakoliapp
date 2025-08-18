@@ -34,6 +34,11 @@ Route::get('referrals/all-payments', [\App\Http\Controllers\Api\ReferrerAPIContr
 Route::post('login', [App\Http\Controllers\Api\MobileAppController::class, 'login']);
 Route::post('register', [App\Http\Controllers\Api\MobileAppController::class, 'register']);
 
+// Form submission routes
+Route::post('form', [App\Http\Controllers\Api\FormAPIController::class, 'store']);
+Route::get('form', [App\Http\Controllers\Api\FormAPIController::class, 'index']);
+Route::get('form/{id}', [App\Http\Controllers\Api\FormAPIController::class, 'show']);
+
 Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('logout', [App\Http\Controllers\Api\MobileAppController::class, 'logout']);
