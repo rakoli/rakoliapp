@@ -27,6 +27,8 @@ class FormSubmission extends Model
         'decline_reason',
         'key_concerns',
         'suggestions',
+        'daily_challenges',
+        'rakoli_suggestions',
         'agent_signature',
     ];
 

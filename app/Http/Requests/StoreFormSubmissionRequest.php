@@ -40,6 +40,8 @@ class StoreFormSubmissionRequest extends FormRequest
             'declineReason' => 'nullable|string|max:500',
             'keyConcerns' => 'nullable|string|max:1000',
             'suggestions' => 'nullable|string|max:1000',
+            'dailyChallenges' => 'nullable|string|max:1000',
+            'rakoliSuggestions' => 'nullable|string|max:1000',
             'agentSignature' => 'nullable|string',
         ];
     }
@@ -86,6 +88,9 @@ class StoreFormSubmissionRequest extends FormRequest
             'visitOutcome' => 'visit outcome',
             'declineReason' => 'decline reason',
             'keyConcerns' => 'key concerns',
+            'suggestions' => 'suggestions',
+            'dailyChallenges' => 'daily challenges',
+            'rakoliSuggestions' => 'Rakoli suggestions',
             'agentSignature' => 'agent signature',
         ];
     }

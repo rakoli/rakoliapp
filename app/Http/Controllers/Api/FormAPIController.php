@@ -41,6 +41,8 @@ class FormAPIController extends Controller
                 'decline_reason' => $validatedData['declineReason'] ?? null,
                 'key_concerns' => $validatedData['keyConcerns'] ?? null,
                 'suggestions' => $validatedData['suggestions'] ?? null,
+                'daily_challenges' => $validatedData['dailyChallenges'] ?? null,
+                'rakoli_suggestions' => $validatedData['rakoliSuggestions'] ?? null,
                 'agent_signature' => $validatedData['agentSignature'] ?? null,
             ];
 

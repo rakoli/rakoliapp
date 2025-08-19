@@ -30,6 +30,8 @@ return new class extends Migration
             $table->text('decline_reason')->nullable();
             $table->text('key_concerns')->nullable();
             $table->text('suggestions')->nullable();
+            $table->text('daily_challenges')->nullable();
+            $table->text('rakoli_suggestions')->nullable();
             $table->string('agent_signature')->nullable(); // Agent signature as string
             $table->timestamps();
         });
