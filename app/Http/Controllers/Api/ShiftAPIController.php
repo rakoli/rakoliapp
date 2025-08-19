@@ -77,6 +77,10 @@ class ShiftAPIController extends Controller
                 description: $validated['description'] ?? null
             );
 
+            if (!$shift) {
+                return responder()->error('Failed to create shift', 422);
+            }
+
             return responder()->success([
                 'message' => 'Shift opened successfully',
                 'shift' => $shift->load(['user', 'location', 'shiftNetworks.network.agency'])
