@@ -60,6 +60,22 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('agency/networks', App\Http\Controllers\Agent\Networks\NetworkController::class);
     Route::get('agency/loans', [\App\Http\Controllers\Agent\Shift\Loans\LoanController::class, 'index']);
 
+    //NETWORK MODULE
+    Route::prefix('networks')->group(function () {
+        // Core network operations
+        Route::get('/', [\App\Http\Controllers\Api\NetworkAPIController::class, 'index']);
+        Route::post('/', [\App\Http\Controllers\Api\NetworkAPIController::class, 'store']);
+        Route::get('/{code}', [\App\Http\Controllers\Api\NetworkAPIController::class, 'show']);
+        Route::put('/{code}', [\App\Http\Controllers\Api\NetworkAPIController::class, 'update']);
+        Route::delete('/{code}', [\App\Http\Controllers\Api\NetworkAPIController::class, 'destroy']);
+
+        // Helper endpoints for network creation
+        Route::get('/data/locations', [\App\Http\Controllers\Api\NetworkAPIController::class, 'locations']);
+        Route::get('/data/financial-service-providers', [\App\Http\Controllers\Api\NetworkAPIController::class, 'financialServiceProviders']);
+        Route::get('/data/cryptos', [\App\Http\Controllers\Api\NetworkAPIController::class, 'cryptos']);
+        Route::get('/data/types', [\App\Http\Controllers\Api\NetworkAPIController::class, 'types']);
+    });
+
     //SHIFT MODULE
     Route::prefix('shifts')->group(function () {
         // Core shift operations
