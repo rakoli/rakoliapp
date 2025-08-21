@@ -89,11 +89,55 @@ class NetworkAPIController extends Controller
         try {
             Log::info('NetworkAPIController::store - Request data: ' . json_encode($request->validated()));
 
-            $network = AddLocationNetwork::run($request->validated());
+            $data = $request->validated();
+            $data['business_code'] = auth()->user()->business_code;
+
+            // Generate network code
+            $data['code'] = generateCode($data['name'], auth()->user()->business_code);
+
+            // Set balance currency for finance networks
+            if ($data['type'] === NetworkTypeEnum::FINANCE->value) {
+                $data['balance_currency'] = currencyCode();
+            }
+
+            // Create the network
+            $network = Network::create($data);
+
+            // Load relationships for response
+            $network->load(['location', 'business', 'agency', 'crypto']);
+
+            // Format response data
+            $responseData = [
+                'id' => $network->id,
+                'code' => $network->code,
+                'name' => $network->name,
+                'type' => $network->type,
+                'agent_no' => $network->agent_no,
+                'description' => $network->description,
+                'balance' => $network->balance,
+                'balance_currency' => $network->balance_currency,
+                'crypto_balance' => $network->crypto_balance,
+                'exchange_rate' => $network->exchange_rate,
+                'location' => [
+                    'code' => $network->location?->code,
+                    'name' => $network->location?->name,
+                ],
+                'fsp' => $network->agency ? [
+                    'code' => $network->agency->code,
+                    'name' => $network->agency->name,
+                ] : null,
+                'crypto' => $network->crypto ? [
+                    'code' => $network->crypto->code,
+                    'symbol' => $network->crypto->symbol,
+                    'name' => $network->crypto->name,
+                ] : null,
+                'created_at' => $network->created_at,
+                'updated_at' => $network->updated_at,
+            ];
 
             return response()->json([
                 'success' => true,
-                'data' => $network,
+                'data' => $responseData,
                 'message' => 'Network created successfully'
             ], 201);
         } catch (\Exception $e) {
