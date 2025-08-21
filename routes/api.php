@@ -71,7 +71,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
         // Helper endpoints for network creation
         Route::get('/data/locations', [\App\Http\Controllers\Api\NetworkAPIController::class, 'locations']);
-        Route::get('/data/financial-service-providers', [\App\Http\Controllers\Api\NetworkAPIController::class, 'financialServiceProviders']);
+        Route::get('/data/fsps', [\App\Http\Controllers\Api\NetworkAPIController::class, 'financialServiceProviders']);
         Route::get('/data/cryptos', [\App\Http\Controllers\Api\NetworkAPIController::class, 'cryptos']);
         Route::get('/data/types', [\App\Http\Controllers\Api\NetworkAPIController::class, 'types']);
     });
