@@ -77,6 +77,13 @@
                     </span>
                     <span class="menu-title">{{__('Referral Backoffice')}}</span>
                 </a>
+
+                  <a class="menu-link" href="https://form.rakoli.com/admin" target="_blank">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{__('Forms Dashboard')}}</span>
+                </a>
             </div>
             <!--end:Menu sub-->
         </div>
