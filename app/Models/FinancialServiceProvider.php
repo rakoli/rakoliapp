@@ -11,6 +11,17 @@ class FinancialServiceProvider extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'country_code',
+        'code',
+        'name',
+        'desc',
+        'pic',
+        'is_default',
+        'withdraw_commission_rate',
+        'deposit_commission_rate',
+    ];
+
     public static $tzDefaultsFSPs = ['M-PESA','MIXXBYYAS','AIRTELMONEY'];
     public static $keDefaultsFSPs = ['M-PESA','AIRTELMONEY','ORANGE MONEY'];
 
@@ -35,5 +46,37 @@ class FinancialServiceProvider extends Model
         } else {
             return asset('/assets/media/fsp_logos/default.jpg');
         }
+    }
+
+    /**
+     * Calculate withdraw commission for a given amount
+     */
+    public function calculateWithdrawCommission($amount)
+    {
+        return $amount * $this->withdraw_commission_rate;
+    }
+
+    /**
+     * Calculate deposit commission for a given amount
+     */
+    public function calculateDepositCommission($amount)
+    {
+        return $amount * $this->deposit_commission_rate;
+    }
+
+    /**
+     * Get withdraw commission rate as percentage
+     */
+    public function getWithdrawCommissionPercentage()
+    {
+        return $this->withdraw_commission_rate * 100;
+    }
+
+    /**
+     * Get deposit commission rate as percentage
+     */
+    public function getDepositCommissionPercentage()
+    {
+        return $this->deposit_commission_rate * 100;
     }
 }

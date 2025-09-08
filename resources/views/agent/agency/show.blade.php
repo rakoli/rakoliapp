@@ -547,6 +547,71 @@
                 </div>
                 <!--end::Card-->
 
+                <!--begin::Commissions-->
+                <div class="card pt-4 mb-6 mb-xl-9">
+                    <!--begin::Card header-->
+                    <div class="card-header border-0">
+                        <!--begin::Card title-->
+                        <div class="card-title">
+                            <h2>{{ __('general.LBL_NETWORK_COMMISSIONS') }}</h2>
+                        </div>
+                        <!--end::Card title-->
+                    </div>
+                    <!--end::Card header-->
+
+                    <!--begin::Card body-->
+                    <div class="card-body pt-0 pb-5">
+                        <!--begin::Table-->
+                        <div class="table-responsive">
+                            <table class="table align-middle table-row-dashed gy-5" id="commissions-table">
+                                <thead>
+                                <tr>
+                                    <th>{{ __('general.LBL_NETWORK') }}</th>
+                                    <th>{{ __('general.LBL_FSP') }}</th>
+                                    <th>{{ __('general.LBL_TRANSACTION_TYPE') }}</th>
+                                    <th>{{ __('general.LBL_TRANSACTION_COUNT') }}</th>
+                                    <th>{{ __('general.LBL_TOTAL_AMOUNT') }}</th>
+                                    <th>{{ __('general.LBL_COMMISSION_RATE') }}</th>
+                                    <th>{{ __('general.LBL_COMMISSION_AMOUNT') }}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @forelse($commissions as $commission)
+                                    <tr>
+                                        <td>{{ $commission['network']->name ?? 'N/A' }}</td>
+                                        <td>{{ $commission['network']->agency->name ?? 'N/A' }}</td>
+                                        <td>
+                                            <span class="{{ $commission['transaction_type']->color() }}">
+                                                {{ $commission['transaction_type']->label() }}
+                                            </span>
+                                        </td>
+                                        <td>{{ number_format($commission['transaction_count']) }}</td>
+                                        <td>{{ money(amount: $commission['total_amount'], convert: true, currency: currencyCode()) }}</td>
+                                        <td>{{ number_format($commission['commission_rate'] * 100, 2) }}%</td>
+                                        <td>{{ money(amount: $commission['commission_amount'], convert: true, currency: currencyCode()) }}</td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="7" class="text-center text-muted">{{ __('general.LBL_NO_COMMISSIONS_FOUND') }}</td>
+                                    </tr>
+                                @endforelse
+                                </tbody>
+                                <tfoot>
+                                    @if($commissions->isNotEmpty())
+                                    <tr class="fw-bold">
+                                        <td colspan="6" class="text-end">{{ __('general.LBL_TOTAL_COMMISSION') }}:</td>
+                                        <td>{{ money(amount: $commissions->sum('commission_amount'), convert: true, currency: currencyCode()) }}</td>
+                                    </tr>
+                                    @endif
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!--end::Table-->
+                    </div>
+                    <!--end::Card body-->
+                </div>
+                <!--end::Commissions-->
+
             </div>
         </div>
     </div>

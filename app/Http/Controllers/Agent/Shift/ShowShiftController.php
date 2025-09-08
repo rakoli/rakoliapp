@@ -8,6 +8,7 @@ use App\Models\Location;
 use App\Models\Network;
 use App\Models\Shift;
 use App\Models\ShiftNetwork;
+use App\Models\ShiftTransaction;
 use App\Utils\Datatables\Agent\Shift\ShiftCashTransactionDatatable;
 use App\Utils\Datatables\Agent\Shift\ShiftTransactionDatatable;
 use App\Utils\Enums\NetworkTypeEnum;
@@ -43,10 +44,48 @@ class ShowShiftController extends Controller
             ->selectRaw('*, note')
             ->get();
 
+        // Calculate commissions for each network based on transactions
+        $commissions = ShiftTransaction::query()
+            ->where('shift_id', $shift->id)
+            ->with(['network.agency'])
+            ->whereHas('network.agency') // Only include transactions with FSP
+            ->selectRaw('
+                network_code,
+                type,
+                SUM(amount) as total_amount,
+                COUNT(*) as transaction_count
+            ')
+            ->groupBy('network_code', 'type')
+            ->get()
+            ->map(function ($transaction) {
+                $commission = 0;
+                $rate = 0;
+
+                if ($transaction->network && $transaction->network->agency) {
+                    if ($transaction->type === \App\Utils\Enums\TransactionTypeEnum::MONEY_OUT) {
+                        $rate = $transaction->network->agency->withdraw_commission_rate;
+                        $commission = $transaction->network->agency->calculateWithdrawCommission($transaction->total_amount);
+                    } elseif ($transaction->type === \App\Utils\Enums\TransactionTypeEnum::MONEY_IN) {
+                        $rate = $transaction->network->agency->deposit_commission_rate;
+                        $commission = $transaction->network->agency->calculateDepositCommission($transaction->total_amount);
+                    }
+                }
+
+                return [
+                    'network' => $transaction->network,
+                    'transaction_type' => $transaction->type,
+                    'total_amount' => $transaction->total_amount,
+                    'transaction_count' => $transaction->transaction_count,
+                    'commission_rate' => $rate,
+                    'commission_amount' => $commission,
+                ];
+            });
+
             return view('agent.agency.show', [
             'dataTableHtml' => $dataTableHtml,
             'loans' => $loans,
             'locations' => $locations,
+            'commissions' => $commissions,
             ...shiftBalances(shift: $shift),
             'tills' => $tills->cursor(),
             'shift' => $shift->loadMissing('user', 'location'),
