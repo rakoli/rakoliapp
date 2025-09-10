@@ -103,6 +103,21 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/{id}/tills', [ShiftAPIController::class, 'tills']);
     });
 
+    //BRANCH MODULE
+    Route::prefix('branches')->group(function () {
+        // Core branch operations
+        Route::get('/', [\App\Http\Controllers\Api\BranchAPIController::class, 'index']);
+        Route::post('/', [\App\Http\Controllers\Api\BranchAPIController::class, 'store']);
+        Route::get('/{id}', [\App\Http\Controllers\Api\BranchAPIController::class, 'show']);
+        Route::put('/{id}', [\App\Http\Controllers\Api\BranchAPIController::class, 'update']);
+        Route::delete('/{id}', [\App\Http\Controllers\Api\BranchAPIController::class, 'destroy']);
+
+        // Helper endpoints for branch creation
+        Route::get('/data/regions', [\App\Http\Controllers\Api\BranchAPIController::class, 'regions']);
+        Route::get('/data/towns', [\App\Http\Controllers\Api\BranchAPIController::class, 'towns']);
+        Route::get('/data/areas', [\App\Http\Controllers\Api\BranchAPIController::class, 'areas']);
+    });
+
 
 });
 
