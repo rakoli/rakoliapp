@@ -118,6 +118,19 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/data/areas', [\App\Http\Controllers\Api\BranchAPIController::class, 'areas']);
     });
 
+    //USERS MODULE
+    Route::prefix('users')->group(function () {
+        // Core user operations
+        Route::get('/', [\App\Http\Controllers\Api\UsersAPIController::class, 'index']);
+        Route::post('/', [\App\Http\Controllers\Api\UsersAPIController::class, 'store']);
+        Route::get('/{id}', [\App\Http\Controllers\Api\UsersAPIController::class, 'show']);
+        Route::put('/{id}', [\App\Http\Controllers\Api\UsersAPIController::class, 'update']);
+        Route::delete('/{id}', [\App\Http\Controllers\Api\UsersAPIController::class, 'destroy']);
+
+        // Helper endpoints for user creation
+        Route::get('/data/form', [\App\Http\Controllers\Api\UsersAPIController::class, 'getFormData']);
+    });
+
 
 });
 
