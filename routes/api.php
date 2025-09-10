@@ -131,6 +131,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/data/form', [\App\Http\Controllers\Api\UsersAPIController::class, 'getFormData']);
     });
 
+    //BUSINESS PROFILE MODULE
+    Route::prefix('business/profile')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Api\BusinessPofileAPI::class, 'show']);
+        Route::put('/', [\App\Http\Controllers\Api\BusinessPofileAPI::class, 'update']);
+        Route::post('/update', [\App\Http\Controllers\Api\BusinessPofileAPI::class, 'update']);
+    });
+
 
 });
 
