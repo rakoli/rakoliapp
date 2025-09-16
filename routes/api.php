@@ -38,6 +38,7 @@ Route::post('register', [App\Http\Controllers\Api\MobileAppController::class, 'r
 Route::post('form', [App\Http\Controllers\Api\FormAPIController::class, 'store']);
 Route::get('form', [App\Http\Controllers\Api\FormAPIController::class, 'index']);
 Route::get('form/{id}', [App\Http\Controllers\Api\FormAPIController::class, 'show']);
+Route::get('form/gps/coordinates', [App\Http\Controllers\Api\FormAPIController::class, 'getGpsCoordinates']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
 

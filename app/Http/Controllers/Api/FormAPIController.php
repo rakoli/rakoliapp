@@ -138,4 +138,36 @@ class FormAPIController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Get all GPS coordinates that are not null
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getGpsCoordinates(Request $request): JsonResponse
+    {
+        try {
+            $submissions = FormSubmission::whereNotNull('gps_coordinates')
+                ->select('id', 'gps_coordinates', 'location')
+                ->latest()
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'GPS coordinates retrieved successfully',
+                'data' => $submissions,
+                'total_count' => $submissions->count()
+            ], 200);
+
+        } catch (\Exception $e) {
+            Log::error('Error fetching GPS coordinates: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while fetching GPS coordinates',
+                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error'
+            ], 500);
+        }
+    }
 }
