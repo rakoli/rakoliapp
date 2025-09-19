@@ -34,6 +34,8 @@ Route::get('referrals/all-payments', [\App\Http\Controllers\Api\ReferrerAPIContr
 
 Route::post('login', [App\Http\Controllers\Api\MobileAppController::class, 'login']);
 Route::post('register', [App\Http\Controllers\Api\MobileAppController::class, 'register']);
+Route::post('verify-otp', [App\Http\Controllers\Api\MobileAppController::class, 'verifyOtp']);
+Route::post('resend-otp', [App\Http\Controllers\Api\MobileAppController::class, 'resendOtp']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
 
