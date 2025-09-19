@@ -64,8 +64,7 @@ class MobileAppController
 
             if (!$otpSent) {
                 Log::error('Failed to send OTP after registration', ['user_id' => $user->id]);
-                return responder()->error('otp_send_failed', [
-                    'message' => 'Registration successful but failed to send OTP. Please request a new one.',
+                return responder()->error('otp_send_failed', 'Registration successful but failed to send OTP. Please request a new one.', [
                     'user_id' => $user->id,
                     'phone' => $this->maskPhone($user->phone)
                 ]);
@@ -129,9 +128,7 @@ class MobileAppController
             }
 
             Log::channel('mobile_api')->info("Invalid OTP attempt: {$user->phone}");
-            return responder()->error('invalid_otp', [
-                'message' => 'Invalid or expired OTP'
-            ]);
+            return responder()->error('invalid_otp', 'Invalid or expired OTP');
 
         } catch (\Exception $e) {
             Log::error('OTP verification failed: ' . $e->getMessage());
@@ -159,26 +156,21 @@ class MobileAppController
             // Check if OTP is still active
             if (VerifyOTP::hasActivePhoneOTP($user)) {
                 $remainingTime = VerifyOTP::phoneOTPTimeRemaining($user);
-                return responder()->error('otp_still_active', [
-                    'message' => "OTP already sent. Try again in {$remainingTime} seconds.",
+                return responder()->error('otp_still_active', "OTP already sent. Try again in {$remainingTime} seconds.", [
                     'remaining_time' => $remainingTime
                 ]);
             }
 
             // Check if user is locked
             if (VerifyOTP::shouldLockPhoneOTP($user)) {
-                return responder()->error('otp_locked', [
-                    'message' => 'Too many attempts. Account temporarily locked.'
-                ]);
+                return responder()->error('otp_locked', 'Too many attempts. Account temporarily locked.');
             }
 
             // Send new OTP
             $otpSent = $this->generateAndSendOTP($user);
 
             if (!$otpSent) {
-                return responder()->error('otp_send_failed', [
-                    'message' => 'Failed to send OTP. Please try again.'
-                ]);
+                return responder()->error('otp_send_failed', 'Failed to send OTP. Please try again.');
             }
 
             Log::channel('mobile_api')->info("OTP resent: {$user->phone}");
