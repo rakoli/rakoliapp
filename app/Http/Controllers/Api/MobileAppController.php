@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Actions\CheckUserPendingSystemPayments;
+use App\Models\Business;
 use App\Models\Package;
 use App\Models\User;
 use App\Utils\ValidationRule;
@@ -17,29 +18,59 @@ class MobileAppController
 {
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
+        $request->validate([
+            'phone' => ['required', 'string'],
+            'pin' => ['required', 'string', 'min:4', 'max:6'],
         ]);
 
-        if (\Auth::attempt($credentials)) {
-            $user = \Auth::user();
+        $user = User::findByPhone($request->phone);
 
-            if (!$user->canAccessMobileApp()) {
-                return responder()->error('unauthorized');
+        if (!$user) {
+            Log::channel('mobile_api')->warning("Login attempt with non-existent phone: {$request->phone}");
+            return responder()->error('unauthorized', 'Invalid phone number or PIN');
+        }
+
+        // Check if account is locked or disabled
+        if ($user->isAccountLocked()) {
+            Log::channel('mobile_api')->warning("Login attempt on locked account: {$user->phone}");
+
+            if ($user->is_disabled) {
+                return responder()->error('account_disabled', 'Account has been disabled. Please contact administrator.');
             }
 
-            $token = $user->createToken('auth_token')->plainTextToken;
+            $lockMessage = $user->locked_until
+                ? "Account is locked until " . $user->locked_until->format('Y-m-d H:i:s')
+                : "Account is locked";
 
-            return responder()->success([
-                'access_token' => $token,
-                'token_type' => 'Bearer',
-                'user' => getApiSessionData($user)
-            ]);
-
-        } else {
-            return responder()->error('unauthorized');
+            return responder()->error('account_locked', $lockMessage);
         }
+
+        // Verify PIN
+        if (!$user->verifyPin($request->pin)) {
+            $user->incrementFailedAttempts();
+
+            Log::channel('mobile_api')->warning("Failed PIN attempt for user: {$user->phone}, attempts: {$user->failed_login_attempts}");
+
+            return responder()->error('unauthorized', 'Invalid phone number or PIN');
+        }
+
+        // Check if user can access mobile app
+        if (!$user->canAccessMobileApp()) {
+            return responder()->error('unauthorized', 'Access denied');
+        }
+
+        // Successful login - reset failed attempts
+        $user->resetFailedAttempts();
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        Log::channel('mobile_api')->info("Successful login: {$user->phone}");
+
+        return responder()->success([
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+            'user' => getApiSessionData($user)
+        ]);
     }
 
     public function logout(Request $request)
@@ -58,6 +89,21 @@ class MobileAppController
             $request->validate(ValidationRule::agentRegistration());
 
             event(new Registered($user = User::addUser($request->all())));
+
+            // Create business for the user (same as web registration)
+            $addBusinessData = [
+                'country_code' => $user->country_code,
+                'code' => generateCode($request->business_name, $user->country_code),
+                'type' => $user->type,
+                'business_name' => $request->business_name,
+                'business_regno' => $request->business_regno ?? null,
+            ];
+
+            if($user->referral_business_code != null){
+                $addBusinessData['referral_business_code'] = $user->referral_business_code;
+            }
+
+            $business = Business::addBusiness($addBusinessData, $user);
 
             // Send OTP immediately after registration
             $otpSent = $this->generateAndSendOTP($user);
@@ -82,7 +128,7 @@ class MobileAppController
         } catch (\Illuminate\Validation\ValidationException $e) {
             Log::error('Mobile registration validation failed', [
                 'errors' => $e->errors(),
-                'request_data' => $request->except(['password'])
+                'request_data' => $request->except(['pin', 'pin_confirmation'])
             ]);
 
             return responder()->error('validation_failed', 'Validation failed', [
@@ -91,7 +137,7 @@ class MobileAppController
 
         } catch (\Exception $e) {
             Log::error('Mobile registration failed: ' . $e->getMessage(), [
-                'request_data' => $request->except(['password'])
+                'request_data' => $request->except(['pin', 'pin_confirmation'])
             ]);
             return responder()->error('registration_failed', $e->getMessage());
         }
@@ -129,11 +175,14 @@ class MobileAppController
 
                 Log::channel('mobile_api')->info("OTP verified successfully: {$user->phone}");
 
+                // Refresh user data to ensure business relationship is loaded
+                $user = $user->fresh(['business']);
+
                 return responder()->success([
                     'message' => 'Phone verified successfully',
                     'token' => $token,
                     'token_type' => 'Bearer',
-                    'user' => getApiSessionData($user, true)
+                    'user' => getApiSessionData($user, false)
                 ]);
             }
 
