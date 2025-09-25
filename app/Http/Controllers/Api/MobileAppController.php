@@ -79,11 +79,21 @@ class MobileAppController
                 'requires_verification' => true
             ]);
 
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Mobile registration validation failed', [
+                'errors' => $e->errors(),
+                'request_data' => $request->except(['password'])
+            ]);
+
+            return responder()->error('validation_failed', 'Validation failed', [
+                'errors' => $e->errors()
+            ]);
+
         } catch (\Exception $e) {
             Log::error('Mobile registration failed: ' . $e->getMessage(), [
                 'request_data' => $request->except(['password'])
             ]);
-            return responder()->error('registration_failed');
+            return responder()->error('registration_failed', $e->getMessage());
         }
     }
 
