@@ -35,6 +35,7 @@ class User extends Authenticatable
         'lname',
         'email',
         'password',
+        'pin',
         'country_code',
         'phone',
         'code', // Add the 'code' attribute for user registration
@@ -44,16 +45,24 @@ class User extends Authenticatable
         'phone_verified_at',
         'email_verified_at',
         'id_verified_at',
+        'is_locked',
+        'failed_login_attempts',
+        'locked_until',
+        'is_disabled',
     ];
 
     protected $hidden = [
         'password',
+        'pin',
         'remember_token',
     ];
 
     protected $casts = [
-        'email_verified_at',
+        'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'locked_until' => 'datetime',
+        'is_locked' => 'boolean',
+        'is_disabled' => 'boolean',
     ];
 
     /**
@@ -240,7 +249,8 @@ class User extends Authenticatable
         if(array_key_exists('referral_business_code', $data)){
             $referralBusinessCode = $data['referral_business_code'];
         }
-        return User::create([
+        // Handle both web (password) and mobile (pin) registration
+        $userData = [
             'country_code' => $country->code,
             'code' => generateCode($data['fname'].' '.$data['lname'],$country->code),
             'type' => isset($data['type']) ? $data['type'] : UserTypeEnum::AGENT->value,
@@ -248,14 +258,25 @@ class User extends Authenticatable
             'lname' => $data['lname'],
             'phone' => $fullPhone,
             'email' => $data['email'],
-            'password' => Hash::make($data['password']),
             'referral_business_code' => $referralBusinessCode,
             'isowner' => isset($data['type']) ? 1 : 0,
             'registration_step' => isset($data['type']) ? 0 : 3,
             'phone_verified_at' => isset($data['type'])  ? Carbon::now() : NULL,
             'email_verified_at' => isset($data['type']) ? Carbon::now() : NULL,
             'id_verified_at' => isset($data['type']) ? Carbon::now() : NULL,
-        ]);
+        ];
+
+        // For mobile API: use PIN and set dummy password
+        if (isset($data['pin'])) {
+            $userData['pin'] = Hash::make($data['pin']);
+            $userData['password'] = Hash::make('dummy_password_' . time()); // Dummy password for mobile users
+        }
+        // For web: use password
+        elseif (isset($data['password'])) {
+            $userData['password'] = Hash::make($data['password']);
+        }
+
+        return User::create($userData);
     }
 
     public static function completedRegistration(User $user)
@@ -266,6 +287,94 @@ class User extends Authenticatable
             SendTelegramNotification::dispatch($message);
         }
 
+    }
+
+    /**
+     * Check if user account is locked due to failed login attempts
+     */
+    public function isAccountLocked(): bool
+    {
+        if ($this->is_disabled) {
+            return true;
+        }
+
+        if ($this->is_locked && $this->locked_until && now()->lt($this->locked_until)) {
+            return true;
+        }
+
+        // If lock period has expired, unlock the account
+        if ($this->is_locked && $this->locked_until && now()->gte($this->locked_until)) {
+            $this->unlockAccount();
+        }
+
+        return false;
+    }
+
+    /**
+     * Increment failed login attempts and lock account if necessary
+     */
+    public function incrementFailedAttempts(): void
+    {
+        $this->failed_login_attempts++;
+
+        if ($this->failed_login_attempts >= 4) {
+            if ($this->failed_login_attempts == 4) {
+                // First time reaching 4 attempts - lock for 30 minutes
+                $this->is_locked = true;
+                $this->locked_until = now()->addMinutes(30);
+            } else {
+                // More than 4 attempts - disable account permanently
+                $this->is_disabled = true;
+                $this->is_locked = true;
+                $this->locked_until = null;
+            }
+        }
+
+        $this->save();
+    }
+
+    /**
+     * Reset failed login attempts on successful login
+     */
+    public function resetFailedAttempts(): void
+    {
+        $this->failed_login_attempts = 0;
+        $this->save();
+    }
+
+    /**
+     * Unlock account (called when lock period expires)
+     */
+    public function unlockAccount(): void
+    {
+        $this->is_locked = false;
+        $this->locked_until = null;
+        $this->save();
+    }
+
+    /**
+     * Verify PIN
+     */
+    public function verifyPin(string $pin): bool
+    {
+        return Hash::check($pin, $this->pin);
+    }
+
+    /**
+     * Set PIN (hash it for security)
+     */
+    public function setPin(string $pin): void
+    {
+        $this->pin = Hash::make($pin);
+        $this->save();
+    }
+
+    /**
+     * Find user by phone number
+     */
+    public static function findByPhone(string $phone): ?User
+    {
+        return static::where('phone', $phone)->first();
     }
 
 }

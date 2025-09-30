@@ -1,7 +1,7 @@
 name: Deploy to AWS Cpanel
 on:
   push:
-    branches: [ main ]
+    branches: [ main, feature/api ]
 jobs:
   web-deploy:
     name: Deploy
@@ -9,11 +9,21 @@ jobs:
     steps:
     - name: Get latest code
       uses: actions/checkout@v3
-      
-    - name: Sync files
+
+    - name: Sync files to Production
+      if: github.ref == 'refs/heads/main'
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
+        server-dir: /
+
+    - name: Sync files to Development
+      if: github.ref == 'refs/heads/feature/api'
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      with:
+        server: ${{ secrets.FTP_DEV_SERVER }}
+        username: ${{ secrets.FTP_DEV_USERNAME }}
+        password: ${{ secrets.FTP_DEV_PASSWORD }}
         server-dir: /

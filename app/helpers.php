@@ -221,8 +221,13 @@ if (! function_exists('getApiSessionData')) {
             'status'=> $user->status,
         ];
 
-        if ($user->type != 'admin' && $user->registration_step == 0 && $isRegisteringUser == false) {
-            $data['business_name'] =  $user->business->business_name;
+        if ($user->type != 'admin' && $user->business_code && $isRegisteringUser == false) {
+            try {
+                $data['business_name'] = $user->business ? $user->business->business_name : null;
+            } catch (\Exception $e) {
+                \Log::error('Error loading business name for user ' . $user->id . ': ' . $e->getMessage());
+                $data['business_name'] = null;
+            }
         }
 
         return  $data;
@@ -451,7 +456,7 @@ if (! function_exists('shiftBalances')) {
         // $cash = $cash + $income - $expenses;
 
         $totalBalance = $cash + $tillBalances;
-        
+
         $netBalance = $totalBalance + $loanBalances;
         $differ = $totalBalance + $loanBalances + ($expenses + $tillExpense) - $capital;
 

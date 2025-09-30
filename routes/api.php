@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\ShiftAPIController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +34,8 @@ Route::get('referrals/all-payments', [\App\Http\Controllers\Api\ReferrerAPIContr
 
 Route::post('login', [App\Http\Controllers\Api\MobileAppController::class, 'login']);
 Route::post('register', [App\Http\Controllers\Api\MobileAppController::class, 'register']);
+Route::post('verify-otp', [App\Http\Controllers\Api\MobileAppController::class, 'verifyOtp']);
+Route::post('resend-otp', [App\Http\Controllers\Api\MobileAppController::class, 'resendOtp']);
 
 // Form submission routes
 Route::post('form', [App\Http\Controllers\Api\FormAPIController::class, 'store']);
@@ -64,6 +67,84 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('agency/shifts', [\App\Http\Controllers\Agent\Shift\AgencyController::class, 'shift']);
     Route::get('agency/networks', App\Http\Controllers\Agent\Networks\NetworkController::class);
     Route::get('agency/loans', [\App\Http\Controllers\Agent\Shift\Loans\LoanController::class, 'index']);
+
+    //NETWORK MODULE
+    Route::prefix('networks')->group(function () {
+        // Core network operations
+        Route::get('/', [\App\Http\Controllers\Api\NetworkAPIController::class, 'index']);
+        Route::post('/', [\App\Http\Controllers\Api\NetworkAPIController::class, 'store']);
+        Route::get('/{code}', [\App\Http\Controllers\Api\NetworkAPIController::class, 'show']);
+        Route::put('/{code}', [\App\Http\Controllers\Api\NetworkAPIController::class, 'update']);
+        Route::delete('/{code}', [\App\Http\Controllers\Api\NetworkAPIController::class, 'destroy']);
+
+        // Helper endpoints for network creation
+        Route::get('/data/locations', [\App\Http\Controllers\Api\NetworkAPIController::class, 'locations']);
+        Route::get('/data/fsps', [\App\Http\Controllers\Api\NetworkAPIController::class, 'financialServiceProviders']);
+        Route::get('/data/cryptos', [\App\Http\Controllers\Api\NetworkAPIController::class, 'cryptos']);
+        Route::get('/data/types', [\App\Http\Controllers\Api\NetworkAPIController::class, 'types']);
+    });
+
+    //SHIFT MODULE
+    Route::prefix('shifts')->group(function () {
+        // Core shift operations
+        Route::get('/', [ShiftAPIController::class, 'index']);
+        Route::post('/', [ShiftAPIController::class, 'store']);
+        Route::get('/current', [ShiftAPIController::class, 'current']);
+        Route::get('/locations', [ShiftAPIController::class, 'locations']);
+        Route::get('/{id}', [ShiftAPIController::class, 'show']);
+        Route::put('/{id}', [ShiftAPIController::class, 'update']);
+        Route::delete('/{id}', [ShiftAPIController::class, 'destroy']);
+
+        // Transaction operations
+        Route::post('/{id}/income', [ShiftAPIController::class, 'addIncome']);
+        Route::post('/{id}/expense', [ShiftAPIController::class, 'addExpense']);
+        Route::post('/{id}/transaction', [ShiftAPIController::class, 'addTransaction']);
+        Route::post('/{id}/transfer', [ShiftAPIController::class, 'transferBalance']);
+        Route::get('/{id}/transactions', [ShiftAPIController::class, 'transactions']);
+
+        // Loan operations
+        Route::post('/{id}/loans', [ShiftAPIController::class, 'addLoan']);
+        Route::get('/{id}/loans', [ShiftAPIController::class, 'loans']);
+        Route::post('/{shiftId}/loans/{loanId}/pay', [ShiftAPIController::class, 'payLoan']);
+
+        // Other shift data
+        Route::get('/{id}/tills', [ShiftAPIController::class, 'tills']);
+    });
+
+    //BRANCH MODULE
+    Route::prefix('branches')->group(function () {
+        // Core branch operations
+        Route::get('/', [\App\Http\Controllers\Api\BranchAPIController::class, 'index']);
+        Route::post('/', [\App\Http\Controllers\Api\BranchAPIController::class, 'store']);
+        Route::get('/{id}', [\App\Http\Controllers\Api\BranchAPIController::class, 'show']);
+        Route::put('/{id}', [\App\Http\Controllers\Api\BranchAPIController::class, 'update']);
+        Route::delete('/{id}', [\App\Http\Controllers\Api\BranchAPIController::class, 'destroy']);
+
+        // Helper endpoints for branch creation
+        Route::get('/data/regions', [\App\Http\Controllers\Api\BranchAPIController::class, 'regions']);
+        Route::get('/data/towns', [\App\Http\Controllers\Api\BranchAPIController::class, 'towns']);
+        Route::get('/data/areas', [\App\Http\Controllers\Api\BranchAPIController::class, 'areas']);
+    });
+
+    //USERS MODULE
+    Route::prefix('users')->group(function () {
+        // Core user operations
+        Route::get('/', [\App\Http\Controllers\Api\UsersAPIController::class, 'index']);
+        Route::post('/', [\App\Http\Controllers\Api\UsersAPIController::class, 'store']);
+        Route::get('/{id}', [\App\Http\Controllers\Api\UsersAPIController::class, 'show']);
+        Route::put('/{id}', [\App\Http\Controllers\Api\UsersAPIController::class, 'update']);
+        Route::delete('/{id}', [\App\Http\Controllers\Api\UsersAPIController::class, 'destroy']);
+
+        // Helper endpoints for user creation
+        Route::get('/data/form', [\App\Http\Controllers\Api\UsersAPIController::class, 'getFormData']);
+    });
+
+    //BUSINESS PROFILE MODULE
+    Route::prefix('business/profile')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Api\BusinessPofileAPI::class, 'show']);
+        Route::put('/', [\App\Http\Controllers\Api\BusinessPofileAPI::class, 'update']);
+        Route::post('/update', [\App\Http\Controllers\Api\BusinessPofileAPI::class, 'update']);
+    });
 
 
 });
