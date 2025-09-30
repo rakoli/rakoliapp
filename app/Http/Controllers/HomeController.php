@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Business;
+use App\Models\FormSubmission;
 use App\Models\Shift;
 use App\Models\SystemIncome;
 use App\Models\Transaction;
@@ -12,6 +13,7 @@ use App\Utils\Enums\UserTypeEnum;
 use App\Utils\StatisticsService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Yajra\DataTables\DataTables;
@@ -210,6 +212,12 @@ class HomeController extends Controller
             // Registration earnings (1000 per referral)
             $stats['registration_earnings'] = $stats['total_referred_businesses'] * 1000;
 
+            // Form submission statistics
+            $stats['total_form_submissions'] = FormSubmission::where('sales_rep_name', $user->business_code)->count();
+
+            // Form submission earnings (1000 per valid submission)
+            $stats['form_submission_earnings'] = $stats['total_form_submissions'] * 1000;
+
             // Usage earnings based on shift activities in first 2 weeks
             $usageEarnings = 0;
             $referredBusinesses = Business::where('referral_business_code', $user->business_code)->get();
@@ -240,7 +248,7 @@ class HomeController extends Controller
             }
 
             $stats['usage_earnings'] = $usageEarnings;
-            $stats['total_earnings'] = $stats['registration_earnings'] + $stats['usage_earnings'];
+            $stats['total_earnings'] = $stats['registration_earnings'] + $stats['usage_earnings'] + $stats['form_submission_earnings'];
 
             // Active businesses (those with recent activity in last 30 days)
             $thirtyDaysAgo = Carbon::now()->subDays(30);
