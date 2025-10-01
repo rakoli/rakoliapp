@@ -86,7 +86,7 @@ class MobileAppController
     public function register(Request $request)
     {
         try {
-            $request->validate(ValidationRule::agentRegistration());
+            $request->validate(ValidationRule::mobileAgentRegistration());
 
             event(new Registered($user = User::addUser($request->all())));
 

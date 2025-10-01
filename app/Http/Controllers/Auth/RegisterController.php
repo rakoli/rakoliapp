@@ -100,12 +100,12 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         $validators = ValidationRule::agentRegistration();
-        
         if (env('APP_ENV') == 'production'){
-            $validators['g-recaptcha-response'] = [new GoogleReCaptchaV3ValidationRule('register')];
             $message = [
                 'g-recaptcha-response' => "Invalid Captch code, Please resubmit data."
             ];
+            $validators['g-recaptcha-response'] = [new GoogleReCaptchaV3ValidationRule('register')];
+
         }
         return Validator::make($data,$validators,$message);
     }
