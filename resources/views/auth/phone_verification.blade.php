@@ -6,10 +6,53 @@
 <style>
     .otp-input {
         text-align: center;
-        font-size: 1.5rem;
-        font-weight: bold;
+        font-size: 1.5rem    // Toast notification helper
+    function showToast(message, type = 'success') {
+        const toastEl = document.getElementById('notificationToast');
+        const toastBody = document.getElementById('toastMessage');
+
+        // Set message
+        toastBody.textContent = message;
+
+        // Set color based on type
+        toastEl.classList.remove('text-bg-success', 'text-bg-danger', 'text-bg-warning', 'text-bg-info');
+        if (type === 'success') {
+            toastEl.classList.add('text-bg-success');
+        } else if (type === 'error') {
+            toastEl.classList.add('text-bg-danger');
+        } else if (type === 'warning') {
+            toastEl.classList.add('text-bg-warning');
+        } else {
+            toastEl.classList.add('text-bg-info');
+        }
+
+        // Show toast
+        const toast = new bootstrap.Toast(toastEl);
+        toast.show();
     }
-    .verification-container {
+
+    // Form validation and submission
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        if (!otpInput.value || otpInput.value.length < 4) {
+            showToast('{{ __('Please enter a valid verification code') }}', 'error');
+            return;
+        }  font-weight: bold;
+    }
+           .then(response => response.json())
+        .then(data => {
+            if (data.status === 200) {
+                showToast('{{ __('OTP sent successfully!') }}', 'success');
+                startCountdown();
+            } else {
+                showToast(data.message || '{{ __('Failed to send OTP. Please try again.') }}', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showToast('{{ __('An error occurred. Please try again.') }}', 'error');
+        });n-container {
         max-width: 500px;
         margin: 0 auto;
     }
@@ -17,7 +60,20 @@
         color: #dc3545;
         font-weight: bold;
     }
+    .toast-container {
+        z-index: 9999;
+    }
 </style>
+
+<!-- Toast Container -->
+<div class="toast-container position-fixed top-0 end-0 p-3" id="toastContainer">
+    <div id="notificationToast" class="toast align-items-center border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body" id="toastMessage"></div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
 
 <!--begin::Form-->
 <form class="form w-100" id="kt_phone_verification_form" method="POST" action="{{ route('registration.phone.verify.submit') }}">
@@ -90,12 +146,73 @@
             {{ __('general.LBL_RESEND_CODE') }}
         </button>
         <div id="countdown-timer" class="countdown mt-2" style="display: none;"></div>
+
+        <!--begin::Change Phone-->
+        <div class="mt-4">
+            <button type="button" id="change-phone-btn" class="btn btn-link p-0 text-primary fw-bold">
+                {{ __('Wrong phone number? Click to edit') }}
+            </button>
+        </div>
+        <!--end::Change Phone-->
     </div>
     <!--end::Resend-->
 </form>
 <!--end::Form-->
 
 @endsection
+
+<!-- Phone Update Modal -->
+<div class="modal fade" id="phoneUpdateModal" tabindex="-1" aria-labelledby="phoneUpdateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="phoneUpdateModalLabel">{{ __('Update Phone Number') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="phone-update-form">
+                    @csrf
+                    <div class="mb-3">
+                        <label for="country_code" class="form-label">{{ __('Country') }}</label>
+                        <select name="country_code" id="country_code" class="form-select" required>
+                            <option value="">{{ __('Select Country') }}</option>
+                            @php
+                                $countries = \App\Models\Country::orderBy('name')->get();
+                            @endphp
+                            @foreach($countries as $country)
+                                <option value="{{ $country->code }}" {{ $user->country_code == $country->code ? 'selected' : '' }}>
+                                    {{ $country->name }} (+{{ $country->dialing_code }})
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">{{ __('Phone Number') }}</label>
+                        <input type="text"
+                               class="form-control"
+                               id="phone"
+                               name="phone"
+                               placeholder="{{ __('Enter phone number') }}"
+                               required>
+                        <div class="form-text">{{ __('Enter phone number without country code') }}</div>
+                    </div>
+                    <div class="alert alert-info">
+                        <small>{{ __('A new verification code will be sent to the updated number') }}</small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                <button type="button" id="update-phone-submit" class="btn btn-primary">
+                    <span class="indicator-label">{{ __('Update & Send OTP') }}</span>
+                    <span class="indicator-progress" style="display: none;">{{ __('Please wait...') }}
+                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section('js')
 <script>
@@ -188,6 +305,81 @@ document.addEventListener('DOMContentLoaded', function() {
     @if(session('otp_sent_recently'))
         startCountdown();
     @endif
+
+    // Phone number update functionality
+    const changePhoneBtn = document.getElementById('change-phone-btn');
+    const phoneUpdateModal = new bootstrap.Modal(document.getElementById('phoneUpdateModal'));
+    const phoneUpdateForm = document.getElementById('phone-update-form');
+    const updatePhoneSubmit = document.getElementById('update-phone-submit');
+
+    changePhoneBtn.addEventListener('click', function() {
+        phoneUpdateModal.show();
+    });
+
+    // Only allow numeric input for phone
+    document.getElementById('phone').addEventListener('input', function(e) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
+
+    updatePhoneSubmit.addEventListener('click', function() {
+        const phone = document.getElementById('phone').value;
+        const countryCode = document.getElementById('country_code').value;
+
+        if (!phone || !countryCode) {
+            showToast('{{ __('Please fill in all fields') }}', 'warning');
+            return;
+        }
+
+        if (phone.length < 8) {
+            showToast('{{ __('Please enter a valid phone number') }}', 'warning');
+            return;
+        }
+
+        // Show loading state
+        updatePhoneSubmit.disabled = true;
+        updatePhoneSubmit.querySelector('.indicator-label').style.display = 'none';
+        updatePhoneSubmit.querySelector('.indicator-progress').style.display = 'inline-block';
+
+        fetch('{{ route("registration.phone.update") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({
+                phone: phone,
+                country_code: countryCode
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 200) {
+                phoneUpdateModal.hide();
+                showToast(data.message, 'success');
+                // Update the displayed phone number
+                if (data.formatted_phone) {
+                    document.querySelector('.text-gray-500 strong').textContent = data.formatted_phone;
+                }
+                // Clear the OTP input
+                otpInput.value = '';
+                otpInput.focus();
+                // Start countdown for new OTP
+                startCountdown();
+            } else {
+                showToast(data.message || '{{ __('Failed to update phone number. Please try again.') }}', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showToast('{{ __('An error occurred. Please try again.') }}', 'error');
+        })
+        .finally(() => {
+            // Reset button state
+            updatePhoneSubmit.disabled = false;
+            updatePhoneSubmit.querySelector('.indicator-label').style.display = 'inline-block';
+            updatePhoneSubmit.querySelector('.indicator-progress').style.display = 'none';
+        });
+    });
 });
 </script>
 @endsection
