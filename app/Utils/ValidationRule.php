@@ -13,7 +13,7 @@ class ValidationRule
             'lname' => ['required', 'string', 'max:20'],
             'phone' => ['required','string', 'unique:users'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'pin' => ['required', 'string', 'min:4', 'max:6', 'confirmed'],
             //'tax_id' => ['nullable', 'string', 'max:11'],
             'business_regno' => ['nullable', 'string', 'max:20'],
             'referral_business_code' => ['nullable', 'string', 'exists:businesses,code'],
