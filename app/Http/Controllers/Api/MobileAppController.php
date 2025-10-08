@@ -313,6 +313,161 @@ class MobileAppController
     }
 
     /**
+     * Request PIN reset - sends OTP to user's phone
+     */
+    public function requestPinReset(Request $request)
+    {
+        try {
+            $request->validate([
+                'phone' => 'required|string',
+            ]);
+
+            $user = User::findByPhone($request->phone);
+
+            if (!$user) {
+                // For security, don't reveal if phone exists
+                return responder()->success([
+                    'message' => 'If this phone number is registered, you will receive an OTP.',
+                ]);
+            }
+
+            // Check if account is locked or disabled
+            if ($user->is_disabled) {
+                return responder()->error('account_disabled', 'Account has been disabled. Please contact administrator.');
+            }
+
+            // Check if too many PIN reset attempts
+            if ($user->shouldLockPinReset()) {
+                Log::channel('mobile_api')->warning("PIN reset locked for user: {$user->phone}");
+                return responder()->error('reset_locked', 'Too many PIN reset attempts. Please try again later.');
+            }
+
+            // Generate and send OTP for PIN reset
+            $otp = VerifyOTP::generateOTPCode();
+            $minutes = (VerifyOTP::$validtime / 60);
+            $text = env('APP_NAME') . ' PIN reset code: ' . $otp . "\nValid for " . $minutes . ' min. Do not share this code.';
+
+            SMS::sendToUser($user, $text);
+
+            // Save PIN reset OTP
+            $user->pin_reset_otp = $otp;
+            $user->pin_reset_otp_time = now();
+            $user->pin_reset_otp_count = $user->pin_reset_otp_count + 1;
+            $user->save();
+
+            Log::channel('mobile_api')->info("PIN reset OTP sent to: {$user->phone}");
+
+            return responder()->success([
+                'message' => 'PIN reset code sent to your phone.',
+                'phone' => $this->maskPhone($user->phone),
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('PIN reset request failed: ' . $e->getMessage());
+            return responder()->error('request_failed', 'Failed to process request. Please try again.');
+        }
+    }
+
+    /**
+     * Verify PIN reset OTP
+     */
+    public function verifyPinResetOtp(Request $request)
+    {
+        try {
+            $request->validate([
+                'phone' => 'required|string',
+                'otp' => 'required|numeric|digits:6',
+            ]);
+
+            $user = User::findByPhone($request->phone);
+
+            if (!$user) {
+                return responder()->error('invalid_credentials', 'Invalid phone number or OTP.');
+            }
+
+            // Verify OTP
+            if (!$user->verifyPinResetOTP($request->otp)) {
+                Log::channel('mobile_api')->info("Invalid PIN reset OTP attempt: {$user->phone}");
+                return responder()->error('invalid_otp', 'Invalid or expired OTP.');
+            }
+
+            // Generate a temporary token for PIN reset (valid for 10 minutes)
+            $resetToken = bin2hex(random_bytes(32));
+
+            // Store token in user record with expiry time
+            $user->pin_reset_token = $resetToken;
+            $user->pin_reset_token_expires_at = now()->addMinutes(10);
+            $user->save();
+
+            Log::channel('mobile_api')->info("PIN reset OTP verified: {$user->phone}");
+
+            return responder()->success([
+                'message' => 'OTP verified successfully. You can now reset your PIN.',
+                'reset_token' => $resetToken,
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('PIN reset OTP verification failed: ' . $e->getMessage());
+            return responder()->error('verification_failed', 'Failed to verify OTP.');
+        }
+    }
+
+    /**
+     * Reset PIN with verified token
+     */
+    public function resetPin(Request $request)
+    {
+        try {
+            $request->validate([
+                'reset_token' => 'required|string',
+                'new_pin' => 'required|string|min:4|max:6|confirmed',
+                'new_pin_confirmation' => 'required|string',
+            ]);
+
+            // Find user by reset token
+            $user = User::where('pin_reset_token', $request->reset_token)
+                ->where('pin_reset_token_expires_at', '>', now())
+                ->first();
+
+            if (!$user) {
+                Log::channel('mobile_api')->warning("Invalid or expired reset token attempt");
+                return responder()->error('invalid_token', 'Invalid or expired reset token. Please request a new PIN reset.');
+            }
+
+            // Ensure PIN is numeric only
+            if (!ctype_digit($request->new_pin)) {
+                return responder()->error('invalid_pin', 'PIN must contain only numbers.');
+            }
+
+            // Set new PIN
+            $user->setPin($request->new_pin);
+
+            // Clear PIN reset data and token
+            $user->clearPinResetOTP();
+            $user->pin_reset_token = null;
+            $user->pin_reset_token_expires_at = null;
+            $user->save();
+
+            // Revoke all existing tokens for security
+            $user->tokens()->delete();
+
+            Log::channel('mobile_api')->info("PIN reset successful: {$user->phone}");
+
+            return responder()->success([
+                'message' => 'PIN reset successfully. Please login with your new PIN.',
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return responder()->error('validation_failed', 'Validation failed', [
+                'errors' => $e->errors()
+            ]);
+        } catch (\Exception $e) {
+            Log::error('PIN reset failed: ' . $e->getMessage());
+            return responder()->error('reset_failed', 'Failed to reset PIN. Please try again.');
+        }
+    }
+
+    /**
      * Mask phone number for security
      */
     private function maskPhone($phone)

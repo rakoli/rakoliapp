@@ -37,6 +37,11 @@ Route::post('register', [App\Http\Controllers\Api\MobileAppController::class, 'r
 Route::post('verify-otp', [App\Http\Controllers\Api\MobileAppController::class, 'verifyOtp']);
 Route::post('resend-otp', [App\Http\Controllers\Api\MobileAppController::class, 'resendOtp']);
 
+// PIN Reset routes (public - no auth required)
+Route::post('pin-reset/request', [App\Http\Controllers\Api\MobileAppController::class, 'requestPinReset']);
+Route::post('pin-reset/verify-otp', [App\Http\Controllers\Api\MobileAppController::class, 'verifyPinResetOtp']);
+Route::post('pin-reset/reset', [App\Http\Controllers\Api\MobileAppController::class, 'resetPin']);
+
 // Form submission routes
 Route::post('form', [App\Http\Controllers\Api\FormAPIController::class, 'store']);
 Route::get('form', [App\Http\Controllers\Api\FormAPIController::class, 'index']);

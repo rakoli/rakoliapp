@@ -49,11 +49,18 @@ class User extends Authenticatable
         'failed_login_attempts',
         'locked_until',
         'is_disabled',
+        'pin_reset_otp',
+        'pin_reset_otp_time',
+        'pin_reset_otp_count',
+        'pin_reset_token',
+        'pin_reset_token_expires_at',
     ];
 
     protected $hidden = [
         'password',
         'pin',
+        'pin_reset_otp',
+        'pin_reset_token',
         'remember_token',
     ];
 
@@ -366,6 +373,53 @@ class User extends Authenticatable
     public function setPin(string $pin): void
     {
         $this->pin = Hash::make($pin);
+        $this->save();
+    }
+
+    /**
+     * Check if user has active PIN reset OTP
+     */
+    public function hasActivePinResetOTP(): bool
+    {
+        if (!$this->pin_reset_otp || !$this->pin_reset_otp_time) {
+            return false;
+        }
+
+        $validTime = config('app.otp_valid_time', 300); // 5 minutes default
+        $otpAge = now()->diffInSeconds($this->pin_reset_otp_time);
+
+        return $otpAge < $validTime;
+    }
+
+    /**
+     * Check if PIN reset should be locked (too many attempts)
+     */
+    public function shouldLockPinReset(): bool
+    {
+        $maxAttempts = config('app.otp_max_attempts', 5);
+        return $this->pin_reset_otp_count >= $maxAttempts;
+    }
+
+    /**
+     * Verify PIN reset OTP
+     */
+    public function verifyPinResetOTP(string $otp): bool
+    {
+        if (!$this->hasActivePinResetOTP()) {
+            return false;
+        }
+
+        return $this->pin_reset_otp === $otp;
+    }
+
+    /**
+     * Reset PIN reset OTP data
+     */
+    public function clearPinResetOTP(): void
+    {
+        $this->pin_reset_otp = null;
+        $this->pin_reset_otp_time = null;
+        $this->pin_reset_otp_count = 0;
         $this->save();
     }
 
