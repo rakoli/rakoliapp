@@ -318,6 +318,17 @@ class MobileAppController
     public function requestPinReset(Request $request)
     {
         try {
+            // Force JSON parsing for production environment
+            if ($request->isJson() || str_contains($request->header('Content-Type', ''), 'application/json')) {
+                $data = $request->json()->all();
+                $request->merge($data);
+            }
+
+            Log::channel('mobile_api')->info('PIN reset request data', [
+                'all_data' => $request->all(),
+                'json_data' => $request->json()->all(),
+            ]);
+
             $request->validate([
                 'phone' => 'required|string',
             ]);
@@ -380,13 +391,20 @@ class MobileAppController
     public function verifyPinResetOtp(Request $request)
     {
         try {
+            // Force JSON parsing if content-type is JSON (fix for production)
+            if ($request->isJson() || str_contains($request->header('Content-Type', ''), 'application/json')) {
+                $data = $request->json()->all();
+                $request->merge($data);
+            }
+
             // Log incoming request for debugging
             Log::channel('mobile_api')->debug('PIN reset OTP verification attempt', [
                 'has_phone' => $request->has('phone'),
                 'has_otp' => $request->has('otp'),
                 'phone_value' => $request->input('phone'),
                 'content_type' => $request->header('Content-Type'),
-                'all_input' => $request->all()
+                'all_input' => $request->all(),
+                'json_data' => $request->json()->all()
             ]);
 
             $request->validate([
@@ -426,7 +444,8 @@ class MobileAppController
                 'errors' => $e->errors(),
                 'received_fields' => array_keys($request->all()),
                 'expected_fields' => ['phone', 'otp'],
-                'input' => $request->except(['otp'])
+                'input' => $request->except(['otp']),
+                'json_data' => $request->json()->all()
             ]);
 
             // Check if user sent wrong step data
@@ -446,14 +465,23 @@ class MobileAppController
             ]);
             return responder()->error('verification_failed', 'Failed to verify OTP.');
         }
-    }
-
-    /**
+    }    /**
      * Reset PIN with verified token
      */
     public function resetPin(Request $request)
     {
         try {
+            // Force JSON parsing for production environment
+            if ($request->isJson() || str_contains($request->header('Content-Type', ''), 'application/json')) {
+                $data = $request->json()->all();
+                $request->merge($data);
+            }
+
+            Log::channel('mobile_api')->info('PIN reset request data', [
+                'all_data' => $request->all(),
+                'json_data' => $request->json()->all(),
+            ]);
+
             $request->validate([
                 'reset_token' => 'required|string',
                 'new_pin' => 'required|string|min:4|max:6|confirmed',
