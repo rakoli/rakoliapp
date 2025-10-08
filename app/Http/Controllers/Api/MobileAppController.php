@@ -362,8 +362,14 @@ class MobileAppController
                 'phone' => $this->maskPhone($user->phone),
             ]);
 
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return responder()->error('validation_failed', 'Validation failed', [
+                'errors' => $e->errors()
+            ]);
         } catch (\Exception $e) {
-            Log::error('PIN reset request failed: ' . $e->getMessage());
+            Log::channel('mobile_api')->error('PIN reset request failed: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
             return responder()->error('request_failed', 'Failed to process request. Please try again.');
         }
     }
@@ -374,6 +380,15 @@ class MobileAppController
     public function verifyPinResetOtp(Request $request)
     {
         try {
+            // Log incoming request for debugging
+            Log::channel('mobile_api')->debug('PIN reset OTP verification attempt', [
+                'has_phone' => $request->has('phone'),
+                'has_otp' => $request->has('otp'),
+                'phone_value' => $request->input('phone'),
+                'content_type' => $request->header('Content-Type'),
+                'all_input' => $request->all()
+            ]);
+
             $request->validate([
                 'phone' => 'required|string',
                 'otp' => 'required|numeric|digits:6',
@@ -406,8 +421,29 @@ class MobileAppController
                 'reset_token' => $resetToken,
             ]);
 
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::channel('mobile_api')->error('PIN reset OTP validation failed', [
+                'errors' => $e->errors(),
+                'received_fields' => array_keys($request->all()),
+                'expected_fields' => ['phone', 'otp'],
+                'input' => $request->except(['otp'])
+            ]);
+
+            // Check if user sent wrong step data
+            if ($request->has('reset_token') && $request->has('new_pin')) {
+                return responder()->error('wrong_endpoint', 'Wrong endpoint. Use /api/pin-reset/reset for setting new PIN. This endpoint is for OTP verification only.', [
+                    'hint' => 'You should call /api/pin-reset/verify-otp first with phone and otp, then use the returned reset_token to call /api/pin-reset/reset',
+                    'errors' => $e->errors()
+                ]);
+            }
+
+            return responder()->error('validation_failed', 'Validation failed', [
+                'errors' => $e->errors()
+            ]);
         } catch (\Exception $e) {
-            Log::error('PIN reset OTP verification failed: ' . $e->getMessage());
+            Log::channel('mobile_api')->error('PIN reset OTP verification failed: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
             return responder()->error('verification_failed', 'Failed to verify OTP.');
         }
     }
