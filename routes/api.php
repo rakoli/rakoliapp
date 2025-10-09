@@ -50,6 +50,11 @@ Route::get('form/gps/coordinates', [App\Http\Controllers\Api\FormAPIController::
 
 Route::middleware(['auth:sanctum'])->group(function () {
 
+    // Mock Transaction API Routes (authentication required)
+    Route::get('mock/transactions', [\App\Http\Controllers\Api\MockTransactionAPIController::class, 'index']);
+    Route::get('mock/transactions/recent', [\App\Http\Controllers\Api\MockTransactionAPIController::class, 'recent']);
+    Route::get('shifts/{shiftId}/transactions', [\App\Http\Controllers\Api\MockTransactionAPIController::class, 'shiftTransactions']);
+
     Route::post('logout', [App\Http\Controllers\Api\MobileAppController::class, 'logout']);
 
     Route::get('request/email/code', [App\Http\Controllers\RegistrationStepController::class, 'requestEmailCodeAjax']);
