@@ -394,7 +394,7 @@ class MobileAppController
             // Force JSON parsing if content-type is JSON (fix for production)
             if ($request->isJson() || str_contains($request->header('Content-Type', ''), 'application/json')) {
                 $data = $request->json()->all();
-                $request->merge($data);
+                $request->replace($data); // Use replace() to ensure a clean state
             }
 
             // Log incoming request for debugging
@@ -404,7 +404,6 @@ class MobileAppController
                 'phone_value' => $request->input('phone'),
                 'content_type' => $request->header('Content-Type'),
                 'all_input' => $request->all(),
-                'json_data' => $request->json()->all()
             ]);
 
             $request->validate([
@@ -445,7 +444,6 @@ class MobileAppController
                 'received_fields' => array_keys($request->all()),
                 'expected_fields' => ['phone', 'otp'],
                 'input' => $request->except(['otp']),
-                'json_data' => $request->json()->all()
             ]);
 
             // Check if user sent wrong step data
@@ -484,8 +482,8 @@ class MobileAppController
 
             $request->validate([
                 'reset_token' => 'required|string',
-                'new_pin' => 'required|string|min:4|max:6|confirmed',
-                'new_pin_confirmation' => 'required|string',
+                'pin' => 'required|string|min:4|max:6|confirmed',
+                'pin_confirmation' => 'required|string',
             ]);
 
             // Find user by reset token
@@ -499,12 +497,12 @@ class MobileAppController
             }
 
             // Ensure PIN is numeric only
-            if (!ctype_digit($request->new_pin)) {
+            if (!ctype_digit($request->pin)) {
                 return responder()->error('invalid_pin', 'PIN must contain only numbers.');
             }
 
             // Set new PIN
-            $user->setPin($request->new_pin);
+            $user->setPin($request->pin);
 
             // Clear PIN reset data and token
             $user->clearPinResetOTP();
