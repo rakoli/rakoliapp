@@ -79,7 +79,6 @@ class MockTransactionAPIController extends Controller
                     'status' => $shift->status,
                     'user' => $shift->user ? [
                         'code' => $shift->user->code,
-                        'name' => $shift->user->name,
                     ] : null,
                     'location' => $shift->location ? [
                         'code' => $shift->location->code,
@@ -121,6 +120,89 @@ class MockTransactionAPIController extends Controller
             return responder()->success([
                 'transactions' => $transactions,
                 'count' => $transactions->count(),
+            ]);
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Get random shifts with pagination.
+     * Authentication required.
+     */
+    public function randomShifts(Request $request)
+    {
+        try {
+            // Get random shifts with their relationships
+            $shifts = Shift::withoutGlobalScopes()
+                ->with(['user', 'location', 'business', 'shiftNetworks.network.agency'])
+                ->inRandomOrder()
+                ->paginate(15);
+
+            return responder()->success([
+                'shifts' => $shifts->items(),
+                'pagination' => [
+                    'current_page' => $shifts->currentPage(),
+                    'total_pages' => $shifts->lastPage(),
+                    'total_items' => $shifts->total(),
+                    'per_page' => $shifts->perPage(),
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return responder()->error($e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Get transactions of a random shift with pagination.
+     * Authentication required.
+     */
+    public function randomShiftTransactions(Request $request)
+    {
+        try {
+            // Get a random shift that has at least 1 transaction
+            $shift = Shift::withoutGlobalScopes()
+                ->whereHas('transactions', function ($query) {
+                    $query->withoutGlobalScopes();
+                }, '>=', 1)
+                ->inRandomOrder()
+                ->first();
+
+            if (!$shift) {
+                return responder()->error('No shifts with transactions found', 404);
+            }
+
+            // Get transactions for this shift
+            $transactions = ShiftTransaction::withoutGlobalScopes()
+                ->where('shift_id', $shift->id)
+                ->with(['network.agency', 'location'])
+                ->orderBy('created_at', 'desc')
+                ->paginate(15);
+
+            return responder()->success([
+                'shift' => [
+                    'id' => $shift->id,
+                    'status' => $shift->status,
+                    'user' => $shift->user ? [
+                        'code' => $shift->user->code,
+                    ] : null,
+                    'location' => $shift->location ? [
+                        'code' => $shift->location->code,
+                        'name' => $shift->location->name,
+                    ] : null,
+                    'business' => $shift->business ? [
+                        'code' => $shift->business->code,
+                        'name' => $shift->business->business_name,
+                    ] : null,
+                    'created_at' => $shift->created_at,
+                ],
+                'transactions' => $transactions->items(),
+                'pagination' => [
+                    'current_page' => $transactions->currentPage(),
+                    'total_pages' => $transactions->lastPage(),
+                    'total_items' => $transactions->total(),
+                    'per_page' => $transactions->perPage(),
+                ]
             ]);
         } catch (\Exception $e) {
             return responder()->error($e->getMessage(), 500);
