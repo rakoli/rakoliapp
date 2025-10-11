@@ -76,12 +76,12 @@ class BranchAPIController extends Controller
     {
         try {
             // Check subscription limit
-            if (!validateSubscription("branches", Location::where('business_code', auth()->user()->business_code)->count())) {
+       /*      if (!validateSubscription("branches", Location::where('business_code', auth()->user()->business_code)->count())) {
                 return response()->json([
                     'success' => false,
                     'message' => 'You have exceeded your branch limit. Please upgrade your plan.'
                 ], 403);
-            }
+            } */
 
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:255',
