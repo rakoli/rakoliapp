@@ -96,6 +96,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/data/types', [\App\Http\Controllers\Api\NetworkAPIController::class, 'types']);
     });
 
+    //FLOAT EXCHANGE MODULE
+    Route::prefix('float-exchanges')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Api\FloatExchangeAPI::class, 'index']);
+        Route::post('/', [\App\Http\Controllers\Api\FloatExchangeAPI::class, 'store']);
+        Route::get('/statistics', [\App\Http\Controllers\Api\FloatExchangeAPI::class, 'statistics']);
+        Route::get('/{code}', [\App\Http\Controllers\Api\FloatExchangeAPI::class, 'show']);
+    });
+
     //SHIFT MODULE
     Route::prefix('shifts')->group(function () {
         // Core shift operations

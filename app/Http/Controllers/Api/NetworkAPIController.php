@@ -59,6 +59,7 @@ class NetworkAPIController extends Controller
                         'fsp' => $network->agency ? [
                             'code' => $network->agency->code,
                             'name' => $network->agency->name,
+                            'logo' => $network->agency->logo,
                         ] : null,
                         'crypto' => $network->crypto ? [
                             'code' => $network->crypto->code,
@@ -122,6 +123,7 @@ class NetworkAPIController extends Controller
                 'fsp' => $network->agency ? [
                     'code' => $network->agency->code,
                     'name' => $network->agency->name,
+                    'logo' => $network->agency->logo,
                 ] : null,
                 'crypto' => $network->crypto ? [
                     'code' => $network->crypto->code,
@@ -179,6 +181,7 @@ class NetworkAPIController extends Controller
                     'fsp' => $network->agency ? [
                         'code' => $network->agency->code,
                         'name' => $network->agency->name,
+                        'logo' => $network->agency->logo,
                     ] : null,
                     'crypto' => $network->crypto ? [
                         'code' => $network->crypto->code,
@@ -321,7 +324,7 @@ class NetworkAPIController extends Controller
             $fsps = FinancialServiceProvider::when($countryCode, function ($query) use ($countryCode) {
                     return $query->where('country_code', $countryCode);
                 })
-                ->select('code', 'name', 'country_code')
+                ->select('code', 'name', 'logo', 'country_code')
                 ->orderBy('name')
                 ->get();
 
