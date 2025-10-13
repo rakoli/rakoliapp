@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Business;
 use App\Models\Shift;
 use App\Models\ShiftTransaction;
+use App\Utils\ErrorCode;
 use Illuminate\Http\Request;
 
 class MockTransactionAPIController extends Controller
@@ -26,7 +27,7 @@ class MockTransactionAPIController extends Controller
                 ->first();
 
             if (!$business) {
-                return responder()->error('No businesses with sufficient transactions found', 404);
+                return responder()->error(ErrorCode::NOT_FOUND, 'No businesses with sufficient transactions found', null, 404);
             }
 
             // Get transactions for this business without global scopes
@@ -50,7 +51,7 @@ class MockTransactionAPIController extends Controller
                 ]
             ]);
         } catch (\Exception $e) {
-            return responder()->error($e->getMessage(), 500);
+            return responder()->error(ErrorCode::RETRIEVE_FAILED, $e->getMessage(), null, 500);
         }
     }
 
@@ -99,7 +100,7 @@ class MockTransactionAPIController extends Controller
                 ]
             ]);
         } catch (\Exception $e) {
-            return responder()->error($e->getMessage(), 404);
+            return responder()->error(ErrorCode::NOT_FOUND, $e->getMessage(), null, 404);
         }
     }
 
@@ -122,7 +123,7 @@ class MockTransactionAPIController extends Controller
                 'count' => $transactions->count(),
             ]);
         } catch (\Exception $e) {
-            return responder()->error($e->getMessage(), 500);
+            return responder()->error(ErrorCode::RETRIEVE_FAILED, $e->getMessage(), null, 500);
         }
     }
 
@@ -149,7 +150,7 @@ class MockTransactionAPIController extends Controller
                 ]
             ]);
         } catch (\Exception $e) {
-            return responder()->error($e->getMessage(), 500);
+            return responder()->error(ErrorCode::RETRIEVE_FAILED, $e->getMessage(), null, 500);
         }
     }
 
@@ -169,7 +170,7 @@ class MockTransactionAPIController extends Controller
                 ->first();
 
             if (!$shift) {
-                return responder()->error('No shifts with transactions found', 404);
+                return responder()->error(ErrorCode::NOT_FOUND, 'No shifts with transactions found', null, 404);
             }
 
             // Get transactions for this shift
@@ -205,7 +206,7 @@ class MockTransactionAPIController extends Controller
                 ]
             ]);
         } catch (\Exception $e) {
-            return responder()->error($e->getMessage(), 500);
+            return responder()->error(ErrorCode::RETRIEVE_FAILED, $e->getMessage(), null, 500);
         }
     }
 }

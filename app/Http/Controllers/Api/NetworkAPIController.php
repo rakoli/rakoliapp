@@ -9,6 +9,7 @@ use App\Models\Crypto;
 use App\Models\FinancialServiceProvider;
 use App\Models\Location;
 use App\Models\Network;
+use App\Utils\ErrorCode;
 use App\Utils\Enums\NetworkTypeEnum;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -73,11 +74,7 @@ class NetworkAPIController extends Controller
         } catch (\Exception $e) {
             Log::error('NetworkAPIController::index - Error: ' . $e->getMessage());
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to retrieve networks',
-                'error' => $e->getMessage()
-            ], 500);
+            return responder()->error(ErrorCode::RETRIEVE_FAILED, 'Failed to retrieve networks', null, 500);
         }
     }
 
@@ -143,11 +140,7 @@ class NetworkAPIController extends Controller
         } catch (\Exception $e) {
             Log::error('NetworkAPIController::store - Error: ' . $e->getMessage());
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to create network',
-                'error' => $e->getMessage()
-            ], 500);
+            return responder()->error(ErrorCode::CREATE_FAILED, 'Failed to create network', null, 500);
         }
     }
 
@@ -163,10 +156,7 @@ class NetworkAPIController extends Controller
                 ->first();
 
             if (!$network) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Network not found'
-                ], 404);
+                return responder()->error(ErrorCode::NOT_FOUND, 'Network not found', null, 404);
             }
 
             return response()->json([
@@ -203,11 +193,7 @@ class NetworkAPIController extends Controller
         } catch (\Exception $e) {
             Log::error('NetworkAPIController::show - Error: ' . $e->getMessage());
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to retrieve network',
-                'error' => $e->getMessage()
-            ], 500);
+            return responder()->error(ErrorCode::RETRIEVE_FAILED, 'Failed to retrieve network', null, 500);
         }
     }
 
@@ -222,10 +208,7 @@ class NetworkAPIController extends Controller
                 ->first();
 
             if (!$network) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Network not found'
-                ], 404);
+                return responder()->error(ErrorCode::NOT_FOUND, 'Network not found', null, 404);
             }
 
             $data = $request->validated();
@@ -272,11 +255,7 @@ class NetworkAPIController extends Controller
         } catch (\Exception $e) {
             Log::error('NetworkAPIController::update - Error: ' . $e->getMessage());
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to update network',
-                'error' => $e->getMessage()
-            ], 500);
+            return responder()->error(ErrorCode::UPDATE_FAILED, 'Failed to update network', null, 500);
         }
     }
 
@@ -291,10 +270,7 @@ class NetworkAPIController extends Controller
                 ->first();
 
             if (!$network) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Network not found'
-                ], 404);
+                return responder()->error(ErrorCode::NOT_FOUND, 'Network not found', null, 404);
             }
 
             $network->delete();
@@ -306,11 +282,7 @@ class NetworkAPIController extends Controller
         } catch (\Exception $e) {
             Log::error('NetworkAPIController::destroy - Error: ' . $e->getMessage());
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to delete network',
-                'error' => $e->getMessage()
-            ], 500);
+            return responder()->error(ErrorCode::DELETE_FAILED, 'Failed to delete network', null, 500);
         }
     }
 
@@ -333,11 +305,7 @@ class NetworkAPIController extends Controller
         } catch (\Exception $e) {
             Log::error('NetworkAPIController::locations - Error: ' . $e->getMessage());
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to retrieve locations',
-                'error' => $e->getMessage()
-            ], 500);
+            return responder()->error(ErrorCode::RETRIEVE_FAILED, 'Failed to retrieve locations', null, 500);
         }
     }
 
@@ -365,11 +333,7 @@ class NetworkAPIController extends Controller
         } catch (\Exception $e) {
             Log::error('NetworkAPIController::financialServiceProviders - Error: ' . $e->getMessage());
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to retrieve financial service providers',
-                'error' => $e->getMessage()
-            ], 500);
+            return responder()->error(ErrorCode::RETRIEVE_FAILED, 'Failed to retrieve financial service providers', null, 500);
         }
     }
 
@@ -391,11 +355,7 @@ class NetworkAPIController extends Controller
         } catch (\Exception $e) {
             Log::error('NetworkAPIController::cryptos - Error: ' . $e->getMessage());
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to retrieve crypto currencies',
-                'error' => $e->getMessage()
-            ], 500);
+            return responder()->error(ErrorCode::RETRIEVE_FAILED, 'Failed to retrieve crypto currencies', null, 500);
         }
     }
 
@@ -421,11 +381,7 @@ class NetworkAPIController extends Controller
         } catch (\Exception $e) {
             Log::error('NetworkAPIController::types - Error: ' . $e->getMessage());
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to retrieve network types',
-                'error' => $e->getMessage()
-            ], 500);
+            return responder()->error(ErrorCode::RETRIEVE_FAILED, 'Failed to retrieve network types', null, 500);
         }
     }
 }

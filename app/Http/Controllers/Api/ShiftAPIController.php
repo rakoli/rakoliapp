@@ -16,6 +16,7 @@ use App\Models\Location;
 use App\Models\Network;
 use App\Models\Shift;
 use App\Models\ShiftNetwork;
+use App\Utils\ErrorCode;
 use App\Utils\Enums\LoanPaymentStatusEnum;
 use App\Utils\Enums\NetworkTypeEnum;
 use App\Utils\Enums\ShiftStatusEnum;
@@ -48,7 +49,7 @@ class ShiftAPIController extends Controller
                 ]
             ]);
         } catch (\Exception $e) {
-            return responder()->error($e->getMessage(), 500);
+            return responder()->error(ErrorCode::RETRIEVE_FAILED, $e->getMessage(), null, 500);
         }
     }
 
@@ -67,7 +68,7 @@ class ShiftAPIController extends Controller
         try {
             // Check if there's already an open shift
             if (Shift::query()->where('status', ShiftStatusEnum::OPEN)->exists()) {
-                return responder()->error('Close opened shift to continue', 422);
+                return responder()->error(ErrorCode::RESOURCE_CONFLICT, 'Close opened shift to continue', null, 422);
             }
 
             $shift = OpenShift::run(
@@ -78,7 +79,7 @@ class ShiftAPIController extends Controller
             );
 
             if (!$shift) {
-                return responder()->error('Failed to create shift', 422);
+                return responder()->error(ErrorCode::CREATE_FAILED, 'Failed to create shift', null, 422);
             }
 
             return responder()->success([
@@ -86,7 +87,7 @@ class ShiftAPIController extends Controller
                 'shift' => $shift->load(['user', 'location', 'shiftNetworks.network.agency'])
             ]);
         } catch (\Exception $e) {
-            return responder()->error($e->getMessage(), 422);
+            return responder()->error(ErrorCode::CREATE_FAILED, $e->getMessage(), null, 422);
         }
     }
 
@@ -118,7 +119,7 @@ class ShiftAPIController extends Controller
                 ]
             ]);
         } catch (\Exception $e) {
-            return responder()->error($e->getMessage(), 404);
+            return responder()->error(ErrorCode::NOT_FOUND, $e->getMessage(), null, 404);
         }
     }
 
@@ -141,7 +142,7 @@ class ShiftAPIController extends Controller
             $shift = Shift::findOrFail($id);
 
             if ($shift->status !== ShiftStatusEnum::OPEN) {
-                return responder()->error('Shift is not open', 422);
+                return responder()->error(ErrorCode::OPERATION_FAILED, 'Shift is not open', null, 422);
             }
 
             $validated['status'] = ShiftStatusEnum::CLOSED;
@@ -153,7 +154,7 @@ class ShiftAPIController extends Controller
                 'shift' => $shift->fresh(['user', 'location'])
             ]);
         } catch (\Exception $e) {
-            return responder()->error($e->getMessage(), 422);
+            return responder()->error(ErrorCode::UPDATE_FAILED, $e->getMessage(), null, 422);
         }
     }
 
@@ -170,7 +171,7 @@ class ShiftAPIController extends Controller
                 ->first();
 
             if (!$shift) {
-                return responder()->error('No open shift found', 404);
+                return responder()->error(ErrorCode::NOT_FOUND, 'No open shift found', null, 404);
             }
 
             $balances = shiftBalances(shift: $shift);
@@ -180,7 +181,7 @@ class ShiftAPIController extends Controller
                 'balances' => $balances,
             ]);
         } catch (\Exception $e) {
-            return responder()->error($e->getMessage(), 500);
+            return responder()->error(ErrorCode::RETRIEVE_FAILED, $e->getMessage(), null, 500);
         }
     }
 
@@ -203,11 +204,11 @@ class ShiftAPIController extends Controller
             $shift = Shift::findOrFail($id);
 
             if ($shift->status !== ShiftStatusEnum::OPEN) {
-                return responder()->error('Shift is not open', 422);
+                return responder()->error(ErrorCode::OPERATION_FAILED, 'Shift is not open', null, 422);
             }
 
             if (! $shift->created_at->isToday()) {
-                return responder()->error('You must close previous Day shift to make this Transaction', 422);
+                return responder()->error(ErrorCode::OPERATION_FAILED, 'You must close previous Day shift to make this Transaction', null, 422);
             }
 
             $validated['category'] = TransactionCategoryEnum::INCOME;
@@ -219,7 +220,7 @@ class ShiftAPIController extends Controller
                 'message' => 'Income transaction added successfully'
             ]);
         } catch (\Exception $e) {
-            return responder()->error($e->getMessage(), 422);
+            return responder()->error(ErrorCode::CREATE_FAILED, $e->getMessage(), null, 422);
         }
     }
 
@@ -243,15 +244,15 @@ class ShiftAPIController extends Controller
             $shift = Shift::findOrFail($id);
 
             if ($shift->status !== ShiftStatusEnum::OPEN) {
-                return responder()->error('Shift is not open', 422);
+                return responder()->error(ErrorCode::OPERATION_FAILED, 'Shift is not open', null, 422);
             }
 
             if (! $shift->created_at->isToday()) {
-                return responder()->error('You must close previous Day shift to make this Transaction', 422);
+                return responder()->error(ErrorCode::OPERATION_FAILED, 'You must close previous Day shift to make this Transaction', null, 422);
             }
 
             if (! checkBalance($shift, $request)) {
-                return responder()->error('Insufficient balance', 422);
+                return responder()->error(ErrorCode::OPERATION_FAILED, 'Insufficient balance', null, 422);
             }
 
             $validated['category'] = TransactionCategoryEnum::EXPENSE;
@@ -263,7 +264,7 @@ class ShiftAPIController extends Controller
                 'message' => 'Expense transaction added successfully'
             ]);
         } catch (\Exception $e) {
-            return responder()->error($e->getMessage(), 422);
+            return responder()->error(ErrorCode::CREATE_FAILED, $e->getMessage(), null, 422);
         }
     }
 
@@ -286,11 +287,11 @@ class ShiftAPIController extends Controller
             $shift = Shift::findOrFail($id);
 
             if ($shift->status !== ShiftStatusEnum::OPEN) {
-                return responder()->error('Shift is not open', 422);
+                return responder()->error(ErrorCode::OPERATION_FAILED, 'Shift is not open', null, 422);
             }
 
             if (! $shift->created_at->isToday()) {
-                return responder()->error('You must close previous Day shift to make this Transaction', 422);
+                return responder()->error(ErrorCode::OPERATION_FAILED, 'You must close previous Day shift to make this Transaction', null, 422);
             }
 
             $validated['category'] = TransactionCategoryEnum::GENERAL;
@@ -301,7 +302,7 @@ class ShiftAPIController extends Controller
                 'message' => 'Transaction added successfully'
             ]);
         } catch (\Exception $e) {
-            return responder()->error($e->getMessage(), 422);
+            return responder()->error(ErrorCode::CREATE_FAILED, $e->getMessage(), null, 422);
         }
     }
 
@@ -321,11 +322,11 @@ class ShiftAPIController extends Controller
             $shift = Shift::findOrFail($id);
 
             if ($shift->status !== ShiftStatusEnum::OPEN) {
-                return responder()->error('Shift is not open', 422);
+                return responder()->error(ErrorCode::OPERATION_FAILED, 'Shift is not open', null, 422);
             }
 
             if (! $shift->created_at->isToday()) {
-                return responder()->error('You must close previous Day shift to make this Transaction', 422);
+                return responder()->error(ErrorCode::OPERATION_FAILED, 'You must close previous Day shift to make this Transaction', null, 422);
             }
 
             $validated['category'] = TransactionCategoryEnum::GENERAL;
@@ -336,7 +337,7 @@ class ShiftAPIController extends Controller
                 'message' => 'Balance transferred successfully'
             ]);
         } catch (\Exception $e) {
-            return responder()->error($e->getMessage(), 422);
+            return responder()->error(ErrorCode::OPERATION_FAILED, $e->getMessage(), null, 422);
         }
     }
 
@@ -359,12 +360,12 @@ class ShiftAPIController extends Controller
             $shift = Shift::findOrFail($id);
 
             if ($shift->status !== ShiftStatusEnum::OPEN) {
-                return responder()->error('Shift is not open', 422);
+                return responder()->error(ErrorCode::OPERATION_FAILED, 'Shift is not open', null, 422);
             }
 
             // Check subscription limits if needed
             if (!validateSubscription("loan management", Loan::where('business_code', auth()->user()->business_code)->count())) {
-                return responder()->error("You have exceeded loan limit, Please upgrade your plan", 403);
+                return responder()->error(ErrorCode::ACCESS_DENIED, "You have exceeded loan limit, Please upgrade your plan", null, 403);
             }
 
             $validated['category'] = TransactionCategoryEnum::GENERAL;
@@ -376,7 +377,7 @@ class ShiftAPIController extends Controller
                 'loan' => $loan
             ]);
         } catch (\Exception $e) {
-            return responder()->error($e->getMessage(), 422);
+            return responder()->error(ErrorCode::CREATE_FAILED, $e->getMessage(), null, 422);
         }
     }
 
@@ -399,7 +400,7 @@ class ShiftAPIController extends Controller
             $loan = Loan::findOrFail($loanId);
 
             if ($loan->shift_id != $shift->id) {
-                return responder()->error('Loan does not belong to this shift', 422);
+                return responder()->error(ErrorCode::VALIDATION_FAILED, 'Loan does not belong to this shift', null, 422);
             }
 
             $validated['category'] = TransactionCategoryEnum::GENERAL;
@@ -410,7 +411,7 @@ class ShiftAPIController extends Controller
                 'message' => 'Loan paid successfully'
             ]);
         } catch (\Exception $e) {
-            return responder()->error($e->getMessage(), 422);
+            return responder()->error(ErrorCode::OPERATION_FAILED, $e->getMessage(), null, 422);
         }
     }
 
@@ -432,7 +433,7 @@ class ShiftAPIController extends Controller
                 'loans' => $loans
             ]);
         } catch (\Exception $e) {
-            return responder()->error($e->getMessage(), 404);
+            return responder()->error(ErrorCode::NOT_FOUND, $e->getMessage(), null, 404);
         }
     }
 
@@ -453,7 +454,7 @@ class ShiftAPIController extends Controller
                 'tills' => $tills
             ]);
         } catch (\Exception $e) {
-            return responder()->error($e->getMessage(), 404);
+            return responder()->error(ErrorCode::NOT_FOUND, $e->getMessage(), null, 404);
         }
     }
 
@@ -493,7 +494,7 @@ class ShiftAPIController extends Controller
                 ]
             ]);
         } catch (\Exception $e) {
-            return responder()->error($e->getMessage(), 404);
+            return responder()->error(ErrorCode::NOT_FOUND, $e->getMessage(), null, 404);
         }
     }
 
@@ -529,7 +530,7 @@ class ShiftAPIController extends Controller
                 'locations' => $locations
             ]);
         } catch (\Exception $e) {
-            return responder()->error($e->getMessage(), 500);
+            return responder()->error(ErrorCode::RETRIEVE_FAILED, $e->getMessage(), null, 500);
         }
     }
 
@@ -538,6 +539,6 @@ class ShiftAPIController extends Controller
      */
     public function destroy(string $id)
     {
-        return responder()->error('Shifts cannot be deleted', 405);
+        return responder()->error(ErrorCode::OPERATION_FAILED, 'Shifts cannot be deleted', null, 405);
     }
 }
