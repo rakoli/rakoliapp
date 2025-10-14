@@ -76,8 +76,14 @@ class BranchAPIController extends Controller
                 ], 403);
             } */
 
-                                    $validator = Validator::make($request->all(), [
-                'town_id' => 'required|exists:towns,id',
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|max:255',
+                'capital' => 'nullable|numeric|min:0',
+                'balance' => 'nullable|numeric|min:0',
+                'description' => 'nullable|string|max:255',
+                'region_code' => 'nullable|exists:regions,code',
+                'town_code' => 'nullable|exists:towns,code',
+                'area_code' => 'nullable|exists:areas,code',
             ]);
 
             if ($validator->fails()) {
@@ -91,9 +97,9 @@ class BranchAPIController extends Controller
             $branchData = [
                 'business_code' => $user->business_code,
                 'name' => $request->name,
-                'capital' => $request->capital,
-                'balance' => $request->balance,
-                'balance_currency' => $currency,
+                'capital' => $request->capital ?? 0,
+                'balance' => $request->balance ?? 0,
+                'balance_currency' => $currency ?? 'TSH',
                 'description' => $request->description,
                 'code' => generateCode($request->name, $user->business_code),
             ];
@@ -105,17 +111,19 @@ class BranchAPIController extends Controller
             if ($request->filled('town_code')) {
                 $branchData['town_code'] = $request->town_code;
             }
-            if ($request->filled('area_code')) {
+            if ($request->filled('area_code') && $request->area_code) {
                 $branchData['area_code'] = $request->area_code;
             }
 
             $branch = Location::create($branchData);
+            $branch->load(['region', 'town', 'area']);
 
-            return responder()->success($branch->load(['region', 'town', 'area']), 201)->respond();
+            return responder()->success($branch, null, 201)->respond();
 
         } catch (\Exception $e) {
             Log::error('BranchAPIController::store - Error: ' . $e->getMessage());
-            return responder()->error(ErrorCode::CREATE_FAILED, 'Failed to create branch', null, 500)->respond();
+            Log::error('BranchAPIController::store - Trace: ' . $e->getTraceAsString());
+            return responder()->error(ErrorCode::CREATE_FAILED, 'Failed to create branch: ' . $e->getMessage(), null, 500)->respond();
         }
     }
 
@@ -199,8 +207,9 @@ class BranchAPIController extends Controller
             }
 
             $branch->update($updateData);
+            $branch->load(['region', 'town', 'area']);
 
-            return responder()->success($branch->fresh()->load(['region', 'town', 'area']))->respond();
+            return responder()->success($branch)->respond();
 
         } catch (\Exception $e) {
             Log::error('BranchAPIController::update - Error: ' . $e->getMessage());
