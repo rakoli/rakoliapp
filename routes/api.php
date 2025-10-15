@@ -151,12 +151,15 @@ Route::middleware(['auth:sanctum'])->group(function () {
         // Core user operations
         Route::get('/', [\App\Http\Controllers\Api\UsersAPIController::class, 'index']);
         Route::post('/', [\App\Http\Controllers\Api\UsersAPIController::class, 'store']);
+
+        // Helper endpoints for user creation (must come before /{id} route)
+        Route::get('/data/form', [\App\Http\Controllers\Api\UsersAPIController::class, 'getFormData']);
+        Route::get('/roles', [\App\Http\Controllers\Api\UsersAPIController::class, 'getRoles']);
+
+        // Dynamic ID routes (must come after specific routes)
         Route::get('/{id}', [\App\Http\Controllers\Api\UsersAPIController::class, 'show']);
         Route::put('/{id}', [\App\Http\Controllers\Api\UsersAPIController::class, 'update']);
         Route::delete('/{id}', [\App\Http\Controllers\Api\UsersAPIController::class, 'destroy']);
-
-        // Helper endpoints for user creation
-        Route::get('/data/form', [\App\Http\Controllers\Api\UsersAPIController::class, 'getFormData']);
     });
 
     //BUSINESS PROFILE MODULE

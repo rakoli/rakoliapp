@@ -267,4 +267,30 @@ class UsersAPIController extends Controller
             return responder()->error(ErrorCode::RETRIEVE_FAILED, 'Failed to retrieve form data', null, 500);
         }
     }
+
+    /**
+     * Get all roles for the authenticated business
+     */
+    public function getRoles()
+    {
+        try {
+            $authUser = Auth::user();
+
+            if (!$authUser) {
+                return responder()->error(ErrorCode::NOT_FOUND, 'User not authenticated', null, 401);
+            }
+
+            $businessCode = $authUser->business_code;
+
+            $roles = BusinessRole::where('business_code', $businessCode)
+                ->whereNull('deleted_at')
+                ->select('id', 'business_code', 'code', 'name', 'description', 'created_at')
+                ->get();
+
+            return responder()->success(['roles' => $roles]);
+        } catch (\Exception $e) {
+            Log::error('Users API Get Roles Error: ' . $e->getMessage());
+            return responder()->error(ErrorCode::RETRIEVE_FAILED, 'Failed to retrieve roles', null, 500);
+        }
+    }
 }
