@@ -77,7 +77,7 @@ class UsersAPIController extends Controller
                 'lname' => 'required|string|max:255',
                 'email' => 'required|email|unique:users,email',
                 'phone' => 'required|string',
-                'password' => 'required|string|min:8',
+                'pin' => 'required|string|min:4|max:6',
                 'branches' => [
                     'required',
                     'array',
@@ -118,7 +118,8 @@ class UsersAPIController extends Controller
                 'email' => $request->email,
                 'phone' => $request->phone,
                 'type' => UserTypeEnum::AGENT->value,
-                'password' => Hash::make($request->password),
+                'password' => Hash::make(uniqid('pwd_', true)),
+                'pin' => Hash::make($request->pin),
                 'business_code' => $authUser->business_code,
                 'code' => generateCode($request->fname, $authUser->business_code),
                 'registration_step' => 0,
