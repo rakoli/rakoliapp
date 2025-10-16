@@ -99,6 +99,49 @@
         </div>
         <!--end::Analytics Widgets Row-->
 
+        <!--begin::Form Submissions Row-->
+        <div class="row g-5 g-xl-8 mb-5 mb-xl-8">
+            <!--begin::Total Form Submissions Widget-->
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                <div class="card bg-dark hoverable card-xl-stretch mb-5 mb-xl-8 h-xl-100">
+                    <div class="card-body d-flex flex-column">
+                        <!--begin::Svg Icon-->
+                        <span class="svg-icon svg-icon-white svg-icon-3x ms-n1 mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M14 18V16H10V18C10 19.1 10.9 20 12 20S14 19.1 14 18ZM20 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H8V18H4V8H20V18H16V20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4Z" fill="currentColor"/>
+                                <path opacity="0.3" d="M6 12H18V14H6V12ZM7 16H17V18H7V16ZM7 8H17V10H7V8Z" fill="currentColor"/>
+                            </svg>
+                        </span>
+                        <!--end::Svg Icon-->
+                        <div class="text-white fw-bolder fs-2 mb-2 mt-auto">{{ $stats['total_form_submissions'] ?? 0 }}</div>
+                        <div class="fw-bold text-white opacity-75 fs-6">{{ __('Total Form Submissions') }}</div>
+                    </div>
+                </div>
+            </div>
+            <!--end::Total Form Submissions Widget-->
+
+            <!--begin::Form Submission Earnings Widget-->
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                <div class="card bg-danger hoverable card-xl-stretch mb-5 mb-xl-8 h-xl-100">
+                    <div class="card-body d-flex flex-column">
+                        <!--begin::Svg Icon-->
+                        <span class="svg-icon svg-icon-white svg-icon-3x ms-n1 mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M18.3 8.5C17.9 8.3 17.4 8.1 16.9 8.1C16.6 8.1 16.3 8.2 16.1 8.3L15.5 6.4C15.4 6.1 15.1 5.9 14.8 5.9H9.2C8.9 5.9 8.6 6.1 8.5 6.4L7.9 8.3C7.7 8.2 7.4 8.1 7.1 8.1C6.6 8.1 6.1 8.3 5.7 8.5C5.3 8.7 5 9.1 4.9 9.6L4.5 11.9C4.4 12.4 4.6 12.9 5 13.2L6.8 14.5V19C6.8 19.6 7.2 20 7.8 20H16.2C16.8 20 17.2 19.6 17.2 19V14.5L19 13.2C19.4 12.9 19.6 12.4 19.5 11.9L19.1 9.6C19 9.1 18.7 8.7 18.3 8.5Z" fill="currentColor"/>
+                                <path opacity="0.3" d="M12 2C10.3 2 8.9 3.4 8.9 5.1V5.9H15.1V5.1C15.1 3.4 13.7 2 12 2Z" fill="currentColor"/>
+                            </svg>
+                        </span>
+                        <!--end::Svg Icon-->
+                        <div class="text-white fw-bolder fs-2 mb-2 mt-auto">TZS {{ number_format($stats['form_submission_earnings'] ?? 0, 0) }}</div>
+                        <div class="fw-bold text-white opacity-75 fs-6">{{ __('Form Submission Earnings') }}</div>
+                        <div class="fw-bold text-white opacity-50 fs-7">TZS 1,000 per valid submission</div>
+                    </div>
+                </div>
+            </div>
+            <!--end::Form Submission Earnings Widget-->
+        </div>
+        <!--end::Form Submissions Row-->
+
         <!--begin::Earnings Breakdown Row-->
         <div class="row g-5 g-xl-8 mb-5 mb-xl-8">
             <!--begin::Registration Earnings Card-->

@@ -9,6 +9,7 @@ use App\Models\Region;
 use App\Models\Towns;
 use App\Models\PackageAvailableFeatures;
 use App\Models\PackageFeature;
+use App\Utils\ErrorCode;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -45,27 +46,19 @@ class BranchAPIController extends Controller
             $perPage = $request->get('per_page', 15);
             $branches = $query->orderBy('created_at', 'desc')->paginate($perPage);
 
-            return response()->json([
-                'success' => true,
-                'data' => [
-                    'branches' => $branches->items(),
-                    'pagination' => [
-                        'current_page' => $branches->currentPage(),
-                        'total_pages' => $branches->lastPage(),
-                        'total_items' => $branches->total(),
-                        'per_page' => $branches->perPage(),
-                    ]
-                ],
-                'message' => 'Branches retrieved successfully'
-            ]);
+            return responder()->success([
+                'branches' => $branches->items(),
+                'pagination' => [
+                    'current_page' => $branches->currentPage(),
+                    'total_pages' => $branches->lastPage(),
+                    'total_items' => $branches->total(),
+                    'per_page' => $branches->perPage(),
+                ]
+            ])->respond();
 
         } catch (\Exception $e) {
             Log::error('BranchAPIController::index - Error: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to retrieve branches',
-                'error' => $e->getMessage()
-            ], 500);
+            return responder()->error(ErrorCode::RETRIEVE_FAILED, 'Failed to retrieve branches', null, 500)->respond();
         }
     }
 
@@ -76,17 +69,17 @@ class BranchAPIController extends Controller
     {
         try {
             // Check subscription limit
-            if (!validateSubscription("branches", Location::where('business_code', auth()->user()->business_code)->count())) {
+       /*      if (!validateSubscription("branches", Location::where('business_code', auth()->user()->business_code)->count())) {
                 return response()->json([
                     'success' => false,
                     'message' => 'You have exceeded your branch limit. Please upgrade your plan.'
                 ], 403);
-            }
+            } */
 
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:255',
-                'capital' => 'required|numeric|min:0',
-                'balance' => 'required|numeric|min:0',
+                'capital' => 'nullable|numeric|min:0',
+                'balance' => 'nullable|numeric|min:0',
                 'description' => 'nullable|string|max:255',
                 'region_code' => 'nullable|exists:regions,code',
                 'town_code' => 'nullable|exists:towns,code',
@@ -94,11 +87,8 @@ class BranchAPIController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Validation failed',
-                    'errors' => $validator->errors()
-                ], 422);
+                $firstError = collect($validator->errors()->messages())->flatten()->first();
+                return responder()->error(ErrorCode::VALIDATION_FAILED, $firstError, $validator->errors(), 422)->respond();
             }
 
             $user = auth()->user();
@@ -107,9 +97,9 @@ class BranchAPIController extends Controller
             $branchData = [
                 'business_code' => $user->business_code,
                 'name' => $request->name,
-                'capital' => $request->capital,
-                'balance' => $request->balance,
-                'balance_currency' => $currency,
+                'capital' => $request->capital ?? 0,
+                'balance' => $request->balance ?? 0,
+                'balance_currency' => $currency ?? 'TSH',
                 'description' => $request->description,
                 'code' => generateCode($request->name, $user->business_code),
             ];
@@ -121,25 +111,19 @@ class BranchAPIController extends Controller
             if ($request->filled('town_code')) {
                 $branchData['town_code'] = $request->town_code;
             }
-            if ($request->filled('area_code')) {
+            if ($request->filled('area_code') && $request->area_code) {
                 $branchData['area_code'] = $request->area_code;
             }
 
             $branch = Location::create($branchData);
+            $branch->load(['region', 'town', 'area']);
 
-            return response()->json([
-                'success' => true,
-                'data' => $branch->load(['region', 'town', 'area']),
-                'message' => 'Branch created successfully'
-            ], 201);
+            return responder()->success($branch, null, 201)->respond();
 
         } catch (\Exception $e) {
             Log::error('BranchAPIController::store - Error: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to create branch',
-                'error' => $e->getMessage()
-            ], 500);
+            Log::error('BranchAPIController::store - Trace: ' . $e->getTraceAsString());
+            return responder()->error(ErrorCode::CREATE_FAILED, 'Failed to create branch: ' . $e->getMessage(), null, 500)->respond();
         }
     }
 
@@ -156,33 +140,19 @@ class BranchAPIController extends Controller
                 ->first();
 
             if (!$branch) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Branch not found'
-                ], 404);
+                return responder()->error(ErrorCode::NOT_FOUND, 'Branch not found', null, 404)->respond();
             }
 
             // Check authorization
             if (!$branch->isUserAllowed(auth()->user())) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Not authorized to access this branch'
-                ], 403);
+                return responder()->error(ErrorCode::ACCESS_DENIED, 'Not authorized to access this branch', null, 403)->respond();
             }
 
-            return response()->json([
-                'success' => true,
-                'data' => $branch,
-                'message' => 'Branch retrieved successfully'
-            ]);
+            return responder()->success($branch)->respond();
 
         } catch (\Exception $e) {
             Log::error('BranchAPIController::show - Error: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to retrieve branch',
-                'error' => $e->getMessage()
-            ], 500);
+            return responder()->error(ErrorCode::RETRIEVE_FAILED, 'Failed to retrieve branch', null, 500)->respond();
         }
     }
 
@@ -198,18 +168,12 @@ class BranchAPIController extends Controller
                 ->first();
 
             if (!$branch) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Branch not found'
-                ], 404);
+                return responder()->error(ErrorCode::NOT_FOUND, 'Branch not found', null, 404)->respond();
             }
 
             // Check authorization
             if (!$branch->isUserAllowed(auth()->user())) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Not authorized to update this branch'
-                ], 403);
+                return responder()->error(ErrorCode::ACCESS_DENIED, 'Not authorized to update this branch', null, 403)->respond();
             }
 
             $validator = Validator::make($request->all(), [
@@ -223,11 +187,10 @@ class BranchAPIController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Validation failed',
+                $firstError = collect($validator->errors())->flatten()->first();
+                return responder()->error(ErrorCode::VALIDATION_FAILED, $firstError ?? 'Validation failed', [
                     'errors' => $validator->errors()
-                ], 422);
+                ], 422)->respond();
             }
 
             $updateData = $request->only(['name', 'capital', 'balance', 'description']);
@@ -244,20 +207,13 @@ class BranchAPIController extends Controller
             }
 
             $branch->update($updateData);
+            $branch->load(['region', 'town', 'area']);
 
-            return response()->json([
-                'success' => true,
-                'data' => $branch->fresh()->load(['region', 'town', 'area']),
-                'message' => 'Branch updated successfully'
-            ]);
+            return responder()->success($branch)->respond();
 
         } catch (\Exception $e) {
             Log::error('BranchAPIController::update - Error: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to update branch',
-                'error' => $e->getMessage()
-            ], 500);
+            return responder()->error(ErrorCode::UPDATE_FAILED, 'Failed to update branch', null, 500)->respond();
         }
     }
 
@@ -273,35 +229,22 @@ class BranchAPIController extends Controller
                 ->first();
 
             if (!$branch) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Branch not found'
-                ], 404);
+                return responder()->error(ErrorCode::NOT_FOUND, 'Branch not found', null, 404)->respond();
             }
 
             // Check authorization
             if (!$branch->isUserAllowed(auth()->user())) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Not authorized to delete this branch'
-                ], 403);
+                return responder()->error(ErrorCode::ACCESS_DENIED, 'Not authorized to delete this branch', null, 403)->respond();
             }
 
             // Soft delete the branch
             $branch->delete();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Branch deleted successfully'
-            ]);
+            return responder()->success(['message' => 'Branch deleted successfully'])->respond();
 
         } catch (\Exception $e) {
             Log::error('BranchAPIController::destroy - Error: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to delete branch',
-                'error' => $e->getMessage()
-            ], 500);
+            return responder()->error(ErrorCode::DELETE_FAILED, 'Failed to delete branch', null, 500)->respond();
         }
     }
 
@@ -317,19 +260,11 @@ class BranchAPIController extends Controller
                 ->orderBy('name')
                 ->get();
 
-            return response()->json([
-                'success' => true,
-                'data' => $regions,
-                'message' => 'Regions retrieved successfully'
-            ]);
+            return responder()->success($regions)->respond();
 
         } catch (\Exception $e) {
             Log::error('BranchAPIController::regions - Error: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to retrieve regions',
-                'error' => $e->getMessage()
-            ], 500);
+            return responder()->error(ErrorCode::RETRIEVE_FAILED, 'Failed to retrieve regions', null, 500)->respond();
         }
     }
 
@@ -344,11 +279,10 @@ class BranchAPIController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Validation failed',
+                $firstError = collect($validator->errors())->flatten()->first();
+                return responder()->error(422, $firstError ?? 'Validation failed', [
                     'errors' => $validator->errors()
-                ], 422);
+                ], 422)->respond();
             }
 
             $towns = Towns::where('region_code', $request->region_code)
@@ -356,19 +290,11 @@ class BranchAPIController extends Controller
                 ->orderBy('name')
                 ->get();
 
-            return response()->json([
-                'success' => true,
-                'data' => $towns,
-                'message' => 'Towns retrieved successfully'
-            ]);
+            return responder()->success($towns)->respond();
 
         } catch (\Exception $e) {
             Log::error('BranchAPIController::towns - Error: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to retrieve towns',
-                'error' => $e->getMessage()
-            ], 500);
+            return responder()->error(ErrorCode::RETRIEVE_FAILED, 'Failed to retrieve towns', null, 500)->respond();
         }
     }
 
@@ -383,11 +309,10 @@ class BranchAPIController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Validation failed',
+                $firstError = collect($validator->errors())->flatten()->first();
+                return responder()->error(422, $firstError ?? 'Validation failed', [
                     'errors' => $validator->errors()
-                ], 422);
+                ], 422)->respond();
             }
 
             $areas = Area::where('town_code', $request->town_code)
@@ -395,19 +320,11 @@ class BranchAPIController extends Controller
                 ->orderBy('name')
                 ->get();
 
-            return response()->json([
-                'success' => true,
-                'data' => $areas,
-                'message' => 'Areas retrieved successfully'
-            ]);
+            return responder()->success($areas)->respond();
 
         } catch (\Exception $e) {
             Log::error('BranchAPIController::areas - Error: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to retrieve areas',
-                'error' => $e->getMessage()
-            ], 500);
+            return responder()->error(ErrorCode::RETRIEVE_FAILED, 'Failed to retrieve areas', null, 500)->respond();
         }
     }
 }

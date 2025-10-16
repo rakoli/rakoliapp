@@ -26,6 +26,7 @@ Route::get('registration/agent', [App\Http\Controllers\RegistrationStepControlle
 Route::get('registration/phone/verify', [App\Http\Controllers\RegistrationStepController::class, 'showPhoneVerification'])->name('registration.phone.verify');
 Route::post('registration/phone/verify', [App\Http\Controllers\RegistrationStepController::class, 'verifyPhoneOtp'])->name('registration.phone.verify.submit');
 Route::post('registration/phone/resend', [App\Http\Controllers\RegistrationStepController::class, 'resendPhoneOtp'])->name('registration.phone.resend');
+Route::post('registration/phone/update', [App\Http\Controllers\RegistrationStepController::class, 'updatePhoneNumber'])->name('registration.phone.update');
 Route::get('registration/step/confirmation', [App\Http\Controllers\RegistrationStepController::class, 'registrationStepConfirmation'])->name('registration.step.confirmation');
 Route::get('request/email/code', [App\Http\Controllers\RegistrationStepController::class, 'requestEmailCodeAjax'])->name('request.email.code');
 Route::get('request/phone/code', [App\Http\Controllers\RegistrationStepController::class, 'requestPhoneCodeAjax'])->name('request.phone.code');

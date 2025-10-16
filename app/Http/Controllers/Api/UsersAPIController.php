@@ -9,6 +9,7 @@ use App\Models\Location;
 use App\Models\BusinessRole;
 use App\Models\LocationUser;
 use App\Models\UserRole;
+use App\Utils\ErrorCode;
 use App\Utils\Enums\UserTypeEnum;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -32,16 +33,10 @@ class UsersAPIController extends Controller
                 ->select('id', 'fname', 'lname', 'email', 'phone', 'code', 'type', 'registration_step', 'created_at')
                 ->get();
 
-            return response()->json([
-                'success' => true,
-                'data' => $users
-            ], 200);
+            return responder()->success(['users' => $users]);
         } catch (\Exception $e) {
             Log::error('Users API Index Error: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to retrieve users'
-            ], 500);
+            return responder()->error(ErrorCode::RETRIEVE_FAILED, 'Failed to retrieve users', null, 500);
         }
     }
 
@@ -59,22 +54,13 @@ class UsersAPIController extends Controller
                 ->first();
 
             if (!$user) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'User not found'
-                ], 404);
+                return responder()->error(ErrorCode::NOT_FOUND, 'User not found', null, 404);
             }
 
-            return response()->json([
-                'success' => true,
-                'data' => $user
-            ], 200);
+            return responder()->success(['user' => $user]);
         } catch (\Exception $e) {
             Log::error('Users API Show Error: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to retrieve user'
-            ], 500);
+            return responder()->error(ErrorCode::RETRIEVE_FAILED, 'Failed to retrieve user', null, 500);
         }
     }
 
@@ -91,7 +77,7 @@ class UsersAPIController extends Controller
                 'lname' => 'required|string|max:255',
                 'email' => 'required|email|unique:users,email',
                 'phone' => 'required|string',
-                'password' => 'required|string|min:8',
+                'pin' => 'required|string|min:4|max:6',
                 'branches' => [
                     'required',
                     'array',
@@ -132,7 +118,8 @@ class UsersAPIController extends Controller
                 'email' => $request->email,
                 'phone' => $request->phone,
                 'type' => UserTypeEnum::AGENT->value,
-                'password' => Hash::make($request->password),
+                'password' => Hash::make(uniqid('pwd_', true)),
+                'pin' => Hash::make($request->pin),
                 'business_code' => $authUser->business_code,
                 'code' => generateCode($request->fname, $authUser->business_code),
                 'registration_step' => 0,
@@ -166,24 +153,17 @@ class UsersAPIController extends Controller
                 'user_role' => $request->roles,
             ]);
 
-            return response()->json([
-                'success' => true,
+            return responder()->success([
                 'message' => 'User created successfully',
-                'data' => $newUser
-            ], 201);
+                'user' => $newUser
+            ]);
 
         } catch (ValidationException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation failed',
-                'errors' => $e->errors()
-            ], 422);
+            $firstError = collect($e->errors())->flatten()->first();
+            return responder()->error(ErrorCode::VALIDATION_FAILED, $firstError, $e->errors(), 422);
         } catch (\Exception $e) {
             Log::error('Users API Store Error: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to create user'
-            ], 500);
+            return responder()->error(ErrorCode::CREATE_FAILED, 'Failed to create user', null, 500);
         }
     }
 
@@ -201,10 +181,7 @@ class UsersAPIController extends Controller
                 ->first();
 
             if (!$user) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'User not found'
-                ], 404);
+                return responder()->error(ErrorCode::NOT_FOUND, 'User not found', null, 404);
             }
 
             $request->validate([
@@ -223,24 +200,17 @@ class UsersAPIController extends Controller
 
             $user->save();
 
-            return response()->json([
-                'success' => true,
+            return responder()->success([
                 'message' => 'User updated successfully',
-                'data' => $user
-            ], 200);
+                'user' => $user
+            ]);
 
         } catch (ValidationException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation failed',
-                'errors' => $e->errors()
-            ], 422);
+            $firstError = collect($e->errors())->flatten()->first();
+            return responder()->error(ErrorCode::VALIDATION_FAILED, $firstError, $e->errors(), 422);
         } catch (\Exception $e) {
             Log::error('Users API Update Error: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to update user'
-            ], 500);
+            return responder()->error(ErrorCode::UPDATE_FAILED, 'Failed to update user', null, 500);
         }
     }
 
@@ -258,25 +228,16 @@ class UsersAPIController extends Controller
                 ->first();
 
             if (!$user) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'User not found'
-                ], 404);
+                return responder()->error(ErrorCode::NOT_FOUND, 'User not found', null, 404);
             }
 
             $user->delete();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'User deleted successfully'
-            ], 200);
+            return responder()->success(['message' => 'User deleted successfully']);
 
         } catch (\Exception $e) {
             Log::error('Users API Delete Error: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to delete user'
-            ], 500);
+            return responder()->error(ErrorCode::DELETE_FAILED, 'Failed to delete user', null, 500);
         }
     }
 
@@ -296,20 +257,40 @@ class UsersAPIController extends Controller
                 ->whereNull('deleted_at')
                 ->get();
 
-            return response()->json([
-                'success' => true,
-                'data' => [
-                    'branches' => $branches,
-                    'roles' => $roles
-                ]
-            ], 200);
+            return responder()->success([
+                'branches' => $branches,
+                'roles' => $roles
+            ]);
 
         } catch (\Exception $e) {
             Log::error('Users API Form Data Error: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to retrieve form data'
-            ], 500);
+            return responder()->error(ErrorCode::RETRIEVE_FAILED, 'Failed to retrieve form data', null, 500);
+        }
+    }
+
+    /**
+     * Get all roles for the authenticated business
+     */
+    public function getRoles()
+    {
+        try {
+            $authUser = Auth::user();
+
+            if (!$authUser) {
+                return responder()->error(ErrorCode::NOT_FOUND, 'User not authenticated', null, 401);
+            }
+
+            $businessCode = $authUser->business_code;
+
+            $roles = BusinessRole::where('business_code', $businessCode)
+                ->whereNull('deleted_at')
+                ->select('id', 'business_code', 'code', 'name', 'description', 'created_at')
+                ->get();
+
+            return responder()->success(['roles' => $roles]);
+        } catch (\Exception $e) {
+            Log::error('Users API Get Roles Error: ' . $e->getMessage());
+            return responder()->error(ErrorCode::RETRIEVE_FAILED, 'Failed to retrieve roles', null, 500);
         }
     }
 }

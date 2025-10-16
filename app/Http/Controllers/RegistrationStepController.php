@@ -186,6 +186,75 @@ class RegistrationStepController extends Controller
         ]);
     }
 
+    public function updatePhoneNumber(Request $request)
+    {
+        $user = $request->user();
+
+        // If phone is already verified, don't allow changes
+        if (!is_null($user->phone_verified_at)) {
+            return response()->json([
+                'status' => 201,
+                'message' => 'Phone already verified. Cannot update.'
+            ]);
+        }
+
+        $request->validate([
+            'phone' => 'required|numeric|min:8',
+            'country_code' => 'required|string|exists:countries,code',
+        ]);
+
+        $requestPhone = $request->get('phone');
+        $countryCode = $request->get('country_code');
+
+        // Get country dial code
+        $country = \App\Models\Country::where('code', $countryCode)->first();
+        if (!$country) {
+            return response()->json([
+                'status' => 201,
+                'message' => 'Invalid country code'
+            ]);
+        }
+
+        // Format phone number (remove leading 0 if present, add country code without +)
+        $plainPhone = ltrim($requestPhone, '0');
+        $countryDialCode = substr($country->dialing_code, 1); // Remove the + sign
+        $fullPhone = $countryDialCode . $plainPhone;
+
+        // Check if phone number already exists for another user
+        $phoneExists = User::where('phone', $fullPhone)
+            ->where('id', '!=', $user->id)
+            ->exists();
+
+        if ($phoneExists) {
+            return response()->json([
+                'status' => 201,
+                'message' => __('Phone number already registered to another account')
+            ]);
+        }
+
+        // Update user's phone number and reset OTP data
+        $user->phone = $fullPhone;
+        $user->country_code = $countryCode;
+        $user->phone_otp = null;
+        $user->phone_otp_time = null;
+        $user->phone_otp_count = 0;
+        $user->save();
+
+        Log::channel('agent_registration')->info("RegistrationStepController :: updatePhoneNumber :: Phone updated to: ".$fullPhone);
+
+        // Send OTP to new phone number
+        if (!VerifyOTP::shouldLockPhoneOTP($user)) {
+            $this->generateAndSendOTP($user);
+            Log::channel('agent_registration')->info("RegistrationStepController :: updatePhoneNumber :: OTP sent to new phone");
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Phone number updated successfully. New OTP sent.',
+            'formatted_phone' => $this->formatPhoneForDisplay($fullPhone, $countryCode)
+        ]);
+    }
+
     public function requestEmailCodeAjax(Request $request)
     {
         Log::channel('agent_registration')->info("RegistrationStepController :: requestEmailCodeAjax :: Start Email Verification");

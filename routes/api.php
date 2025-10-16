@@ -37,7 +37,29 @@ Route::post('register', [App\Http\Controllers\Api\MobileAppController::class, 'r
 Route::post('verify-otp', [App\Http\Controllers\Api\MobileAppController::class, 'verifyOtp']);
 Route::post('resend-otp', [App\Http\Controllers\Api\MobileAppController::class, 'resendOtp']);
 
+// PIN Reset routes (public - no auth required)
+Route::post('pin-reset/request', [App\Http\Controllers\Api\MobileAppController::class, 'requestPinReset']);
+Route::post('pin-reset/verify-otp', [App\Http\Controllers\Api\MobileAppController::class, 'verifyPinResetOtp']);
+Route::post('pin-reset/reset', [App\Http\Controllers\Api\MobileAppController::class, 'resetPin']);
+
+// KYC routes (public - no auth required)
+Route::post('kyc', [App\Http\Controllers\Api\KycController::class, 'initiateKyc']);
+Route::post('kyc/answer', [App\Http\Controllers\Api\KycController::class, 'answerQuestion']);
+
+// Form submission routes
+Route::post('form', [App\Http\Controllers\Api\FormAPIController::class, 'store']);
+Route::get('form', [App\Http\Controllers\Api\FormAPIController::class, 'index']);
+Route::get('form/{id}', [App\Http\Controllers\Api\FormAPIController::class, 'show']);
+Route::get('form/gps/coordinates', [App\Http\Controllers\Api\FormAPIController::class, 'getGpsCoordinates']);
+
 Route::middleware(['auth:sanctum'])->group(function () {
+
+    // Mock Transaction API Routes (authentication required)
+    Route::get('mock/transactions', [\App\Http\Controllers\Api\MockTransactionAPIController::class, 'index']);
+    Route::get('mock/transactions/recent', [\App\Http\Controllers\Api\MockTransactionAPIController::class, 'recent']);
+    Route::get('mock/shifts', [\App\Http\Controllers\Api\MockTransactionAPIController::class, 'randomShifts']);
+    Route::get('mock/shift/transactions', [\App\Http\Controllers\Api\MockTransactionAPIController::class, 'randomShiftTransactions']);
+    Route::get('mock/shifts/{shiftId}/transactions', [\App\Http\Controllers\Api\MockTransactionAPIController::class, 'shiftTransactions']);
 
     Route::post('logout', [App\Http\Controllers\Api\MobileAppController::class, 'logout']);
 
@@ -76,6 +98,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/data/fsps', [\App\Http\Controllers\Api\NetworkAPIController::class, 'financialServiceProviders']);
         Route::get('/data/cryptos', [\App\Http\Controllers\Api\NetworkAPIController::class, 'cryptos']);
         Route::get('/data/types', [\App\Http\Controllers\Api\NetworkAPIController::class, 'types']);
+    });
+
+    //FLOAT EXCHANGE MODULE
+    Route::prefix('float-exchanges')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Api\FloatExchangeAPI::class, 'index']);
+        Route::post('/', [\App\Http\Controllers\Api\FloatExchangeAPI::class, 'store']);
+        Route::get('/statistics', [\App\Http\Controllers\Api\FloatExchangeAPI::class, 'statistics']);
+        Route::get('/{code}', [\App\Http\Controllers\Api\FloatExchangeAPI::class, 'show']);
     });
 
     //SHIFT MODULE
@@ -125,12 +155,15 @@ Route::middleware(['auth:sanctum'])->group(function () {
         // Core user operations
         Route::get('/', [\App\Http\Controllers\Api\UsersAPIController::class, 'index']);
         Route::post('/', [\App\Http\Controllers\Api\UsersAPIController::class, 'store']);
+
+        // Helper endpoints for user creation (must come before /{id} route)
+        Route::get('/data/form', [\App\Http\Controllers\Api\UsersAPIController::class, 'getFormData']);
+        Route::get('/roles', [\App\Http\Controllers\Api\UsersAPIController::class, 'getRoles']);
+
+        // Dynamic ID routes (must come after specific routes)
         Route::get('/{id}', [\App\Http\Controllers\Api\UsersAPIController::class, 'show']);
         Route::put('/{id}', [\App\Http\Controllers\Api\UsersAPIController::class, 'update']);
         Route::delete('/{id}', [\App\Http\Controllers\Api\UsersAPIController::class, 'destroy']);
-
-        // Helper endpoints for user creation
-        Route::get('/data/form', [\App\Http\Controllers\Api\UsersAPIController::class, 'getFormData']);
     });
 
     //BUSINESS PROFILE MODULE

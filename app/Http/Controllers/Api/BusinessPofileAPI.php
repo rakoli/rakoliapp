@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Business;
+use App\Utils\ErrorCode;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -30,11 +31,8 @@ class BusinessPofileAPI extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation error',
-                'errors' => $validator->errors()
-            ], 422);
+            $firstError = collect($validator->errors()->messages())->flatten()->first();
+            return responder()->error(ErrorCode::VALIDATION_FAILED, $firstError, $validator->errors(), 422);
         }
 
         try {
@@ -43,10 +41,7 @@ class BusinessPofileAPI extends Controller
             $business = Business::where('code', $user->business_code)->first();
 
             if (!$business) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Business not found'
-                ], 404);
+                return responder()->error(ErrorCode::NOT_FOUND, 'Business not found', null, 404);
             }
 
             // Update business fields only if they are provided
@@ -84,10 +79,9 @@ class BusinessPofileAPI extends Controller
             // Save the changes
             $business->save();
 
-            return response()->json([
-                'success' => true,
+            return responder()->success([
                 'message' => 'Business profile updated successfully',
-                'data' => [
+                'business' => [
                     'id' => $business->id,
                     'code' => $business->code,
                     'business_name' => $business->business_name,
@@ -101,14 +95,10 @@ class BusinessPofileAPI extends Controller
                     'last_seen' => $business->last_seen,
                     'updated_at' => $business->updated_at
                 ]
-            ], 200);
+            ]);
 
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'An error occurred while updating the business profile',
-                'error' => $e->getMessage()
-            ], 500);
+            return responder()->error(ErrorCode::UPDATE_FAILED, 'An error occurred while updating the business profile', null, 500);
         }
     }
 
@@ -126,16 +116,12 @@ class BusinessPofileAPI extends Controller
             $business = Business::where('code', $user->business_code)->first();
 
             if (!$business) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Business not found'
-                ], 404);
+                return responder()->error(ErrorCode::NOT_FOUND, 'Business not found', null, 404);
             }
 
-            return response()->json([
-                'success' => true,
+            return responder()->success([
                 'message' => 'Business profile retrieved successfully',
-                'data' => [
+                'business' => [
                     'id' => $business->id,
                     'code' => $business->code,
                     'business_name' => $business->business_name,
@@ -153,14 +139,10 @@ class BusinessPofileAPI extends Controller
                     'updated_at' => $business->updated_at,
                     'last_seen' => $business->last_seen
                 ]
-            ], 200);
+            ]);
 
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'An error occurred while retrieving the business profile',
-                'error' => $e->getMessage()
-            ], 500);
+            return responder()->error(ErrorCode::RETRIEVE_FAILED, 'An error occurred while retrieving the business profile', null, 500);
         }
     }
 }
